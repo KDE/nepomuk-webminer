@@ -45,6 +45,9 @@ public slots:
     void lookupResource(const QList<Nepomuk::Resource> &resources);
 
     void searchResults(const QVariantList &searchResults);
+    // start search again with alttitle
+    //@todo select next search engine instead?
+    void noSearchResultsFound();
     void itemResult(const QVariantMap &itemResults);
 
 private slots:
@@ -57,7 +60,8 @@ private:
     QList<Nepomuk::Resource> m_resourcesToLookup;
     PythonQtObjectPtr mainContext;
 
-    MetaDataParameters m_metaDataParameters;
+    MetaDataParameters *m_metaDataParameters;
+    bool m_altSearchStarted;
     NepomukPipe *m_nepomukPipe;
 };
 

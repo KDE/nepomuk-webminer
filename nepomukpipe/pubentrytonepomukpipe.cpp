@@ -74,6 +74,7 @@ PubEntryToNepomukPipe::PubEntryToNepomukPipe(QObject *parent)
     : NepomukPipe(parent)
 {
 }
+
 PubEntryToNepomukPipe::~PubEntryToNepomukPipe()
 {
 
@@ -132,6 +133,47 @@ void PubEntryToNepomukPipe::pipeImport(MetaDataParameters* bibEntry)
     Nepomuk::StoreResourcesJob *srj = Nepomuk::storeResources(graph,Nepomuk::IdentifyNew, Nepomuk::OverwriteProperties);
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
+
+    // get the nepomu kuri of the newly created resource
+    Nepomuk::Resource publicationResource = Nepomuk::Resource::fromResourceUri( srj->mappings().value( publication.uri() ) );
+
+
+    // ok we created the new resource now we want to connect it to the file we requested it for
+    // means the bibEntry->resourceUri is not empty
+
+    // TODO this part is not good ...
+    if( !bibEntry->resourceUri.isEmpty() ) {
+        qDebug() << "attach new publication data to file" << bibEntry->resourceUri;
+
+        // ok this pipe request was called on a local file .. we need to check if the resource exist in the nepomuk storage
+        // so if it was indexed before
+        // often this might not be the case, as the fileanalyzer failed on my system to parse pdf files a lot
+        if( bibEntry->resourceUri.isLocalFile()) {
+            // this is not correct, but for the moment it works
+            // if now resoruce existed, due to a failing analyzer, we create one, otherwise we merge it with an existing one
+            Nepomuk::SimpleResourceGraph graph2;
+            Nepomuk::NFO::FileDataObject localFile;
+            localFile.setProperty( NIE::url(), bibEntry->resourceUri );
+
+            graph2 << localFile;
+
+            Nepomuk::StoreResourcesJob *srj = Nepomuk::storeResources(graph2,Nepomuk::IdentifyNew, Nepomuk::OverwriteProperties);
+            srj->exec();
+
+            bibEntry->resourceUri = srj->mappings().value( localFile.uri() );
+        }
+
+        // up to this point bibEntry->resourceUri is definitly a nepomuk:Resource we cann connect the crosslinks too
+
+        QList<QUrl> resUri; resUri << bibEntry->resourceUri.url();
+        QVariantList value; value << publicationResource.resourceUri();
+        Nepomuk::addProperty(resUri, NBIB::publishedAs(), value);
+
+        resUri.clear(); resUri << publicationResource.resourceUri();
+        value.clear(); value << bibEntry->resourceUri.url();
+        Nepomuk::addProperty(resUri, NBIB::isPublicationOf(), value);
+    }
+
 }
 
 void PubEntryToNepomukPipe::slotSaveToNepomukDone(KJob *job)

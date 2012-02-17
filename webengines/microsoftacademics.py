@@ -11,6 +11,7 @@ regexp = r'http://academic.research.microsoft\.com/Publication/'
 # currently only for the title, author freeform text search comes laters
 # we do not return more than 100 results
 def searchQuery(title, author=None, freetext=None):
+	title = title.replace(':','')
 	query = "http://academic.research.microsoft.com/Search?query=" + title + '&start=0&end=100'
 	return query
 

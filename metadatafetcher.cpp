@@ -35,6 +35,7 @@
 MetaDataFetcher::MetaDataFetcher(QObject *parent)
     : QObject(parent)
 {
+    m_metaDataParameters = 0;
     PythonQt::init( PythonQt::RedirectStdOut );
     mainContext = PythonQt::self()->getMainModule();
     PythonQt::self()->addObject(mainContext, "cppObj", this);
@@ -42,6 +43,8 @@ MetaDataFetcher::MetaDataFetcher(QObject *parent)
     QString pythonFile = KStandardDirs::locate("data", "metadataextractor/extractor.py");
     PythonQt::self()->addSysPath(pythonFile.section('/', 0, -2));
     mainContext.evalFile(pythonFile);
+
+    qDebug() << "main python file used ::" << pythonFile;
 
     connect(PythonQt::self(), SIGNAL(pythonStdOut(QString)), this, SLOT(pythonStdOut(QString)));
     connect(PythonQt::self(), SIGNAL(pythonStdErr(QString)), this, SLOT(pythonStdOut(QString)));
@@ -88,6 +91,8 @@ void MetaDataFetcher::lookupResource(const QList<Nepomuk::Resource> &resources)
 
 void MetaDataFetcher::retrieveMetaDataFromNextFile()
 {
+    qDebug() << "files to check" << m_filesToLookup.size();
+
     if(m_filesToLookup.isEmpty()) {
         emit fetchingDone();
         return;
@@ -97,6 +102,9 @@ void MetaDataFetcher::retrieveMetaDataFromNextFile()
 
     QFileInfo file(nextFile.toLocalFile());
     QString suffix = file.suffix();
+
+    delete m_metaDataParameters;
+    m_metaDataParameters = new MetaDataParameters;
 
     if(suffix == QLatin1String("pdf")) {
         PopplerExtractor pdfExtractor;
@@ -122,22 +130,31 @@ void MetaDataFetcher::retrieveMetaDataFromNextFile()
 
 void MetaDataFetcher::lookupMetaDataOnTheWeb()
 {
-    // retrieve list of available python plugins that support this resource type
+    QString title = m_metaDataParameters->metaData.value(QLatin1String("title")).toString();
 
-    //for all modules if module.resourceType == entryToQuery->resourceType
+    if(!title.isEmpty()) {
+        m_altSearchStarted = false;
+        // retrieve list of available python plugins that support this resource type
 
-    // now tell the user what choices he has, so he can select one engine
-    // debug, use always microsoft academics for now
-    QVariantList list;
-    list << "msa";//     moduleId
-    list << m_metaDataParameters.metaData.value(QLatin1String("title"));  // title
-    //list << entryToQuery->metaData.value(QLatin1String("author"));  // author
-    //list << entryToQuery->metaData.value(QLatin1String("freetext"));  // freetext
+        //for all modules if module.resourceType == entryToQuery->resourceType
 
-    qDebug() << "list" << list;
-    // start the search with the module specified with the moduleId
-    mainContext.call("search", list);
-    // wait till searchResults() slot is called
+        // now tell the user what choices he has, so he can select one engine
+        // debug, use always microsoft academics for now
+        QVariantList list;
+        list << "msa";//     moduleId
+        list << m_metaDataParameters->metaData.value(QLatin1String("title"));  // title
+        //list << entryToQuery->metaData.value(QLatin1String("author"));  // author
+        //list << entryToQuery->metaData.value(QLatin1String("freetext"));  // freetext
+
+        qDebug() << "star t python query with arguments" << list;
+        // start the search with the module specified with the moduleId
+        mainContext.call("search", list);
+        // wait till searchResults() slot is called
+    }
+    else {
+        qDebug() << "no title to search for available, check next file";
+        retrieveMetaDataFromNextFile();
+    }
 }
 
 void MetaDataFetcher::searchResults(const QVariantList &searchResults)
@@ -163,6 +180,31 @@ void MetaDataFetcher::searchResults(const QVariantList &searchResults)
     mainContext.call("extract", list);
 }
 
+void MetaDataFetcher::noSearchResultsFound()
+{
+    QString altTitle = m_metaDataParameters->metaData.value(QLatin1String("alttitle")).toString();
+
+    if(!m_altSearchStarted && !altTitle.isEmpty()) {
+        QVariantList list;
+        list << "msa";//     moduleId
+        list << altTitle;  // title
+        //list << entryToQuery->metaData.value(QLatin1String("author"));  // author
+        //list << entryToQuery->metaData.value(QLatin1String("freetext"));  // freetext
+
+        qDebug() << "list" << list;
+        // start the search with the module specified with the moduleId
+        mainContext.call("search", list);
+        // wait till searchResults() slot is called
+
+    }
+    else {
+        qDebug() << "no alt title availble check next file";
+        // wait a while and start next search
+        // we wait, so we don't hammer to much on the website api
+        QTimer::singleShot(6000, this, SLOT(retrieveMetaDataFromNextFile()));
+    }
+}
+
 void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
 {
     //qDebug() << "item result" << itemResults;
@@ -175,10 +217,10 @@ void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
     QMapIterator<QString, QVariant> i(itemResults);
     while (i.hasNext()) {
         i.next();
-        m_metaDataParameters.metaData.insert(i.key(), i.value());
+        m_metaDataParameters->metaData.insert(i.key(), i.value());
     }
 
-    m_nepomukPipe->pipeImport( &m_metaDataParameters );
+    m_nepomukPipe->pipeImport( m_metaDataParameters );
 
 
     // wait a while and start next search
