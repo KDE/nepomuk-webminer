@@ -10,7 +10,7 @@
 
 #include "dms-copy/simpleresource.h"
 
-#include "nco/role.h"
+#include "sro/nco/role.h"
 
 namespace Nepomuk {
 namespace NCO {

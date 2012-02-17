@@ -49,8 +49,8 @@ int main( int argc, char *argv[] )
     QObject::connect(&mdf, SIGNAL(fetchingDone()), &app, SLOT(quit()));
 
 
-    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/");
-    //    KUrl debug("/home/joerg/Dokumente/metdaData-test.odt");
+//    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/");
+    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/Mayo Zhang 3D face.pdf");
     mdf.lookupFiles( debug );
 
     QTimer::singleShot(0, &mdf, SLOT(run()));

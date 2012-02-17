@@ -23,11 +23,12 @@
 #include <QtXml/QDomDocument>
 #include <KDE/KUrl>
 
+#include "publicationentry.h"
+
 namespace Poppler {
     class Document;
 }
 
-class MetaDataParameters;
 /**
   * @brief Extractor for pdf documents via the poppler library
   *
@@ -49,7 +50,7 @@ public:
       * The caller gets the ownership of the returned object.
       * returns 0 if an error occured
       */
-    MetaDataParameters *parseUrl(const KUrl &fileUrl);
+    void parseUrl(MetaDataParameters &mdp, const KUrl &fileUrl);
 
 private:
     void tocCreation(const QDomDocument &toc, QDomNode &node);

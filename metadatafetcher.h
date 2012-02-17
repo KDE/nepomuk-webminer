@@ -25,7 +25,9 @@
 #include <QtCore/QList>
 #include <PythonQt/PythonQt.h>
 
-class MetaDataParameters;
+#include "publicationentry.h"
+
+class NepomukPipe;
 
 class MetaDataFetcher : public QObject
 {
@@ -46,7 +48,7 @@ public slots:
     void itemResult(const QVariantMap &itemResults);
 
 private slots:
-    void lookupMetaDataOnTheWeb(MetaDataParameters *entryToQuery);
+    void lookupMetaDataOnTheWeb();
     void retrieveMetaDataFromNextFile();
     void pythonStdOut(QString test);
 
@@ -54,6 +56,9 @@ private:
     QList<KUrl> m_filesToLookup;
     QList<Nepomuk::Resource> m_resourcesToLookup;
     PythonQtObjectPtr mainContext;
+
+    MetaDataParameters m_metaDataParameters;
+    NepomukPipe *m_nepomukPipe;
 };
 
 #endif // METADATAFETCHER_H

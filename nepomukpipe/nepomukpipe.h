@@ -15,24 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ODFEXTRACTOR_H
-#define ODFEXTRACTOR_H
+#ifndef NEPOMUKPIPE_H
+#define NEPOMUKPIPE_H
 
-#include <QtCore/QObject>
-#include <KDE/KUrl>
+#include <QObject>
 
-#include "publicationentry.h"
+//class MetaDataParameters;
+#include "../publicationentry.h"
 
-class OdfExtractor : public QObject
+class NepomukPipe : public QObject
 {
     Q_OBJECT
 public:
-    explicit OdfExtractor(QObject *parent = 0);
+    explicit NepomukPipe(QObject *parent = 0);
+    virtual ~NepomukPipe();
 
-    void parseUrl(MetaDataParameters &mdp, const KUrl &fileUrl);
+    /**
+      * Does the piping action
+      */
+    virtual void pipeImport(QList<MetaDataParameters*> & bibEntries) = 0;
+    virtual void pipeImport(MetaDataParameters* bibEntries) = 0;
 
-private:
-    MetaDataParameters  m_publicationEntry;
+signals:
+    void progress(int progress);
+    void finished();
+
 };
 
-#endif // ODFEXTRACTOR_H
+#endif // NEPOMUKPIPE_H

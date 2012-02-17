@@ -28,16 +28,16 @@ PopplerExtractor::PopplerExtractor(QObject *parent)
 {
 }
 
-MetaDataParameters *PopplerExtractor::parseUrl(const KUrl &fileUrl)
+void PopplerExtractor::parseUrl(MetaDataParameters &mdp, const KUrl &fileUrl)
 {
     m_pdfdoc = Poppler::Document::load( fileUrl.toLocalFile(), 0, 0 );
 
     if(!m_pdfdoc) {
         kWarning() << "could not load " << fileUrl;
-        return 0;
+        return;
     }
 
-    m_publicationEntry = new MetaDataParameters();
+    m_publicationEntry = &mdp;
     m_publicationEntry->resourceUri = fileUrl;
 
     QString numOfPages = QString("%1").arg(m_pdfdoc->numPages());
@@ -72,7 +72,7 @@ MetaDataParameters *PopplerExtractor::parseUrl(const KUrl &fileUrl)
             QString keywords = m_pdfdoc->info(key);
             keywords.replace(',', QLatin1String(";"));
 
-            QString currentKeywordList = m_publicationEntry->metaData.value(QLatin1String("keyword"), QString()).toString();
+            QString currentKeywordList = m_publicationEntry->metaData.value(QLatin1String("keywords"), QString()).toString();
             if(!currentKeywordList.isEmpty()) {
                 keywords.append(QLatin1String(";"));
             }
@@ -95,8 +95,6 @@ MetaDataParameters *PopplerExtractor::parseUrl(const KUrl &fileUrl)
     }
 
     parseFirstpage();
-
-    return m_publicationEntry;
 }
 
 void PopplerExtractor::tocCreation(const QDomDocument &toc, QDomNode &node)

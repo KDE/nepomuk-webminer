@@ -10,7 +10,7 @@
 
 #include "dms-copy/simpleresource.h"
 
-#include "nbib/documentpart.h"
+#include "sro/nbib/documentpart.h"
 
 namespace Nepomuk {
 namespace NBIB {

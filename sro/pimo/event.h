@@ -10,7 +10,7 @@
 
 #include "dms-copy/simpleresource.h"
 
-#include "pimo/processconcept.h"
+#include "sro/pimo/processconcept.h"
 
 namespace Nepomuk {
 namespace PIMO {

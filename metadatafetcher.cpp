@@ -18,9 +18,10 @@
 #include "metadatafetcher.h"
 
 #include "publicationentry.h"
+
 #include "fileextractor/popplerextractor.h"
 #include "fileextractor/odfextractor.h"
-#include "search/searchmicrosoftacademic.h"
+#include "nepomukpipe/pubentrytonepomukpipe.h"
 
 #include <PythonQt/PythonQt.h>
 
@@ -30,7 +31,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QTimer>
 
-
 MetaDataFetcher::MetaDataFetcher(QObject *parent)
     : QObject(parent)
 {
@@ -38,8 +38,8 @@ MetaDataFetcher::MetaDataFetcher(QObject *parent)
     mainContext = PythonQt::self()->getMainModule();
     PythonQt::self()->addObject(mainContext, "cppObj", this);
 
-    QString pythonFile = QString("/home/joerg/Development/Python/webextractor/extractor.py");
-    PythonQt::self()->addSysPath(QString("/home/joerg/Development/Python/webextractor"));//pythonFile.section('/', 0, -2));
+    QString pythonFile = QString("/home/joerg/Development/KDE/metadataextractor/extractor.py");
+    PythonQt::self()->addSysPath(pythonFile.section('/', 0, -2));
     mainContext.evalFile(pythonFile);
 
     connect(PythonQt::self(), SIGNAL(pythonStdOut(QString)), this, SLOT(pythonStdOut(QString)));
@@ -101,26 +101,26 @@ void MetaDataFetcher::retrieveMetaDataFromNextFile()
     if(suffix == QLatin1String("pdf")) {
         PopplerExtractor pdfExtractor;
 
-        MetaDataParameters *searchEntry = pdfExtractor.parseUrl( nextFile );
+        pdfExtractor.parseUrl( m_metaDataParameters, nextFile );
 //        searchEntry->resourceType = NBIB::Publication();
-
-        lookupMetaDataOnTheWeb( searchEntry );
+        m_nepomukPipe = new PubEntryToNepomukPipe;
     }
     else if(suffix == QLatin1String("odt")) {
         OdfExtractor odfExtractor;
 
-        MetaDataParameters *searchEntry = odfExtractor.parseUrl( nextFile );
+        odfExtractor.parseUrl( m_metaDataParameters, nextFile );
 //        searchEntry->resourceType = NBIB::Publication();
-
-        lookupMetaDataOnTheWeb( searchEntry );
+        m_nepomukPipe = new PubEntryToNepomukPipe;
     }
     else {
         // unknown file suffix
         retrieveMetaDataFromNextFile();
     }
+
+    lookupMetaDataOnTheWeb( );
 }
 
-void MetaDataFetcher::lookupMetaDataOnTheWeb(MetaDataParameters *entryToQuery)
+void MetaDataFetcher::lookupMetaDataOnTheWeb()
 {
     // retrieve list of available python plugins that support this resource type
 
@@ -130,10 +130,11 @@ void MetaDataFetcher::lookupMetaDataOnTheWeb(MetaDataParameters *entryToQuery)
     // debug, use always microsoft academics for now
     QVariantList list;
     list << "msa";//     moduleId
-    list << entryToQuery->metaData.value(QLatin1String("title"));  // title
+    list << m_metaDataParameters.metaData.value(QLatin1String("title"));  // title
     //list << entryToQuery->metaData.value(QLatin1String("author"));  // author
     //list << entryToQuery->metaData.value(QLatin1String("freetext"));  // freetext
 
+    qDebug() << "list" << list;
     // start the search with the module specified with the moduleId
     mainContext.call("search", list);
     // wait till searchResults() slot is called
@@ -164,11 +165,21 @@ void MetaDataFetcher::searchResults(const QVariantList &searchResults)
 
 void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
 {
-    qDebug() << "item result" << itemResults;
+    //qDebug() << "item result" << itemResults;
 
     // now we have the fetched meta data as nice QVariantmap call the pipeImporter
     // these knwo how the VariantMap should be handled and create the
     // right SimpleResource, SimpleResourceGraph information from it
+
+    //    m_metaDataParameters.metaData.unite(itemResults); // creates multimap .. not good
+    QMapIterator<QString, QVariant> i(itemResults);
+    while (i.hasNext()) {
+        i.next();
+        m_metaDataParameters.metaData.insert(i.key(), i.value());
+    }
+
+    m_nepomukPipe->pipeImport( &m_metaDataParameters );
+
 
     // wait a while and start next search
     // we wait, so we don#t hammer to much on the website api
@@ -177,5 +188,6 @@ void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
 
 void MetaDataFetcher::pythonStdOut(QString test)
 {
-    qDebug() << test;
+    if(!test.trimmed().isEmpty())
+        qDebug() << "python debug: " << test;
 }

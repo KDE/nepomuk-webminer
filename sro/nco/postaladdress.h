@@ -10,7 +10,7 @@
 
 #include "dms-copy/simpleresource.h"
 
-#include "nco/contactmedium.h"
+#include "sro/nco/contactmedium.h"
 
 namespace Nepomuk {
 namespace NCO {

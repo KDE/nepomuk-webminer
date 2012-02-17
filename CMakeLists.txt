@@ -41,17 +41,26 @@ set( metadataextractor_BIN_SRCS
 
   fileextractor/popplerextractor.cpp
   fileextractor/odfextractor.cpp
+
+  nepomukpipe/nepomukpipe.cpp
+  nepomukpipe/pubentrytonepomukpipe.cpp
+
+  sro/nbib.cpp
 )
 
 kde4_add_executable(metadataextractor ${metadataextractor_BIN_SRCS})
 
 target_link_libraries(metadataextractor
-  ${NEPOMUK_LIBRARIES}
-  ${QT_QTGUI_LIBRARY}
+
+  ${KDE4_KDECORE_LIBS}
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KIO_LIBS}
+
+# include nepomuk stuff
   ${SOPRANO_LIBRARIES}
+  ${NEPOMUK_LIBRARIES}
   ${NEPOMUK_QUERY_LIBRARIES}
+  nepomukdatamanagement-copy
 
   ${POPPLER_LIBRARY}
   PythonQt

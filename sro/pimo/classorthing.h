@@ -10,7 +10,7 @@
 
 #include "dms-copy/simpleresource.h"
 
-#include "pimo/classorthingorpropertyorassociation.h"
+#include "sro/pimo/classorthingorpropertyorassociation.h"
 
 namespace Nepomuk {
 namespace PIMO {
