@@ -1,0 +1,44 @@
+
+Metadata extractor
+
+Idea:
+* extarct metda data from files (existing nepomuk:resource)
+* take this info and search the inter for more details
+* python plugins (easy to write) handle teh actual search.
+* python plugins only create a simple dictionary (transformed into QVariantMap
+* the c++ part have neopomuk pip eclasses, tha ttransform such QVarianTMap data into DMS calls
+
++ not working yet, but planned
+* the list of available searchengines is pre-filterd by the supported types (based in the resource type)
+* the user can select between serveral matches (currenbtly always teh first is used)
+* nepomuk resource based fetching
+* handle other types than pdf/odt and nbib:Publication
+
+#################################################################
+# Dependencies:
+* Nepomuk
+** with nbib.ontology ~ see end of README
+
+* poppler (for pdf parsing)
+* PySide for the python parts
+
+#################################################################
+# install to the system
+
+mkdir build
+cd build
+cmake ../ -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=release
+make
+make install
+
+and start via metadatafetcher <url to file or folder>
+or via right click service menu in dolphin
+
+#################################################################
+# install necessary ontology
+copy
+nbib/nbib.trig
+nbib/nbib.ontology
+
+into
+/usr/share/ontology/nie

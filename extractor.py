@@ -5,22 +5,22 @@ from PySide.QtGui import *
 from PySide.QtWebKit import *
 
 import sys, re, traceback
-import pythonplugins
+import webengines
 import resultProcessing 
 
 from async import *
 
-# selects the right module in the pythonplugins folder by a short name
+# selects the right module in the webengines folder by a short name
 # usefull if the user wants to search with a specific engine
 def selectModuleByName(moduleid):
-	for module in pythonplugins.modules:
+	for module in webengines.modules:
 		if re.search(module.moduleid, moduleid): return module
 	return None
 
 # selects the right module by the full url
 # will be used by konquerer(or other browers) to find teh right plugin for a given url
 def selectModuleByUrl(url):
-	for module in pythonplugins.modules:
+	for module in webengines.modules:
 		if re.search(module.regexp, url): return module
 	return None
 

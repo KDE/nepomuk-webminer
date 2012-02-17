@@ -68,3 +68,9 @@ target_link_libraries(metadataextractor
 
 install(TARGETS metadataextractor ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS metadataextractor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+
+#install pyton stuff
+install(FILES async.py DESTINATION ${DATA_INSTALL_DIR}/metadataextractor)
+install(FILES extractor.py DESTINATION ${DATA_INSTALL_DIR}/metadataextractor)
+install(FILES resultProcessing.py DESTINATION ${DATA_INSTALL_DIR}/metadataextractor)
+install(DIRECTORY webengines DESTINATION ${DATA_INSTALL_DIR}/metadataextractor)

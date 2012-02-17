@@ -26,6 +26,7 @@
 #include <PythonQt/PythonQt.h>
 
 #include <KDE/KApplication>
+#include <KDE/KStandardDirs>
 #include <KDE/KDebug>
 
 #include <QtCore/QDir>
@@ -38,13 +39,12 @@ MetaDataFetcher::MetaDataFetcher(QObject *parent)
     mainContext = PythonQt::self()->getMainModule();
     PythonQt::self()->addObject(mainContext, "cppObj", this);
 
-    QString pythonFile = QString("/home/joerg/Development/KDE/metadataextractor/extractor.py");
+    QString pythonFile = KStandardDirs::locate("data", "metadataextractor/extractor.py");
     PythonQt::self()->addSysPath(pythonFile.section('/', 0, -2));
     mainContext.evalFile(pythonFile);
 
     connect(PythonQt::self(), SIGNAL(pythonStdOut(QString)), this, SLOT(pythonStdOut(QString)));
     connect(PythonQt::self(), SIGNAL(pythonStdErr(QString)), this, SLOT(pythonStdOut(QString)));
-
 }
 
 void MetaDataFetcher::run()
@@ -182,7 +182,7 @@ void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
 
 
     // wait a while and start next search
-    // we wait, so we don#t hammer to much on the website api
+    // we wait, so we don't hammer to much on the website api
     QTimer::singleShot(6000, this, SLOT(retrieveMetaDataFromNextFile()));
 }
 
