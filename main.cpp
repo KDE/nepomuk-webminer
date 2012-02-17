@@ -50,20 +50,20 @@ int main( int argc, char *argv[] )
 
 
 //    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/");
-    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/Mayo Zhang 3D face.pdf");
-    mdf.lookupFiles( debug );
+//    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/Mayo Zhang 3D face.pdf");
+//    mdf.lookupFiles( debug );
 
-    QTimer::singleShot(0, &mdf, SLOT(run()));
+//    QTimer::singleShot(0, &mdf, SLOT(run()));
 
-    return app.exec();
+//    return app.exec();
 
-//    if ( args->count() ) {
-//        mdf.lookupFiles( args->url( 0 ) );
-//        QTimer::singleShot(0, &mdf, SLOT(run()));
+    if ( args->count() ) {
+        mdf.lookupFiles( args->url( 0 ) );
+        QTimer::singleShot(0, &mdf, SLOT(run()));
 
-//        return app.exec();
-//    }
-//    else {
-//        return 1;
-//    }
+        return app.exec();
+    }
+    else {
+        return 1;
+    }
 }

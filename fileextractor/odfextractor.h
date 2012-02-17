@@ -29,10 +29,10 @@ class OdfExtractor : public QObject
 public:
     explicit OdfExtractor(QObject *parent = 0);
 
-    void parseUrl(MetaDataParameters &mdp, const KUrl &fileUrl);
+    void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
 
 private:
-    MetaDataParameters  m_publicationEntry;
+    MetaDataParameters *m_publicationEntry;
 };
 
 #endif // ODFEXTRACTOR_H

@@ -28,7 +28,7 @@ PopplerExtractor::PopplerExtractor(QObject *parent)
 {
 }
 
-void PopplerExtractor::parseUrl(MetaDataParameters &mdp, const KUrl &fileUrl)
+void PopplerExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
 {
     m_pdfdoc = Poppler::Document::load( fileUrl.toLocalFile(), 0, 0 );
 
@@ -37,7 +37,7 @@ void PopplerExtractor::parseUrl(MetaDataParameters &mdp, const KUrl &fileUrl)
         return;
     }
 
-    m_publicationEntry = &mdp;
+    m_publicationEntry = mdp;
     m_publicationEntry->resourceUri = fileUrl;
 
     QString numOfPages = QString("%1").arg(m_pdfdoc->numPages());

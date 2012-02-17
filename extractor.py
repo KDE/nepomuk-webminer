@@ -30,6 +30,7 @@ def selectModuleByUrl(url):
 @async
 def asyncSearch(moduleId, title, author=None, freetext=None):
 
+	print 'started python part for the searching'
 	# 1. get the right module for the name we specified
 	module = selectModuleByName(moduleId)
 
@@ -55,12 +56,16 @@ def asyncSearch(moduleId, title, author=None, freetext=None):
 
 	try:
 		result = module.extractSearchResults(frame.documentElement(), frame.metaData())
+		if not result:
+			cppObj.noSearchResultsFound()
+		else:
+			# 4. send the variantmap back to c++
+			cppObj.searchResults(result)
+			
 	except Exception:
 		print 'Error with parsing HTML.'
 		traceback.print_exc()
-
-	# 4. send the variantmap back to c++
-	cppObj.searchResults(result)
+		cppObj.noSearchResultsFound()
 
 	# PyQt doesn't handle deletion of Qt objects properly
 	# Removing these lines leads to segfaults later

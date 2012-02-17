@@ -50,7 +50,7 @@ public:
       * The caller gets the ownership of the returned object.
       * returns 0 if an error occured
       */
-    void parseUrl(MetaDataParameters &mdp, const KUrl &fileUrl);
+    void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
 
 private:
     void tocCreation(const QDomDocument &toc, QDomNode &node);
