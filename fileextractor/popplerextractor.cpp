@@ -191,6 +191,7 @@ void PopplerExtractor::parseFirstpage()
         }
     }
 
+    newPossibleTitle = newPossibleTitle.toAscii();
     QString currentTitle = m_publicationEntry->metaData.value( QLatin1String("title"), QString() ).toString();
 
     // if no title from metadata was fetched, the possible Title is the title we want
