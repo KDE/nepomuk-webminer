@@ -18,13 +18,14 @@
 #ifndef METADATAFETCHER_H
 #define METADATAFETCHER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QList>
-
 #include <KDE/KUrl>
 #include <Nepomuk/Resource>
 
-class PublicationEntry;
+#include <QtCore/QObject>
+#include <QtCore/QList>
+#include <PythonQt/PythonQt.h>
+
+class MetaDataParameters;
 
 class MetaDataFetcher : public QObject
 {
@@ -41,14 +42,18 @@ public slots:
     void lookupResource(const Nepomuk::Resource &resource);
     void lookupResource(const QList<Nepomuk::Resource> &resources);
 
+    void searchResults(const QVariantList &searchResults);
+    void itemResult(const QVariantMap &itemResults);
+
 private slots:
-    void lookupMetaDataOnTheWeb(PublicationEntry *entryToQuery);
-    void searchfinished();
+    void lookupMetaDataOnTheWeb(MetaDataParameters *entryToQuery);
     void retrieveMetaDataFromNextFile();
+    void pythonStdOut(QString test);
 
 private:
     QList<KUrl> m_filesToLookup;
     QList<Nepomuk::Resource> m_resourcesToLookup;
+    PythonQtObjectPtr mainContext;
 };
 
 #endif // METADATAFETCHER_H

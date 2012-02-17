@@ -1,6 +1,6 @@
 project(metadataextractor)
 
-##################  Nepomuktvnamer version  ################################
+##################  metadataextractor version  ################################
 set(CMAKE_METDADATAEXTRACTOR_VERSION_MAJOR 0)
 set(CMAKE_METDADATAEXTRACTOR_VERSION_MINOR 1)
 set(CMAKE_METDADATAEXTRACTOR_VERSION_RELEASE 0)
@@ -24,16 +24,23 @@ include_directories(
   ${KDE4_INCLUDES}
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_INCLUDE_DIR}
+
+  "/usr/include/python2.6"
+  "/usr/include/python2.7"
+
   ${metadataextractor_BINARY_DIR}
 )
+
+
+add_subdirectory( dms-copy )
 
 set( metadataextractor_BIN_SRCS
   main.cpp
   metadatafetcher.cpp
 
+
   fileextractor/popplerextractor.cpp
   fileextractor/odfextractor.cpp
-  search/searchmicrosoftacademic.cpp
 )
 
 kde4_add_executable(metadataextractor ${metadataextractor_BIN_SRCS})
@@ -46,8 +53,8 @@ target_link_libraries(metadataextractor
   ${SOPRANO_LIBRARIES}
   ${NEPOMUK_QUERY_LIBRARIES}
 
-
   ${POPPLER_LIBRARY}
+  PythonQt
 )
 
 install(TARGETS metadataextractor ${INSTALL_TARGETS_DEFAULT_ARGS})

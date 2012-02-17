@@ -27,8 +27,7 @@ namespace Poppler {
     class Document;
 }
 
-class PublicationEntry;
-
+class MetaDataParameters;
 /**
   * @brief Extractor for pdf documents via the poppler library
   *
@@ -50,14 +49,14 @@ public:
       * The caller gets the ownership of the returned object.
       * returns 0 if an error occured
       */
-    PublicationEntry * parseUrl(const KUrl &fileUrl);
+    MetaDataParameters *parseUrl(const KUrl &fileUrl);
 
 private:
     void tocCreation(const QDomDocument &toc, QDomNode &node);
     void parseFirstpage();
 
     Poppler::Document *m_pdfdoc;
-    PublicationEntry  *m_publicationEntry;
+    MetaDataParameters  *m_publicationEntry;
 };
 
 #endif // POPPLEREXTRACTOR_H

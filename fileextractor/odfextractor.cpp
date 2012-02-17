@@ -27,7 +27,7 @@ OdfExtractor::OdfExtractor(QObject *parent)
 {
 }
 
-PublicationEntry * OdfExtractor::parseUrl(const KUrl &fileUrl)
+MetaDataParameters * OdfExtractor::parseUrl(const KUrl &fileUrl)
 {
     KZip zip( fileUrl.toLocalFile() );
     if ( !zip.open( QIODevice::ReadOnly ) ) {
@@ -47,8 +47,8 @@ PublicationEntry * OdfExtractor::parseUrl(const KUrl &fileUrl)
         return 0;
     }
 
-    m_publicationEntry = new PublicationEntry();
-    m_publicationEntry->fileUrl = fileUrl;
+    m_publicationEntry = new MetaDataParameters();
+    m_publicationEntry->resourceUri = fileUrl;
 
     QDomDocument metaData("metaData");
     const KArchiveFile *file = static_cast<const KArchiveFile*>( directory->entry( "meta.xml" ) );
@@ -65,35 +65,38 @@ PublicationEntry * OdfExtractor::parseUrl(const KUrl &fileUrl)
          if(!e.isNull()) {
 
              if( e.tagName() == QLatin1String("dc:description")) {
-                 m_publicationEntry->dataMap.insert(QLatin1String("note"), e.text() );
+                 m_publicationEntry->metaData.insert(QLatin1String("note"), e.text() );
              }
              else if( e.tagName() == QLatin1String("meta:keyword")) {
-                 QString keywords = m_publicationEntry->dataMap.value( QLatin1String("keywords"), QString() );
+                 QString keywords = m_publicationEntry->metaData.value( QLatin1String("keywords"), QString() ).toString();
                  if(!keywords.isEmpty()) {
                      keywords.append( QLatin1String("; ") );
                  }
                  keywords.append( e.text() );
              }
              else if( e.tagName() == QLatin1String("dc:subject")) {
-                 QString keywords = m_publicationEntry->dataMap.value( QLatin1String("keywords"), QString() );
+                 QString keywords = m_publicationEntry->metaData.value( QLatin1String("keywords"), QString() ).toString();
                  if(!keywords.isEmpty()) {
                      keywords.append( QLatin1String("; ") );
                  }
                  keywords.append( e.text() );
              }
              else if( e.tagName() == QLatin1String("dc:title")) {
-                 m_publicationEntry->dataMap.insert(QLatin1String("title"), e.text() );
+                 m_publicationEntry->metaData.insert(QLatin1String("title"), e.text() );
              }
              else if( e.tagName() == QLatin1String("meta:document-statistic")) {
-                 m_publicationEntry->dataMap.insert(QLatin1String("numofpages"), e.attribute("meta:page-count") );
+                 m_publicationEntry->metaData.insert(QLatin1String("numofpages"), e.attribute("meta:page-count") );
 
              }
              else if( e.tagName() == QLatin1String("meta:user-defined")) {
-                 m_publicationEntry->dataMap.insert(e.attribute("meta:name"), e.text() );
+                 m_publicationEntry->metaData.insert(e.attribute("meta:name"), e.text() );
              }
          }
          n = n.nextSibling();
      }
+
+     m_publicationEntry->searchTitle    = m_publicationEntry->metaData.value(QLatin1String("title")).toString();
+     m_publicationEntry->searchAltTitle = m_publicationEntry->metaData.value(QLatin1String("altTitle")).toString();
 
     return m_publicationEntry;
 }

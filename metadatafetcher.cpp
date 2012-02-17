@@ -22,6 +22,8 @@
 #include "fileextractor/odfextractor.h"
 #include "search/searchmicrosoftacademic.h"
 
+#include <PythonQt/PythonQt.h>
+
 #include <KDE/KApplication>
 #include <KDE/KDebug>
 
@@ -32,6 +34,17 @@
 MetaDataFetcher::MetaDataFetcher(QObject *parent)
     : QObject(parent)
 {
+    PythonQt::init( PythonQt::RedirectStdOut );
+    mainContext = PythonQt::self()->getMainModule();
+    PythonQt::self()->addObject(mainContext, "cppObj", this);
+
+    QString pythonFile = QString("/home/joerg/Development/Python/webextractor/extractor.py");
+    PythonQt::self()->addSysPath(QString("/home/joerg/Development/Python/webextractor"));//pythonFile.section('/', 0, -2));
+    mainContext.evalFile(pythonFile);
+
+    connect(PythonQt::self(), SIGNAL(pythonStdOut(QString)), this, SLOT(pythonStdOut(QString)));
+    connect(PythonQt::self(), SIGNAL(pythonStdErr(QString)), this, SLOT(pythonStdOut(QString)));
+
 }
 
 void MetaDataFetcher::run()
@@ -87,13 +100,19 @@ void MetaDataFetcher::retrieveMetaDataFromNextFile()
 
     if(suffix == QLatin1String("pdf")) {
         PopplerExtractor pdfExtractor;
-        PublicationEntry *pubEntry = pdfExtractor.parseUrl( nextFile );
-        lookupMetaDataOnTheWeb( pubEntry );
+
+        MetaDataParameters *searchEntry = pdfExtractor.parseUrl( nextFile );
+//        searchEntry->resourceType = NBIB::Publication();
+
+        lookupMetaDataOnTheWeb( searchEntry );
     }
     else if(suffix == QLatin1String("odt")) {
         OdfExtractor odfExtractor;
-        PublicationEntry *pubEntry = odfExtractor.parseUrl( nextFile );
-        lookupMetaDataOnTheWeb( pubEntry );
+
+        MetaDataParameters *searchEntry = odfExtractor.parseUrl( nextFile );
+//        searchEntry->resourceType = NBIB::Publication();
+
+        lookupMetaDataOnTheWeb( searchEntry );
     }
     else {
         // unknown file suffix
@@ -101,53 +120,62 @@ void MetaDataFetcher::retrieveMetaDataFromNextFile()
     }
 }
 
-void MetaDataFetcher::lookupMetaDataOnTheWeb(PublicationEntry *entryToQuery)
+void MetaDataFetcher::lookupMetaDataOnTheWeb(MetaDataParameters *entryToQuery)
 {
-    SearchMicrosoftAcademic *sma = new SearchMicrosoftAcademic;
-    connect(sma, SIGNAL(searchFinished()), this, SLOT(searchfinished()));
+    // retrieve list of available python plugins that support this resource type
 
-    sma->setPublicationEntry( entryToQuery );
-    sma->startSearch();
+    //for all modules if module.resourceType == entryToQuery->resourceType
+
+    // now tell the user what choices he has, so he can select one engine
+    // debug, use always microsoft academics for now
+    QVariantList list;
+    list << "msa";//     moduleId
+    list << entryToQuery->metaData.value(QLatin1String("title"));  // title
+    //list << entryToQuery->metaData.value(QLatin1String("author"));  // author
+    //list << entryToQuery->metaData.value(QLatin1String("freetext"));  // freetext
+
+    // start the search with the module specified with the moduleId
+    mainContext.call("search", list);
+    // wait till searchResults() slot is called
 }
-void MetaDataFetcher::searchfinished()
+
+void MetaDataFetcher::searchResults(const QVariantList &searchResults)
 {
-    SearchMicrosoftAcademic *sma = qobject_cast<SearchMicrosoftAcademic*>(sender());
+    qDebug() << "found search " << searchResults.size() << "results";
 
-    if(!sma) {
-        kWarning() << "could not cast search class from sender";
-        return;
+    foreach(const QVariant &entry, searchResults) {
+        QVariantMap map = entry.toMap();
+
+        qDebug() << "Title: " << map.value("title").toString();
+        qDebug() << "Url: " << map.value("url").toString();
     }
 
-    PublicationEntry *pe = sma->publicationEntry();
+    // let the user decide which entry he might want to use (default to first one for now)
 
-    kDebug() << "###########################################################";
-    kDebug() << "# Metadata for file : " << pe->fileUrl;
-    kDebug() << "title    :\t" << pe->dataMap.value(QLatin1String("title"));
-    kDebug() << "alt-title:\t" << pe->dataMap.value(QLatin1String("altTitle"));;
-    kDebug() << "type: \t@" << pe->type;
-    kDebug() << "data:";
+    QVariantMap map = searchResults.first().toMap();
 
-    QMapIterator<QString, QString> i(pe->dataMap);
-    while (i.hasNext()) {
-        i.next();
-        qDebug() << "\t" << i.key() << ": " << i.value();
-    }
+    // extract item info, module is selected based on url regexp
+    // this is because brower plugins reuse this part and figure the module out anyway
+    // also we could fetch item urls tha tlead to a different side, than the
+    // page we used to search for these entries
+    QVariantList list; list << map.value("url");
+    mainContext.call("extract", list);
+}
 
-    qDebug() << "citations:" << pe->citations.size();
+void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
+{
+    qDebug() << "item result" << itemResults;
 
-    foreach(PublicationEntry *citation, pe->citations) {
-        qDebug() << "\t @" << citation->type;
-        QMapIterator<QString, QString> i2(citation->dataMap);
-        while (i2.hasNext()) {
-            i2.next();
-            qDebug() << "\t\t" << i2.key() << ": " << i2.value();
-        }
-    }
+    // now we have the fetched meta data as nice QVariantmap call the pipeImporter
+    // these knwo how the VariantMap should be handled and create the
+    // right SimpleResource, SimpleResourceGraph information from it
 
-    qDebug() << "###########################################################";
-
-
-    // some timeout before we start the next search query..
+    // wait a while and start next search
+    // we wait, so we don#t hammer to much on the website api
     QTimer::singleShot(6000, this, SLOT(retrieveMetaDataFromNextFile()));
-//    retrieveMetaDataFromNextFile();
+}
+
+void MetaDataFetcher::pythonStdOut(QString test)
+{
+    qDebug() << test;
 }

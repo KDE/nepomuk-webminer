@@ -21,7 +21,7 @@
 #include <QtCore/QObject>
 #include <KDE/KUrl>
 
-class PublicationEntry;
+class MetaDataParameters;
 
 class OdfExtractor : public QObject
 {
@@ -29,10 +29,10 @@ class OdfExtractor : public QObject
 public:
     explicit OdfExtractor(QObject *parent = 0);
 
-    PublicationEntry * parseUrl(const KUrl &fileUrl);
+    MetaDataParameters * parseUrl(const KUrl &fileUrl);
 
 private:
-    PublicationEntry  *m_publicationEntry;
+    MetaDataParameters  *m_publicationEntry;
 };
 
 #endif // ODFEXTRACTOR_H
