@@ -331,28 +331,30 @@ void MetaDataFetcher::noSearchResultsFound()
 
 void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
 {
+    QList<MetaDataParameters> mdpList = m_filesToLookup.value(m_currentType);
+    MetaDataParameters currentMDP = mdpList.takeFirst();
+    m_filesToLookup.insert(m_currentType, mdpList);
+
     qDebug() << "item result ...";
     emit progressStatus( i18n("Insert found data into nepomuk") );
 
     // now we have the fetched meta data as nice QVariantmap call the pipeImporter
-    // these knwo how the VariantMap should be handled and create the
+    // these know how the VariantMap should be handled and create the
     // right SimpleResource, SimpleResourceGraph information from it
 
+    // combine the downloaded meta data with the one extracted from the file
     //    m_metaDataParameters.metaData.unite(itemResults); // creates multimap .. not good
-//    QMapIterator<QString, QVariant> i(itemResults);
-//    while (i.hasNext()) {
-//        i.next();
-//        m_metaDataParameters->metaData.insert(i.key(), i.value());
-//    }
+    QMapIterator<QString, QVariant> i(itemResults);
+    while (i.hasNext()) {
+        i.next();
+        currentMDP->metaData.insert(i.key(), i.value());
+    }
 
-//    m_nepomukPipe->pipeImport( m_metaDataParameters );
+    m_nepomukPipe->pipeImport( currentMDP );
 
 
     // wait a while and start next search
     // we wait, so we don't hammer to much on the website api
-    QList<MetaDataParameters> mdpList = m_filesToLookup.value(m_currentType);
-    mdpList.takeFirst();
-    m_filesToLookup.insert(m_currentType, mdpList);
     lookupNextMetaDataOnTheWeb();
     //QTimer::singleShot(6000, this, SLOT(retrieveMetaDataFromNextFile()));
 }
