@@ -35,11 +35,18 @@ class MetaDataFetcher : public QObject
 public:
     explicit MetaDataFetcher(QObject *parent = 0);
 
+    QStringList availableFileTypes();
+    QVariantList availableSearchEngines( const QString &resourceType);
+
+    void setUsedEngine(const QString &type, const QString &engine);
+    void startFetching(const QString &type);
+
 signals:
+    void progressStatus(const QString &status);
+    void fileFetchingDone();
     void fetchingDone();
 
 public slots:
-    void run();
     void lookupFiles(const KUrl &fileOrFolder);
     void lookupResource(const Nepomuk::Resource &resource);
     void lookupResource(const QList<Nepomuk::Resource> &resources);
@@ -51,16 +58,17 @@ public slots:
     void itemResult(const QVariantMap &itemResults);
 
 private slots:
-    void lookupMetaDataOnTheWeb();
-    void retrieveMetaDataFromNextFile();
+    void addFilesToList(const KUrl &fileUrl);
+    void lookupNextMetaDataOnTheWeb();
     void pythonStdOut(QString test);
 
 private:
-    QList<KUrl> m_filesToLookup;
-    QList<Nepomuk::Resource> m_resourcesToLookup;
     PythonQtObjectPtr mainContext;
+    QMap<QString, QList<MetaDataParameters> > m_filesToLookup;
+    QMap<QString,QString> m_selectedSearchEngine;
 
-    MetaDataParameters *m_metaDataParameters;
+    QString m_currentType;
+
     bool m_altSearchStarted;
     NepomukPipe *m_nepomukPipe;
 };

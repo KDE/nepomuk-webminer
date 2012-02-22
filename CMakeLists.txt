@@ -36,16 +36,30 @@ add_subdirectory( dms-copy )
 
 set( metadataextractor_BIN_SRCS
   main.cpp
+  fetcherdialog.cpp
   metadatafetcher.cpp
-
+  selectenginedialog.cpp
+  selectsearchresultdialog.cpp
+  searchresultsmodel.cpp
+  searchresultdelegate.cpp
+  searchresultitem.cpp
 
   fileextractor/popplerextractor.cpp
   fileextractor/odfextractor.cpp
+  fileextractor/videoextractor.cpp
 
   nepomukpipe/nepomukpipe.cpp
   nepomukpipe/pubentrytonepomukpipe.cpp
 
   sro/nbib.cpp
+)
+
+kde4_add_ui_files( metadataextractor_BIN_SRCS
+
+                   fetcherdialog.ui
+                   selectenginedialog.ui
+                   selectsearchresultdialog.ui
+                   searchresultitem.ui
 )
 
 kde4_add_executable(metadataextractor ${metadataextractor_BIN_SRCS})

@@ -348,7 +348,6 @@ void PubEntryToNepomukPipe::addPublicationSubTypes(Nepomuk::NBIB::Publication &p
 
 void PubEntryToNepomukPipe::handleSpecialCases(QVariantMap &metaData, Nepomuk::SimpleResourceGraph &graph, Nepomuk::NBIB::Publication &publication, Nepomuk::NBIB::Reference &reference)
 {
-
     // I. publisher/school/institution + address
     //    means address belongs to publisher
     if(metaData.contains(QLatin1String("address"))) {

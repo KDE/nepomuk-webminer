@@ -22,6 +22,8 @@
 #include <KDE/KZip>
 #include <KDE/KDebug>
 
+#include <QtXml/QDomDocument>
+
 OdfExtractor::OdfExtractor(QObject *parent)
     : QObject(parent)
 {
@@ -49,6 +51,7 @@ void OdfExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
 
     m_publicationEntry = mdp;
     m_publicationEntry->resourceUri = fileUrl;
+    m_publicationEntry->resourceType = QLatin1String("publication");
 
     QDomDocument metaData("metaData");
     const KArchiveFile *file = static_cast<const KArchiveFile*>( directory->entry( "meta.xml" ) );

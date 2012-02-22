@@ -20,9 +20,7 @@
 #include <KAboutData>
 #include <KUrl>
 
-#include <QTimer>
-
-#include "metadatafetcher.h"
+#include "fetcherdialog.h"
 
 int main( int argc, char *argv[] )
 {
@@ -44,26 +42,29 @@ int main( int argc, char *argv[] )
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
 
     KApplication app;
+    FetcherDialog fd;
 
-    MetaDataFetcher mdf;
-    QObject::connect(&mdf, SIGNAL(fetchingDone()), &app, SLOT(quit()));
-
-
-//    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/");
 //    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/Mayo Zhang 3D face.pdf");
-//    mdf.lookupFiles( debug );
+    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/");
+    fd.setInitialPathOrFile( debug );
+//    fd.setInitialPathOrFile( args->url( 0 ) );
 
-//    QTimer::singleShot(0, &mdf, SLOT(run()));
+    fd.show();
+    return app.exec();
 
-//    return app.exec();
 
-    if ( args->count() ) {
-        mdf.lookupFiles( args->url( 0 ) );
-        QTimer::singleShot(0, &mdf, SLOT(run()));
+//    if ( args->count() ) {
+//        mdf.lookupFiles( args->url( 0 ) );
+//        QTimer::singleShot(0, &mdf, SLOT(run()));
 
-        return app.exec();
-    }
-    else {
-        return 1;
-    }
+//        return app.exec();
+//    }
+//    else {
+//        KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/");
+//        mdf.lookupFiles( debug );
+//        QTimer::singleShot(1000, &mdf, SLOT(run()));
+
+//        return app.exec();
+        //return 1;
+//    }
 }

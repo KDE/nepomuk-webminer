@@ -39,6 +39,7 @@ void PopplerExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
 
     m_publicationEntry = mdp;
     m_publicationEntry->resourceUri = fileUrl;
+    m_publicationEntry->resourceType = QLatin1String("publication");
 
     QString numOfPages = QString("%1").arg(m_pdfdoc->numPages());
     m_publicationEntry->metaData.insert(QLatin1String("numpages"), numOfPages);
@@ -128,6 +129,7 @@ void PopplerExtractor::tocCreation(const QDomDocument &toc, QDomNode &node)
 
 void PopplerExtractor::parseFirstpage()
 {
+    qDebug() << "parseFirstpage";
     Poppler::Page *p = m_pdfdoc->page(0);
 
     QList<Poppler::TextBox*> tbList = p->textList();
@@ -196,25 +198,24 @@ void PopplerExtractor::parseFirstpage()
 
     // if no title from metadata was fetched, the possible Title is the title we want
     if( currentTitle.trimmed().isEmpty()) {
-        m_publicationEntry->metaData.insert(QLatin1String("title"), newPossibleTitle);
+        m_publicationEntry->searchTitle = newPossibleTitle;
         return;
     }
     // otherwise check if the actual metadata title is part of the title we found by fetching
     // if so, we can stop, we didn't get a better result, possible just some wrong words at the  end attached
     else if(newPossibleTitle.contains(currentTitle, Qt::CaseInsensitive)) {
+        m_publicationEntry->searchTitle = currentTitle;
         return;
     }
 
     //if the metadata title has no white space, we assume it was just junk and we take the possible title as real title
     if( !currentTitle.contains(' ') || currentTitle.contains(QLatin1String("Microsoft"))) {
-        m_publicationEntry->metaData.insert(QLatin1String("title"), newPossibleTitle);
-        m_publicationEntry->metaData.insert(QLatin1String("altTitle"), currentTitle);
+        m_publicationEntry->searchTitle = newPossibleTitle;
+        m_publicationEntry->searchAltTitle = currentTitle;
         return;
     }
 
     // in all other cases the possible title is just and alternative title
-    m_publicationEntry->metaData.insert(QLatin1String("altTitle"), newPossibleTitle);
-
-    m_publicationEntry->searchTitle    = m_publicationEntry->metaData.value(QLatin1String("title")).toString();
-    m_publicationEntry->searchAltTitle = m_publicationEntry->metaData.value(QLatin1String("altTitle")).toString();
+    m_publicationEntry->searchTitle = currentTitle;
+    m_publicationEntry->searchAltTitle = newPossibleTitle;
 }

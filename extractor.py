@@ -1,20 +1,16 @@
 
-
-from PySide.QtCore import *
-from PySide.QtGui import *
-from PySide.QtWebKit import *
+from PySide.QtCore import QObject
+from BeautifulSoup import BeautifulSoup
 
 import sys, re, traceback
 import webengines
-import resultProcessing 
-
 from async import *
 
 # selects the right module in the webengines folder by a short name
 # usefull if the user wants to search with a specific engine
 def selectModuleByName(moduleid):
 	for module in webengines.modules:
-		if re.search(module.moduleid, moduleid): return module
+		if re.search(module.identification, moduleid): return module
 	return None
 
 # selects the right module by the full url
@@ -24,13 +20,44 @@ def selectModuleByUrl(url):
 		if re.search(module.regexp, url): return module
 	return None
 
+def availableSearchEngines(resourceType):
+	
+	engineList = {}
+	for module in webengines.modules:
+		if re.search(module.resourceType, resourceType):
+			engineList.update(dict(
+						identification = module.identification,
+						name = module.name,
+						icon = module.icon,
+						regexp = module.regexp,
+						resourceType = module.resourceType
+						))
 
+	return engineList
+
+def getMetaData(doc):
+	metaData = dict()
+	for field in doc('meta'):
+		metaData.setdefault(field.get('name'), []).append(field.get('content'))
+	return metaData
+
+@async
+def loadUrl(url):
+	from PySide.QtNetwork import QNetworkAccessManager, QNetworkRequest
+	nm = QNetworkAccessManager()
+	reply = nm.get(QNetworkRequest(QUrl(url)))
+	yield reply.finished
+	result = reply.readAll()
+	nm.deleteLater()
+	asyncReturn(result)
+	
 # handles a  the call to get the search result via the right module and calls
 # a c++ slot at the end to return the values
 @async
-def asyncSearch(moduleId, title, author=None, freetext=None):
+def asyncSearch(moduleId, title, author=None, freetext=None, year=None):
 
 	print 'started python part for the searching'
+
 	# 1. get the right module for the name we specified
 	module = selectModuleByName(moduleId)
 
@@ -38,44 +65,34 @@ def asyncSearch(moduleId, title, author=None, freetext=None):
 		print 'No module named', moduleId
 		asyncReturn()
 	else:
-		print 'Start search via:', module.moduleName
+		print 'Start search via:', module.name
 
 	# 2. get the search query url from the module
-	urlQuery = module.searchQuery(title, author, freetext)
-	
-	print 'Used search query', urlQuery
+	urlQuery = module.searchQuery(title, author, freetext, year)
   
 	# 3. fetch the html page
-	page = QWebPage()
-	frame = page.mainFrame()
-	page.settings().setAttribute(QWebSettings.AutoLoadImages, False)
-	frame.load(QUrl(urlQuery))
-
-	yield page.loadFinished
-	print 'Page loaded:'
-
+	loadJob = loadUrl(urlQuery)
+	html = yield loadJob.finished
+	html = str(html)
+	
+	doc = BeautifulSoup(html)
+	
 	try:
-		result = module.extractSearchResults(frame.documentElement(), frame.metaData())
-		if not result:
-			cppObj.noSearchResultsFound()
-		else:
-			# 4. send the variantmap back to c++
-			cppObj.searchResults(result)
-			
+		result = module.extractSearchResults(doc, getMetaData(doc))
 	except Exception:
 		print 'Error with parsing HTML.'
 		traceback.print_exc()
+		
+	if not result:
+		print 'noSearchResultsFound'
 		cppObj.noSearchResultsFound()
+	else:
+		print 'searchResults found'
+		# 4. send the variantmap back to c++
+		cppObj.searchResults(result)
 
-	# PyQt doesn't handle deletion of Qt objects properly
-	# Removing these lines leads to segfaults later
-	page.deleteLater()
-
-	
-# start the search from c++ part
-def search(moduleId, title, author=None, freetext=None):
-	asyncSearch(moduleId, title, author, freetext)
-
+def search(url, html=None):
+	asyncSearch(url, html)
 
 @async
 def asyncExtract(url, html=None):
@@ -85,25 +102,21 @@ def asyncExtract(url, html=None):
 
 	if not module:
 		print 'No module for url', url
-		asyncReturn()
+		asyncReturn2()
 	else:
-		print 'Start extraction via:', module.moduleName
+		print 'Start extraction via:', module.name
 
 	# 3. fetch the html page
-	page = QWebPage()
-	frame = page.mainFrame()
-
-	if not html:
-		page.settings().setAttribute(QWebSettings.AutoLoadImages, False)
-		frame.load(QUrl(url))
-	else:
-		frame.setHtml(html)
-
-	yield page.loadFinished
-	print 'Page loaded:' + url
+	# 3. fetch the html page
+	loadJob = loadUrl(url)
+	html = yield loadJob.finished
+	html = str(html)
+	
+	doc = BeautifulSoup(html)
 
 	try:
-		result = module.extractItemData(frame.documentElement(), frame.metaData())
+		result = module.extractItemData(doc, getMetaData(doc))
+		print 'after result()'
 	except Exception:
 		print 'Error with parsing HTML.'
 		traceback.print_exc()
@@ -111,12 +124,6 @@ def asyncExtract(url, html=None):
 	# 4. send the variantmap back to c++
 	cppObj.itemResult(result)
 
-	# PyQt doesn't handle deletion of Qt objects properly
-	# Removing these lines leads to segfaults later
-	page.deleteLater()
 
-# extract item results for 1 item from the given url
-# html might be prefetched by a browser, otherwise we fetch it again
 def extract(url, html=None):
 	asyncExtract(url, html)
-

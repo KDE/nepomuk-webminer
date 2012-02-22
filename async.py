@@ -10,8 +10,8 @@ class AsyncJob(QObject):
 	#finished = pyqtSignal(tuple)
 	finished = Signal(tuple)
 	
-	def isFinished(self): return self.returnValue != None
-	def returnValue(): return self.returnValue
+	def isFinished(self): return self.done
+	def returnValues(): return self.returnValues
 	
 	# The rest is for internal use only...
 	
@@ -19,7 +19,8 @@ class AsyncJob(QObject):
 	
 	def __init__(self, generator):
 		QObject.__init__(self)
-		self.returnValue = None
+		self.returnValues = None
+		self.done = False
 		self.generator = generator
 		QTimer.singleShot(0, self.run)
 		self.instances.add(self) # Avoid garbage collection
@@ -31,7 +32,8 @@ class AsyncJob(QObject):
 	def slot(self, *args):
 		try:
 			# Execute the next code segment
-			sig = self.generator.send(args)
+			
+			sig = self.generator.send(self.unwrapSingletons(args))
 			if not sig: return # Keep on listening to the same signal
 			self.signal.disconnect(self.slot)
 			self.signal = sig
@@ -40,17 +42,24 @@ class AsyncJob(QObject):
 		except StopIteration as i:
 			# Function finished
 			self.finish(*i.args)
+			return
 			
 		except Exception as e:
 			traceback.print_exc()
 			self.finish(e)
 			
-	def finish(self, *returnValue):
-		self.returnValue = returnValue
-		self.signal.disconnect(self.slot)
-		self.finished.emit(self.returnValue)
+	def finish(self, *values):
+		self.returnValues = values
+		self.done = True
+		#self.signal.disconnect(self.slot)
+		if len(values) == 0: self.finished.emit(None) 
+		else: self.finished.emit(*values)
 		self.instances.remove(self)
-		del self.generator
+	
+	def unwrapSingletons(self, values):
+		if len(values) == 0: return None
+		elif len(values) == 1: return values[0]
+		else: return values
 
 
 # Function decorator (@async)
@@ -61,4 +70,4 @@ def async(function):
 
 	
 # Use this instead of return in @async functions
-def asyncReturn(*values): raise StopIteration(*values)
+def asyncReturn(value): raise StopIteration(value)
