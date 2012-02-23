@@ -2,6 +2,9 @@
 import urllib
 import re
 from BeautifulSoup import BeautifulSoup
+from PySide.QtCore import QObject, QUrl
+
+from async import *
 
 #------------------------------------------------------------------------------
 # Module options
@@ -26,6 +29,16 @@ def getMetaData(doc):
 	for field in doc('meta'):
 		metaData.setdefault(field.get('name'), []).append(field.get('content'))
 	return metaData
+
+@async
+def loadUrl(url):
+	from PySide.QtNetwork import QNetworkAccessManager, QNetworkRequest
+	nm = QNetworkAccessManager()
+	reply = nm.get(QNetworkRequest(QUrl(url)))
+	yield reply.finished
+	result = reply.readAll()
+	nm.deleteLater()
+	asyncReturn(result)
 	
 #------------------------------------------------------------------------------
 # creates the proper search query used for this side
@@ -38,7 +51,7 @@ def searchQuery(title, author=None, freetext=None, year=None):
 
 #------------------------------------------------------------------------------
 # parse either the normal search result or the the list of citations
-def extractSearchResults(documentElement, metaData):
+def extractSearchResults(documentElement, metaData, url):
 
 	return extractSearchResultsExtended(documentElement, metaData, False)
 
@@ -114,7 +127,7 @@ def extractSearchResultsExtended(documentElement, metaData, citation=False):
 	
 #------------------------------------------------------------------------------
 # extract item info for one 1 item from a specific page
-def extractItemData(documentElement, metaData):
+def extractItemData(documentElement, metaData, url):
 
 	return extractItemDataExtended(documentElement, metaData, True)
 
@@ -128,14 +141,20 @@ def extractItemData(documentElement, metaData):
 #
 #  bibtexentrytype =...          like book, article, inproceedings
 #  references = ...              list of dicts, where each dict is another publication dict
+@async
 def extractItemDataExtended(documentElement, metaData, withCitation=False):
 
 	# 1. lets get the microsoft masid again to do further requests
 	# necessary, as not all data can easily be parsed from the current page content
+	masid = ''
 	masidTag = documentElement.first('link', {'type':'application/rss+xml'})
-	masidHref = masidTag['href']
-	masidPart = masidHref.rpartition("id=")
-	masid = masidPart[2]
+	if masidTag is not None:
+		masidHref = masidTag['href']
+		masidPart = masidHref.rpartition("id=")
+		masid = masidPart[2]
+	else:
+		print documentElement.text
+		print 'Could not fetch masid.'
 
 	finalEntry = {}
 	
@@ -168,10 +187,14 @@ def extractItemDataExtended(documentElement, metaData, withCitation=False):
 		# and we can get the citations from it, each citation has its own page we should parse
 		# http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=64764&start=1&end=100
 		# @todo replace urllib by async appraoch
-		filehandle = urllib.urlopen('http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=' + masid + '&start=1&end=100')
+		url = 'http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=' + masid + '&start=1&end=100'
+		loadJob = loadUrl(url)
+		html = yield loadJob.finished
+		html = str(html)
+		#filehandle = urllib.urlopen('http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=' + masid + '&start=1&end=100')
 		
-		doc = BeautifulSoup(filehandle)
-		filehandle.close()
+		doc = BeautifulSoup(html)
+		#filehandle.close()
 		
 		citations = extractSearchResultsExtended(doc, getMetaData(doc), True)
 		
@@ -181,13 +204,20 @@ def extractItemDataExtended(documentElement, metaData, withCitation=False):
 		citationResults = []
 		for subPublication in citations:
 			print 'Fetch reference: ' + subPublication['title']
-			filehandle = urllib.urlopen(subPublication['url'])
-			subDoc = BeautifulSoup(filehandle)
-			filehandle.close()
-			publication = extractItemDataExtended(subDoc, getMetaData(subDoc), False)
-			citationResults.append(publication)
+			subLoadJob = loadUrl(subPublication['url'])
+			subHtml = yield subLoadJob.finished
+			subHtml = str(subHtml)
+			#filehandle = urllib.urlopen(subPublication['url'])
+			subDoc = BeautifulSoup(subHtml)
+			#filehandle.close()
+			
+			extractJob = extractItemDataExtended(subDoc, getMetaData(subDoc), False)
+			result = yield extractJob.finished
+			#publication = extractItemDataExtended(subDoc, getMetaData(subDoc), False)
+			citationResults.append(result)
 		
 		finalEntry.update(dict(references = citationResults))
 
-	return finalEntry
+	asyncReturn(finalEntry)
+	#return finalEntry
 	
