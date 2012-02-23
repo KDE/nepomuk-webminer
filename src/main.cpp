@@ -56,7 +56,7 @@ int main( int argc, char *argv[] )
         return app.exec();
     }
 
-    if ( args->count() ) {
+    if ( args->url(0).isValid() ) {
 
         FetcherDialog fd;
 

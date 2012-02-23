@@ -1,0 +1,18 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/*;video/*;inode/directory;
+Actions=mdfetcher;mdfetcher2;
+X-KDE-Submenu=Desktop Search
+Icon=nepomuk
+
+[Desktop Action mdfetcher]
+Name=Fetch MetaData for this file or folder
+Icon=nepomuk
+Exec=metadataextractor %f
+
+[Desktop Action mdfetcher2]
+Name=Fetch MetaData for this file or folder (force download)
+Icon=nepomuk
+Exec=metadataextractor -f %f
+

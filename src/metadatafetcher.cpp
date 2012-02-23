@@ -48,10 +48,10 @@ MetaDataFetcher::MetaDataFetcher(QObject *parent)
     mainContext = PythonQt::self()->getMainModule();
     PythonQt::self()->addObject(mainContext, "cppObj", this);
 
-    QString pythonFile = QString("/home/joerg/Development/KDE/metadataextractor/extractor.py");
-    PythonQt::self()->addSysPath(QString("/home/joerg/Development/KDE/metadataextractor"));
-    //QString pythonFile = KStandardDirs::locate("data", "metadataextractor/extractor.py");
-//    PythonQt::self()->addSysPath(pythonFile.section('/', 0, -2));
+    //QString pythonFile = QString("/home/joerg/Development/KDE/metadataextractor/extractor.py");
+    //PythonQt::self()->addSysPath(QString("/home/joerg/Development/KDE/metadataextractor"));
+    QString pythonFile = KStandardDirs::locate("data", "metadataextractor/extractor.py");
+    PythonQt::self()->addSysPath(pythonFile.section('/', 0, -2));
 
     mainContext.evalFile(pythonFile);
 

@@ -20,7 +20,7 @@
 
 #include <QtGui/QDialog>
 
-#include "../metadataparameters.h"
+#include "metadataparameters.h"
 
 namespace Ui {
     class SelectSearchResultDialog;
