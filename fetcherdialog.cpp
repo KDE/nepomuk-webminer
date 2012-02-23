@@ -35,12 +35,14 @@ FetcherDialog::FetcherDialog(QWidget *parent) :
     connect(ui->buttonStart, SIGNAL(clicked()), this, SLOT(startSearch()));
     connect(ui->buttonCancel, SIGNAL(clicked()), this, SLOT(cancelClose()));
     connect(m_mdf, SIGNAL(progressStatus(QString)), this, SLOT(setProgressInfo(QString)));
+    connect(m_mdf, SIGNAL(progress(int,int)), this, SLOT(setProgress(int,int)));
     connect(m_mdf, SIGNAL(fileFetchingDone()), this, SLOT(fileFetchingDone()));
-    connect(m_mdf, SIGNAL(FetchingDone()), this, SLOT(fetchingDone()));
+    connect(m_mdf, SIGNAL(fetchingDone()), this, SLOT(fetchingDone()));
 }
 
 FetcherDialog::~FetcherDialog()
 {
+    delete m_mdf;
     delete ui;
 }
 
@@ -52,6 +54,13 @@ void FetcherDialog::setInitialPathOrFile( const KUrl &url )
 void FetcherDialog::setProgressInfo(const QString &status)
 {
     ui->statusText->append( status );
+}
+
+void FetcherDialog::setProgress(int current, int max)
+{
+    ui->progressBar->setMinimum(0);
+    ui->progressBar->setMaximum(max);
+    ui->progressBar->setValue(current);
 }
 
 void FetcherDialog::fileFetchingDone()

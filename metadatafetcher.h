@@ -43,6 +43,7 @@ public:
 
 signals:
     void progressStatus(const QString &status);
+    void progress(int current, int max);
     void fileFetchingDone();
     void fetchingDone();
 
@@ -67,6 +68,8 @@ private:
     QMap<QString, QList<MetaDataParameters> > m_filesToLookup;
     QMap<QString,QString> m_selectedSearchEngine;
 
+    int m_maxProgress;
+    int m_curProgress;
     QString m_currentType;
 
     bool m_altSearchStarted;

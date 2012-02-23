@@ -22,7 +22,7 @@
 #include "fileextractor/popplerextractor.h"
 #include "fileextractor/odfextractor.h"
 #include "fileextractor/videoextractor.h"
-#include "nepomukpipe/pubentrytonepomukpipe.h"
+#include "nepomukpipe/publicationpipe.h"
 
 #include "selectsearchresultdialog.h"
 
@@ -39,6 +39,8 @@
 
 MetaDataFetcher::MetaDataFetcher(QObject *parent)
     : QObject(parent)
+    , m_maxProgress(0)
+    , m_curProgress(0)
     , m_nepomukPipe(0)
 {
     PythonQt::init( PythonQt::RedirectStdOut );
@@ -85,7 +87,7 @@ void MetaDataFetcher::startFetching(const QString &type)
     delete m_nepomukPipe;
 
     if(type == QLatin1String("publication")) {
-        m_nepomukPipe = new PubEntryToNepomukPipe;
+        m_nepomukPipe = new PublicationPipe;
     }
     else if(type == QLatin1String("tvshow")) {
         m_nepomukPipe = 0;
@@ -164,6 +166,7 @@ void MetaDataFetcher::lookupFiles(const KUrl &fileOrFolder)
         emit progressStatus( i18n("No files for meta data fetching found") );
     }
     else {
+        m_maxProgress = pubSize + tvshowSize + movieSize;
         emit fileFetchingDone();
     }
 }
@@ -210,7 +213,11 @@ void MetaDataFetcher::lookupResource(const QList<Nepomuk::Resource> &resources)
 
 void MetaDataFetcher::lookupNextMetaDataOnTheWeb()
 {
+    emit progress(m_curProgress, m_maxProgress);
+    m_curProgress++;
+
     if(m_filesToLookup.value(m_currentType).isEmpty()) {
+        emit progress(m_maxProgress, m_maxProgress);
         emit fetchingDone();
         return;
     }
@@ -219,7 +226,8 @@ void MetaDataFetcher::lookupNextMetaDataOnTheWeb()
     QString title = mdp.searchTitle;
 
 
-    emit progressStatus( i18n("#############################################################") );
+    emit progressStatus( QLatin1String("") );
+    emit progressStatus( QLatin1String("#############################################################") );
     emit progressStatus( i18n("# check next file: %1", mdp.resourceUri.fileName()) );
 
     if(!title.isEmpty()) {
@@ -309,6 +317,8 @@ void MetaDataFetcher::searchResults(const QVariantList &searchResults)
     // also we could fetch item urls tha tlead to a different side, than the
     // page we used to search for these entries
 
+    emit progressStatus( i18n("Start fetching the item, this may take a while") );
+
     QVariantList list; list << selectedEntry.value("url");
     mainContext.call("extract", list);
 }
@@ -328,8 +338,6 @@ void MetaDataFetcher::noSearchResultsFound()
         list << altTitle;
         //list << entryToQuery->metaData.value(QLatin1String("author"));  // author
         //list << entryToQuery->metaData.value(QLatin1String("freetext"));  // freetext
-
-        emit progressStatus( i18n("Start fetching the item") );
 
         qDebug() << "list" << list;
         // start the search with the module specified with the moduleId
@@ -355,7 +363,7 @@ void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
     MetaDataParameters currentMDP = mdpList.takeFirst();
     m_filesToLookup.insert(m_currentType, mdpList);
 
-    emit progressStatus( i18n("Insert found data into nepomuk") );
+    emit progressStatus( i18n("Insert the data into nepomuk") );
 
     // now we have the fetched meta data as nice QVariantmap call the pipeImporter
     // these know how the VariantMap should be handled and create the

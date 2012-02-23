@@ -49,7 +49,7 @@ set( metadataextractor_BIN_SRCS
   fileextractor/videoextractor.cpp
 
   nepomukpipe/nepomukpipe.cpp
-  nepomukpipe/pubentrytonepomukpipe.cpp
+  nepomukpipe/publicationpipe.cpp
 
   sro/nbib.cpp
 )

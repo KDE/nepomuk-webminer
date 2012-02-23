@@ -37,12 +37,12 @@ public:
 
     void setInitialPathOrFile( const KUrl &url );
 
-public slots:
+private slots:
     void setProgressInfo(const QString &status);
+    void setProgress(int current, int max);
     void fileFetchingDone();
     void fetchingDone();
 
-private slots:
     void selectEngine();
     void startSearch();
     void cancelClose();

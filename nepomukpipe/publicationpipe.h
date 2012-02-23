@@ -42,12 +42,12 @@ class KJob;
   *
   * @see NBIB ontology
   */
-class PubEntryToNepomukPipe : public NepomukPipe
+class PublicationPipe : public NepomukPipe
 {
     Q_OBJECT
 public:
-    explicit PubEntryToNepomukPipe(QObject *parent = 0);
-    virtual ~PubEntryToNepomukPipe();
+    explicit PublicationPipe(QObject *parent = 0);
+    virtual ~PublicationPipe();
 
     /**
       * Does the piping action
@@ -133,11 +133,11 @@ private:
         QString full;
     };
 
-    QList<PubEntryToNepomukPipe::Name> splitPersonList(const QString & persons);
+    QList<PublicationPipe::Name> splitPersonList(const QString & persons);
 
     // taken from KBibtex, so
     // @author Thomas Fischer <fischer@unix-ag.uni-kl.de> with some modifications
-    PubEntryToNepomukPipe::Name splitPersonString(const QString & persons);
+    PublicationPipe::Name splitPersonString(const QString & persons);
 };
 
 #endif // BIBTEXTONEPOMUKPIPE_H

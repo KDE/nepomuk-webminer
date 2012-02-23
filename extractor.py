@@ -1,6 +1,5 @@
 
-from PySide.QtGui import *
-from PySide.QtCore import QObject
+from PySide.QtCore import QObject, QUrl
 from BeautifulSoup import BeautifulSoup
 
 import sys, re, traceback
