@@ -56,16 +56,12 @@ def loadUrl(url):
 @async
 def asyncSearch(moduleId, title, author=None, freetext=None, year=None):
 
-	print 'started python part for the searching'
-
 	# 1. get the right module for the name we specified
 	module = selectModuleByName(moduleId)
 
 	if not module:
 		print 'No module named', moduleId
 		asyncReturn()
-	else:
-		print 'Start search via:', module.name
 
 	# 2. get the search query url from the module
 	urlQuery = module.searchQuery(title, author, freetext, year)
@@ -84,10 +80,8 @@ def asyncSearch(moduleId, title, author=None, freetext=None, year=None):
 		traceback.print_exc()
 		
 	if not result:
-		print 'noSearchResultsFound'
 		cppObj.noSearchResultsFound()
 	else:
-		print 'searchResults found'
 		# 4. send the variantmap back to c++
 		cppObj.searchResults(result)
 
@@ -102,9 +96,7 @@ def asyncExtract(url, html=None):
 
 	if not module:
 		print 'No module for url', url
-		asyncReturn2()
-	else:
-		print 'Start extraction via:', module.name
+		asyncReturn()
 
 	# 3. fetch the html page
 	# 3. fetch the html page

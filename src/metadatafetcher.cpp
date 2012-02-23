@@ -393,6 +393,9 @@ void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
 
 void MetaDataFetcher::pythonStdOut(QString test)
 {
-    if(!test.trimmed().isEmpty())
+    if(!test.trimmed().isEmpty()) {
+        QString pythonOutput = QString("\t %1").arg(test);
+        emit progressStatus(pythonOutput);
         kDebug() << test;
+    }
 }

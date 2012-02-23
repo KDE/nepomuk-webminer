@@ -55,9 +55,7 @@ def extractSearchResultsExtended(documentElement, metaData, citation=False):
 	noResult = documentElement.first('div', {'id':'ctl00_MainContent_divNoResult'})
 
 	if noResult:
-		print "no search result found"
 		return None
-	
 	
 	searchResults = []
 	
@@ -138,8 +136,6 @@ def extractItemDataExtended(documentElement, metaData, withCitation=False):
 	masidHref = masidTag['href']
 	masidPart = masidHref.rpartition("id=")
 	masid = masidPart[2]
-	
-	print 'masid' + masid
 
 	finalEntry = {}
 	
@@ -169,7 +165,6 @@ def extractItemDataExtended(documentElement, metaData, withCitation=False):
 	# todo parse downloadable files ...
 	
 	if withCitation is True:
-		print 'download citation'
 		# and we can get the citations from it, each citation has its own page we should parse
 		# http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=64764&start=1&end=100
 		# @todo replace urllib by async appraoch
@@ -180,8 +175,12 @@ def extractItemDataExtended(documentElement, metaData, withCitation=False):
 		
 		citations = extractSearchResultsExtended(doc, getMetaData(doc), True)
 		
+		if citations is None:
+			print 'No references found.'
+		
 		citationResults = []
 		for subPublication in citations:
+			print 'Fetch reference: ' + subPublication['title']
 			filehandle = urllib.urlopen(subPublication['url'])
 			subDoc = BeautifulSoup(filehandle)
 			filehandle.close()
@@ -191,3 +190,4 @@ def extractItemDataExtended(documentElement, metaData, withCitation=False):
 		finalEntry.update(dict(references = citationResults))
 
 	return finalEntry
+	
