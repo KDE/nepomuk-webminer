@@ -24,10 +24,13 @@
 
 #include <KDE/KUrl>
 
-#include "../metadataparameters.h"
+class MetaDataParameters;
 
 /**
-  * copy of Sebastian Trüg's tvshowfilenameanalyzer
+  * @brief copy of Sebastian Trüg's tvshowfilenameanalyzer
+  *
+  * Defines the file as TvShow if it has S01E0E or simmilar in its name
+  * Otherwise it is a movie
   */
 class VideoExtractor : public QObject
 {

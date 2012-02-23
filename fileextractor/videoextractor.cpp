@@ -17,6 +17,8 @@
 
 #include "videoextractor.h"
 
+#include "../metadataparameters.h"
+
 VideoExtractor::VideoExtractor(QObject *parent)
     : QObject(parent)
 {

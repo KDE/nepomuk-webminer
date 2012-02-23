@@ -27,6 +27,10 @@ namespace Ui {
 
 class MetaDataFetcher;
 
+/**
+  * @brief Main dialog to show the current progress and some buttons to interact with
+  *
+  */
 class FetcherDialog : public QDialog
 {
     Q_OBJECT
@@ -36,6 +40,7 @@ public:
     ~FetcherDialog();
 
     void setInitialPathOrFile( const KUrl &url );
+    void setForceUpdate(bool update);
 
 private slots:
     void setProgressInfo(const QString &status);

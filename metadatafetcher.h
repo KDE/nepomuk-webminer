@@ -23,17 +23,40 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QList>
+
 #include <PythonQt/PythonQt.h>
 
 #include "metadataparameters.h"
 
 class NepomukPipe;
 
+/**
+  * @brief Main worker class to fetch all the data
+  *
+  * When @c lookupFiles() is called all files will be scanned and its local data retrieved.
+  * Depending on the @c mimetype the right @c fileextractor is called to gather the necessary bits.
+  *
+  * For pdf/odt this means reading the RDF output, for video files the information is retrieved via filename extraction.
+  *
+  * Once this data is collected and the files are sorted by the resourcetype we need to fetch (nbib:Publication, nmm:TvShow and such),
+  * the @c fileFetchingDone() signal is thrown. The user should now select the search engine hew wants to use and
+  * afterwards start the extraction via @c startFetching()
+  *
+  * One file after another is now checked and the right python plugin called to:
+  * @li search for items that might fit
+  * @li extract the information from the right item
+  *
+  * If the search returned only 1 item where the @c title is exactly as the title we searched for, this entry is automatically
+  * selected. Otherwise the user can select the right entry via the @c SelectSearchResultDialog.
+  */
 class MetaDataFetcher : public QObject
 {
     Q_OBJECT
 public:
     explicit MetaDataFetcher(QObject *parent = 0);
+    ~MetaDataFetcher();
+
+    void setForceUpdate(bool update);
 
     QStringList availableFileTypes();
     QVariantList availableSearchEngines( const QString &resourceType);
@@ -64,6 +87,7 @@ private slots:
     void pythonStdOut(QString test);
 
 private:
+    bool m_forceUpdate;
     PythonQtObjectPtr mainContext;
     QMap<QString, QList<MetaDataParameters> > m_filesToLookup;
     QMap<QString,QString> m_selectedSearchEngine;

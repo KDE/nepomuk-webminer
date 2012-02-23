@@ -28,6 +28,11 @@ namespace Ui {
 
 class SearchResultsModel;
 
+/**
+  * @brief A dialog tha presnts all found search results with the @c title and some @c details
+  *
+  * The user can select the entry he wish to use or hit cancel and the current file will be skipped
+  */
 class SelectSearchResultDialog : public QDialog
 {
     Q_OBJECT

@@ -18,11 +18,9 @@
 #include "selectenginedialog.h"
 #include "ui_selectenginedialog.h"
 
-#include <QDebug>
-
-SelectEngineDialog::SelectEngineDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::SelectEngineDialog)
+SelectEngineDialog::SelectEngineDialog(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::SelectEngineDialog)
 {
     ui->setupUi(this);
 }

@@ -20,11 +20,10 @@
 
 #include "searchresultsmodel.h"
 #include "searchresultdelegate.h"
-#include "searchresultitem.h"
 
-SelectSearchResultDialog::SelectSearchResultDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::SelectSearchResultDialog)
+SelectSearchResultDialog::SelectSearchResultDialog(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::SelectSearchResultDialog)
 {
     ui->setupUi(this);
 
@@ -37,6 +36,7 @@ SelectSearchResultDialog::SelectSearchResultDialog(QWidget *parent) :
 
 SelectSearchResultDialog::~SelectSearchResultDialog()
 {
+    delete m_resultModel;
     delete ui;
 }
 

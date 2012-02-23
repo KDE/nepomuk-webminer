@@ -18,10 +18,9 @@
 #ifndef NEPOMUKPIPE_H
 #define NEPOMUKPIPE_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
-//class MetaDataParameters;
-#include "../metadataparameters.h"
+class MetaDataParameters;
 
 class NepomukPipe : public QObject
 {

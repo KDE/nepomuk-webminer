@@ -25,6 +25,12 @@ namespace Ui {
     class SelectEngineDialog;
 }
 
+/**
+  * @brief Simple dialog that lists all available search engines @c (python @c plugins) that can be used
+  *
+  * The list is prefiltered so only the engine that support fetching the current resource type is shown.
+  * So noone selects an engine written for tvshow search when he wants to find publication data
+  */
 class SelectEngineDialog : public QDialog
 {
     Q_OBJECT

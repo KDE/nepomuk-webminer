@@ -28,6 +28,11 @@ PopplerExtractor::PopplerExtractor(QObject *parent)
 {
 }
 
+PopplerExtractor::~PopplerExtractor()
+{
+    delete m_pdfdoc;
+}
+
 void PopplerExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
 {
     m_pdfdoc = Poppler::Document::load( fileUrl.toLocalFile(), 0, 0 );

@@ -15,10 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <KApplication>
-#include <KCmdLineArgs>
-#include <KAboutData>
-#include <KUrl>
+#include <KDE/KApplication>
+#include <KDE/KCmdLineArgs>
+#include <KDE/KAboutData>
+#include <KDE/KUrl>
 
 #include "fetcherdialog.h"
 
@@ -36,35 +36,42 @@ int main( int argc, char *argv[] )
     aboutData.addAuthor(ki18n("Jörg Ehrichs"), ki18n("Maintainer"), "joerg.ehrichs@gmx.de");
 
     KCmdLineArgs::init( argc, argv, &aboutData );
+
     KCmdLineOptions options;
-    options.add("+uri", ki18n("The URL to the publication file or folder to annotate."));
+    options.add("d", ki18n("Debug purpose just good for developers"));
+    options.add("f", ki18n("Force meta data fetching even for files that already have them"));
+    options.add("+url", ki18n("The file or folder url used for the input"));
+
     KCmdLineArgs::addCmdLineOptions( options );
+
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
 
     KApplication app;
-    FetcherDialog fd;
 
-//    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/Mayo Zhang 3D face.pdf");
-    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest2/");
-    fd.setInitialPathOrFile( debug );
-//    fd.setInitialPathOrFile( args->url( 0 ) );
+    if(args->isSet("d")) {
+        FetcherDialog fd;
+        KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest2/");
+        fd.setInitialPathOrFile( debug );
+        fd.show();
+        return app.exec();
+    }
 
-    fd.show();
-    return app.exec();
+    if ( args->count() ) {
 
+        FetcherDialog fd;
 
-//    if ( args->count() ) {
-//        mdf.lookupFiles( args->url( 0 ) );
-//        QTimer::singleShot(0, &mdf, SLOT(run()));
+        if(args->isSet("f")) {
+            fd.setForceUpdate(true);
+        }
 
-//        return app.exec();
-//    }
-//    else {
-//        KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/");
-//        mdf.lookupFiles( debug );
-//        QTimer::singleShot(1000, &mdf, SLOT(run()));
+        fd.setInitialPathOrFile( args->url( 0 ) );
+        fd.show();
 
-//        return app.exec();
-        //return 1;
-//    }
+        return app.exec();
+    }
+    else {
+
+        KCmdLineArgs::usageError(i18n("No file or folder specified.\nPlease start it with metadataextractor <url>.\nFor example: metadataextractor ~/Documents"));
+        return 0;
+    }
 }

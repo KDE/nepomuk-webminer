@@ -51,6 +51,11 @@ void FetcherDialog::setInitialPathOrFile( const KUrl &url )
     m_mdf->lookupFiles(url);
 }
 
+void FetcherDialog::setForceUpdate(bool update)
+{
+    m_mdf->setForceUpdate(update);
+}
+
 void FetcherDialog::setProgressInfo(const QString &status)
 {
     ui->statusText->append( status );

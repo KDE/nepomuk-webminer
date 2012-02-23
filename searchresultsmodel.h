@@ -18,8 +18,13 @@
 #ifndef SEARCHRESULTSMODEL_H
 #define SEARCHRESULTSMODEL_H
 
-#include <QAbstractListModel>
+#include <QtCore/QAbstractListModel>
 
+/**
+  * @brief ListModel to present the @c search @c result @c entries in a nice way
+  *
+  * Uses the @c title and @c details key of the @c QVariantMap from the python call
+  */
 class SearchResultsModel : public QAbstractListModel
 {
     Q_OBJECT

@@ -19,8 +19,8 @@
 #define POPPLEREXTRACTOR_H
 
 #include <QtCore/QObject>
-
 #include <QtXml/QDomDocument>
+
 #include <KDE/KUrl>
 
 #include "metadataparameters.h"
@@ -43,12 +43,10 @@ class PopplerExtractor : public QObject
 
 public:
     explicit PopplerExtractor(QObject *parent = 0);
+    ~PopplerExtractor();
 
     /**
-      * Creates a new publication entry and fills it.
-      *
-      * The caller gets the ownership of the returned object.
-      * returns 0 if an error occured
+      * Fille the MetaDataParameters with soem more values from the RDF and first page
       */
     void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
 

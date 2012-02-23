@@ -42,7 +42,6 @@ set( metadataextractor_BIN_SRCS
   selectsearchresultdialog.cpp
   searchresultsmodel.cpp
   searchresultdelegate.cpp
-  searchresultitem.cpp
 
   fileextractor/popplerextractor.cpp
   fileextractor/odfextractor.cpp
@@ -59,7 +58,6 @@ kde4_add_ui_files( metadataextractor_BIN_SRCS
                    fetcherdialog.ui
                    selectenginedialog.ui
                    selectsearchresultdialog.ui
-                   searchresultitem.ui
 )
 
 kde4_add_executable(metadataextractor ${metadataextractor_BIN_SRCS})
