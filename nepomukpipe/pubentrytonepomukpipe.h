@@ -59,6 +59,10 @@ private slots:
     void slotSaveToNepomukDone(KJob *job);
 
 private:
+    /**
+      * @return QPair with first = publicationUr and second = referenceUri
+      */
+    QPair<QUrl, QUrl> importPublication( QVariantMap &metaData );
     void addPublicationSubTypes(Nepomuk::NBIB::Publication &publication, const QVariantMap &metaData);
     void handleSpecialCases(QVariantMap &metaData, Nepomuk::SimpleResourceGraph &graph, Nepomuk::NBIB::Publication &publication, Nepomuk::NBIB::Reference &reference);
 

@@ -21,7 +21,7 @@
 #include <QObject>
 
 //class MetaDataParameters;
-#include "../publicationentry.h"
+#include "../metadataparameters.h"
 
 class NepomukPipe : public QObject
 {

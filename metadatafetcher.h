@@ -25,7 +25,7 @@
 #include <QtCore/QList>
 #include <PythonQt/PythonQt.h>
 
-#include "publicationentry.h"
+#include "metadataparameters.h"
 
 class NepomukPipe;
 

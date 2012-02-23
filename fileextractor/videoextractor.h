@@ -24,7 +24,7 @@
 
 #include <KDE/KUrl>
 
-#include "../publicationentry.h"
+#include "../metadataparameters.h"
 
 /**
   * copy of Sebastian Trüg's tvshowfilenameanalyzer

@@ -36,6 +36,7 @@ FetcherDialog::FetcherDialog(QWidget *parent) :
     connect(ui->buttonCancel, SIGNAL(clicked()), this, SLOT(cancelClose()));
     connect(m_mdf, SIGNAL(progressStatus(QString)), this, SLOT(setProgressInfo(QString)));
     connect(m_mdf, SIGNAL(fileFetchingDone()), this, SLOT(fileFetchingDone()));
+    connect(m_mdf, SIGNAL(FetchingDone()), this, SLOT(fetchingDone()));
 }
 
 FetcherDialog::~FetcherDialog()
@@ -60,6 +61,15 @@ void FetcherDialog::fileFetchingDone()
     m_fileTypesToFetch = m_mdf->availableFileTypes();
 
     showNextFileTypeInfoString();
+}
+
+void FetcherDialog::fetchingDone()
+{
+    ui->statusText->append( QLatin1String("#######################################################################") );
+    ui->statusText->append( i18n("Meta Data Fetching done.") );
+    ui->buttonSelect->setEnabled(false);
+    ui->buttonStart->setEnabled(false);
+    ui->buttonCancel->setText(i18n("Close"));
 }
 
 void FetcherDialog::showNextFileTypeInfoString()
@@ -96,6 +106,7 @@ void FetcherDialog::selectEngine()
 
 void FetcherDialog::startSearch()
 {
+    ui->buttonSelect->setEnabled(false);
     QString nextType = m_fileTypesToFetch.takeFirst();
 
     m_mdf->startFetching(nextType);

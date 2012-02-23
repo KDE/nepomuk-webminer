@@ -40,6 +40,7 @@ public:
 public slots:
     void setProgressInfo(const QString &status);
     void fileFetchingDone();
+    void fetchingDone();
 
 private slots:
     void selectEngine();

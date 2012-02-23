@@ -23,7 +23,7 @@
 #include <QtXml/QDomDocument>
 #include <KDE/KUrl>
 
-#include "publicationentry.h"
+#include "metadataparameters.h"
 
 namespace Poppler {
     class Document;

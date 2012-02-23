@@ -17,7 +17,7 @@
 
 #include "pubentrytonepomukpipe.h"
 
-#include "../publicationentry.h"
+#include "../metadataparameters.h"
 
 #include "dms-copy/simpleresource.h"
 #include "dms-copy/datamanagement.h"
@@ -98,19 +98,94 @@ void PubEntryToNepomukPipe::pipeImport(QList<MetaDataParameters*> & bibEntries)
 
 void PubEntryToNepomukPipe::pipeImport(MetaDataParameters* bibEntry)
 {
-    QString originalEntryType = bibEntry->metaData.value(QLatin1String("bibtexentrytype")).toString().toLower();
-    QString citeKey           = bibEntry->metaData.value(QLatin1String("bibtexcitekey"), QLatin1String("unknwon citekey")).toString();
+    // The MetaDataParameters contain the metadata for the publication as bibEntry->metaData
+    // also if it is related to a file the bibEntry->resourceUri points to it.
+    // if we have some information about the references used inthe publication the
+    // bibEntry->metaData.value("references") has a list of more publications to add
+
+    // here we add all this stuff step by step.
+
+    // 1. split the reference details so the next function does not complain that it does not know about
+    // this key
+    QVariantList references = bibEntry->metaData.value(QLatin1String("references")).toList();
+    bibEntry->metaData.remove( QLatin1String("references") );
+
+    // 2. create the main publication resource
+    QPair<QUrl,QUrl> mainPublicationUris = importPublication( bibEntry->metaData );
+
+    // 3. if we have some references, we create them now
+    foreach(const QVariant &reference, references) {
+        kDebug() << "import reference";
+        QVariantMap referenceMetaData = reference.toMap();
+
+        QPair<QUrl,QUrl> referenceUris = importPublication( referenceMetaData );
+
+        // and connect it to the mainPublication
+        QList<QUrl> resUri; resUri << mainPublicationUris.first;
+        QVariantList value; value << referenceUris.second;
+        Nepomuk::addProperty(resUri, NBIB::citedReference(), value);
+    }
+
+    // 4. if the main resource has a file attachment, we add the publishedAs crossrefs to it
+    if( bibEntry->resourceUri.isLocalFile()) {
+        kDebug() << "add locafile crosref";
+        // first we create a nepomu kresource from the file
+        // if the resoruce existed already (due to fileanalyzer added it before), we get the existing resource back
+        // if the analyzer failed a new resource is created
+        Nepomuk::SimpleResourceGraph graph;
+        Nepomuk::NFO::FileDataObject localFile;
+        localFile.addType( NFO::Document() );
+        localFile.addType( NFO::PaginatedTextDocument() );
+        localFile.setProperty( NIE::url(), bibEntry->resourceUri );
+        localFile.setProperty( NFO::fileName(), bibEntry->resourceUri.fileName() );
+        localFile.setProperty( NIE::title(), bibEntry->metaData.value(QLatin1String("title")).toString() );
+
+        graph << localFile;
+
+        Nepomuk::StoreResourcesJob *srj = Nepomuk::storeResources(graph,Nepomuk::IdentifyNew, Nepomuk::OverwriteProperties);
+        srj->exec();
+
+        QUrl fileResourceUri = srj->mappings().value( localFile.uri() );
+
+        // now add the crossrefs
+        QList<QUrl> resUri; resUri << fileResourceUri;
+        QVariantList value; value << mainPublicationUris.first;
+        Nepomuk::addProperty(resUri, NBIB::publishedAs(), value);
+
+        resUri.clear(); resUri << mainPublicationUris.first;
+        value.clear(); value << fileResourceUri;
+        Nepomuk::addProperty(resUri, NBIB::isPublicationOf(), value);
+    }
+}
+
+QPair<QUrl, QUrl> PubEntryToNepomukPipe::importPublication( QVariantMap &metaData )
+{
+    kDebug() << "import" << metaData.value(QLatin1String("title")).toString();
+
+    QString originalEntryType = metaData.value(QLatin1String("bibtexentrytype")).toString().toLower();
+
+    QString citeKey = metaData.value(QLatin1String("bibtexcitekey")).toString();
+    if(citeKey.isEmpty()) {
+        // if we have no citekey defined, take the first 100 chars (without whitespace) and use this one
+        QString title = metaData.value(QLatin1String("title"), QLatin1String("unknwon")).toString();
+        title.remove(' ');
+        citeKey = title.left(10);
+
+        // also add the year to it if available
+        QString year = metaData.value(QLatin1String("year"), QLatin1String("")).toString();
+        citeKey.append(year);
+    }
 
     Nepomuk::SimpleResourceGraph graph;
     Nepomuk::NBIB::Publication publication;
-    addPublicationSubTypes(publication, bibEntry->metaData);
+    addPublicationSubTypes(publication, metaData);
     // we remove it, othewise addContent complains about an unknown key
     // as it is not used anymore, this is fine and reduce wrong debug output
-    bibEntry->metaData.remove( QLatin1String("bibtexentrytype") );
+    metaData.remove( QLatin1String("bibtexentrytype") );
 
     Nepomuk::NBIB::Reference reference;
     reference.setCiteKey( citeKey );
-    reference.addProperty( NAO::prefLabel(), citeKey); // adds no real value, but looks nicer in the Nepomuk shell
+    reference.addProperty( NAO::prefLabel(), citeKey);
 
     reference.setProperty( NBIB::publication(), publication);
     publication.setProperty( NBIB::reference(), reference);
@@ -118,15 +193,16 @@ void PubEntryToNepomukPipe::pipeImport(MetaDataParameters* bibEntry)
     publication.addProperty(NAO::hasSubResource(), reference.uri() ); // remove reference when publication is deleted
 
     //before we go through the whole list one by one, we take care of some special cases
-    handleSpecialCases(bibEntry->metaData, graph, publication, reference);
+    handleSpecialCases(metaData, graph, publication, reference);
 
     //now go through the list of all remaining entries
-    QMapIterator<QString, QVariant> i(bibEntry->metaData);
+    QMapIterator<QString, QVariant> i(metaData);
     while (i.hasNext()) {
         i.next();
         if(!i.value().toString().isEmpty())
             addContent(i.key().toLower(), i.value().toString(), publication, reference, graph, originalEntryType, citeKey);
     }
+
 
     graph << publication << reference;
 
@@ -135,45 +211,14 @@ void PubEntryToNepomukPipe::pipeImport(MetaDataParameters* bibEntry)
     srj->exec();
 
     // get the nepomu kuri of the newly created resource
-    Nepomuk::Resource publicationResource = Nepomuk::Resource::fromResourceUri( srj->mappings().value( publication.uri() ) );
+    QUrl publicationUri( srj->mappings().value( publication.uri() ));
+    QUrl referenceUri( srj->mappings().value( reference.uri() ));
 
+    QPair<QUrl,QUrl> uris;
+    uris.first = publicationUri;
+    uris.second = referenceUri;
 
-    // ok we created the new resource now we want to connect it to the file we requested it for
-    // means the bibEntry->resourceUri is not empty
-
-    // TODO this part is not good ...
-    if( !bibEntry->resourceUri.isEmpty() ) {
-        qDebug() << "attach new publication data to file" << bibEntry->resourceUri;
-
-        // ok this pipe request was called on a local file .. we need to check if the resource exist in the nepomuk storage
-        // so if it was indexed before
-        // often this might not be the case, as the fileanalyzer failed on my system to parse pdf files a lot
-        if( bibEntry->resourceUri.isLocalFile()) {
-            // this is not correct, but for the moment it works
-            // if now resoruce existed, due to a failing analyzer, we create one, otherwise we merge it with an existing one
-            Nepomuk::SimpleResourceGraph graph2;
-            Nepomuk::NFO::FileDataObject localFile;
-            localFile.setProperty( NIE::url(), bibEntry->resourceUri );
-
-            graph2 << localFile;
-
-            Nepomuk::StoreResourcesJob *srj = Nepomuk::storeResources(graph2,Nepomuk::IdentifyNew, Nepomuk::OverwriteProperties);
-            srj->exec();
-
-            bibEntry->resourceUri = srj->mappings().value( localFile.uri() );
-        }
-
-        // up to this point bibEntry->resourceUri is definitly a nepomuk:Resource we cann connect the crosslinks too
-
-        QList<QUrl> resUri; resUri << bibEntry->resourceUri.url();
-        QVariantList value; value << publicationResource.resourceUri();
-        Nepomuk::addProperty(resUri, NBIB::publishedAs(), value);
-
-        resUri.clear(); resUri << publicationResource.resourceUri();
-        value.clear(); value << bibEntry->resourceUri.url();
-        Nepomuk::addProperty(resUri, NBIB::isPublicationOf(), value);
-    }
-
+    return uris;
 }
 
 void PubEntryToNepomukPipe::slotSaveToNepomukDone(KJob *job)

@@ -21,7 +21,7 @@
 #include <QtCore/QObject>
 #include <KDE/KUrl>
 
-#include "publicationentry.h"
+#include "metadataparameters.h"
 
 class OdfExtractor : public QObject
 {

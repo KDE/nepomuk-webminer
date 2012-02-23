@@ -45,7 +45,7 @@ int main( int argc, char *argv[] )
     FetcherDialog fd;
 
 //    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/Mayo Zhang 3D face.pdf");
-    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/");
+    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest2/");
     fd.setInitialPathOrFile( debug );
 //    fd.setInitialPathOrFile( args->url( 0 ) );
 

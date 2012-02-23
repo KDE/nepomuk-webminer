@@ -17,7 +17,7 @@
 
 #include "odfextractor.h"
 
-#include "../publicationentry.h"
+#include "../metadataparameters.h"
 
 #include <KDE/KZip>
 #include <KDE/KDebug>

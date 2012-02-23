@@ -1,4 +1,5 @@
 
+from PySide.QtGui import *
 from PySide.QtCore import QObject
 from BeautifulSoup import BeautifulSoup
 
@@ -116,7 +117,6 @@ def asyncExtract(url, html=None):
 
 	try:
 		result = module.extractItemData(doc, getMetaData(doc))
-		print 'after result()'
 	except Exception:
 		print 'Error with parsing HTML.'
 		traceback.print_exc()
@@ -127,3 +127,32 @@ def asyncExtract(url, html=None):
 
 def extract(url, html=None):
 	asyncExtract(url, html)
+	
+
+def runSearch(module, title):
+	app = QApplication([])
+	extractJob = asyncSearch(module, title)
+	def quitSlot(args): app.quit()
+	extractJob.finished.connect(quitSlot)
+	app.exec_()
+	
+def runExtract(url):
+	app = QApplication([])
+	extractJob = asyncExtract(url)
+	def quitSlot(args): app.quit()
+	extractJob.finished.connect(quitSlot)
+	app.exec_()
+
+'''
+if __name__ == '__main__':
+
+
+	module = 'msa'
+	title = 'toward a standard process: the use of UML'
+	
+	runSearch(module, title)
+
+	
+	#url = 'http://academic.research.microsoft.com/Publication/64764'
+	#runExtract(url)
+'''

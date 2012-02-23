@@ -17,7 +17,7 @@
 
 #include "metadatafetcher.h"
 
-#include "publicationentry.h"
+#include "metadataparameters.h"
 
 #include "fileextractor/popplerextractor.h"
 #include "fileextractor/odfextractor.h"
@@ -39,6 +39,7 @@
 
 MetaDataFetcher::MetaDataFetcher(QObject *parent)
     : QObject(parent)
+    , m_nepomukPipe(0)
 {
     PythonQt::init( PythonQt::RedirectStdOut );
     mainContext = PythonQt::self()->getMainModule();
@@ -80,6 +81,22 @@ void MetaDataFetcher::setUsedEngine(const QString &type, const QString &engine)
 void MetaDataFetcher::startFetching(const QString &type)
 {
     m_currentType = type;
+
+    delete m_nepomukPipe;
+
+    if(type == QLatin1String("publication")) {
+        m_nepomukPipe = new PubEntryToNepomukPipe;
+    }
+    else if(type == QLatin1String("tvshow")) {
+        m_nepomukPipe = 0;
+        qDebug() << "no nepomuk pipe for tvshows available";
+        //m_nepomukPipe = new PubEntryToNepomukPipe;
+    }
+    else if(type == QLatin1String("movie")) {
+        m_nepomukPipe = 0;
+        qDebug() << "no nepomuk pipe for movies available";
+        //m_nepomukPipe = new PubEntryToNepomukPipe;
+    }
 
     lookupNextMetaDataOnTheWeb();
 }
@@ -158,7 +175,6 @@ void MetaDataFetcher::addFilesToList(const KUrl &fileUrl)
     MetaDataParameters metaDataParameters;
 
     if(kmt.data()->name().contains(QLatin1String("application/vnd.oasis.opendocument.text"))) {
-
         OdfExtractor odfExtractor;
         odfExtractor.parseUrl( &metaDataParameters, fileUrl );
     }
@@ -169,7 +185,6 @@ void MetaDataFetcher::addFilesToList(const KUrl &fileUrl)
     }
 
     else if(kmt.data()->name().contains(QLatin1String("video/"))) {
-
         VideoExtractor videoExtractor;
         videoExtractor.parseUrl( &metaDataParameters, fileUrl );
     }
@@ -234,7 +249,6 @@ void MetaDataFetcher::lookupNextMetaDataOnTheWeb()
 
 void MetaDataFetcher::searchResults(const QVariantList &searchResults)
 {
-    QStringList entryTitles;
     QList<int> exactStringMatches;
 
     MetaDataParameters mdp = m_filesToLookup.value(m_currentType).first();
@@ -245,22 +259,26 @@ void MetaDataFetcher::searchResults(const QVariantList &searchResults)
         QVariantMap map = entry.toMap();
 
         QString returnedTitle = map.value("title").toString();
+        returnedTitle.remove(QRegExp("<[^>]*>"));
 
         if( returnedTitle == title) {
             exactStringMatches << i;
         }
 
-        entryTitles << map.value("title").toString();
-
         i++;
     }
 
     QVariantMap selectedEntry;
-    selectedEntry = searchResults.first().toMap();
+
     if( exactStringMatches.size() == 1) {
+
+        emit progressStatus(i18n("Only 1 result with an exact title match found. This entry will be used"));
+
         selectedEntry = searchResults.at( exactStringMatches.first() ).toMap();
     }
     else {
+        emit progressStatus(i18n("Several results found. Please select the one you want to use"));
+
         QPointer<SelectSearchResultDialog> ssrd = new SelectSearchResultDialog;
         ssrd->setMetaDataParameters( mdp );
         ssrd->setSearchResults( searchResults );
@@ -311,6 +329,8 @@ void MetaDataFetcher::noSearchResultsFound()
         //list << entryToQuery->metaData.value(QLatin1String("author"));  // author
         //list << entryToQuery->metaData.value(QLatin1String("freetext"));  // freetext
 
+        emit progressStatus( i18n("Start fetching the item") );
+
         qDebug() << "list" << list;
         // start the search with the module specified with the moduleId
         mainContext.call("search", list);
@@ -335,7 +355,6 @@ void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
     MetaDataParameters currentMDP = mdpList.takeFirst();
     m_filesToLookup.insert(m_currentType, mdpList);
 
-    qDebug() << "item result ...";
     emit progressStatus( i18n("Insert found data into nepomuk") );
 
     // now we have the fetched meta data as nice QVariantmap call the pipeImporter
@@ -347,10 +366,10 @@ void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
     QMapIterator<QString, QVariant> i(itemResults);
     while (i.hasNext()) {
         i.next();
-        currentMDP->metaData.insert(i.key(), i.value());
+        currentMDP.metaData.insert(i.key(), i.value());
     }
 
-    m_nepomukPipe->pipeImport( currentMDP );
+    m_nepomukPipe->pipeImport( &currentMDP );
 
 
     // wait a while and start next search

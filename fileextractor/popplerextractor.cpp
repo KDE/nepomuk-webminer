@@ -17,7 +17,7 @@
 
 #include "popplerextractor.h"
 
-#include "../publicationentry.h"
+#include "../metadataparameters.h"
 
 #include <poppler/qt4/poppler-qt4.h>
 

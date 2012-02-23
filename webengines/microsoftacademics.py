@@ -40,7 +40,7 @@ def searchQuery(title, author=None, freetext=None, year=None):
 # parse either the normal search result or the the list of citations
 def extractSearchResults(documentElement, metaData):
 
-	extractSearchResultsExtended(documentElement, metaData, False)
+	return extractSearchResultsExtended(documentElement, metaData, False)
 
 #------------------------------------------------------------------------------
 # extracts the single item results from the html page returned by

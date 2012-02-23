@@ -17,6 +17,8 @@
 
 #include "searchresultsmodel.h"
 
+#include <QtCore/QRegExp>
+
 SearchResultsModel::SearchResultsModel(QObject *parent) :
     QAbstractListModel(parent)
 {
@@ -37,7 +39,10 @@ int SearchResultsModel::rowCount ( const QModelIndex & parent ) const
 QVariant SearchResultsModel::data ( const QModelIndex & index, int role ) const
 {
     if( role == Qt::DisplayRole) {
-        return m_searchResults.at(index.row()).toMap().value("title");
+        QString title = m_searchResults.at(index.row()).toMap().value("title").toString();
+        title.remove(QRegExp("<[^>]*>"));
+
+        return title;
     }
     else if( role == Qt::UserRole) {
         return m_searchResults.at(index.row()).toMap().value("details");
