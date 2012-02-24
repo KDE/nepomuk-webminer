@@ -48,13 +48,13 @@ int main( int argc, char *argv[] )
 
     KApplication app;
 
-    if(args->isSet("d")) {
+    //if(args->isSet("d")) {
         FetcherDialog fd;
         KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest2/");
         fd.setInitialPathOrFile( debug );
         fd.show();
         return app.exec();
-    }
+    //}
 
     if ( args->url(0).isValid() ) {
 

@@ -48,10 +48,10 @@ MetaDataFetcher::MetaDataFetcher(QObject *parent)
     mainContext = PythonQt::self()->getMainModule();
     PythonQt::self()->addObject(mainContext, "cppObj", this);
 
-    //QString pythonFile = QString("/home/joerg/Development/KDE/metadataextractor/extractor.py");
-    //PythonQt::self()->addSysPath(QString("/home/joerg/Development/KDE/metadataextractor"));
-    QString pythonFile = KStandardDirs::locate("data", "metadataextractor/extractor.py");
-    PythonQt::self()->addSysPath(pythonFile.section('/', 0, -2));
+    QString pythonFile = QString("/home/joerg/Development/KDE/metadataextractor/python/extractor.py");
+    PythonQt::self()->addSysPath(QString("/home/joerg/Development/KDE/metadataextractor/python/"));
+    //QString pythonFile = KStandardDirs::locate("data", "metadataextractor/extractor.py");
+    //PythonQt::self()->addSysPath(pythonFile.section('/', 0, -2));
 
     mainContext.evalFile(pythonFile);
 
@@ -61,8 +61,8 @@ MetaDataFetcher::MetaDataFetcher(QObject *parent)
     connect(PythonQt::self(), SIGNAL(pythonStdErr(QString)), this, SLOT(pythonStdOut(QString)));
 
     m_selectedSearchEngine.insert(QLatin1String("publication"), QLatin1String("msa"));
-    //m_selectedSearchEngine.insert(QLatin1String("tvshow"), QLatin1String("msa"));
-    //m_selectedSearchEngine.insert(QLatin1String("movie"), QLatin1String("msa"));
+    m_selectedSearchEngine.insert(QLatin1String("tvshow"), QLatin1String("msa"));
+    m_selectedSearchEngine.insert(QLatin1String("movie"), QLatin1String("imdb"));
 }
 
 MetaDataFetcher::~MetaDataFetcher()
@@ -115,6 +115,7 @@ void MetaDataFetcher::startFetching(const QString &type)
 
 QVariantList MetaDataFetcher::availableSearchEngines( const QString &resourceType)
 {
+    kDebug() << "find engines suitable for" << resourceType;
     QVariantList list; list << resourceType;
     QVariant engines = mainContext.call("availableSearchEngines", list);
 
@@ -192,7 +193,6 @@ void MetaDataFetcher::addFilesToList(const KUrl &fileUrl)
         odfExtractor.parseUrl( &metaDataParameters, fileUrl );
     }
     else if(kmt.data()->name().contains(QLatin1String("application/pdf"))) {
-        kDebug() << "find pdf meta data for" << fileUrl.fileName();
         PopplerExtractor pdfExtractor;
         pdfExtractor.parseUrl( &metaDataParameters, fileUrl );
     }
@@ -286,7 +286,7 @@ void MetaDataFetcher::searchResults(const QVariantList &searchResults)
 
     QVariantMap selectedEntry;
 
-    if( exactStringMatches.size() == 1) {
+    if( exactStringMatches.size() == 1 && false) {
         emit progressStatus(i18n("Only 1 result with an exact title match found. This entry will be used"));
 
         selectedEntry = searchResults.at( exactStringMatches.first() ).toMap();
@@ -365,6 +365,8 @@ void MetaDataFetcher::noSearchResultsFound()
 
 void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
 {
+    qDebug() << itemResults;
+
     // remove the item from the list of file we need to lookup
     QList<MetaDataParameters> mdpList = m_filesToLookup.value(m_currentType);
     MetaDataParameters currentMDP = mdpList.takeFirst();

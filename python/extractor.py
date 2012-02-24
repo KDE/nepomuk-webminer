@@ -1,4 +1,5 @@
 
+#from PySide.QtGui import *
 from PySide.QtCore import QObject, QUrl
 from BeautifulSoup import BeautifulSoup
 
@@ -10,7 +11,7 @@ from async import *
 # usefull if the user wants to search with a specific engine
 def selectModuleByName(moduleid):
 	for module in webengines.modules:
-		if re.search(module.identification, moduleid): return module
+		if re.search(module.identification, moduleid):return module
 	return None
 
 # selects the right module by the full url
@@ -61,7 +62,7 @@ def asyncSearch(moduleId, title, author=None, freetext=None, year=None):
 
 	if not module:
 		print 'No module named', moduleId
-		asyncReturn()
+		asyncReturn(None)
 
 	# 2. get the search query url from the module
 	urlQuery = module.searchQuery(title, author, freetext, year)
@@ -74,7 +75,7 @@ def asyncSearch(moduleId, title, author=None, freetext=None, year=None):
 	doc = BeautifulSoup(html)
 	
 	try:
-		result = module.extractSearchResults(doc, getMetaData(doc))
+		result = module.extractSearchResults(doc, getMetaData(doc), urlQuery)
 	except Exception:
 		print 'Error with parsing HTML.'
 		traceback.print_exc()
@@ -99,7 +100,6 @@ def asyncExtract(url, html=None):
 		asyncReturn()
 
 	# 3. fetch the html page
-	# 3. fetch the html page
 	loadJob = loadUrl(url)
 	html = yield loadJob.finished
 	html = str(html)
@@ -107,19 +107,24 @@ def asyncExtract(url, html=None):
 	doc = BeautifulSoup(html)
 
 	try:
-		result = module.extractItemData(doc, getMetaData(doc))
+		if module.asyncUsage is 'true':
+			extractJob = module.extractItemData(doc, getMetaData(doc), url)
+			result = yield extractJob.finished
+		else:
+			result = module.extractItemData(doc, getMetaData(doc), url)
+		
+		# 4. send the variantmap back to c++
+		cppObj.itemResult(result)
 	except Exception:
 		print 'Error with parsing HTML.'
 		traceback.print_exc()
-
-	# 4. send the variantmap back to c++
-	cppObj.itemResult(result)
 
 
 def extract(url, html=None):
 	asyncExtract(url, html)
 	
 
+'''
 def runSearch(module, title):
 	app = QApplication([])
 	extractJob = asyncSearch(module, title)
@@ -134,12 +139,12 @@ def runExtract(url):
 	extractJob.finished.connect(quitSlot)
 	app.exec_()
 
-'''
 if __name__ == '__main__':
 
+	#print availableSearchEngines('movie')
 
-	module = 'msa'
-	title = 'toward a standard process: the use of UML'
+	module = 'imdb'
+	title = 'Matrix'
 	
 	runSearch(module, title)
 

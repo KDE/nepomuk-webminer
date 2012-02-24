@@ -24,6 +24,8 @@ regexp = r'http://academic.research.microsoft\.com/Publication/'
 #what kind of nepomuk resource type can be fetched with this engine?
 resourceType = 'publication'
 
+asyncUsage = 'true'
+
 def getMetaData(doc):
 	metaData = dict()
 	for field in doc('meta'):
@@ -153,7 +155,6 @@ def extractItemDataExtended(documentElement, metaData, withCitation=False):
 		masidPart = masidHref.rpartition("id=")
 		masid = masidPart[2]
 	else:
-		print documentElement.text
 		print 'Could not fetch masid.'
 
 	finalEntry = {}

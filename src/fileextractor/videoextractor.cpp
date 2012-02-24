@@ -19,6 +19,8 @@
 
 #include "../metadataparameters.h"
 
+#include <QtCore/QStringList>
+
 VideoExtractor::VideoExtractor(QObject *parent)
     : QObject(parent)
 {
@@ -90,14 +92,15 @@ void VideoExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
     else {
         mdp->resourceType = QLatin1String("movie");
 
-        name.replace('.', ' ');
-        name.replace('-', ' ');
+        QStringList nameSplit = name.split(QLatin1String("."));
+        //name.replace('.', ' ');
+        //name.replace('-', ' ');
 
         //TODO: Remove the extension
         //TODO: Remove special characters like [] ()
         //TODO: Remove DVDRip
         //TODO: Remove the year
 
-        mdp->searchTitle = name;
+        mdp->searchTitle = nameSplit.first();
     }
 }
