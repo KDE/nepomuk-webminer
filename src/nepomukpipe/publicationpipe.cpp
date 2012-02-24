@@ -80,22 +80,6 @@ PublicationPipe::~PublicationPipe()
 
 }
 
-void PublicationPipe::pipeImport(QList<MetaDataParameters*> & bibEntries)
-{
-    emit progress(0);
-    qreal perEntryProgress = (100.0/(qreal)bibEntries.size());
-    qreal currentprogress = 0.0;
-
-    foreach(MetaDataParameters *mdp, bibEntries ) {
-        pipeImport(mdp);
-
-        currentprogress += perEntryProgress;
-        emit progress(currentprogress);
-    }
-
-    emit progress(100);
-}
-
 void PublicationPipe::pipeImport(MetaDataParameters* bibEntry)
 {
     // The MetaDataParameters contain the metadata for the publication as bibEntry->metaData

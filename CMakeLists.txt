@@ -28,6 +28,7 @@ include_directories(
   "/usr/include/python2.6"
   "/usr/include/python2.7"
 
+  ${CMAKE_SOURCE_DIR}/src
   ${metadataextractor_BINARY_DIR}
 )
 

@@ -89,7 +89,7 @@ def extractItemData(documentElement, metaData, url=None):
 	for cast in movie['cast']:
 		castString = castString + ';' + cast['name']
 
-	result = dict( title = movie['title'],
+	result = dict(  title = movie['title'],
 			year = movie['year'],
 			director = directorString,
 			writer = writerString,

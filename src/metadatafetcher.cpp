@@ -25,6 +25,7 @@
 #include "fileextractor/videoextractor.h"
 
 #include "nepomukpipe/publicationpipe.h"
+#include "nepomukpipe/moviepipe.h"
 
 #include <PythonQt/PythonQt.h>
 
@@ -105,9 +106,7 @@ void MetaDataFetcher::startFetching(const QString &type)
         //m_nepomukPipe = new PubEntryToNepomukPipe;
     }
     else if(type == QLatin1String("movie")) {
-        m_nepomukPipe = 0;
-        kDebug() << "no nepomuk pipe for movies available";
-        //m_nepomukPipe = new PubEntryToNepomukPipe;
+        m_nepomukPipe = new MoviePipe;
     }
 
     lookupNextMetaDataOnTheWeb();
@@ -365,8 +364,6 @@ void MetaDataFetcher::noSearchResultsFound()
 
 void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
 {
-    qDebug() << itemResults;
-
     // remove the item from the list of file we need to lookup
     QList<MetaDataParameters> mdpList = m_filesToLookup.value(m_currentType);
     MetaDataParameters currentMDP = mdpList.takeFirst();

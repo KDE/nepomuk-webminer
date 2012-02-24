@@ -15,30 +15,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NEPOMUKPIPE_H
-#define NEPOMUKPIPE_H
+#ifndef MOVIEPIPE_H
+#define MOVIEPIPE_H
 
-#include <QtCore/QObject>
+#include "nepomukpipe.h"
 
-class MetaDataParameters;
+#include "sro/nco/personcontact.h"
 
-class NepomukPipe : public QObject
+class MoviePipe : public NepomukPipe
 {
-    Q_OBJECT
 public:
-    explicit NepomukPipe(QObject *parent = 0);
-    virtual ~NepomukPipe();
+    MoviePipe(QObject *parent = 0);
+    virtual ~MoviePipe();
 
     /**
       * Does the piping action
       */
-    virtual void pipeImport(QList<MetaDataParameters*> & bibEntries);
-    virtual void pipeImport(MetaDataParameters* bibEntries) = 0;
+    void pipeImport(MetaDataParameters* movieEntry);
 
-signals:
-    void progress(int progress);
-    void finished();
-
+private:
+    Nepomuk::NCO::PersonContact createPerson(const QString &fullName);
 };
 
-#endif // NEPOMUKPIPE_H
+#endif // MOVIEPIPE_H

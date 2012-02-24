@@ -52,7 +52,6 @@ public:
     /**
       * Does the piping action
       */
-    void pipeImport(QList<MetaDataParameters*> & bibEntries);
     void pipeImport(MetaDataParameters* bibEntries);
 
 private slots:

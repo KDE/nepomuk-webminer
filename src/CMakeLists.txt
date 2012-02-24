@@ -18,6 +18,7 @@ set( metadataextractor_BIN_SRCS
 
   nepomukpipe/nepomukpipe.cpp
   nepomukpipe/publicationpipe.cpp
+  nepomukpipe/moviepipe.cpp
 
   sro/nbib.cpp
 )
