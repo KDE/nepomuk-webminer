@@ -38,7 +38,6 @@ int main( int argc, char *argv[] )
     KCmdLineArgs::init( argc, argv, &aboutData );
 
     KCmdLineOptions options;
-    options.add("d", ki18n("Debug purpose just good for developers"));
     options.add("f", ki18n("Force meta data fetching even for files that already have them"));
     options.add("+url", ki18n("The file or folder url used for the input"));
 
@@ -48,15 +47,13 @@ int main( int argc, char *argv[] )
 
     KApplication app;
 
-    //if(args->isSet("d")) {
-        FetcherDialog fd;
-        KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest2/");
-        fd.setInitialPathOrFile( debug );
-        fd.show();
-        return app.exec();
-    //}
+//    FetcherDialog fd;
+//    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest2/");
+//    fd.setInitialPathOrFile( debug );
+//    fd.show();
+//    return app.exec();
 
-    if ( args->url(0).isValid() ) {
+    if ( args->count() && args->url(0).isValid() ) {
 
         FetcherDialog fd;
 

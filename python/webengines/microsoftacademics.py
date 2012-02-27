@@ -5,6 +5,7 @@ from BeautifulSoup import BeautifulSoup
 from PySide.QtCore import QObject, QUrl
 
 from async import *
+from extractor import *
 
 #------------------------------------------------------------------------------
 # Module options
@@ -12,36 +13,18 @@ from async import *
 # unique identification string, all lower-case no whitespace
 identification = 'msa'
 
-#the full name of this engine
+# the full name of this engine
 name = 'Microsoft Academic Search'
 
-#name of the icon for this engine
+# name of the icon for this engine
 icon = 'microsoft-academic-search.png'
 
-#a regular expression used to find the right engine for a specific website
+# a regular expression used to find the right engine for a specific website
 regexp = r'http://academic.research.microsoft\.com/Publication/'
 
-#what kind of nepomuk resource type can be fetched with this engine?
+# what kind of nepomuk resource type can be fetched with this engine?
 resourceType = 'publication'
 
-asyncUsage = 'true'
-
-def getMetaData(doc):
-	metaData = dict()
-	for field in doc('meta'):
-		metaData.setdefault(field.get('name'), []).append(field.get('content'))
-	return metaData
-
-@async
-def loadUrl(url):
-	from PySide.QtNetwork import QNetworkAccessManager, QNetworkRequest
-	nm = QNetworkAccessManager()
-	reply = nm.get(QNetworkRequest(QUrl(url)))
-	yield reply.finished
-	result = reply.readAll()
-	nm.deleteLater()
-	asyncReturn(result)
-	
 #------------------------------------------------------------------------------
 # creates the proper search query used for this side
 # currently only for the title, author, freeform text and year search comes later
@@ -59,10 +42,11 @@ def extractSearchResults(documentElement, metaData, url):
 
 #------------------------------------------------------------------------------
 # extracts the single item results from the html page returned by
-# doing the searchQuery() returns a list of dicts each dict has:
+# doing the searchQuery()
+# returns a list of dicts each dict has:
 # 
 # title   = name of the publication
-# details = some more details on this entry (here Authors, and number of available citations)
+# details = some more details on this entry (here Authors and number of available citations)
 # url     = the url where to fetch the full data
 def extractSearchResultsExtended(documentElement, metaData, citation=False):
 
@@ -187,38 +171,34 @@ def extractItemDataExtended(documentElement, metaData, withCitation=False):
 	if withCitation is True:
 		# and we can get the citations from it, each citation has its own page we should parse
 		# http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=64764&start=1&end=100
-		# @todo replace urllib by async appraoch
 		url = 'http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=' + masid + '&start=1&end=100'
 		loadJob = loadUrl(url)
 		html = yield loadJob.finished
-		html = str(html)
-		#filehandle = urllib.urlopen('http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=' + masid + '&start=1&end=100')
+                html = str(html)
 		
-		doc = BeautifulSoup(html)
-		#filehandle.close()
+                doc = BeautifulSoup(html)
 		
 		citations = extractSearchResultsExtended(doc, getMetaData(doc), True)
 		
 		if citations is None:
 			print 'No references found.'
 		
-		citationResults = []
-		for subPublication in citations:
-			print 'Fetch reference: ' + subPublication['title']
-			subLoadJob = loadUrl(subPublication['url'])
-			subHtml = yield subLoadJob.finished
-			subHtml = str(subHtml)
-			#filehandle = urllib.urlopen(subPublication['url'])
-			subDoc = BeautifulSoup(subHtml)
-			#filehandle.close()
-			
-			extractJob = extractItemDataExtended(subDoc, getMetaData(subDoc), False)
-			result = yield extractJob.finished
-			#publication = extractItemDataExtended(subDoc, getMetaData(subDoc), False)
-			citationResults.append(result)
-		
-		finalEntry.update(dict(references = citationResults))
+		else:
+			citationResults = []
+			for subPublication in citations:
+				print 'Fetch reference: ' + subPublication['title']
+				subLoadJob = loadUrl(subPublication['url'])
+				subHtml = yield subLoadJob.finished
+				subHtml = str(subHtml)
 
-	asyncReturn(finalEntry)
-	#return finalEntry
+				subDoc = BeautifulSoup(subHtml)
+				
+				extractJob = extractItemDataExtended(subDoc, getMetaData(subDoc), False)
+				result = yield extractJob.finished
+
+				citationResults.append(result)
+			
+			finalEntry.update(dict(references = citationResults))
+
+        asyncReturn(finalEntry)
 	

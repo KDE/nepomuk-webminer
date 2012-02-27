@@ -70,8 +70,6 @@ void FetcherDialog::setProgress(int current, int max)
 
 void FetcherDialog::fileFetchingDone()
 {
-    ui->buttonSelect->setEnabled(true);
-
     m_fileTypesToFetch = m_mdf->availableFileTypes();
 
     showNextFileTypeInfoString();
@@ -79,16 +77,26 @@ void FetcherDialog::fileFetchingDone()
 
 void FetcherDialog::fetchingDone()
 {
-    ui->statusText->append( QLatin1String("#######################################################################") );
-    ui->statusText->append( i18n("Meta Data Fetching done.") );
-    ui->buttonSelect->setEnabled(false);
-    ui->buttonStart->setEnabled(false);
-    ui->buttonCancel->setText(i18n("Close"));
+    if( m_fileTypesToFetch.isEmpty() ) {
+        ui->statusText->append( QLatin1String("#######################################################################") );
+        ui->statusText->append( i18n("Meta Data Fetching done.") );
+        ui->buttonSelect->setEnabled(false);
+        ui->buttonStart->setEnabled(false);
+        ui->buttonCancel->setText(i18n("Close"));
+    }
+    else {
+        showNextFileTypeInfoString();
+    }
 }
 
 void FetcherDialog::showNextFileTypeInfoString()
 {
     QString nextType = m_fileTypesToFetch.first();
+
+    ui->buttonSelect->setEnabled(true);
+    ui->buttonStart->setEnabled(false);
+
+    ui->statusText->append( QLatin1String("#######################################################################") );
 
     if( nextType == QLatin1String("publication")) {
         ui->statusText->append( i18n("Please select the engine you want to use for the publication search.") );
@@ -121,6 +129,7 @@ void FetcherDialog::selectEngine()
 void FetcherDialog::startSearch()
 {
     ui->buttonSelect->setEnabled(false);
+    ui->buttonStart->setEnabled(false);
     QString nextType = m_fileTypesToFetch.takeFirst();
 
     m_mdf->startFetching(nextType);

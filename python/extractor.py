@@ -107,14 +107,16 @@ def asyncExtract(url, html=None):
 	doc = BeautifulSoup(html)
 
 	try:
-		if module.asyncUsage is 'true':
-			extractJob = module.extractItemData(doc, getMetaData(doc), url)
-			result = yield extractJob.finished
-		else:
-			result = module.extractItemData(doc, getMetaData(doc), url)
+                returnValue = module.extractItemData(doc, getMetaData(doc), url)
+
+                if isinstance(returnValue, AsyncJob):
+                  realReturnValue = yield returnValue.finished
+                else:
+                  realReturnValue = returnValue
 		
 		# 4. send the variantmap back to c++
-		cppObj.itemResult(result)
+                cppObj.itemResult(realReturnValue)
+
 	except Exception:
 		print 'Error with parsing HTML.'
 		traceback.print_exc()

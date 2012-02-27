@@ -32,7 +32,7 @@ public:
     /**
       * Does the piping action
       */
-    virtual void pipeImport(QList<MetaDataParameters*> & bibEntries);
+    void pipeImport(QList<MetaDataParameters*> & bibEntries);
     virtual void pipeImport(MetaDataParameters* bibEntries) = 0;
 
 signals:

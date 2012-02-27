@@ -18,6 +18,10 @@
 #include "selectenginedialog.h"
 #include "ui_selectenginedialog.h"
 
+#include <KDE/KStandardDirs>
+
+#include <QtGui/QListWidgetItem>
+
 SelectEngineDialog::SelectEngineDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::SelectEngineDialog)
@@ -35,7 +39,10 @@ void SelectEngineDialog::setEngines(const QVariantList &engines)
     foreach(const QVariant &engine, engines) {
         QVariantMap engineMap = engine.toMap();
 
-        QListWidgetItem *i = new QListWidgetItem( engineMap.value(QLatin1String("name")).toString() );
+        QString searchString = QLatin1String("metadataextractor/webengines/") + engineMap.value(QLatin1String("icon")).toString();
+        QString iconPath = KStandardDirs::locate("data", searchString);
+
+        QListWidgetItem *i = new QListWidgetItem(QIcon( iconPath ), engineMap.value(QLatin1String("name")).toString() );
         i->setData( Qt::UserRole, engineMap.value(QLatin1String("identification")).toString() );
 
         ui->engineList->addItem( i );

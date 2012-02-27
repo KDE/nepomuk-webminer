@@ -6,21 +6,19 @@ from imdb import IMDb
 # Module options
 
 # unique identification string, all lower-case no whitespace
-identification = 'imdb'
+identification = 'imdbmovies'
 
-#the full name of this engine
+# the full name of this engine
 name = 'The Internet Movie Database'
 
-#name of the icon for this engine
+# name of the icon for this engine
 icon = 'imdb.png'
 
-#a regular expression used to find the right engine for a specific website
+# a regular expression used to find the right engine for a specific website
 regexp = r'http://www.imdb\.com/title/'
 
-#what kind of nepomuk resource type can be fetched with this engine?
+# what kind of nepomuk resource type can be fetched with this engine?
 resourceType = 'movie'
-
-asyncUsage = 'false'
 
 #------------------------------------------------------------------------------
 # creates the proper search query used for this side
@@ -49,16 +47,20 @@ def extractSearchResults(documentElement, metaData, url=None):
 	
 	searchResults = []
 	for item in results :
+                itemKind = str(item['kind'])
 
-		detailString = str(item['kind']) + ', ' + str(item['year'])
-		fullUrl = 'http://www.imdb.com/title/tt' + item.movieID
-		entryDict = dict(
-				title = item['title'],
-				details = detailString,
-				url = fullUrl
-				)
+                # ignore tv show and such
+                if itemKind == 'movie':
 
-		searchResults.append(entryDict)
+                        detailString = str(item['kind']) + ', ' + str(item['year'])
+                        fullUrl = 'http://www.imdb.com/title/tt' + item.movieID
+                        entryDict = dict(
+                                        title = item['title'],
+                                        details = detailString,
+                                        url = fullUrl
+                                        )
+
+                        searchResults.append(entryDict)
 	
 	return searchResults
 

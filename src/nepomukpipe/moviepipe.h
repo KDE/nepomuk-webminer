@@ -24,6 +24,7 @@
 
 class MoviePipe : public NepomukPipe
 {
+
 public:
     MoviePipe(QObject *parent = 0);
     virtual ~MoviePipe();

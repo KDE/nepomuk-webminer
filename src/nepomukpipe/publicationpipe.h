@@ -45,6 +45,7 @@ class KJob;
 class PublicationPipe : public NepomukPipe
 {
     Q_OBJECT
+
 public:
     explicit PublicationPipe(QObject *parent = 0);
     virtual ~PublicationPipe();

@@ -35,6 +35,10 @@
 #include <KDE/KMimeType>
 #include <KDE/KDebug>
 
+
+#include <KDE/Nepomuk/File>
+#include <Nepomuk/Vocabulary/NMM>
+
 #include <QtCore/QDir>
 #include <QtCore/QTimer>
 
@@ -49,10 +53,10 @@ MetaDataFetcher::MetaDataFetcher(QObject *parent)
     mainContext = PythonQt::self()->getMainModule();
     PythonQt::self()->addObject(mainContext, "cppObj", this);
 
-    QString pythonFile = QString("/home/joerg/Development/KDE/metadataextractor/python/extractor.py");
-    PythonQt::self()->addSysPath(QString("/home/joerg/Development/KDE/metadataextractor/python/"));
-    //QString pythonFile = KStandardDirs::locate("data", "metadataextractor/extractor.py");
-    //PythonQt::self()->addSysPath(pythonFile.section('/', 0, -2));
+//    QString pythonFile = QString("/home/joerg/Development/KDE/metadataextractor/python/extractor.py");
+//    PythonQt::self()->addSysPath(QString("/home/joerg/Development/KDE/metadataextractor/python/"));
+    QString pythonFile = KStandardDirs::locate("data", "metadataextractor/extractor.py");
+    PythonQt::self()->addSysPath(pythonFile.section('/', 0, -2));
 
     mainContext.evalFile(pythonFile);
 
@@ -183,6 +187,16 @@ void MetaDataFetcher::lookupFiles(const KUrl &fileOrFolder)
 
 void MetaDataFetcher::addFilesToList(const KUrl &fileUrl)
 {
+    Nepomuk::File fileResource(fileUrl);
+
+    if( !m_forceUpdate && (
+        fileResource.hasProperty(Nepomuk::Vocabulary::NBIB::publishedAs()) ||
+        fileResource.hasType(Nepomuk::Vocabulary::NMM::TVShow()) ||
+        fileResource.hasType(Nepomuk::Vocabulary::NMM::Movie()))) {
+        kDebug() << "skip file " << fileUrl;
+        return;
+    }
+
     KSharedPtr<KMimeType> kmt = KMimeType::findByUrl( fileUrl );
 
     MetaDataParameters metaDataParameters;
@@ -222,11 +236,7 @@ void MetaDataFetcher::lookupResource(const QList<Nepomuk::Resource> &resources)
 
 void MetaDataFetcher::lookupNextMetaDataOnTheWeb()
 {
-    emit progress(m_curProgress, m_maxProgress);
-    m_curProgress++;
-
     if(m_filesToLookup.value(m_currentType).isEmpty()) {
-        emit progress(m_maxProgress, m_maxProgress);
         emit fetchingDone();
         return;
     }
@@ -351,6 +361,9 @@ void MetaDataFetcher::noSearchResultsFound()
 
     }
     else {
+
+        m_curProgress++;
+        emit progress(m_curProgress, m_maxProgress);
         emit progressStatus( i18n("No search result found") );
 
         // remove item and start next search
@@ -384,6 +397,10 @@ void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
     }
 
     m_nepomukPipe->pipeImport( &currentMDP );
+
+
+    m_curProgress++;
+    emit progress(m_curProgress, m_maxProgress);
 
     // start next search
     lookupNextMetaDataOnTheWeb();
