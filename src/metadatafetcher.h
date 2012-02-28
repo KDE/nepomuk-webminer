@@ -28,6 +28,8 @@
 
 #include "metadataparameters.h"
 
+#include "metadataextractor_export.h"
+
 class NepomukPipe;
 
 /**
@@ -49,7 +51,7 @@ class NepomukPipe;
   * If the search returned only 1 item where the @c title is exactly as the title we searched for, this entry is automatically
   * selected. Otherwise the user can select the right entry via the @c SelectSearchResultDialog.
   */
-class MetaDataFetcher : public QObject
+class NEPOMUKMETADATAEXTRACTOR_EXPORT MetaDataFetcher : public QObject
 {
     Q_OBJECT
 public:

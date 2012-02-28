@@ -21,8 +21,6 @@
 #include "metadatafetcher.h"
 #include "selectenginedialog.h"
 
-#include <QtGui/QApplication>
-
 FetcherDialog::FetcherDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::FetcherDialog)
@@ -137,5 +135,5 @@ void FetcherDialog::startSearch()
 
 void FetcherDialog::cancelClose()
 {
-    qApp->quit();
+    close();
 }

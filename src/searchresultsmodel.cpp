@@ -33,6 +33,8 @@ void SearchResultsModel::setSearchResults(const QVariantList & searchResults)
 
 int SearchResultsModel::rowCount ( const QModelIndex & parent ) const
 {
+    Q_UNUSED(parent);
+
     return m_searchResults.size();
 }
 

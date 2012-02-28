@@ -21,6 +21,8 @@
 #include <QtGui/QDialog>
 #include <KDE/KUrl>
 
+#include "metadataextractor_export.h"
+
 namespace Ui {
     class FetcherDialog;
 }
@@ -31,7 +33,7 @@ class MetaDataFetcher;
   * @brief Main dialog to show the current progress and some buttons to interact with
   *
   */
-class FetcherDialog : public QDialog
+class NEPOMUKMETADATAEXTRACTOR_EXPORT FetcherDialog : public QDialog
 {
     Q_OBJECT
 
