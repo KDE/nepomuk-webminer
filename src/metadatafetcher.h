@@ -58,48 +58,147 @@ public:
     explicit MetaDataFetcher(QObject *parent = 0);
     ~MetaDataFetcher();
 
+    /**
+      * If force update is @c true metadata is also fetched for files that already have data attached to them.
+      *
+      * Otherwise those files will be skipped
+      */
     void setForceUpdate(bool update);
 
-    QStringList availableFileTypes();
-    QVariantList availableSearchEngines( const QString &resourceType);
+    /**
+      * if @p bulk is true thesearch results for each item to lookup is cached
+      * and the user can select the right entry once all items are queried.
+      *
+      * This reduce the need to interact with the fetcher after every item
+      *
+      * Default is false
+      */
+    void setBulkDownload(bool bulk);
 
-    void setUsedEngine(const QString &type, const QString &engine);
-    void startFetching(const QString &type);
-
-signals:
-    void progressStatus(const QString &status);
-    void progress(int current, int max);
-    void fileFetchingDone();
-    void fetchingDone();
-
-public slots:
+    /**
+      * Prepare a file or folder for the lookup
+      *
+      * Check each file mimetype if it is supported and parse some additional info from the file
+      *
+      * @p fileOrFolder the local url of the file or folder
+      *
+      * @see addFilesToList()
+      * @see OdfExtractor
+      * @see PopplerExtractor
+      * @see VideoExtractor
+      */
     void lookupFiles(const KUrl &fileOrFolder);
+
+    /**
+      * Prepare a resource for the lookup.
+      *
+      * Gets some important search parameters from it
+      */
     void lookupResource(const Nepomuk::Resource &resource);
     void lookupResource(const QList<Nepomuk::Resource> &resources);
 
+    /**
+      * If a folder with different filetypes is scanned this returnes the list of types
+      *
+      * the types are "publication", "tvshow", "movie"
+      */
+    QStringList availableResourceTypes();
+
+    /**
+      * Returns the list of available search engines for a specific resource type.
+      *
+      * For example the resourceType "movie" returns the imdb and other engines that can fetch
+      * movie data
+      */
+    QVariantList availableSearchEngines( const QString &resourceType );
+
+    /**
+      * Sets the user selected search engine for the lookup of the @c type
+      *
+      * @p type values like "publication", "tvshow", "movie" etc
+      * @p engine the the short identifier for the engine. See the python plugins for more
+      */
+    void setUsedEngine(const QString &type, const QString &engine);
+
+    /**
+      * Starts the metadata lookup for the @c engine set via setUsedEngine() to the @c type
+      */
+    void startFetching(const QString &type);
+
+signals:
+    void progress(int current, int max);
+    void progressStatus(const QString &status);
+
+    void fileFetchingDone();
+    void fetchingDone();
+
+    void searchlookUpFinished();
+    void itemExtractionFinished();
+
+    void selectSearchEntry( MetaDataParameters *mdp, QVariantList searchResults);
+
+public slots:
+    /**
+      * This slot is called from the python plugin when the serach results are ready
+      *
+      * If only 1 search result is found or only 1 result that has an exact math on the title take this one
+      * and call @c fetchItem()
+      *
+      * Otherwise @c selectSearchEntry() is emitted where the user needs to do his selection
+      * After the selectio nis done @c fetchItem() mus tbe called to proceed
+      *
+      * In the case @c batchDownload is enabled the search rsults will be saved and the next item is used for the lookup
+      * after all items are lookedUp @c searchlookUpFinished is emitted and the user can select the entries he want in one go
+      */
     void searchResults(const QVariantList &searchResults);
-    // start search again with alttitle
-    //@todo select next search engine instead?
     void noSearchResultsFound();
+
+    void fetchItem(MetaDataParameters *mdp, const KUrl &fetchUrl);
     void itemResult(const QVariantMap &itemResults);
 
 private slots:
-    void addFilesToList(const KUrl &fileUrl);
-    void lookupNextMetaDataOnTheWeb();
+    /**
+      * Outputs the python "print xxx" to the commandline and emit them via progressStatus()
+      */
     void pythonStdOut(QString test);
 
 private:
+    /**
+      * called by lookupFiles checks if the metadata matches and extarcts some info
+      *
+      * the results will be added to @c m_resourcesToLookup
+      */
+    void addFilesToList(const KUrl &fileUrl);
+
+    /**
+      * Takes the next entry of @c m_resourcesToLookup for the @c m_currentType
+      * and calls the python part to start the search
+      *
+      * emits @c fetchingDone() if all items are fetched
+      * the python part calls
+      * @li searchResults() for the found items
+      * @li noSearchResultsFound if nothing was found
+      */
+    void startNextWebSearch();
+    void startNextBulkItemExtraction();
+
+private:
     bool m_forceUpdate;
+    bool m_bulkDownload;
+
     PythonQtObjectPtr mainContext;
-    QMap<QString, QList<MetaDataParameters> > m_filesToLookup;
     QMap<QString,QString> m_selectedSearchEngine;
+
+    QMap<QString, QList<MetaDataParameters *> > m_resourcesToLookup;
+    QMap<MetaDataParameters *, QVariantList > m_bulkSearchResults;
+    QMap<MetaDataParameters *, KUrl > m_bulkItemdFetching;
+    MetaDataParameters *m_currentItemToFetch;
 
     int m_maxProgress;
     int m_curProgress;
     QString m_currentType;
 
     bool m_altSearchStarted;
-    NepomukPipe *m_nepomukPipe;
 };
 
 #endif // METADATAFETCHER_H

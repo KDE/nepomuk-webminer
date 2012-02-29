@@ -41,14 +41,15 @@ public:
     explicit SelectSearchResultDialog(QWidget *parent = 0);
     ~SelectSearchResultDialog();
 
-    void setMetaDataParameters(const MetaDataParameters & mdp);
+    void setMetaDataParameters(const MetaDataParameters * mdp);
     void setSearchResults(const QVariantList &searchResults);
 
-    int selectedEntry();
+    KUrl selectedEntry();
 
 private:
     Ui::SelectSearchResultDialog *ui;
     SearchResultsModel *m_resultModel;
+    QVariantList m_searchResults;
 };
 
 #endif // SELECTSEARCHRESULTDIALOG_H

@@ -40,18 +40,22 @@ SelectSearchResultDialog::~SelectSearchResultDialog()
     delete ui;
 }
 
-void SelectSearchResultDialog::setMetaDataParameters(const MetaDataParameters & mdp)
+void SelectSearchResultDialog::setMetaDataParameters(const MetaDataParameters * mdp)
 {
-    ui->labelFileName->setText(mdp.resourceUri.fileName());
-    ui->labelTitle->setText(mdp.searchTitle);
+    ui->labelFileName->setText(mdp->resourceUri.fileName());
+    ui->labelTitle->setText(mdp->searchTitle);
 }
 
 void SelectSearchResultDialog::setSearchResults(const QVariantList &searchResults)
 {
     m_resultModel->setSearchResults( searchResults );
+    m_searchResults = searchResults;
 }
 
-int SelectSearchResultDialog::selectedEntry()
+KUrl SelectSearchResultDialog::selectedEntry()
 {
-    return ui->listView->currentIndex().row();
+    int resultRow = ui->listView->currentIndex().row();
+    QVariantMap entryMap =  m_searchResults.at( resultRow ).toMap();
+    KUrl fetchUrl(entryMap.value(QLatin1String("url")).toString() );
+    return fetchUrl;
 }

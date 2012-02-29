@@ -28,6 +28,7 @@ namespace Ui {
 }
 
 class MetaDataFetcher;
+class MetaDataParameters;
 
 /**
   * @brief Main dialog to show the current progress and some buttons to interact with
@@ -43,12 +44,14 @@ public:
 
     void setInitialPathOrFile( const KUrl &url );
     void setForceUpdate(bool update);
+    void setBulkDownload(bool bulk);
 
 private slots:
     void setProgressInfo(const QString &status);
     void setProgress(int current, int max);
     void fileFetchingDone();
-    void fetchingDone();
+    void searchlookUpFinished();
+    void selectSearchEntry( MetaDataParameters *mdp, QVariantList searchResults);
 
     void selectEngine();
     void startSearch();
@@ -60,6 +63,7 @@ private:
 
     MetaDataFetcher *m_mdf;
     QStringList m_fileTypesToFetch;
+    bool m_bulkDownload;
 };
 
 #endif // FETCHERDIALOG_H

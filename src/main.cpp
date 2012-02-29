@@ -49,6 +49,7 @@ int main( int argc, char *argv[] )
 
 //    FetcherDialog fd;
 //    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest2/");
+//    fd.setForceUpdate(true);
 //    fd.setInitialPathOrFile( debug );
 //    fd.show();
 //    return app.exec();
