@@ -249,6 +249,7 @@ void FetcherDialog::startSearch()
     busyFetching();
 
     MetaDataParameters *mdp = m_mdf->getResource( m_categoriesToFetch.at(m_currentCategory), m_currentResource);
+    mdp->searchTitle = ui->lineEditTitle->text();
 
     int currentEngine = ui->comboBoxSearchEngine->currentIndex();
     QString engineId = ui->comboBoxSearchEngine->itemData( currentEngine ).toString();
