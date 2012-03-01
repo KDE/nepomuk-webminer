@@ -32,6 +32,7 @@ namespace Ui {
 class MetaDataFetcher;
 class MetaDataParameters;
 class SearchResultsModel;
+class QTextDocument;
 
 /**
   * @brief Main dialog to show the current progress and some buttons to interact with
@@ -64,10 +65,8 @@ private slots:
 
     void cancelClose();
 
-/*
-    void setProgressInfo(const QString &status);
-    void setProgress(int current, int max);
-    */
+    void addProgressInfo(const QString &status);
+    void showProgressLog();
 
 private:
     void fillEngineList(const QString &category);
@@ -82,6 +81,8 @@ private:
     int m_currentResource;
 
     SearchResultsModel *m_resultModel;
+
+    QTextDocument *m_progressLog;
 };
 
 #endif // FETCHERDIALOG_H

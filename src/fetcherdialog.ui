@@ -139,7 +139,7 @@
       <number>5</number>
      </property>
      <widget class="QListView" name="searchResults"/>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QGroupBox" name="groupBox">
@@ -162,7 +162,7 @@
              </font>
             </property>
             <property name="text">
-             <string notr="true">Title</string>
+             <string notr="true"/>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
@@ -172,7 +172,7 @@
           <item>
            <widget class="QLabel" name="detailsText">
             <property name="text">
-             <string notr="true">Details</string>
+             <string notr="true"/>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
@@ -181,6 +181,9 @@
           </item>
           <item>
            <widget class="KUrlLabel" name="detailsUrl">
+            <property name="text">
+             <string/>
+            </property>
             <property name="wordWrap">
              <bool>true</bool>
             </property>

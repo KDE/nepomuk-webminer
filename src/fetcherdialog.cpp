@@ -23,14 +23,19 @@
 #include "searchresultdelegate.h"
 
 #include <KDE/KStandardDirs>
+#include <KDE/KDialog>
 
 #include <QtGui/QGridLayout>
+#include <QtGui/QTextDocument>
+#include <QtGui/QTextEdit>
 
 FetcherDialog::FetcherDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::FetcherDialog)
 {
     ui->setupUi(this);
+
+    m_progressLog = new QTextDocument;
 
     m_mdf = new MetaDataFetcher;
 
@@ -55,12 +60,23 @@ FetcherDialog::FetcherDialog(QWidget *parent)
 
     connect(ui->buttonCancel, SIGNAL(clicked()), this, SLOT(cancelClose()));
 
-    //connect(m_mdf, SIGNAL(progressStatus(QString)), this, SLOT(setProgressInfo(QString)));
-    //connect(m_mdf, SIGNAL(progress(int,int)), this, SLOT(setProgress(int,int)));
-
+    connect(m_mdf, SIGNAL(progressStatus(QString)), this, SLOT(addProgressInfo(QString)));
+    connect(ui->buttonLog, SIGNAL(clicked()), this, SLOT(showProgressLog()));
 
     QGridLayout * gridLayout = new QGridLayout;
     ui->metaDataList->setLayout( gridLayout );
+
+    ui->buttonEngineSettings->setIcon(KIcon("configure"));
+    ui->buttonEngineSettings->setEnabled(false);
+    ui->buttonSearchDetails->setIcon(KIcon("system-search"));
+    ui->buttonSearchDetails->setEnabled(false);
+    ui->buttonSearch->setIcon(KIcon("edit-find"));
+    ui->buttonSave->setIcon(KIcon("document-save"));
+    ui->buttonCancel->setIcon(KIcon("dialog-cancel"));
+    ui->buttonNext->setIcon(KIcon("go-next"));
+    ui->buttonPrevious->setIcon(KIcon("go-previous"));
+    ui->buttonLog->setIcon(KIcon("tools-report-bug"));
+    ui->buttonFetchMore->setIcon(KIcon("download"));
 }
 
 FetcherDialog::~FetcherDialog()
@@ -79,19 +95,30 @@ void FetcherDialog::setForceUpdate(bool update)
     m_mdf->setForceUpdate(update);
 }
 
-/*
-void FetcherDialog::setProgressInfo(const QString &status)
+
+void FetcherDialog::addProgressInfo(const QString &status)
 {
-    ui->statusText->append( status );
+    QTextCursor qtc(m_progressLog);
+    qtc.movePosition( QTextCursor::End );
+    qtc.insertText(status + QLatin1String("\n"));
 }
 
-void FetcherDialog::setProgress(int current, int max)
+void FetcherDialog::showProgressLog()
 {
-    ui->progressBar->setMinimum(0);
-    ui->progressBar->setMaximum(max);
-    ui->progressBar->setValue(current);
+    QPointer<KDialog> log = new KDialog;
+    log->setInitialSize(QSize(600,300));
+    log->setButtons( KDialog::Ok );
+
+    QTextEdit *logView = new QTextEdit(log);
+    logView->setDocument(m_progressLog);
+    logView->setReadOnly(true);
+    log->setMainWidget(logView);
+
+    log->exec();
+
+    delete log;
 }
-*/
+
 void FetcherDialog::fileFetchingDone()
 {
     m_categoriesToFetch = m_mdf->availableResourceTypes();
@@ -148,8 +175,9 @@ void FetcherDialog::selectNextResourceToLookUp()
     ui->labelDescription->setText( i18n("Fetch metadata for the resource: <b>%1</b>", mdp->resourceUri.fileName()));
     ui->lineEditTitle->setText( mdp->searchTitle );
 
+    ui->buttonFetchMore->setEnabled(false);
+
     // don't show next button if there is no next item
-    qDebug() << m_currentCategory << m_currentResource;
     if(m_currentCategory == m_categoriesToFetch.size()-1 &&
        m_currentResource == resourceCount-1) {
         ui->buttonNext->setEnabled(false);
