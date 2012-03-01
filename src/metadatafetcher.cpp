@@ -52,21 +52,13 @@ MetaDataFetcher::MetaDataFetcher(QObject *parent)
     mainContext = PythonQt::self()->getMainModule();
     PythonQt::self()->addObject(mainContext, "cppObj", this);
 
-//    QString pythonFile = QString("/home/joerg/Development/KDE/metadataextractor/python/extractor.py");
-//    PythonQt::self()->addSysPath(QString("/home/joerg/Development/KDE/metadataextractor/python/"));
     QString pythonFile = KStandardDirs::locate("data", "metadataextractor/extractor.py");
     PythonQt::self()->addSysPath(pythonFile.section('/', 0, -2));
 
     mainContext.evalFile(pythonFile);
 
-    kDebug() << "main python file used ::" << pythonFile;
-
     connect(PythonQt::self(), SIGNAL(pythonStdOut(QString)), this, SLOT(pythonStdOut(QString)));
     connect(PythonQt::self(), SIGNAL(pythonStdErr(QString)), this, SLOT(pythonStdOut(QString)));
-
-    //m_selectedSearchEngine.insert(QLatin1String("publication"), QLatin1String("msa"));
-    //m_selectedSearchEngine.insert(QLatin1String("tvshow"), QLatin1String("msa"));
-    //m_selectedSearchEngine.insert(QLatin1String("movie"), QLatin1String("imdb"));
 }
 
 MetaDataFetcher::~MetaDataFetcher()

@@ -47,12 +47,12 @@ int main( int argc, char *argv[] )
 
     KApplication app;
 
-    FetcherDialog fd;
-    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/");
-    fd.setForceUpdate(true);
-    fd.setInitialPathOrFile( debug );
-    fd.show();
-    return app.exec();
+//    FetcherDialog fd;
+//    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/");
+//    fd.setForceUpdate(true);
+//    fd.setInitialPathOrFile( debug );
+//    fd.show();
+//    return app.exec();
 
     if ( args->count() && args->url(0).isValid() ) {
 
