@@ -65,6 +65,7 @@ FetcherDialog::FetcherDialog(QWidget *parent)
 
     QGridLayout * gridLayout = new QGridLayout;
     ui->metaDataList->setLayout( gridLayout );
+    gridLayout->setColumnStretch(1,10);
 
     ui->buttonEngineSettings->setIcon(KIcon("configure"));
     ui->buttonEngineSettings->setEnabled(false);
@@ -203,7 +204,7 @@ void FetcherDialog::selectPreviousResourceToLookUp()
 {
     m_currentResource--;
 
-    int resourceCount = m_mdf->resourcesToUpdate( m_categoriesToFetch.at(m_currentCategory) );;
+    int resourceCount = m_mdf->resourcesToUpdate( m_categoriesToFetch.at(m_currentCategory) );
     if( m_currentResource < 0) {
         m_currentCategory--;
         resourceCount = m_mdf->resourcesToUpdate( m_categoriesToFetch.at(m_currentCategory) );
@@ -245,13 +246,18 @@ void FetcherDialog::selectPreviousResourceToLookUp()
 
 void FetcherDialog::startSearch()
 {
-    ui->buttonNext->setEnabled(false);
-    ui->buttonSearch->setEnabled(false);
+    busyFetching();
 
     MetaDataParameters *mdp = m_mdf->getResource( m_categoriesToFetch.at(m_currentCategory), m_currentResource);
 
     int currentEngine = ui->comboBoxSearchEngine->currentIndex();
     QString engineId = ui->comboBoxSearchEngine->itemData( currentEngine ).toString();
+
+    QWidget::setCursor( Qt::BusyCursor );
+
+    ui->buttonSearch->setEnabled(false);
+    ui->buttonNext->setEnabled(false);
+    ui->buttonPrevious->setEnabled(false);
 
     m_mdf->searchItem( mdp, engineId );
 }
@@ -260,8 +266,7 @@ void FetcherDialog::selectSearchEntry( MetaDataParameters *mdp, QVariantList sea
 {
     Q_UNUSED(mdp);
 
-    ui->buttonNext->setEnabled(true);
-    ui->buttonSearch->setEnabled(true);
+    finishedFetching();
 
     m_resultModel->setSearchResults( searchResults );
 
@@ -293,12 +298,15 @@ void FetcherDialog::searchEntrySelected(const QModelIndex &current, const QModel
 
 void FetcherDialog::fetchMoreDetails()
 {
+    busyFetching();
+
     // get the current item to fetch
     QModelIndex currentEntry = ui->searchResults->currentIndex();
     QVariantMap entry = m_resultModel->searchResultEntry(currentEntry);
 
     MetaDataParameters *mdp = m_mdf->getResource( m_categoriesToFetch.at(m_currentCategory), m_currentResource);
     KUrl fetchUrl( entry.value(QLatin1String("url")).toString() );
+
     m_mdf->fetchItem(mdp, fetchUrl);
 }
 
@@ -307,14 +315,17 @@ void FetcherDialog::fetchedItemDetails(MetaDataParameters *mdp, QVariantMap item
     Q_UNUSED(mdp);
 
     showItemDetails();
+
+    finishedFetching();
 }
 
 void FetcherDialog::saveMetaData()
 {
     MetaDataParameters *mdp = m_mdf->getResource( m_categoriesToFetch.at(m_currentCategory), m_currentResource);
 
-    ui->buttonSave->setEnabled(false);
+    busyFetching();
     m_mdf->saveItemMetaData( mdp );
+    finishedFetching();
 }
 
 void FetcherDialog::cancelClose()
@@ -380,5 +391,51 @@ void FetcherDialog::showItemDetails()
     }
     else {
         ui->buttonSave->setEnabled(true);
+    }
+}
+
+void FetcherDialog::busyFetching()
+{
+    QWidget::setCursor( Qt::BusyCursor );
+
+    ui->buttonSearch->setEnabled(false);
+    ui->buttonFetchMore->setEnabled(false);
+    ui->buttonNext->setEnabled(false);
+    ui->buttonPrevious->setEnabled(false);
+    ui->buttonSave->setEnabled( false );
+}
+
+void FetcherDialog::finishedFetching()
+{
+    QWidget::setCursor( Qt::ArrowCursor );
+
+    MetaDataParameters *mdp = m_mdf->getResource( m_categoriesToFetch.at(m_currentCategory), m_currentResource);
+    ui->buttonSave->setEnabled( !mdp->metaDataSaved );
+
+    ui->buttonSearch->setEnabled( true );
+
+    QModelIndex currentEntry = ui->searchResults->currentIndex();
+    QVariantMap entry = m_resultModel->searchResultEntry(currentEntry);
+    if( entry.contains(QLatin1String("url")) ) {
+        ui->buttonFetchMore->setEnabled(true);
+    }
+
+    int resourceCount = m_mdf->resourcesToUpdate( m_categoriesToFetch.at(m_currentCategory) );
+
+    // don't enable next button if there is no next item
+    if(m_currentCategory == m_categoriesToFetch.size()-1 &&
+       m_currentResource == resourceCount-1) {
+        ui->buttonNext->setEnabled(false);
+    }
+    else {
+        ui->buttonNext->setEnabled(true);
+    }
+
+    // don't enable previous button, if there is no previous item
+    if(m_currentCategory == 0 && m_currentResource == 0) {
+        ui->buttonPrevious->setEnabled(false);
+    }
+    else {
+        ui->buttonPrevious->setEnabled(true);
     }
 }

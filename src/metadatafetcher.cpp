@@ -281,8 +281,6 @@ void MetaDataFetcher::fetchItem(MetaDataParameters *mdp, const KUrl &fetchUrl)
 
 void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
 {
-    emit progressStatus( i18n("Insert the data into nepomuk") );
-
     // now we have the fetched meta data as nice QVariantMap call the pipeImporter
     // these know how the VariantMap should be handled and create the
     // right SimpleResource, SimpleResourceGraph information from it

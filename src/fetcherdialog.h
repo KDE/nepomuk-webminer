@@ -72,6 +72,9 @@ private:
     void fillEngineList(const QString &category);
     void showItemDetails();
 
+    void busyFetching();
+    void finishedFetching();
+
 private:
     Ui::FetcherDialog *ui;
     MetaDataFetcher *m_mdf;
