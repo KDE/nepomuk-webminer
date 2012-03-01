@@ -23,12 +23,15 @@
 
 #include "metadataextractor_export.h"
 
+#include <QtCore/QModelIndex>
+
 namespace Ui {
     class FetcherDialog;
 }
 
 class MetaDataFetcher;
 class MetaDataParameters;
+class SearchResultsModel;
 
 /**
   * @brief Main dialog to show the current progress and some buttons to interact with
@@ -44,26 +47,41 @@ public:
 
     void setInitialPathOrFile( const KUrl &url );
     void setForceUpdate(bool update);
-    void setBulkDownload(bool bulk);
 
 private slots:
+    void fileFetchingDone();
+    void selectNextResourceToLookUp();
+    void selectPreviousResourceToLookUp();
+
+    void startSearch();
+    void selectSearchEntry( MetaDataParameters *mdp, QVariantList searchResults);
+    void searchEntrySelected(const QModelIndex &current, const QModelIndex &previous);
+
+    void fetchMoreDetails();
+    void fetchedItemDetails(MetaDataParameters *mdp, QVariantMap itemDetails);
+
+    void saveMetaData();
+
+    void cancelClose();
+
+/*
     void setProgressInfo(const QString &status);
     void setProgress(int current, int max);
-    void fileFetchingDone();
-    void searchlookUpFinished();
-    void selectSearchEntry( MetaDataParameters *mdp, QVariantList searchResults);
+    */
 
-    void selectEngine();
-    void startSearch();
-    void cancelClose();
-    void showNextFileTypeInfoString();
+private:
+    void fillEngineList(const QString &category);
+    void showItemDetails();
 
 private:
     Ui::FetcherDialog *ui;
-
     MetaDataFetcher *m_mdf;
-    QStringList m_fileTypesToFetch;
-    bool m_bulkDownload;
+
+    QStringList m_categoriesToFetch;
+    int m_currentCategory;
+    int m_currentResource;
+
+    SearchResultsModel *m_resultModel;
 };
 
 #endif // FETCHERDIALOG_H

@@ -35,6 +35,7 @@ struct MetaDataParameters {
     QString resourceType;         /**< used to select the right set of python modules that allow retrieving data for this resoruce */
     KUrl resourceUri;             /**< the nepomuk or file url where the retrieved data will be added to */
     QVariantMap metaData;         /**< here all fetched data is pushed into @todo define proper api how the data should be saved in her (key=value list) */
+    bool metaDataSaved;
 };
 
 #endif // PUBLICATIONENTRY_H

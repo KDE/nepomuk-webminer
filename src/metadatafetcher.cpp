@@ -64,9 +64,9 @@ MetaDataFetcher::MetaDataFetcher(QObject *parent)
     connect(PythonQt::self(), SIGNAL(pythonStdOut(QString)), this, SLOT(pythonStdOut(QString)));
     connect(PythonQt::self(), SIGNAL(pythonStdErr(QString)), this, SLOT(pythonStdOut(QString)));
 
-    m_selectedSearchEngine.insert(QLatin1String("publication"), QLatin1String("msa"));
-    m_selectedSearchEngine.insert(QLatin1String("tvshow"), QLatin1String("msa"));
-    m_selectedSearchEngine.insert(QLatin1String("movie"), QLatin1String("imdb"));
+    //m_selectedSearchEngine.insert(QLatin1String("publication"), QLatin1String("msa"));
+    //m_selectedSearchEngine.insert(QLatin1String("tvshow"), QLatin1String("msa"));
+    //m_selectedSearchEngine.insert(QLatin1String("movie"), QLatin1String("imdb"));
 }
 
 MetaDataFetcher::~MetaDataFetcher()
@@ -152,7 +152,7 @@ QStringList MetaDataFetcher::availableResourceTypes()
     return availableTypes;
 }
 
-QVariantList MetaDataFetcher::availableSearchEngines( const QString &resourceType)
+QVariantList MetaDataFetcher::availableSearchEngines( const QString &resourceType )
 {
     QVariantList list; list << resourceType;
     QVariant engines = mainContext.call("availableSearchEngines", list);
@@ -173,76 +173,73 @@ QVariantList MetaDataFetcher::availableSearchEngines( const QString &resourceTyp
     return engineList;
 }
 
-void MetaDataFetcher::setUsedEngine(const QString &type, const QString &engine)
+int MetaDataFetcher::resourcesToUpdate( const QString &type ) const
 {
-    m_selectedSearchEngine.insert(type, engine);
+    QList<MetaDataParameters *> mdpList = m_resourcesToLookup.value(type);
+
+    return mdpList.size();
 }
 
-void MetaDataFetcher::startFetching(const QString &type)
+MetaDataParameters *MetaDataFetcher::getResource( const QString &type, int resource ) const
 {
-    m_currentType = type;
+    QList<MetaDataParameters *> mdpList = m_resourcesToLookup.value(type);
 
-    startNextWebSearch();
+    if(resource >= mdpList.size()) {
+        return 0;
+    }
+    else {
+        return mdpList.at(resource);
+    }
+}
+
+void MetaDataFetcher::searchItem(MetaDataParameters *mdp, const QString &engine)
+{
+    m_currentItemToFetch = mdp;
+    m_currentEngineToUse = engine;
+
+    QString title = mdp->searchTitle;
+
+    emit progressStatus( QLatin1String("") );
+    emit progressStatus( QLatin1String("#############################################################") );
+    emit progressStatus( i18n("# check next file: %1", mdp->resourceUri.fileName()) );
+
+    if(!title.isEmpty()) {
+        emit progressStatus( i18n("Lookup title \"%1\"", title) );
+
+        m_altSearchStarted = false;
+
+        QVariantList list;
+        list << engine; //search engine identifier
+        list << title;
+        //list << entryToQuery->metaData.value(QLatin1String("author"));  // author
+        //list << entryToQuery->metaData.value(QLatin1String("freetext"));  // freetext
+
+        kDebug() << "start python query with arguments" << list;
+
+        // start the search with the module specified with the moduleId
+        mainContext.call("search", list);
+        // wait till searchResults() slot is called
+    }
+    else {
+        emit progressStatus( i18n("Can't lookup file, no search parameters defined") );
+    }
 }
 
 void MetaDataFetcher::searchResults(const QVariantList &searchResults)
 {
-    // remove from list of file entries we still need to look up
-    QList<MetaDataParameters *> mdpList = m_resourcesToLookup.value(m_currentType);
-    MetaDataParameters *mdp = mdpList.takeFirst();
-    m_resourcesToLookup.insert(m_currentType, mdpList);
+//    QVariantList searchResultList = m_searchResults.value(m_currentItemToFetch);
 
-    m_curProgress++;
-    emit progress(m_curProgress, m_maxProgress);
+//    searchResultList.append(searchResults);
+    m_searchResults.insert(m_currentItemToFetch, searchResults);
 
-    if(m_bulkDownload) {
-        // add to the list of entries we did look up
-        m_bulkSearchResults.insert(mdp, searchResults);
-
-        // start next search
-        startNextWebSearch();
-    }
-    else {
-        // check if we have one exact search result
-        // take this then or emit a signal so the user can decide if he wants to search again or take one of the existing items
-        QList<int> exactStringMatches;
-
-        int i=0;
-        foreach(const QVariant &entry, searchResults) {
-            QVariantMap map = entry.toMap();
-
-            QString returnedTitle = map.value("title").toString();
-            returnedTitle.remove(QRegExp("<[^>]*>"));
-
-            if( returnedTitle == mdp->searchTitle) {
-                exactStringMatches << i;
-            }
-
-            i++;
-        }
-
-        QVariantMap selectedEntry;
-
-        if( exactStringMatches.size() == 1 ) {
-            emit progressStatus(i18n("Only 1 result with an exact title match found. This entry will be used"));
-
-            selectedEntry = searchResults.at( exactStringMatches.first() ).toMap();
-
-            KUrl fetchUrl( selectedEntry.value("url").toString() );
-            fetchItem(mdp, fetchUrl);
-        }
-        else {
-            emit progressStatus(i18n("Several results found. Please select the one you want to use"));
-
-            emit selectSearchEntry(mdp, searchResults);
-        }
-    }
+    emit progressStatus(i18n("Several results found. Please select the one you want to use"));
+    emit selectSearchEntry(m_currentItemToFetch, searchResults);
 }
 
 void MetaDataFetcher::noSearchResultsFound()
 {
     // ok nothing found with normal title check alttitle
-    MetaDataParameters *mdp = m_resourcesToLookup.value(m_currentType).first();
+    MetaDataParameters *mdp = m_currentItemToFetch;
     QString altTitle = mdp->searchAltTitle;
 
     if(!m_altSearchStarted && !altTitle.isEmpty()) {
@@ -250,7 +247,7 @@ void MetaDataFetcher::noSearchResultsFound()
         emit progressStatus( i18n("No search result found, try with alternative title \"%1\"", altTitle) );
 
         QVariantList list;
-        list << m_selectedSearchEngine.value(m_currentType);//     moduleId
+        list << m_currentEngineToUse;
         list << altTitle;
         //list << entryToQuery->metaData.value(QLatin1String("author"));  // author
         //list << entryToQuery->metaData.value(QLatin1String("freetext"));  // freetext
@@ -260,24 +257,10 @@ void MetaDataFetcher::noSearchResultsFound()
         // wait till searchResults() slot is called
     }
     else {
-        m_curProgress++;
-        emit progress(m_curProgress, m_maxProgress);
         emit progressStatus( i18n("No search result found") );
 
-        // remove from list of file entries we still need to look up
-        QList<MetaDataParameters *> mdpList = m_resourcesToLookup.value(m_currentType);
-        MetaDataParameters *mdp = mdpList.takeFirst();
-        m_resourcesToLookup.insert(m_currentType, mdpList);
-
-        if(m_bulkDownload) {
-            // add to the list of entries we did look up
-            QVariantList empty;
-            m_bulkSearchResults.insert(mdp, empty);
-        }
-
-        kDebug() << "TODOOOOOOOO open dialog to adjust search parameters/change engine";
-
-        startNextWebSearch();
+        QVariantList empty;
+        emit selectSearchEntry(mdp, empty);
     }
 }
 
@@ -298,9 +281,6 @@ void MetaDataFetcher::fetchItem(MetaDataParameters *mdp, const KUrl &fetchUrl)
 
 void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
 {
-    // remove the item from the list of entries we used to search for
-    m_bulkSearchResults.remove(m_currentItemToFetch);
-
     emit progressStatus( i18n("Insert the data into nepomuk") );
 
     // now we have the fetched meta data as nice QVariantMap call the pipeImporter
@@ -315,38 +295,35 @@ void MetaDataFetcher::itemResult(const QVariantMap &itemResults)
         m_currentItemToFetch->metaData.insert(i.key(), i.value());
     }
 
+    emit fetchedItemDetails( m_currentItemToFetch, m_currentItemToFetch->metaData );
+}
+
+void MetaDataFetcher::saveItemMetaData( MetaDataParameters *mdp )
+{
+    QString type = mdp->resourceType;
+
     NepomukPipe *nepomukPipe = 0;
-    if(m_currentItemToFetch->resourceType == QLatin1String("publication")) {
+    if(type == QLatin1String("publication")) {
         nepomukPipe = new PublicationPipe;
     }
-    else if(m_currentItemToFetch->resourceType == QLatin1String("tvshow")) {
+
+    else if(type == QLatin1String("tvshow")) {
+
         nepomukPipe = 0;
-        kDebug() << "no nepomuk pipe for tvshows available";
         //m_nepomukPipe = new PubEntryToNepomukPipe;
     }
-    else if(m_currentItemToFetch->resourceType == QLatin1String("movie")) {
+
+    else if(type == QLatin1String("movie")) {
         nepomukPipe = new MoviePipe;
     }
 
     if(nepomukPipe) {
-        nepomukPipe->pipeImport( m_currentItemToFetch );
+        nepomukPipe->pipeImport( mdp );
+
+        mdp->metaDataSaved = true;
     }
     else {
-        kDebug() << "no pipe importer for" << m_currentItemToFetch->resourceType << "found to add the data to nepomuk";
-    }
-
-    delete m_currentItemToFetch;
-
-    m_curProgress++;
-    emit progress(m_curProgress, m_maxProgress);
-
-    if(m_bulkDownload) {
-        // start next item extract
-        startNextBulkItemExtraction();
-    }
-    else {
-        // start next search
-        startNextWebSearch();
+        emit progressStatus(i18n("No nepomuk pipe available for the resoure type %1", type));
     }
 }
 
@@ -374,6 +351,7 @@ void MetaDataFetcher::addFilesToList(const KUrl &fileUrl)
     KSharedPtr<KMimeType> kmt = KMimeType::findByUrl( fileUrl );
 
     MetaDataParameters *metaDataParameters = new MetaDataParameters;
+    metaDataParameters->metaDataSaved = false;
 
     if(kmt.data()->name().contains(QLatin1String("application/vnd.oasis.opendocument.text"))) {
         OdfExtractor odfExtractor;
@@ -395,70 +373,4 @@ void MetaDataFetcher::addFilesToList(const KUrl &fileUrl)
     QList<MetaDataParameters*> currentFileList = m_resourcesToLookup.value( metaDataParameters->resourceType );
     currentFileList.append( metaDataParameters );
     m_resourcesToLookup.insert( metaDataParameters->resourceType, currentFileList);
-}
-
-void MetaDataFetcher::startNextWebSearch()
-{
-    kDebug() << "startNextWebSearch";
-    if(m_resourcesToLookup.value(m_currentType).isEmpty()) {
-        kDebug() << "searchlookUpFinished";
-        emit searchlookUpFinished();
-        return;
-    }
-    kDebug() << "start next";
-
-    MetaDataParameters *mdp = m_resourcesToLookup.value(m_currentType).first();
-    QString title = mdp->searchTitle;
-
-    emit progressStatus( QLatin1String("") );
-    emit progressStatus( QLatin1String("#############################################################") );
-    emit progressStatus( i18n("# check next file: %1", mdp->resourceUri.fileName()) );
-
-    if(!title.isEmpty()) {
-        emit progressStatus( i18n("Lookup title \"%1\"", title) );
-
-        m_altSearchStarted = false;
-
-        QVariantList list;
-        list << m_selectedSearchEngine.value(m_currentType);//     moduleId
-        list << title;
-        //list << entryToQuery->metaData.value(QLatin1String("author"));  // author
-        //list << entryToQuery->metaData.value(QLatin1String("freetext"));  // freetext
-
-        kDebug() << "start python query with arguments" << list;
-
-        // start the search with the module specified with the moduleId
-        mainContext.call("search", list);
-        // wait till searchResults() slot is called
-    }
-    else {
-        emit progressStatus( i18n("Can't lookup file, no search parameters defined") );
-
-        // remove from list of file entries we still need to look up
-        QList<MetaDataParameters *> mdpList = m_resourcesToLookup.value(m_currentType);
-        MetaDataParameters *mdp = mdpList.takeFirst();
-        m_resourcesToLookup.insert(m_currentType, mdpList);
-
-        if(m_bulkDownload) {
-            // add to the list of entries we did look up
-            QVariantList empty;
-            m_bulkSearchResults.insert(mdp, empty);
-        }
-
-        kDebug() << "TODOOOOOOOO open dialog to adjust search parameters/change engine";
-
-        // and proceed with the next entry
-        startNextWebSearch();
-    }
-}
-
-void MetaDataFetcher::startNextBulkItemExtraction()
-{
-    if( m_bulkItemdFetching.isEmpty() ) {
-        emit itemExtractionFinished();
-    }
-    else {
-        MetaDataParameters *mdp = m_bulkItemdFetching.keys().first();
-        fetchItem(mdp, m_bulkItemdFetching.value(mdp) );
-    }
 }

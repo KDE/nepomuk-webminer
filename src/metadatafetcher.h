@@ -112,18 +112,12 @@ public:
       */
     QVariantList availableSearchEngines( const QString &resourceType );
 
-    /**
-      * Sets the user selected search engine for the lookup of the @c type
-      *
-      * @p type values like "publication", "tvshow", "movie" etc
-      * @p engine the the short identifier for the engine. See the python plugins for more
-      */
-    void setUsedEngine(const QString &type, const QString &engine);
+    int resourcesToUpdate( const QString &type ) const;
+    MetaDataParameters *getResource( const QString &type, int resource ) const;
 
-    /**
-      * Starts the metadata lookup for the @c engine set via setUsedEngine() to the @c type
-      */
-    void startFetching(const QString &type);
+
+    void searchItem( MetaDataParameters *mdp, const QString &engine );
+    void saveItemMetaData( MetaDataParameters *mdp );
 
 signals:
     void progress(int current, int max);
@@ -136,6 +130,7 @@ signals:
     void itemExtractionFinished();
 
     void selectSearchEntry( MetaDataParameters *mdp, QVariantList searchResults);
+    void fetchedItemDetails(MetaDataParameters *mdp, QVariantMap itemDetails);
 
 public slots:
     /**
@@ -170,29 +165,15 @@ private:
       */
     void addFilesToList(const KUrl &fileUrl);
 
-    /**
-      * Takes the next entry of @c m_resourcesToLookup for the @c m_currentType
-      * and calls the python part to start the search
-      *
-      * emits @c fetchingDone() if all items are fetched
-      * the python part calls
-      * @li searchResults() for the found items
-      * @li noSearchResultsFound if nothing was found
-      */
-    void startNextWebSearch();
-    void startNextBulkItemExtraction();
-
 private:
     bool m_forceUpdate;
     bool m_bulkDownload;
 
     PythonQtObjectPtr mainContext;
-    QMap<QString,QString> m_selectedSearchEngine;
-
     QMap<QString, QList<MetaDataParameters *> > m_resourcesToLookup;
-    QMap<MetaDataParameters *, QVariantList > m_bulkSearchResults;
-    QMap<MetaDataParameters *, KUrl > m_bulkItemdFetching;
+    QMap<MetaDataParameters *, QVariantList > m_searchResults;
     MetaDataParameters *m_currentItemToFetch;
+    QString m_currentEngineToUse;
 
     int m_maxProgress;
     int m_curProgress;

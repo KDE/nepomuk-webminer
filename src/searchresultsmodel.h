@@ -32,6 +32,8 @@ public:
     explicit SearchResultsModel(QObject *parent = 0);
 
     void setSearchResults(const QVariantList & searchResults);
+    QVariantMap searchResultEntry( const QModelIndex & index );
+    void clear( );
 
     int rowCount ( const QModelIndex & parent = QModelIndex() ) const ;
     QVariant data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;

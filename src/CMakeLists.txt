@@ -11,8 +11,6 @@ set( metadataextractor_LIB_SRCS
 
   fetcherdialog.cpp
   metadatafetcher.cpp
-  selectenginedialog.cpp
-  selectsearchresultdialog.cpp
   searchresultsmodel.cpp
   searchresultdelegate.cpp
 
@@ -30,8 +28,6 @@ set( metadataextractor_LIB_SRCS
 kde4_add_ui_files( metadataextractor_LIB_SRCS
 
                    fetcherdialog.ui
-                   selectenginedialog.ui
-                   selectsearchresultdialog.ui
 )
 
 kde4_add_library( nepomukmetadataextractor SHARED ${metadataextractor_LIB_SRCS} )
