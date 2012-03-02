@@ -58,6 +58,9 @@ private slots:
     void selectSearchEntry( MetaDataParameters *mdp, QVariantList searchResults);
     void searchEntrySelected(const QModelIndex &current, const QModelIndex &previous);
 
+    void showSearchParameters();
+    void openDetailsLink(const QString &url);
+
     void fetchMoreDetails();
     void fetchedItemDetails(MetaDataParameters *mdp, QVariantMap itemDetails);
 

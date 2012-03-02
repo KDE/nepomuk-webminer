@@ -24,8 +24,15 @@ resourceType = 'movie'
 # creates the proper search query used for this side
 # currently only for the title, author, freeform text and year search comes later
 # we do not return more than 100 results
-def searchQuery(title, author=None, freetext=None, year=None):
-	query = "http://www.imdb.com/find?q=" + title + "&s=all"
+def searchQuery(title, yearMin=None, yearMax=None, seasonOrAuthor=None, episodeOrJournal=None):
+	
+	releaseDate = ''
+	if (yearMin is not None) and (yearMax is not None) and (yearMin) and (yearMax):
+		releaseDate = "&release_date=" + yearMin + "," + yearMax
+	
+	query = "http://www.imdb.com/search/title?title=Matrix&title_type=feature,tv_movie,documentary,short,video" + releaseDate
+	
+	#query = "http://www.imdb.com/find?q=" + title + "&s=all"
 	return query
 
 #------------------------------------------------------------------------------
@@ -34,7 +41,7 @@ def searchQuery(title, author=None, freetext=None, year=None):
 # here we get the title again from the url and rather ask the already existing
 # imdb python plugin to do it properly.
 def extractSearchResults(documentElement, metaData, url=None):
-	exp = re.compile(r'q=(.*)&s=all')
+	exp = re.compile(r'title=(.*)&title_type')
 	match = exp.search(url)
 	if not match:
 		print 'Error getting search sting from url'

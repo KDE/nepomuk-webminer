@@ -69,20 +69,70 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="KLineEdit" name="lineEditTitle">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>300</width>
-         <height>0</height>
-        </size>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="KLineEdit" name="lineEditTitle">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelSeason">
+         <property name="text">
+          <string>Season:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEditSeason">
+         <property name="minimumSize">
+          <size>
+           <width>40</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelEpisode">
+         <property name="text">
+          <string>Episode:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEditEpisode">
+         <property name="minimumSize">
+          <size>
+           <width>40</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item row="1" column="2">
       <widget class="QPushButton" name="buttonSearchDetails">
@@ -207,7 +257,7 @@
             <item>
              <widget class="QPushButton" name="buttonFetchMore">
               <property name="text">
-               <string>Fetch Metadata from here</string>
+               <string>Fetch Metadata</string>
               </property>
              </widget>
             </item>
@@ -257,7 +307,7 @@
                <x>0</x>
                <y>0</y>
                <width>427</width>
-               <height>265</height>
+               <height>264</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_5">

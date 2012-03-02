@@ -55,7 +55,7 @@ def loadUrl(url):
 # handles a  the call to get the search result via the right module and calls
 # a c++ slot at the end to return the values
 @async
-def asyncSearch(moduleId, title, author=None, freetext=None, year=None):
+def asyncSearch(moduleId, title, yearMin=None, yearMax=None, seasonOrAuthor=None, episodeOrJournal=None):
 
 	# 1. get the right module for the name we specified
 	module = selectModuleByName(moduleId)
@@ -65,7 +65,9 @@ def asyncSearch(moduleId, title, author=None, freetext=None, year=None):
 		asyncReturn(None)
 
 	# 2. get the search query url from the module
-	urlQuery = module.searchQuery(title, author, freetext, year)
+	urlQuery = module.searchQuery(title, yearMin, yearMax, seasonOrAuthor, episodeOrJournal)
+	
+	print urlQuery
   
 	# 3. fetch the html page
 	loadJob = loadUrl(urlQuery)
@@ -86,8 +88,8 @@ def asyncSearch(moduleId, title, author=None, freetext=None, year=None):
 		# 4. send the variantmap back to c++
 		cppObj.searchResults(result)
 
-def search(url, html=None):
-	asyncSearch(url, html)
+def search(moduleId, title, yearMin=None, yearMax=None, seasonOrAuthor=None, episodeOrJournal=None):
+	asyncSearch(moduleId, title, yearMin, yearMax, seasonOrAuthor, episodeOrJournal)
 
 @async
 def asyncExtract(url, html=None):

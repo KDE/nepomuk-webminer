@@ -189,22 +189,29 @@ void MetaDataFetcher::searchItem(MetaDataParameters *mdp, const QString &engine)
     m_currentItemToFetch = mdp;
     m_currentEngineToUse = engine;
 
-    QString title = mdp->searchTitle;
-
     emit progressStatus( QLatin1String("") );
     emit progressStatus( QLatin1String("#############################################################") );
     emit progressStatus( i18n("# check next file: %1", mdp->resourceUri.fileName()) );
 
-    if(!title.isEmpty()) {
-        emit progressStatus( i18n("Lookup title \"%1\"", title) );
+    if(!mdp->searchTitle.isEmpty()) {
+        emit progressStatus( i18n("Lookup title \"%1\"", mdp->searchTitle) );
 
         m_altSearchStarted = false;
 
         QVariantList list;
-        list << engine; //search engine identifier
-        list << title;
-        //list << entryToQuery->metaData.value(QLatin1String("author"));  // author
-        //list << entryToQuery->metaData.value(QLatin1String("freetext"));  // freetext
+        list << m_currentEngineToUse; //search engine identifier
+        list << mdp->searchTitle;
+        list << mdp->searchYearMin;
+        list << mdp->searchYearMax;
+
+        if(mdp->resourceType == QLatin1String("publication")) {
+            list << mdp->searchAuthor;
+            list << mdp->searchJournal;
+        }
+        else if(mdp->resourceType == QLatin1String("tvshow")) {
+            list << mdp->searchSeason;
+            list << mdp->searchEpisode;
+        }
 
         kDebug() << "start python query with arguments" << list;
 
@@ -232,17 +239,26 @@ void MetaDataFetcher::noSearchResultsFound()
 {
     // ok nothing found with normal title check alttitle
     MetaDataParameters *mdp = m_currentItemToFetch;
-    QString altTitle = mdp->searchAltTitle;
 
-    if(!m_altSearchStarted && !altTitle.isEmpty()) {
+    if(!m_altSearchStarted && !mdp->searchAltTitle.isEmpty()) {
+        m_altSearchStarted = true;
 
-        emit progressStatus( i18n("No search result found, try with alternative title \"%1\"", altTitle) );
+        emit progressStatus( i18n("No search result found, try with alternative title \"%1\"", mdp->searchAltTitle) );
 
         QVariantList list;
         list << m_currentEngineToUse;
-        list << altTitle;
-        //list << entryToQuery->metaData.value(QLatin1String("author"));  // author
-        //list << entryToQuery->metaData.value(QLatin1String("freetext"));  // freetext
+        list << mdp->searchAltTitle;
+        list << mdp->searchYearMin;
+        list << mdp->searchYearMax;
+
+        if(mdp->resourceType == QLatin1String("publication")) {
+            list << mdp->searchAuthor;
+            list << mdp->searchJournal;
+        }
+        else if(mdp->resourceType == QLatin1String("tvshow")) {
+            list << mdp->searchSeason;
+            list << mdp->searchEpisode;
+        }
 
         // start the search with the module specified with the moduleId
         mainContext.call("search", list);

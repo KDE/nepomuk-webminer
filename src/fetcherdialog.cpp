@@ -24,8 +24,11 @@
 
 #include <KDE/KStandardDirs>
 #include <KDE/KDialog>
+#include <KDE/KMimeType>
+#include <KDE/KRun>
 
 #include <QtGui/QGridLayout>
+#include <QtGui/QVBoxLayout>
 #include <QtGui/QTextDocument>
 #include <QtGui/QTextEdit>
 
@@ -53,6 +56,7 @@ FetcherDialog::FetcherDialog(QWidget *parent)
     connect(ui->buttonSearch, SIGNAL(clicked()), this, SLOT(startSearch()));
     connect(m_mdf, SIGNAL(selectSearchEntry(MetaDataParameters*,QVariantList)), this, SLOT(selectSearchEntry(MetaDataParameters*,QVariantList)));
     connect(ui->searchResults->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(searchEntrySelected(QModelIndex,QModelIndex)));
+    connect(ui->buttonSearchDetails, SIGNAL(clicked()), this, SLOT(showSearchParameters()));
 
     connect(ui->buttonFetchMore, SIGNAL(clicked()), this, SLOT(fetchMoreDetails()));
     connect(m_mdf, SIGNAL(fetchedItemDetails(MetaDataParameters*,QVariantMap)), this, SLOT(fetchedItemDetails(MetaDataParameters*,QVariantMap)));
@@ -62,6 +66,7 @@ FetcherDialog::FetcherDialog(QWidget *parent)
 
     connect(m_mdf, SIGNAL(progressStatus(QString)), this, SLOT(addProgressInfo(QString)));
     connect(ui->buttonLog, SIGNAL(clicked()), this, SLOT(showProgressLog()));
+    connect(ui->detailsUrl, SIGNAL(leftClickedUrl(QString)), this, SLOT(openDetailsLink(QString)));
 
     QGridLayout * gridLayout = new QGridLayout;
     ui->metaDataList->setLayout( gridLayout );
@@ -70,7 +75,6 @@ FetcherDialog::FetcherDialog(QWidget *parent)
     ui->buttonEngineSettings->setIcon(KIcon("configure"));
     ui->buttonEngineSettings->setEnabled(false);
     ui->buttonSearchDetails->setIcon(KIcon("system-search"));
-    ui->buttonSearchDetails->setEnabled(false);
     ui->buttonSearch->setIcon(KIcon("edit-find"));
     ui->buttonSave->setIcon(KIcon("document-save"));
     ui->buttonCancel->setIcon(KIcon("dialog-cancel"));
@@ -176,6 +180,21 @@ void FetcherDialog::selectNextResourceToLookUp()
     ui->labelDescription->setText( i18n("Fetch metadata for the resource: <b>%1</b>", mdp->resourceUri.fileName()));
     ui->lineEditTitle->setText( mdp->searchTitle );
 
+    if(mdp->resourceType == QLatin1String("tvshow")) {
+        ui->labelSeason->setVisible(true);
+        ui->lineEditSeason->setVisible(true);
+        ui->lineEditSeason->setText(  mdp->searchSeason );
+        ui->labelEpisode->setVisible(true);
+        ui->lineEditEpisode->setVisible(true);
+        ui->lineEditEpisode->setText(  mdp->searchEpisode );
+    }
+    else {
+        ui->labelSeason->setVisible(false);
+        ui->lineEditSeason->setVisible(false);
+        ui->labelEpisode->setVisible(false);
+        ui->lineEditEpisode->setVisible(false);
+    }
+
     ui->buttonFetchMore->setEnabled(false);
 
     // don't show next button if there is no next item
@@ -222,6 +241,21 @@ void FetcherDialog::selectPreviousResourceToLookUp()
     ui->labelDescription->setText( i18n("Fetch metadata for the resource: <b>%1</b>", mdp->resourceUri.fileName()));
     ui->lineEditTitle->setText( mdp->searchTitle );
 
+    if(mdp->resourceType == QLatin1String("tvshow")) {
+        ui->labelSeason->setVisible(true);
+        ui->lineEditSeason->setVisible(true);
+        ui->lineEditSeason->setText(  mdp->searchSeason );
+        ui->labelEpisode->setVisible(true);
+        ui->lineEditEpisode->setVisible(true);
+        ui->lineEditEpisode->setText(  mdp->searchEpisode );
+    }
+    else {
+        ui->labelSeason->setVisible(false);
+        ui->lineEditSeason->setVisible(false);
+        ui->labelEpisode->setVisible(false);
+        ui->lineEditEpisode->setVisible(false);
+    }
+
     // don't enable next button if there is no next item
     if(m_currentCategory == m_categoriesToFetch.size()-1 &&
        m_currentResource == resourceCount-1) {
@@ -250,6 +284,8 @@ void FetcherDialog::startSearch()
 
     MetaDataParameters *mdp = m_mdf->getResource( m_categoriesToFetch.at(m_currentCategory), m_currentResource);
     mdp->searchTitle = ui->lineEditTitle->text();
+    mdp->searchSeason = ui->lineEditSeason->text();
+    mdp->searchEpisode = ui->lineEditEpisode->text();
 
     int currentEngine = ui->comboBoxSearchEngine->currentIndex();
     QString engineId = ui->comboBoxSearchEngine->itemData( currentEngine ).toString();
@@ -297,6 +333,111 @@ void FetcherDialog::searchEntrySelected(const QModelIndex &current, const QModel
     }
 }
 
+void FetcherDialog::showSearchParameters()
+{
+
+    QPointer<KDialog> spd = new KDialog;
+    spd->setInitialSize(QSize(600,300));
+
+    QWidget *w = new QWidget(spd);
+    QGridLayout *gl = new QGridLayout;
+    gl->setColumnStretch(1,10);
+
+    QVBoxLayout *vbl = new QVBoxLayout();
+    vbl->addLayout(gl);
+    vbl->addStretch(0);
+    w->setLayout(vbl);
+
+    MetaDataParameters *mdp = m_mdf->getResource( m_categoriesToFetch.at(m_currentCategory), m_currentResource);
+    QLabel *labelTitle = new QLabel(i18n("Title:"),w);
+    QLineEdit *editTitle = new QLineEdit(mdp->searchTitle,w);
+    gl->addWidget(labelTitle, 0,0);
+    gl->addWidget(editTitle, 0,1);
+    QLabel *labelAltTitle = new QLabel(i18n("Alternative Title:"),w);
+    QLineEdit *editAltTitle = new QLineEdit(mdp->searchAltTitle,w);
+    gl->addWidget(labelAltTitle, 1,0);
+    gl->addWidget(editAltTitle, 1,1);
+
+    QLabel *labelYearMin = new QLabel(i18n("Year Min:"),w);
+    QLineEdit *editYearMin = new QLineEdit(mdp->searchYearMin,w);
+    gl->addWidget(labelYearMin, 2,0);
+    gl->addWidget(editYearMin, 2,1);
+
+    QLabel *labelYearMax = new QLabel(i18n("Year Max:"),w);
+    QLineEdit *editYearMax = new QLineEdit(mdp->searchYearMax,w);
+    gl->addWidget(labelYearMax, 3,0);
+    gl->addWidget(editYearMax, 3,1);
+
+    QLabel *labelAuthor = 0;
+    QLineEdit *editAuthor = 0;
+
+    QLabel *labelJournal = 0;
+    QLineEdit *editJournal = 0;
+
+    QLabel *labelSeason = 0;
+    QLineEdit *editSeason = 0;
+
+    QLabel *labelEpisode = 0;
+    QLineEdit *editEpisode = 0;
+
+    if(mdp->resourceType == QLatin1String("publication")) {
+        labelAuthor = new QLabel(i18n("Author:"),w);
+        editAuthor = new QLineEdit(mdp->searchAuthor,w);
+        gl->addWidget(labelAuthor, 4,0);
+        gl->addWidget(editAuthor, 4,1);
+
+        labelJournal = new QLabel(i18n("Journal:"),w);
+        editJournal = new QLineEdit(mdp->searchJournal,w);
+        gl->addWidget(labelJournal, 5,0);
+        gl->addWidget(editJournal, 5,1);
+    }
+    else if(mdp->resourceType == QLatin1String("tvshow")) {
+        labelSeason = new QLabel(i18n("Season:"),w);
+        editSeason = new QLineEdit(mdp->searchSeason,w);
+        gl->addWidget(labelSeason, 4,0);
+        gl->addWidget(editSeason, 4,1);
+
+        labelEpisode = new QLabel(i18n("Episode:"),w);
+        editEpisode = new QLineEdit(mdp->searchEpisode,w);
+        gl->addWidget(labelEpisode, 5,0);
+        gl->addWidget(editEpisode, 5,1);
+    }
+
+    spd->setMainWidget(w);
+
+    int ret = spd->exec();
+
+    if(ret == KDialog::Accepted) {
+        mdp->searchTitle = editTitle->text();
+        mdp->searchAltTitle = editAltTitle->text();
+        mdp->searchYearMin = editYearMin->text();
+        mdp->searchYearMax = editYearMax->text();
+
+        if(mdp->resourceType == QLatin1String("publication")) {
+            mdp->searchAuthor = editAuthor->text();
+            mdp->searchJournal = editJournal->text();
+        }
+        else if(mdp->resourceType == QLatin1String("tvshow")) {
+            mdp->searchSeason = editSeason->text();
+            ui->lineEditSeason->setText( mdp->searchSeason );
+
+            mdp->searchEpisode = editEpisode->text();
+            ui->lineEditEpisode->setText( mdp->searchEpisode );
+        }
+
+        ui->lineEditTitle->setText( mdp->searchTitle );
+    }
+
+    delete spd;
+}
+
+void FetcherDialog::openDetailsLink(const QString &url)
+{
+    QString mimeTypeName = QLatin1String("text/html");
+    /// Ask KDE subsystem to open url in viewer matching mime type
+    KRun::runUrl(url, mimeTypeName, this, false, false);
+}
+
 void FetcherDialog::fetchMoreDetails()
 {
     busyFetching();
@@ -314,6 +455,7 @@ void FetcherDialog::fetchMoreDetails()
 void FetcherDialog::fetchedItemDetails(MetaDataParameters *mdp, QVariantMap itemDetails)
 {
     Q_UNUSED(mdp);
+    Q_UNUSED(itemDetails);
 
     showItemDetails();
 

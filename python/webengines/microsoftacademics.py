@@ -29,9 +29,22 @@ resourceType = 'publication'
 # creates the proper search query used for this side
 # currently only for the title, author, freeform text and year search comes later
 # we do not return more than 100 results
-def searchQuery(title, author=None, freetext=None, year=None):
-	title = title.replace(':','')
-	query = "http://academic.research.microsoft.com/Search?query=" + title + '&start=0&end=100'
+def searchQuery(title, yearMin=None, yearMax=None, author=None, journal=None):
+
+	title = title.replace(':',' ') #msn does not like the :
+	
+	queryPart = title
+	
+	if (author is not None) and (author):
+		queryPart += ' author:(' + author + ')'
+	
+	if (yearMin is not None) and (yearMax is not None) and (yearMin) and (yearMax):
+		queryPart += ' year>=' + yearMin + ' year<=' + yearMax
+		
+	if (journal is not None) and (journal):
+		queryPart += ' jour:(' + journal + ')'
+
+	query = "http://academic.research.microsoft.com/Search?query=" + queryPart + '&start=0&end=100'
 	return query
 
 #------------------------------------------------------------------------------
