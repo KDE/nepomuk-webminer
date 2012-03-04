@@ -9,6 +9,12 @@ from BeautifulSoup import BeautifulSoup # note switch to lxml
 import urllib
 import re
 
+
+finalEntry = {}
+masid = ''
+citations = []
+citationResults = []
+
 #------------------------------------------------------------------------------
 # Module options
 
@@ -198,27 +204,48 @@ def extractItemFromUri( url ):
 	logMsg = 'start item extraction via: ' + url 
 	WebExtractor.log( logMsg )
 	
-	entry = extractItem(url, True)
+	# KIO part to fetch asyncron 
+        data_url = kdecore.KUrl( url )
+        retrieve_job = KIO.storedGet(data_url, KIO.NoReload, KIO.HideProgressInfo)
+        retrieve_job.result.connect(handleMainItemExtraction)
 	
-	WebExtractor.itemResults( entry )
+def handleMainItemExtraction(job):
+
+        if job.error():
+		error = 'kio job error occured'
+		WebExtractor.error( error )
+		return
+
+        data = job.data()
+        
+        #import os
+        #gSysEncoding = os.environ["LANG"].split(".")[1]
+        html = unicode(str(QtCore.QString(data).toUtf8()), 'utf-8')
+	#print QtCore.QString(data).toUtf8()
 	
+        documentElement = BeautifulSoup( html ) # note switch to lxml
+        
+        # retrieve the basic data
+        finalEntry = extractItem( documentElement )
+        
+	# check if we can fetch references
+	url = 'http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=' + masid + '&start=1&end=100'
+	logMsg = 'fetch references via ' + url 
+	WebExtractor.log( logMsg )
+
+	# KIO part to fetch asyncron 
+        data_url = kdecore.KUrl( url )
+        retrieve_job = KIO.storedGet(data_url, KIO.NoReload, KIO.HideProgressInfo)
+        retrieve_job.result.connect(handleCitationSearch)
+        
 #------------------------------------------------------------------------------
 # does the dirty work of extracting the html data
 #
-def extractItem( url, withCitation=False ):
-	
-	finalEntry = {}
-	
-	filehandle = urllib.urlopen(url)
-	html = filehandle.read()
-        html = str(html)
-        filehandle.close()
-
-        documentElement = BeautifulSoup(html)
-        
+def extractItem( documentElement ):
+        entry = {}
 	# 1. lets get the microsoft masid again to do further requests
 	# necessary, as not all data can easily be parsed from the current page content
-	masid = ''
+	global masid
 	masidTag = documentElement.first('link', {'type':'application/rss+xml'})
 	
 	if masidTag is not None:
@@ -228,8 +255,11 @@ def extractItem( url, withCitation=False ):
 	else:
 		error = 'Could not fetch masid.'
 		WebExtractor.error( error )
-		return finalEntry
+		return entry
 
+	logMsg = 'masid found: ' + masid 
+	WebExtractor.log( logMsg )
+	
 	# 2. we get propper publication data, this is available as bibtex file download
 	# http://academic.research.microsoft.com/64764.bib?type=2&format=0&download=1
 	# @todo replace urllib by async appraoch
@@ -243,52 +273,99 @@ def extractItem( url, withCitation=False ):
 	for line in filehandle.readlines():
 		typeMatch = bibtexentrytype.search(line)
 		if(typeMatch):
-			finalEntry.update(dict(bibtexentrytype = typeMatch.group(1)))
+			entry.update(dict(bibtexentrytype = typeMatch.group(1)))
 		keysMatch = bibtexKeys.search(line)
 		if(keysMatch):
-			finalEntry.update( {keysMatch.group(1) : keysMatch.group(2)})
+			entry.update( {keysMatch.group(1) : keysMatch.group(2)})
 
 	filehandle.close()
 	
 	# great, but there is more fetch the abstract from the page
 	abstract = documentElement.first('span', {'id':'ctl00_MainContent_PaperItem_snippet'})
 	if abstract is not None:
-		finalEntry.update(dict(abstract = abstract.text))
+		entry.update(dict(abstract = abstract.text))
 	
 	# todo parse downloadable files ...
+
+	return entry
+
+def handleCitationSearch(job):
+
+        if job.error():
+		error = 'kio job error occured'
+		WebExtractor.error( error )
+		return
+
+        data = job.data()
+        
+        #import os
+        #gSysEncoding = os.environ["LANG"].split(".")[1]
+        html = unicode(str(QtCore.QString(data).toUtf8()), 'utf-8')
+	#print QtCore.QString(data).toUtf8()
 	
-	if withCitation is True:
-		# and we can get the citations from it, each citation has its own page we should parse
-		# http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=64764&start=1&end=100
-		# @todo replace urllib by async appraoch
-		logMsg = 'fetch references' 
+        documentElement = BeautifulSoup( html ) # note switch to lxml
+        
+        global citations
+        citations = extractSearchResults(documentElement, True)
+
+	if citations:
+		fetchNextCitation()
+	else:
+		logMsg = 'No references found' 
 		WebExtractor.log( logMsg )
-		url = 'http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=' + masid + '&start=1&end=100'
-		filehandle = urllib.urlopen(url)
-		html = filehandle.read()
-                html = str(html)
-                filehandle.close()
-		
-                doc = BeautifulSoup(html)
-		
-		citations = extractSearchResults(doc, True)
-		
-		if citations is None:
-			logMsg = 'No references found' 
-			WebExtractor.log( logMsg )
-		
-		else:
-			citationResults = []
-			for subPublication in citations:
-				logMsg = 'Fetch reference: ' + subPublication['title'] 
-				WebExtractor.log( logMsg )
-				
-				extractedCitation = extractItem( subPublication['url'], False )
-
-				citationResults.append( extractedCitation )
-			
-			finalEntry.update(dict(references = citationResults))
+		WebExtractor.itemResults( finalEntry )
+        
+def fetchNextCitation():
 	
-	return finalEntry
-
+        global citations
+	nextCitation = citations.pop()
 	
+	# check if we can fetch references
+	logMsg = 'fetch reference' +  nextCitation['title']
+	WebExtractor.log( logMsg )
+
+	# KIO part to fetch asyncron 
+        data_url = kdecore.KUrl( nextCitation['url'] )
+        retrieve_job = KIO.storedGet(data_url, KIO.NoReload, KIO.HideProgressInfo)
+        retrieve_job.result.connect(handleCitationItemExtraction)
+
+def handleCitationItemExtraction(job):
+
+        if job.error():
+		error = 'kio job error occured'
+		WebExtractor.error( error )
+		WebExtractor.itemResults( finalEntry )
+		return
+
+
+        data = job.data()
+        
+        #import os
+        #gSysEncoding = os.environ["LANG"].split(".")[1]
+        html = unicode(str(QtCore.QString(data).toUtf8()), 'utf-8')
+	#print QtCore.QString(data).toUtf8()
+	
+        documentElement = BeautifulSoup( html ) # note switch to lxml
+        
+        # retrieve the basic data
+        global citations
+        citation = extractItem( documentElement )
+        
+        if citation:
+		logMsg = 'citation fetched'
+		WebExtractor.log( logMsg )
+        
+        global citationResults
+        citationResults.append( citation )
+
+        if citations:
+		fetchNextCitation()
+	else:
+
+		global finalEntry
+		global citationResults
+		finalEntry['references'] = citationResults
+		WebExtractor.itemResults( finalEntry )
+	
+        
+        
