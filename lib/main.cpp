@@ -20,7 +20,10 @@
 #include <KDE/KAboutData>
 #include <KDE/KUrl>
 
-#include "fetcherdialog.h"
+#include <QDebug>
+#include "ui/fetcherdialog.h"
+
+#include "webextractor/extractorfactory.h"
 
 int main( int argc, char *argv[] )
 {
@@ -42,34 +45,32 @@ int main( int argc, char *argv[] )
     options.add("+url", ki18n("The file or folder url used for the input"));
 
     KCmdLineArgs::addCmdLineOptions( options );
-
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
-
     KApplication app;
 
-//    FetcherDialog fd;
-//    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/");
-//    fd.setForceUpdate(true);
-//    fd.setInitialPathOrFile( debug );
-//    fd.show();
-//    return app.exec();
+    FetcherDialog fd;
+    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest2/");
+    fd.setForceUpdate(true);
+    fd.setInitialPathOrFile( debug );
+    fd.show();
+    return app.exec();
 
-    if ( args->count() && args->url(0).isValid() ) {
+//    if ( args->count() && args->url(0).isValid() ) {
 
-        FetcherDialog fd;
+//        FetcherDialog fd;
 
-        if(args->isSet("f")) {
-            fd.setForceUpdate(true);
-        }
+//        if(args->isSet("f")) {
+//            fd.setForceUpdate(true);
+//        }
 
-        fd.setInitialPathOrFile( args->url( 0 ) );
-        fd.show();
+//        fd.setInitialPathOrFile( args->url( 0 ) );
+//        fd.show();
 
-        return app.exec();
-    }
-    else {
+//        return app.exec();
+//    }
+//    else {
 
-        KCmdLineArgs::usageError(i18n("No file or folder specified.\nPlease start it with metadataextractor <url>.\nFor example: metadataextractor ~/Documents"));
-        return 0;
-    }
+//        KCmdLineArgs::usageError(i18n("No file or folder specified.\nPlease start it with metadataextractor <url>.\nFor example: metadataextractor ~/Documents"));
+//        return 0;
+//    }
 }

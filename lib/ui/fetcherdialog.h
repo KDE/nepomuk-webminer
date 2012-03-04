@@ -29,10 +29,15 @@ namespace Ui {
     class FetcherDialog;
 }
 
-class MetaDataFetcher;
 class MetaDataParameters;
+class ResourceExtractor;
+class ExtractorFactory;
+class WebExtractor;
+
 class SearchResultsModel;
 class QTextDocument;
+
+class MetaDataFetcher;
 
 /**
   * @brief Main dialog to show the current progress and some buttons to interact with
@@ -50,19 +55,19 @@ public:
     void setForceUpdate(bool update);
 
 private slots:
-    void fileFetchingDone();
+    void resourceFetchingDone();
     void selectNextResourceToLookUp();
     void selectPreviousResourceToLookUp();
 
     void startSearch();
-    void selectSearchEntry( MetaDataParameters *mdp, QVariantList searchResults);
+    void selectSearchEntry( QVariantList searchResults );
     void searchEntrySelected(const QModelIndex &current, const QModelIndex &previous);
 
     void showSearchParameters();
     void openDetailsLink(const QString &url);
 
     void fetchMoreDetails();
-    void fetchedItemDetails(MetaDataParameters *mdp, QVariantMap itemDetails);
+    void fetchedItemDetails(QVariantMap itemDetails);
 
     void saveMetaData();
 
@@ -80,7 +85,10 @@ private:
 
 private:
     Ui::FetcherDialog *ui;
-    MetaDataFetcher *m_mdf;
+    ResourceExtractor *m_re;
+    ExtractorFactory *m_ef;
+    WebExtractor *m_webextractor;
+    MetaDataParameters *m_currentItemToupdate;
 
     QStringList m_categoriesToFetch;
     int m_currentCategory;

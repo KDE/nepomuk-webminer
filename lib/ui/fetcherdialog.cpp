@@ -16,17 +16,28 @@
  */
 
 #include "fetcherdialog.h"
-#include "src/ui_fetcherdialog.h"
+#include "ui_fetcherdialog.h"
 
-#include "metadatafetcher.h"
 #include "searchresultsmodel.h"
 #include "searchresultdelegate.h"
+
+#include "metadataparameters.h"
+#include "resourceextractor/resourceextractor.h"
+#include "webextractor/extractorfactory.h"
+#include "webextractor/webextractor.h"
+
+#include "nepomukpipe/nepomukpipe.h"
+#include "nepomukpipe/moviepipe.h"
+#include "nepomukpipe/publicationpipe.h"
 
 #include <KDE/KStandardDirs>
 #include <KDE/KDialog>
 #include <KDE/KMimeType>
 #include <KDE/KRun>
+#include <KDE/KDebug>
 
+#include <QtCore/QFileInfo>
+#include <QtCore/QPointer>
 #include <QtGui/QGridLayout>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QTextDocument>
@@ -35,12 +46,15 @@
 FetcherDialog::FetcherDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::FetcherDialog)
+    , m_webextractor(0)
+    , m_currentItemToupdate(0)
 {
     ui->setupUi(this);
 
     m_progressLog = new QTextDocument;
 
-    m_mdf = new MetaDataFetcher;
+    m_re = new ResourceExtractor;
+    m_ef = new ExtractorFactory;
 
     m_resultModel = new SearchResultsModel(this);
     ui->searchResults->setModel( m_resultModel );
@@ -48,23 +62,21 @@ FetcherDialog::FetcherDialog(QWidget *parent)
     ui->searchResults->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->searchResults->setItemDelegate(new SearchResultDelegate);
 
-    connect(m_mdf, SIGNAL(fileFetchingDone()), this, SLOT(fileFetchingDone()));
+    connect(m_re, SIGNAL(resourceExtarctionDone()), this, SLOT(resourceFetchingDone()));
 
     connect(ui->buttonNext, SIGNAL(clicked()), this, SLOT(selectNextResourceToLookUp()));
     connect(ui->buttonPrevious, SIGNAL(clicked()), this, SLOT(selectPreviousResourceToLookUp()));
 
     connect(ui->buttonSearch, SIGNAL(clicked()), this, SLOT(startSearch()));
-    connect(m_mdf, SIGNAL(selectSearchEntry(MetaDataParameters*,QVariantList)), this, SLOT(selectSearchEntry(MetaDataParameters*,QVariantList)));
     connect(ui->searchResults->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(searchEntrySelected(QModelIndex,QModelIndex)));
     connect(ui->buttonSearchDetails, SIGNAL(clicked()), this, SLOT(showSearchParameters()));
 
     connect(ui->buttonFetchMore, SIGNAL(clicked()), this, SLOT(fetchMoreDetails()));
-    connect(m_mdf, SIGNAL(fetchedItemDetails(MetaDataParameters*,QVariantMap)), this, SLOT(fetchedItemDetails(MetaDataParameters*,QVariantMap)));
     connect(ui->buttonSave, SIGNAL(clicked()), this, SLOT(saveMetaData()));
 
     connect(ui->buttonCancel, SIGNAL(clicked()), this, SLOT(cancelClose()));
 
-    connect(m_mdf, SIGNAL(progressStatus(QString)), this, SLOT(addProgressInfo(QString)));
+    connect(m_re, SIGNAL(progressStatus(QString)), this, SLOT(addProgressInfo(QString)));
     connect(ui->buttonLog, SIGNAL(clicked()), this, SLOT(showProgressLog()));
     connect(ui->detailsUrl, SIGNAL(leftClickedUrl(QString)), this, SLOT(openDetailsLink(QString)));
 
@@ -86,20 +98,19 @@ FetcherDialog::FetcherDialog(QWidget *parent)
 
 FetcherDialog::~FetcherDialog()
 {
-    delete m_mdf;
+    delete m_re;
     delete ui;
 }
 
 void FetcherDialog::setInitialPathOrFile( const KUrl &url )
 {
-    m_mdf->lookupFiles(url);
+    m_re->lookupFiles(url);
 }
 
 void FetcherDialog::setForceUpdate(bool update)
 {
-    m_mdf->setForceUpdate(update);
+    m_re->setForceUpdate(update);
 }
-
 
 void FetcherDialog::addProgressInfo(const QString &status)
 {
@@ -124,9 +135,9 @@ void FetcherDialog::showProgressLog()
     delete log;
 }
 
-void FetcherDialog::fileFetchingDone()
+void FetcherDialog::resourceFetchingDone()
 {
-    m_categoriesToFetch = m_mdf->availableResourceTypes();
+    m_categoriesToFetch = m_re->availableResourceTypes();
     m_currentCategory = 0;
     m_currentResource = -1;
 
@@ -139,7 +150,7 @@ void FetcherDialog::fileFetchingDone()
         ui->line->setVisible(false);
     }
 
-    int resourceCount = m_mdf->resourcesToUpdate( m_categoriesToFetch.at(m_currentCategory) );
+    int resourceCount = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).size();
     if(resourceCount > 1 || m_categoriesToFetch.size() > 1) {
         ui->labelResourceCount->setVisible(true);
         ui->buttonPrevious->setVisible(true);
@@ -161,13 +172,13 @@ void FetcherDialog::selectNextResourceToLookUp()
 {
     m_currentResource++;
 
-    int resourceCount = m_mdf->resourcesToUpdate( m_categoriesToFetch.at(m_currentCategory) );
+    int resourceCount = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).size();
 
     if( m_currentResource >= resourceCount) {
         m_currentCategory++;
         m_currentResource = 0;
 
-        resourceCount = m_mdf->resourcesToUpdate( m_categoriesToFetch.at(m_currentCategory) );
+        resourceCount = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).size();
         fillEngineList( m_categoriesToFetch.at(m_currentCategory) );
     }
 
@@ -175,7 +186,7 @@ void FetcherDialog::selectNextResourceToLookUp()
     ui->labelResourceCount->setText(i18n("Resource %1 of %2", m_currentResource + 1, resourceCount));
 
     // get next resourceInformation
-    MetaDataParameters *mdp = m_mdf->getResource( m_categoriesToFetch.at(m_currentCategory), m_currentResource);
+    MetaDataParameters *mdp = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
 
     ui->labelDescription->setText( i18n("Fetch metadata for the resource: <b>%1</b>", mdp->resourceUri.fileName()));
     ui->lineEditTitle->setText( mdp->searchTitle );
@@ -223,10 +234,10 @@ void FetcherDialog::selectPreviousResourceToLookUp()
 {
     m_currentResource--;
 
-    int resourceCount = m_mdf->resourcesToUpdate( m_categoriesToFetch.at(m_currentCategory) );
+    int resourceCount = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).size();
     if( m_currentResource < 0) {
         m_currentCategory--;
-        resourceCount = m_mdf->resourcesToUpdate( m_categoriesToFetch.at(m_currentCategory) );
+        resourceCount = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).size();
         m_currentResource = resourceCount-1;
 
         fillEngineList( m_categoriesToFetch.at(m_currentCategory) );
@@ -236,7 +247,7 @@ void FetcherDialog::selectPreviousResourceToLookUp()
     ui->labelResourceCount->setText(i18n("Resource %1 of %2", m_currentResource + 1, resourceCount));
 
     // get next resourceInformation
-    MetaDataParameters *mdp = m_mdf->getResource( m_categoriesToFetch.at(m_currentCategory), m_currentResource);
+    MetaDataParameters *mdp = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
 
     ui->labelDescription->setText( i18n("Fetch metadata for the resource: <b>%1</b>", mdp->resourceUri.fileName()));
     ui->lineEditTitle->setText( mdp->searchTitle );
@@ -282,7 +293,7 @@ void FetcherDialog::startSearch()
 {
     busyFetching();
 
-    MetaDataParameters *mdp = m_mdf->getResource( m_categoriesToFetch.at(m_currentCategory), m_currentResource);
+    MetaDataParameters *mdp = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
     mdp->searchTitle = ui->lineEditTitle->text();
     mdp->searchSeason = ui->lineEditSeason->text();
     mdp->searchEpisode = ui->lineEditEpisode->text();
@@ -296,13 +307,34 @@ void FetcherDialog::startSearch()
     ui->buttonNext->setEnabled(false);
     ui->buttonPrevious->setEnabled(false);
 
-    m_mdf->searchItem( mdp, engineId );
+    if(!m_webextractor || m_webextractor->info().identifier != engineId) {
+        delete m_webextractor;
+        m_webextractor = m_ef->createExtractor( engineId );
+
+        if(!m_webextractor) {
+            kDebug() << "search engine with identifier" << engineId << "does not exist";
+            return;
+        }
+        connect(m_webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
+        connect(m_webextractor, SIGNAL(itemResults(QVariantMap)), this, SLOT(fetchedItemDetails(QVariantMap)));
+        connect(m_webextractor, SIGNAL(log(QString)), this, SLOT(addProgressInfo(QString)));
+    }
+
+    QVariantMap searchParameters;
+    searchParameters.insert("title", mdp->searchTitle);
+    searchParameters.insert("alttitle", mdp->searchAltTitle);
+    searchParameters.insert("author", mdp->searchAuthor);
+    searchParameters.insert("season", mdp->searchSeason);
+    searchParameters.insert("episode", mdp->searchEpisode);
+    searchParameters.insert("yearMin", mdp->searchYearMin);
+    searchParameters.insert("yearMax", mdp->searchYearMax);
+    searchParameters.insert("journal", mdp->searchJournal);
+
+    m_webextractor->search( searchParameters );
 }
 
-void FetcherDialog::selectSearchEntry( MetaDataParameters *mdp, QVariantList searchResults)
+void FetcherDialog::selectSearchEntry( QVariantList searchResults)
 {
-    Q_UNUSED(mdp);
-
     finishedFetching();
 
     m_resultModel->setSearchResults( searchResults );
@@ -335,7 +367,6 @@ void FetcherDialog::searchEntrySelected(const QModelIndex &current, const QModel
 
 void FetcherDialog::showSearchParameters()
 {
-
     QPointer<KDialog> spd = new KDialog;
     spd->setInitialSize(QSize(600,300));
 
@@ -348,7 +379,7 @@ void FetcherDialog::showSearchParameters()
     vbl->addStretch(0);
     w->setLayout(vbl);
 
-    MetaDataParameters *mdp = m_mdf->getResource( m_categoriesToFetch.at(m_currentCategory), m_currentResource);
+    MetaDataParameters *mdp = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
     QLabel *labelTitle = new QLabel(i18n("Title:"),w);
     QLineEdit *editTitle = new QLineEdit(mdp->searchTitle,w);
     gl->addWidget(labelTitle, 0,0);
@@ -446,16 +477,20 @@ void FetcherDialog::fetchMoreDetails()
     QModelIndex currentEntry = ui->searchResults->currentIndex();
     QVariantMap entry = m_resultModel->searchResultEntry(currentEntry);
 
-    MetaDataParameters *mdp = m_mdf->getResource( m_categoriesToFetch.at(m_currentCategory), m_currentResource);
+    m_currentItemToupdate = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
     KUrl fetchUrl( entry.value(QLatin1String("url")).toString() );
 
-    m_mdf->fetchItem(mdp, fetchUrl);
+    m_webextractor->extractItem( fetchUrl );
 }
 
-void FetcherDialog::fetchedItemDetails(MetaDataParameters *mdp, QVariantMap itemDetails)
+void FetcherDialog::fetchedItemDetails(QVariantMap itemDetails)
 {
-    Q_UNUSED(mdp);
-    Q_UNUSED(itemDetails);
+    QMapIterator<QString, QVariant> i(itemDetails);
+    while (i.hasNext()) {
+        i.next();
+        m_currentItemToupdate->metaData.insert(i.key(), i.value());
+    }
+    m_currentItemToupdate = 0;
 
     showItemDetails();
 
@@ -464,10 +499,32 @@ void FetcherDialog::fetchedItemDetails(MetaDataParameters *mdp, QVariantMap item
 
 void FetcherDialog::saveMetaData()
 {
-    MetaDataParameters *mdp = m_mdf->getResource( m_categoriesToFetch.at(m_currentCategory), m_currentResource);
+    MetaDataParameters *mdp = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
 
     busyFetching();
-    m_mdf->saveItemMetaData( mdp );
+
+    QString type = mdp->resourceType;
+
+    NepomukPipe *nepomukPipe = 0;
+    if(type == QLatin1String("publication")) {
+        nepomukPipe = new PublicationPipe;
+    }
+    else if(type == QLatin1String("tvshow")) {
+        nepomukPipe = 0;
+        //m_nepomukPipe = new PubEntryToNepomukPipe;
+    }
+    else if(type == QLatin1String("movie")) {
+        nepomukPipe = new MoviePipe;
+    }
+
+    if(nepomukPipe) {
+        nepomukPipe->pipeImport( mdp );
+        mdp->metaDataSaved = true;
+    }
+    else {
+        addProgressInfo(i18n("No nepomuk pipe available for the resoure type %1", type));
+    }
+
     finishedFetching();
 }
 
@@ -480,17 +537,18 @@ void FetcherDialog::fillEngineList(const QString &category)
 {
     ui->comboBoxSearchEngine->clear();
 
-    QVariantList engines = m_mdf->availableSearchEngines( category );
+    QList<WebExtractor::Info> engines = m_ef->listAvailablePlugins( category );
 
-    foreach(const QVariant &engine, engines) {
-        QVariantMap engineMap = engine.toMap();
+    foreach(const WebExtractor::Info &engine, engines) {
 
-        QString searchString = QLatin1String("metadataextractor/webengines/") + engineMap.value(QLatin1String("icon")).toString();
-        QString iconPath = KStandardDirs::locate("data", searchString);
+        QFileInfo fileInfo(engine.file);
+
+        QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + engine.icon;
+        //QString iconPath = KStandardDirs::locate("data", searchString);
 
         ui->comboBoxSearchEngine->addItem(QIcon( iconPath ),
-                                          engineMap.value(QLatin1String("name")).toString(),
-                                          engineMap.value(QLatin1String("identification")).toString());
+                                          engine.name,
+                                          engine.identifier);
     }
 
     //TODO select the default engine from some config file
@@ -511,7 +569,7 @@ void FetcherDialog::showItemDetails()
     QGridLayout * gridLayout = qobject_cast<QGridLayout *>(mdlayout);
 
     // current Item metadata
-    MetaDataParameters *mdp = m_mdf->getResource( m_categoriesToFetch.at(m_currentCategory), m_currentResource);
+    MetaDataParameters *mdp = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
 
     QMapIterator<QString, QVariant> i(mdp->metaData);
     int line = 0;
@@ -552,7 +610,7 @@ void FetcherDialog::finishedFetching()
 {
     QWidget::setCursor( Qt::ArrowCursor );
 
-    MetaDataParameters *mdp = m_mdf->getResource( m_categoriesToFetch.at(m_currentCategory), m_currentResource);
+    MetaDataParameters *mdp = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
     ui->buttonSave->setEnabled( !mdp->metaDataSaved );
 
     ui->buttonSearch->setEnabled( true );
@@ -563,7 +621,7 @@ void FetcherDialog::finishedFetching()
         ui->buttonFetchMore->setEnabled(true);
     }
 
-    int resourceCount = m_mdf->resourcesToUpdate( m_categoriesToFetch.at(m_currentCategory) );
+    int resourceCount = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).size();
 
     // don't enable next button if there is no next item
     if(m_currentCategory == m_categoriesToFetch.size()-1 &&

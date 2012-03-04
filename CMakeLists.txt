@@ -28,10 +28,12 @@ include_directories(
   "/usr/include/python2.6"
   "/usr/include/python2.7"
 
-  ${CMAKE_SOURCE_DIR}/src
+  ${CMAKE_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/lib
   ${metadataextractor_BINARY_DIR}
 )
 
 
-add_subdirectory( src )
-add_subdirectory( python )
+add_subdirectory( lib )
+#add_subdirectory( src )
+#add_subdirectory( python )
