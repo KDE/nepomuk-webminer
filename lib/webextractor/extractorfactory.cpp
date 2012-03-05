@@ -29,6 +29,7 @@
 #include <QtCore/QVariant>
 #include <QtCore/QVariantMap>
 
+#include <KDE/KDebug>
 
 ExtractorFactory::ExtractorFactory(QObject *parent)
     : QObject(parent)
@@ -46,6 +47,7 @@ WebExtractor *ExtractorFactory::createExtractor( const QString &webEngine )
     foreach(const WebExtractor::Info i, m_availableScripts) {
         if(i.identifier == webEngine) {
 
+            kDebug() << "create KROSS web extractor for:" << i.name;
             KrossExtractor *ke = new KrossExtractor(i.file);
             return ke;
         }
@@ -77,6 +79,7 @@ void ExtractorFactory::loadScriptInfo()
     Kross::Action action(this, "ExtractorFactory");
     QString lookupurl = KStandardDirs::locate("data", "nepomukmetadataextractor/plugins/");
 
+    kDebug() << "look for plugins on the folder" << lookupurl;
     QDir dir( lookupurl );
     QFileInfoList list = dir.entryInfoList();
 
@@ -85,6 +88,7 @@ void ExtractorFactory::loadScriptInfo()
             fileInfo.completeSuffix() != QString("py")) {
             continue;
         }
+
 
         action.setFile( fileInfo.absoluteFilePath() );
 
@@ -101,5 +105,9 @@ void ExtractorFactory::loadScriptInfo()
         scriptInfo.file = fileInfo.absoluteFilePath();
 
         m_availableScripts.append( scriptInfo );
+
+        kDebug() << "add plugon (" << scriptInfo.name << ") via file: " << scriptInfo.file;
     }
+
+    kDebug() << "found " << m_availableScripts.size() << "search plugins";
 }
