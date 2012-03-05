@@ -19,15 +19,13 @@
 
 #include "krossextractor.h"
 
-#include <kross/core/manager.h>
-#include <kross/core/action.h>
+#include <KDE/Kross/Action>
+#include <KDE/Kross/Manager>
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QVariant>
 #include <QtCore/QVariantMap>
-
-#include <QDebug>
 
 ExtractorFactory::ExtractorFactory(QObject *parent)
     : QObject(parent)
@@ -80,7 +78,8 @@ void ExtractorFactory::loadScriptInfo()
     QFileInfoList list = dir.entryInfoList();
 
     foreach( const QFileInfo &fileInfo, list) {
-        if( fileInfo.fileName() == QString(".") || fileInfo.fileName() == QString("..") || fileInfo.completeSuffix() != QString("py")) {
+        if( fileInfo.fileName() == QString(".") || fileInfo.fileName() == QString("..") ||
+            fileInfo.completeSuffix() != QString("py")) {
             continue;
         }
 

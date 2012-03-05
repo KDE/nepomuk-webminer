@@ -24,6 +24,20 @@
 
 #include "webextractor.h"
 
+/**
+  * @brief This factory takes care of retrieving the right plugin for the metadata retrieval.
+  *
+  * Its purpose is to get a list of available search engines based on the type of resource that will be looked up
+  *
+  * @li publication
+  * @li tvshow
+  * @li movie
+  *
+  * Or return the correct search engine based on its unique identifier or the webpage url where the item can be extarcted from
+  *
+  * The WebExtarctor implementations take care of the actual extraction job.
+  *
+  */
 class ExtractorFactory : public QObject
 {
     Q_OBJECT

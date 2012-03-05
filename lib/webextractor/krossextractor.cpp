@@ -17,22 +17,28 @@
 
 #include "krossextractor.h"
 
-#include <kross/core/manager.h>
-#include <kross/core/action.h>
-
-#include <QLabel>
-#include <QDebug>
+#include <KDE/Kross/Manager>
 
 KrossExtractor::KrossExtractor(const QString &scriptFile, QObject *parent)
     : WebExtractor(parent)
 {
     m_scriptFile = new Kross::Action(this, "WebExtractor");
 
-    QLabel *l = new QLabel;
     m_scriptFile->addObject(this, "WebExtractor", Kross::ChildrenInterface::AutoConnectSignals);
 
     m_scriptFile->setFile( scriptFile );
     m_scriptFile->trigger();
+
+    // load script info
+    QVariantMap result = m_scriptFile->callFunction("info").toMap();
+    m_scriptInfo.name = result.value("name").toString();
+    m_scriptInfo.identifier = result.value("identifier").toString();
+    m_scriptInfo.description = result.value("desscription").toString();
+    m_scriptInfo.author = result.value("author").toString();
+    m_scriptInfo.email = result.value("email").toString();
+    m_scriptInfo.resource = result.value("resource").toString();
+    m_scriptInfo.icon = result.value("icon").toString();
+    m_scriptInfo.file = m_scriptFile->file();
 }
 
 KrossExtractor::~KrossExtractor()
@@ -42,17 +48,7 @@ KrossExtractor::~KrossExtractor()
 
 WebExtractor::Info KrossExtractor::info() const
 {
-    QVariantMap result = m_scriptFile->callFunction("info").toMap();
-
-    WebExtractor::Info scriptInfo;
-    scriptInfo.name = result.value("name").toString();
-    scriptInfo.description = result.value("desscription").toString();
-    scriptInfo.author = result.value("author").toString();
-    scriptInfo.email = result.value("email").toString();
-    scriptInfo.resource = result.value("resource").toString();
-    scriptInfo.file = m_scriptFile->file();
-
-    return scriptInfo;
+    return m_scriptInfo;
 }
 
 void KrossExtractor::search(const QVariantMap &parameters)

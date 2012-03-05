@@ -24,6 +24,20 @@
 
 class MetaDataParameters;
 
+/**
+  * @brief The resource extarctor is used to retrieve some basic information from files and resources
+  *
+  * Here we check the file or the Nepomuk resource and extract values from it that can be used for the @c WebExtractor search.
+  * Usually it would be enough to check only Nepomuk for this info and when some files are given as input the right nepomuk
+  * resource can be looked up and used for the retrival. As the libstreamanalyzer might fail on several pdf files this class
+  * uses its own pdf parsing to get the right details.
+  *
+  * The out put of this class is a ordered Hash where all files are sorted by category:
+  * @li publication
+  * @li tvshow
+  * @li movie
+  * Where each file/resource is represented by its MetaDataParameters that is used for the actaul search
+  */
 class ResourceExtractor : public QObject
 {
     Q_OBJECT

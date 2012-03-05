@@ -22,6 +22,16 @@
 
 class MetaDataParameters;
 
+/**
+  * @brief This part is used to import a plain QVariantMap into Nepomuk
+  *
+  * The data received from the internet is nothing else than a list of key=value pairs.
+  * To save one the trouble of writing the Nepomuk parts that does the semantic transition from such an key=value
+  * list to the right ontology parts, this pipe appraoch exist.
+  *
+  * It is not meant to cover all of Nepomuks ontoloyg but rather a small defined subset of items that will be fetched
+  * from the internet.
+  */
 class NepomukPipe : public QObject
 {
     Q_OBJECT
