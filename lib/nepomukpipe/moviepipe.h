@@ -22,6 +22,20 @@
 
 #include "sro/nco/personcontact.h"
 
+/**
+  * @brief Pipes a QVariantMap with movie information into Nempomuk
+  *
+  * The following keys will be used in this trasition:
+  * @li title
+  * @li plot
+  * @li genres - split by ;
+  * @li year
+  * @li director - split by ;
+  * @li writer - split by ;
+  * @li cast - split by ;
+  *
+  * @todo handle poster/cover download. Given an url on the web, download it to a location specified via KConfig or use directly the localfile
+  */
 class MoviePipe : public NepomukPipe
 {
 

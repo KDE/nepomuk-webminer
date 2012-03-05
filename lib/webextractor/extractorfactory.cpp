@@ -21,6 +21,7 @@
 
 #include <KDE/Kross/Action>
 #include <KDE/Kross/Manager>
+#include <KDE/Kross/Interpreter>
 
 #include <KDE/KStandardDirs>
 
@@ -58,6 +59,15 @@ WebExtractor *ExtractorFactory::createExtractor( const QString &webEngine )
 
 WebExtractor *ExtractorFactory::createExtractor( const QUrl &uri )
 {
+    foreach(const WebExtractor::Info i, m_availableScripts) {
+        if(uri.toString().contains( i.urlregex )) {
+
+            kDebug() << "create KROSS web extractor for:" << i.name;
+            KrossExtractor *ke = new KrossExtractor(i.file);
+            return ke;
+        }
+    }
+
     return 0;
 }
 
@@ -76,19 +86,26 @@ QList<WebExtractor::Info> ExtractorFactory::listAvailablePlugins( const QString 
 
 void ExtractorFactory::loadScriptInfo()
 {
+    QStringList acceptedFileTypes;
+    QStringList interpreters = Kross::Manager::self().interpreters();
+    kDebug() << "available interpreters" << interpreters;
+    foreach(const QString &suffix, interpreters) {
+        QString wildcard = Kross::Manager::self().interpreter(suffix)->interpreterInfo()->wildcard();
+        acceptedFileTypes << wildcard.remove(QLatin1String("*."));
+    }
+
     Kross::Action action(this, "ExtractorFactory");
     QString lookupurl = KStandardDirs::locate("data", "nepomukmetadataextractor/plugins/");
 
     kDebug() << "look for plugins on the folder" << lookupurl;
+
     QDir dir( lookupurl );
     QFileInfoList list = dir.entryInfoList();
 
     foreach( const QFileInfo &fileInfo, list) {
-        if( fileInfo.fileName() == QString(".") || fileInfo.fileName() == QString("..") ||
-            fileInfo.completeSuffix() != QString("py")) {
-            continue;
-        }
 
+        if( !acceptedFileTypes.contains(fileInfo.completeSuffix()))
+            continue;
 
         action.setFile( fileInfo.absoluteFilePath() );
 
@@ -102,6 +119,7 @@ void ExtractorFactory::loadScriptInfo()
         scriptInfo.author = result.value("author").toString();
         scriptInfo.email = result.value("email").toString();
         scriptInfo.resource = result.value("resource").toString();
+        scriptInfo.urlregex = result.value("urlregex").toString();
         scriptInfo.file = fileInfo.absoluteFilePath();
 
         m_availableScripts.append( scriptInfo );

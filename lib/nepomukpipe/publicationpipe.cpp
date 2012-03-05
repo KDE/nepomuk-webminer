@@ -35,7 +35,6 @@
 #include "sro/nbib/courtreporter.h"
 #include "sro/nbib/legalcasedocument.h"
 
-#include "sro/sync/serversyncdata.h"
 #include "sro/pimo/note.h"
 #include "sro/pimo/topic.h"
 #include "sro/pimo/event.h"
@@ -48,7 +47,6 @@
 #include "sro/nco/personcontact.h"
 #include "sro/nco/contact.h"
 #include "sro/nco/organizationcontact.h"
-#include "sro/aneo/akonadidataobject.h"
 
 #include <Soprano/Vocabulary/RDF>
 

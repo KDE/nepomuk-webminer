@@ -46,12 +46,38 @@ public:
     explicit ExtractorFactory(QObject *parent = 0);
     ~ExtractorFactory();
 
+    /**
+      * Creates a new WebExtractor based in the "identifier" name
+      *
+      * Ownership of the created object is transfered to the caller.
+      * The caller must delete it, if it is no longer used
+      */
     WebExtractor *createExtractor( const QString &webEngine );
+
+    /**
+      * Creates a new WebExtractor based in the "url" it can fetch data from
+      *
+      * Ownership of the created object is transfered to the caller.
+      * The caller must delete it, if it is no longer used
+      */
     WebExtractor *createExtractor( const QUrl &uri );
 
+    /**
+      * returns a list of all available webextractor plugins that fetches data for teh resource @c type
+      *
+      * type can be:
+      * @li publication
+      * @li tvshow
+      * @li movie
+      */
     QList<WebExtractor::Info> listAvailablePlugins( const QString &type );
 
 private:
+    /**
+      * Preloads information about all available plugins
+      *
+      * Plugins are scripts in the kde data folder under @c nepomukmetadataextractor/plugins/
+      */
     void loadScriptInfo();
 
     QList<WebExtractor::Info> m_availableScripts;

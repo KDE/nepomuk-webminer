@@ -18,6 +18,7 @@ set( nepomukextractor_LIB_SRCS
   nepomukpipe/nepomukpipe.cpp
   nepomukpipe/publicationpipe.cpp
   nepomukpipe/moviepipe.cpp
+  nepomukpipe/tvshowpipe.cpp
   
 
   ui/fetcherdialog.cpp

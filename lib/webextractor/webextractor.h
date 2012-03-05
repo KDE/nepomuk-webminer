@@ -35,9 +35,10 @@ public:
         QString name;
         QString identifier;
         QString description;
+        QString resource;
+        QString urlregex;
         QString author;
         QString email;
-        QString resource;
         QString file;
         QString icon;
     };

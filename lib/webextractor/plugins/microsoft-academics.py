@@ -23,6 +23,7 @@ citationResults = []
 # icon          = download the favicon and put is as png in the folder, icon is than name.png
 # identifier    = short unique identifier for the service, no special chars, whitespaces
 # resource      = must be either publication, tvshow or movie. Describes what kind of data this plugin fetches
+# urlregex      = regular expression that fits a url to this plugin
 #
 # Can have:
 # description   = Description to add some more information about the service
@@ -34,6 +35,7 @@ def info():
                  icon = 'microsoft-academic-search.png',
                  identifier = 'mas',
                  resource = 'publication',
+                 urlregex = 'http://academic.research.microsoft.com/Publication/',
                  description = 'some description',
                  author = 'Joerg Ehrichs',
                  email = 'some@mail.com')

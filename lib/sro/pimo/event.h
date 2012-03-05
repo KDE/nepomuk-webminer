@@ -10,7 +10,7 @@
 
 #include "dms-copy/simpleresource.h"
 
-#include "sro/pimo/processconcept.h"
+#include "pimo/processconcept.h"
 
 namespace Nepomuk {
 namespace PIMO {
@@ -33,6 +33,36 @@ public:
         SimpleResource::operator=(res);
         addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#Event", QUrl::StrictMode));
         return *this;
+    }
+
+    /**
+     * Get property http://www.example.com/nbib#eventPublication. 
+     * the publications that fornm the result of an event 
+     */
+    QList<QUrl> eventPublications() const {
+        QList<QUrl> value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.example.com/nbib#eventPublication", QUrl::StrictMode)))
+            value << v.value<QUrl>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.example.com/nbib#eventPublication. 
+     * the publications that fornm the result of an event 
+     */
+    void setEventPublications(const QList<QUrl>& value) {
+        QVariantList values;
+        foreach(const QUrl& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#eventPublication", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.example.com/nbib#eventPublication. 
+     * the publications that fornm the result of an event 
+     */
+    void addEventPublication(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#eventPublication", QUrl::StrictMode), value);
     }
 
 protected:

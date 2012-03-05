@@ -10,7 +10,7 @@
 
 #include "dms-copy/simpleresource.h"
 
-#include "sro/pimo/logicalmediatype.h"
+#include "pimo/logicalmediatype.h"
 
 namespace Nepomuk {
 namespace PIMO {

@@ -27,13 +27,6 @@
 
 #include "sro/nmm/movie.h"
 
-#include <Nepomuk/Vocabulary/NIE>
-#include <Nepomuk/Vocabulary/NMM>
-
-#include <QDebug>
-
-using namespace Nepomuk::Vocabulary;
-
 MoviePipe::MoviePipe(QObject *parent)
     : NepomukPipe(parent)
 {
@@ -47,103 +40,66 @@ MoviePipe::~MoviePipe()
 void MoviePipe::pipeImport(MetaDataParameters* movieEntry)
 {
     Nepomuk::SimpleResourceGraph graph;
+
     // do not use local file url here, this will double type the resource
+    // for now this is the best way to deal with this
     Nepomuk::NMM::Movie movieResource(movieEntry->resourceUri);
 
     QString title = movieEntry->metaData.value(QLatin1String("title")).toString();
-    movieResource.setProperty(NIE::title(), title);
+    movieResource.setTitle( title );
 
     QString plot = movieEntry->metaData.value(QLatin1String("plot")).toString();
-    movieResource.setProperty(NIE::description(), plot);
+    QStringList plotList;
+    plotList << plot;
+    movieResource.setDescriptions( plotList );
 
     QString genreList = movieEntry->metaData.value(QLatin1String("genres")).toString();
     QStringList genres = genreList.split(';');
 
     foreach(const QString &genre, genres) {
-        movieResource.addProperty(NMM::genre(), genre);
+        movieResource.addGenre( genre );
     }
 
     QString releaseDate = movieEntry->metaData.value(QLatin1String("year")).toString() + QLatin1String("");
-    movieResource.setProperty(NMM::releaseDate(), releaseDate);
+    QDateTime dateTime = QDateTime::fromString(releaseDate, "yyyy");
+    movieResource.setReleaseDate( dateTime );
 
     QString directorList = movieEntry->metaData.value(QLatin1String("director")).toString();
     QStringList directors = directorList.split(';');
 
     foreach(const QString &director, directors) {
-        QStringList directorParts = director.split(' ');
-
-        Nepomuk::NCO::PersonContact directorResource;
-        directorResource.setFullname( director );
-        directorResource.setNameFamily( directorParts.last() );
-        directorResource.setNameGiven( directorParts.first() );
-//        directorParts.takeFirst();
-//        directorParts.takeLast();
-
-//        if(!directorParts.isEmpty()) {
-//            directorResource.setNameAdditionals( directorParts );
-//        }
+        Nepomuk::NCO::PersonContact directorResource = createPerson(director);
 
         graph << directorResource;
-        movieResource.addProperty(NMM::director(), directorResource);
+        movieResource.addDirector( directorResource.uri() );
     }
 
     QString writerList = movieEntry->metaData.value(QLatin1String("writer")).toString();
     QStringList writers = writerList.split(';');
 
     foreach(const QString &writer, writers) {
-        QStringList writerParts = writer.split(' ');
-
-        Nepomuk::NCO::PersonContact writerResource;
-        writerResource.setFullname( writer );
-        writerResource.setNameFamily( writerParts.last() );
-        writerResource.setNameGiven( writerParts.first() );
-//        writerParts.takeFirst();
-//        writerParts.takeLast();
-
-//        if(!writerParts.isEmpty()) {
-//            writerResource.setNameAdditionals( writerParts );
-//        }
+        Nepomuk::NCO::PersonContact writerResource = createPerson(writer);
 
         graph << writerResource;
-        movieResource.addProperty(NMM::writer(), writerResource);
+        movieResource.addWriter( writerResource.uri() );
     }
 
     QString actorList = movieEntry->metaData.value(QLatin1String("cast")).toString();
     QStringList actors = actorList.split(';');
 
     foreach(const QString &actor, actors) {
-        QStringList actorParts = actor.split(' ');
-
-        Nepomuk::NCO::PersonContact actorResource;
-        actorResource.setFullname( actor );
-        actorResource.setNameFamily( actorParts.last() );
-        actorResource.setNameGiven( actorParts.first() );
-//        actorParts.takeFirst();
-//        actorParts.takeLast();
-
-//        if(!actorParts.isEmpty()) {
-//            actorResource.setNameAdditionals( actorParts );
-//        }
+        Nepomuk::NCO::PersonContact actorResource = createPerson(actor);
 
         graph << actorResource;
-        movieResource.addProperty(NMM::actor(), actorResource);
+        movieResource.addActor( actorResource.uri() );
     }
 
     graph << movieResource;
 
-    Nepomuk::StoreResourcesJob *srj = Nepomuk::storeResources(graph, Nepomuk::IdentifyNew, Nepomuk::OverwriteProperties);
-    //connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
-    srj->exec();
-
-    qDebug() << srj->errorText();
-
-    // get the nepomu kuri of the newly created resource
-    //QUrl movieUri( srj->mappings().value( movieResource.uri() ));
-
-    // add crossref with
+    Nepomuk::storeResources(graph, Nepomuk::IdentifyNew, Nepomuk::OverwriteProperties);
 }
 
-Nepomuk::NCO::PersonContact createPerson(const QString &fullName)
+Nepomuk::NCO::PersonContact MoviePipe::createPerson(const QString &fullName)
 {
     QStringList nameParts = fullName.split(' ');
 
