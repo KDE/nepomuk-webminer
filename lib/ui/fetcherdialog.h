@@ -21,7 +21,7 @@
 #include <QtGui/QDialog>
 #include <KDE/KUrl>
 
-#include "metadataextractor_export.h"
+#include "nepomukmetadataextractor_export.h"
 
 #include <QtCore/QModelIndex>
 

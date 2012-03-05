@@ -23,6 +23,7 @@
 #include <QtCore/QList>
 
 #include "webextractor.h"
+#include "nepomukmetadataextractor_export.h"
 
 /**
   * @brief This factory takes care of retrieving the right plugin for the metadata retrieval.
@@ -38,7 +39,7 @@
   * The WebExtarctor implementations take care of the actual extraction job.
   *
   */
-class ExtractorFactory : public QObject
+class NEPOMUKMETADATAEXTRACTOR_EXPORT ExtractorFactory : public QObject
 {
     Q_OBJECT
 public:

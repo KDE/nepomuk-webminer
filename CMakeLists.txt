@@ -1,6 +1,6 @@
 project(metadataextractor)
 
-##################  metadataextractor version  ################################
+##################  nepomukbulkextractor version  ################################
 set(CMAKE_METDADATAEXTRACTOR_VERSION_MAJOR 0)
 set(CMAKE_METDADATAEXTRACTOR_VERSION_MINOR 1)
 set(CMAKE_METDADATAEXTRACTOR_VERSION_RELEASE 0)
@@ -24,16 +24,32 @@ include_directories(
   ${KDE4_INCLUDES}
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_INCLUDE_DIR}
-
-  "/usr/include/python2.6"
-  "/usr/include/python2.7"
-
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/lib
-  ${metadataextractor_BINARY_DIR}
+  ${nepomukextractor_BINARY_DIR}
 )
 
 
 add_subdirectory( lib )
-#add_subdirectory( src )
-#add_subdirectory( python )
+
+
+
+# -------------------------------------------
+# build the dolphin right click menu
+# bulk extractor from the lib
+# -------------------------------------------
+
+set( metadataextractor_SRCS main.cpp )
+
+kde4_add_executable( metadataextractor ${metadataextractor_SRCS})
+
+target_link_libraries( metadataextractor
+  ${KDE4_KDECORE_LIBS}
+  ${KDE4_KIO_LIBS}
+  ${KDE4_KDEUI_LIBS}
+
+  nepomukmetadataextractor
+)
+
+install(TARGETS metadataextractor ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(PROGRAMS metadataextractor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})

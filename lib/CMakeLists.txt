@@ -6,8 +6,6 @@ add_subdirectory( dms-copy )
 # -------------------------------------------
 set( nepomukextractor_LIB_SRCS
 
-  main.cpp
-
   webextractor/extractorfactory.cpp
   webextractor/webextractor.cpp
   webextractor/krossextractor.cpp
@@ -33,10 +31,9 @@ kde4_add_ui_files( nepomukextractor_LIB_SRCS
                    ui/fetcherdialog.ui
 )
 
-kde4_add_executable(nepomukextractor ${nepomukextractor_LIB_SRCS})
-#kde4_add_library( nepomukextractor SHARED ${nepomukextractor_LIB_SRCS} )
+kde4_add_library( nepomukmetadataextractor SHARED ${nepomukextractor_LIB_SRCS} )
 
-target_link_libraries( nepomukextractor
+target_link_libraries( nepomukmetadataextractor
   ${KDE4_KDECORE_LIBS}
   ${KDE4_KIO_LIBS}
   ${KDE4_KDEUI_LIBS}
@@ -53,22 +50,23 @@ target_link_libraries( nepomukextractor
   ${POPPLER_LIBRARY}
 )
 
-#set_target_properties( nepomukextractor
-#  PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}
-#)
+set_target_properties( nepomukmetadataextractor
+  PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}
+)
 
-#install( TARGETS nepomukextractor ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install( TARGETS nepomukmetadataextractor ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-#set( webextractor_LIB_HDRS
-#  webextractor_export.h
-#  extractor.h
-#)
+set( nepomukmetadataextractor_LIB_HDRS
+  nepomukmetadataextractor_export.h
+  metadataparameters.h
 
-#install( FILES ${webextractor_LIB_HDRS}
-#  DESTINATION ${INCLUDE_INSTALL_DIR}/nepomukextractor
-#  COMPONENT Devel
-#)
+  webextractor/extractorfactory.h
+  webextractor/webextractor.h
 
-#install(TARGETS metadataextractor ${INSTALL_TARGETS_DEFAULT_ARGS})
-#install(PROGRAMS metadataextractor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+  ui/fetcherdialog.h
+)
 
+install( FILES ${nepomukmetadataextractor_LIB_HDRS}
+  DESTINATION ${INCLUDE_INSTALL_DIR}/nepomukmetadataextractor
+  COMPONENT Devel
+)

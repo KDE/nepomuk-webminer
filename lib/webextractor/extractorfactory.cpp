@@ -22,10 +22,13 @@
 #include <KDE/Kross/Action>
 #include <KDE/Kross/Manager>
 
+#include <KDE/KStandardDirs>
+
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QVariant>
 #include <QtCore/QVariantMap>
+
 
 ExtractorFactory::ExtractorFactory(QObject *parent)
     : QObject(parent)
@@ -72,7 +75,7 @@ QList<WebExtractor::Info> ExtractorFactory::listAvailablePlugins( const QString 
 void ExtractorFactory::loadScriptInfo()
 {
     Kross::Action action(this, "MyScript");
-    QString lookupurl("/home/joerg/Development/KDE/metadataextractor/lib/webextractor/plugins/");
+    QString lookupurl = KStandardDirs::locate("data", "metadataextractor/");
 
     QDir dir( lookupurl );
     QFileInfoList list = dir.entryInfoList();

@@ -18,7 +18,7 @@
 #ifndef WEBEXTRACTOR_H
 #define WEBEXTRACTOR_H
 
-#include "metadataextractor_export.h"
+#include "nepomukmetadataextractor_export.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
