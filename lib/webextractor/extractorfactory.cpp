@@ -74,8 +74,8 @@ QList<WebExtractor::Info> ExtractorFactory::listAvailablePlugins( const QString 
 
 void ExtractorFactory::loadScriptInfo()
 {
-    Kross::Action action(this, "MyScript");
-    QString lookupurl = KStandardDirs::locate("data", "metadataextractor/");
+    Kross::Action action(this, "ExtractorFactory");
+    QString lookupurl = KStandardDirs::locate("data", "nepomukmetadataextractor/plugins/");
 
     QDir dir( lookupurl );
     QFileInfoList list = dir.entryInfoList();

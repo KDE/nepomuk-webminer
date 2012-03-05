@@ -70,3 +70,5 @@ install( FILES ${nepomukmetadataextractor_LIB_HDRS}
   DESTINATION ${INCLUDE_INSTALL_DIR}/nepomukmetadataextractor
   COMPONENT Devel
 )
+
+install(DIRECTORY webextractor/plugins DESTINATION ${DATA_INSTALL_DIR}/nepomukmetadataextractor)

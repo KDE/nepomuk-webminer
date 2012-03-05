@@ -226,6 +226,7 @@ def handleMainItemExtraction(job):
         documentElement = BeautifulSoup( html ) # note switch to lxml
         
         # retrieve the basic data
+        global finalEntry
         finalEntry = extractItem( documentElement )
         
 	# check if we can fetch references
