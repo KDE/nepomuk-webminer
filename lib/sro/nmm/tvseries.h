@@ -64,6 +64,36 @@ public:
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#hasEpisode", QUrl::StrictMode), value);
     }
 
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#hasSeason. 
+     * Relates a TV Series to its seasons 
+     */
+    QList<QUrl> seasons() const {
+        QList<QUrl> value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#hasSeason", QUrl::StrictMode)))
+            value << v.value<QUrl>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#hasSeason. 
+     * Relates a TV Series to its seasons 
+     */
+    void setSeasons(const QList<QUrl>& value) {
+        QVariantList values;
+        foreach(const QUrl& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#hasSeason", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#hasSeason. 
+     * Relates a TV Series to its seasons 
+     */
+    void addSeason(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#hasSeason", QUrl::StrictMode), value);
+    }
+
 protected:
     TVSeries(const QUrl& uri, const QUrl& type)
       : SimpleResource(uri), NIE::InformationElement(uri, type) {

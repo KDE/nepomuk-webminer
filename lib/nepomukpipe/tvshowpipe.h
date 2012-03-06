@@ -20,6 +20,13 @@
 
 #include "nepomukpipe.h"
 
+#include "dms-copy/simpleresourcegraph.h"
+
+#include "nmm/tvshow.h"
+#include "nmm/tvseries.h"
+#include "nmm/tvseason.h"
+#include "nco/personcontact.h"
+
 /**
   * @brief Handles the import of tvshows
   *
@@ -32,9 +39,13 @@ public:
     virtual ~TvShowPipe();
 
     /**
-      * Imports one episode and its sereis details
+      * Imports one episode and its series details
       */
     void pipeImport(MetaDataParameters* tvshowEntry);
+
+private:
+    Nepomuk::NMM::TVShow createEpisode(QVariantMap episodeInfo, Nepomuk::NMM::TVSeason season);
+    Nepomuk::NCO::PersonContact createPerson(const QString &fullName);
 };
 
 #endif // TVSHOWPIPE_H

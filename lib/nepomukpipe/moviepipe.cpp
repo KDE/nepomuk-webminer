@@ -27,6 +27,10 @@
 
 #include "sro/nmm/movie.h"
 
+#include <Soprano/Vocabulary/NAO>
+
+using namespace Soprano::Vocabulary;
+
 MoviePipe::MoviePipe(QObject *parent)
     : NepomukPipe(parent)
 {
@@ -72,6 +76,7 @@ void MoviePipe::pipeImport(MetaDataParameters* movieEntry)
 
         graph << directorResource;
         movieResource.addDirector( directorResource.uri() );
+        movieResource.addProperty(NAO::hasSubResource(), directorResource.uri());
     }
 
     QString writerList = movieEntry->metaData.value(QLatin1String("writer")).toString();
@@ -82,6 +87,7 @@ void MoviePipe::pipeImport(MetaDataParameters* movieEntry)
 
         graph << writerResource;
         movieResource.addWriter( writerResource.uri() );
+        movieResource.addProperty(NAO::hasSubResource(), writerResource.uri());
     }
 
     QString actorList = movieEntry->metaData.value(QLatin1String("cast")).toString();
@@ -92,6 +98,7 @@ void MoviePipe::pipeImport(MetaDataParameters* movieEntry)
 
         graph << actorResource;
         movieResource.addActor( actorResource.uri() );
+        movieResource.addProperty(NAO::hasSubResource(), actorResource.uri());
     }
 
     graph << movieResource;
