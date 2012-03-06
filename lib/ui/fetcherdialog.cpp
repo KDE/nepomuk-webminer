@@ -43,6 +43,9 @@
 #include <QtGui/QTextDocument>
 #include <QtGui/QTextEdit>
 
+using namespace NepomukMetaDataExtractor::Pipe;
+using namespace NepomukMetaDataExtractor::WebExtractor;
+
 FetcherDialog::FetcherDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::FetcherDialog)
@@ -485,6 +488,8 @@ void FetcherDialog::fetchMoreDetails()
 
 void FetcherDialog::fetchedItemDetails(QVariantMap itemDetails)
 {
+    m_currentItemToupdate->metaData.insert(QLatin1String("resourceuri"), m_currentItemToupdate->resourceUri.url());
+
     QMapIterator<QString, QVariant> i(itemDetails);
     while (i.hasNext()) {
         i.next();
@@ -518,7 +523,7 @@ void FetcherDialog::saveMetaData()
     }
 
     if(nepomukPipe) {
-        nepomukPipe->pipeImport( mdp );
+        nepomukPipe->pipeImport( mdp->metaData );
         mdp->metaDataSaved = true;
     }
     else {

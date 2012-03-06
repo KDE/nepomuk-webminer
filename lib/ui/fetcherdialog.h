@@ -31,8 +31,13 @@ namespace Ui {
 
 class MetaDataParameters;
 class ResourceExtractor;
-class ExtractorFactory;
-class WebExtractor;
+
+namespace NepomukMetaDataExtractor {
+    namespace WebExtractor {
+        class ExtractorFactory;
+        class WebExtractor;
+    }
+}
 
 class SearchResultsModel;
 class QTextDocument;
@@ -86,8 +91,8 @@ private:
 private:
     Ui::FetcherDialog *ui;
     ResourceExtractor *m_re;
-    ExtractorFactory *m_ef;
-    WebExtractor *m_webextractor;
+    NepomukMetaDataExtractor::WebExtractor::ExtractorFactory *m_ef;
+    NepomukMetaDataExtractor::WebExtractor::WebExtractor *m_webextractor;
     MetaDataParameters *m_currentItemToupdate;
 
     QStringList m_categoriesToFetch;

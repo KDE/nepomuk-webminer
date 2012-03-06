@@ -22,34 +22,36 @@
 
 #include "sro/nco/personcontact.h"
 
-/**
-  * @brief Pipes a QVariantMap with movie information into Nempomuk
-  *
-  * The following keys will be used in this trasition:
-  * @li title
-  * @li plot
-  * @li genres - split by ;
-  * @li year
-  * @li director - split by ;
-  * @li writer - split by ;
-  * @li cast - split by ;
-  *
-  * @todo handle poster/cover download. Given an url on the web, download it to a location specified via KConfig or use directly the localfile
-  */
-class MoviePipe : public NepomukPipe
-{
+namespace NepomukMetaDataExtractor {
+    namespace Pipe {
+        /**
+          * @brief Pipes a QVariantMap with movie information into Nempomuk
+          *
+          * The following keys will be used in this trasition:
+          * @li @c resourceuri - the file url or nepomuk uri of the resource this data should be added to
+          * @li @c title
+          * @li @c plot
+          * @li @c genres - split by ;
+          * @li @c year
+          * @li @c director - split by ;
+          * @li @c writer - split by ;
+          * @li @c cast - split by ;
+          *
+          * @todo handle poster/cover download. Given an url on the web, download it to a location specified via KConfig or use directly the localfile
+          */
+        class MoviePipe : public NepomukPipe
+        {
 
-public:
-    MoviePipe(QObject *parent = 0);
-    virtual ~MoviePipe();
+        public:
+            MoviePipe(QObject *parent = 0);
+            virtual ~MoviePipe();
 
-    /**
-      * Does the piping action
-      */
-    void pipeImport(MetaDataParameters* movieEntry);
+            void pipeImport(const QVariantMap &movieEntry);
 
-private:
-    Nepomuk::NCO::PersonContact createPerson(const QString &fullName);
-};
+        private:
+            Nepomuk::NCO::PersonContact createPerson(const QString &fullName);
+        };
+    }
+}
 
 #endif // MOVIEPIPE_H

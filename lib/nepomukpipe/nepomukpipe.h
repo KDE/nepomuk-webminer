@@ -19,36 +19,32 @@
 #define NEPOMUKPIPE_H
 
 #include <QtCore/QObject>
+#include <QtCore/QVariantMap>
 
-class MetaDataParameters;
+namespace NepomukMetaDataExtractor {
+    namespace Pipe {
 
-/**
-  * @brief This part is used to import a plain QVariantMap into Nepomuk
-  *
-  * The data received from the internet is nothing else than a list of key=value pairs.
-  * To save one the trouble of writing the Nepomuk parts that does the semantic transition from such an key=value
-  * list to the right ontology parts, this pipe appraoch exist.
-  *
-  * It is not meant to cover all of Nepomuks ontoloyg but rather a small defined subset of items that will be fetched
-  * from the internet.
-  */
-class NepomukPipe : public QObject
-{
-    Q_OBJECT
-public:
-    explicit NepomukPipe(QObject *parent = 0);
-    virtual ~NepomukPipe();
+        /**
+          * @brief This part is used to import a plain QVariantMap into Nepomuk
+          *
+          * The data received from the internet is nothing else than a list of key=value pairs.
+          * To save one the trouble of writing the Nepomuk parts that does the semantic transition from such an key=value
+          * list to the right ontology parts, this pipe appraoch exist.
+          *
+          * It is not meant to cover all of Nepomuks ontoloy but rather a small defined subset of items that will be fetched
+          * from the internet.
+          */
+        class NepomukPipe : public QObject
+        {
+            Q_OBJECT
+        public:
+            explicit NepomukPipe(QObject *parent = 0);
+            virtual ~NepomukPipe();
 
-    /**
-      * Does the piping action
-      */
-    void pipeImport(QList<MetaDataParameters*> & bibEntries);
-    virtual void pipeImport(MetaDataParameters* bibEntries) = 0;
+            virtual void pipeImport(const QVariantMap &entry) = 0;
 
-signals:
-    void progress(int progress);
-    void finished();
-
-};
+        };
+    }
+}
 
 #endif // NEPOMUKPIPE_H

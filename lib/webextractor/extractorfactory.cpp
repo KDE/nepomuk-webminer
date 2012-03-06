@@ -32,18 +32,18 @@
 
 #include <KDE/KDebug>
 
-ExtractorFactory::ExtractorFactory(QObject *parent)
+NepomukMetaDataExtractor::WebExtractor::ExtractorFactory::ExtractorFactory(QObject *parent)
     : QObject(parent)
 {
     loadScriptInfo();
 }
 
-ExtractorFactory::~ExtractorFactory()
+NepomukMetaDataExtractor::WebExtractor::ExtractorFactory::~ExtractorFactory()
 {
 
 }
 
-WebExtractor *ExtractorFactory::createExtractor( const QString &webEngine )
+NepomukMetaDataExtractor::WebExtractor::WebExtractor *NepomukMetaDataExtractor::WebExtractor::ExtractorFactory::createExtractor( const QString &webEngine )
 {
     foreach(const WebExtractor::Info i, m_availableScripts) {
         if(i.identifier == webEngine) {
@@ -57,7 +57,7 @@ WebExtractor *ExtractorFactory::createExtractor( const QString &webEngine )
     return 0;
 }
 
-WebExtractor *ExtractorFactory::createExtractor( const QUrl &uri )
+NepomukMetaDataExtractor::WebExtractor::WebExtractor *NepomukMetaDataExtractor::WebExtractor::ExtractorFactory::createExtractor( const QUrl &uri )
 {
     foreach(const WebExtractor::Info i, m_availableScripts) {
         if(uri.toString().contains( i.urlregex )) {
@@ -71,7 +71,7 @@ WebExtractor *ExtractorFactory::createExtractor( const QUrl &uri )
     return 0;
 }
 
-QList<WebExtractor::Info> ExtractorFactory::listAvailablePlugins( const QString &type )
+QList<NepomukMetaDataExtractor::WebExtractor::WebExtractor::Info> NepomukMetaDataExtractor::WebExtractor::ExtractorFactory::listAvailablePlugins( const QString &type )
 {
     QList<WebExtractor::Info> pluginList;
 
@@ -84,7 +84,7 @@ QList<WebExtractor::Info> ExtractorFactory::listAvailablePlugins( const QString 
     return pluginList;
 }
 
-void ExtractorFactory::loadScriptInfo()
+void NepomukMetaDataExtractor::WebExtractor::ExtractorFactory::loadScriptInfo()
 {
     QStringList acceptedFileTypes;
     QStringList interpreters = Kross::Manager::self().interpreters();

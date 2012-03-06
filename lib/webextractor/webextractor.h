@@ -26,37 +26,41 @@
 #include <QtCore/QVariantList>
 #include <QtCore/QVariantMap>
 
-class NEPOMUKMETADATAEXTRACTOR_EXPORT WebExtractor : public QObject
-{
-    Q_OBJECT
+namespace NepomukMetaDataExtractor {
+    namespace WebExtractor {
+        class NEPOMUKMETADATAEXTRACTOR_EXPORT WebExtractor : public QObject
+        {
+            Q_OBJECT
 
-public:
-    struct Info {
-        QString name;
-        QString identifier;
-        QString description;
-        QString resource;
-        QString urlregex;
-        QString author;
-        QString email;
-        QString file;
-        QString icon;
-    };
+        public:
+            struct Info {
+                QString name;
+                QString identifier;
+                QString description;
+                QString resource;
+                QString urlregex;
+                QString author;
+                QString email;
+                QString file;
+                QString icon;
+            };
 
-    explicit WebExtractor(QObject *parent = 0);
-    ~WebExtractor();
+            explicit WebExtractor(QObject *parent = 0);
+            ~WebExtractor();
 
-    virtual WebExtractor::Info info() const = 0;
+            virtual WebExtractor::Info info() const = 0;
 
-public slots:
-    virtual void search(const QVariantMap &parameters) = 0;
-    virtual void extractItem(const QUrl &url) = 0;
+        public slots:
+            virtual void search(const QVariantMap &parameters) = 0;
+            virtual void extractItem(const QUrl &url) = 0;
 
-signals:
-    void error(const QString &errorMessage);
-    void log(const QString &logMessage);
-    void searchResults(const QVariantList &entries);
-    void itemResults(const QVariantMap &entry);
-};
+        signals:
+            void error(const QString &errorMessage);
+            void log(const QString &logMessage);
+            void searchResults(const QVariantList &entries);
+            void itemResults(const QVariantMap &entry);
+        };
+    }
+}
 
 #endif // WEBEXTRACTOR_H

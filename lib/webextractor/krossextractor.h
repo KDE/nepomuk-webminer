@@ -22,44 +22,48 @@
 
 #include <KDE/Kross/Action>
 
-/**
-  * @brief Wrapper around the Kross framework to implement plugins in python, ruby or javascript
-  *
-  * The plugin itself is implemented in the scriptfile that will be passed via its constructor.
-  * Afterwards the signals/slots are passed directly to the script.
-  *
-  * @see http://techbase.kde.org/Development/Tutorials#Kross
-  *
-  * All script plugins must implement the slots:
-  * @li searchItems(QVariantMap)
-  * @li extractItemFromUri(QUrl)
-  *
-  * and return its data via:
-  * @li error(QString);
-  * @li log(QString);
-  * @li searchResults(QVariantList);
-  * @li itemResults(QVariantMap);
-  *
-  */
-class KrossExtractor : public WebExtractor
-{
-    Q_OBJECT
-public:
-    explicit KrossExtractor(const QString &scriptFile, QObject *parent = 0);
-    ~KrossExtractor();
+namespace NepomukMetaDataExtractor {
+    namespace WebExtractor {
+        /**
+          * @brief Wrapper around the Kross framework to implement plugins in python, ruby or javascript
+          *
+          * The plugin itself is implemented in the scriptfile that will be passed via its constructor.
+          * Afterwards the signals/slots are passed directly to the script.
+          *
+          * @see http://techbase.kde.org/Development/Tutorials#Kross
+          *
+          * All script plugins must implement the slots:
+          * @li searchItems(QVariantMap)
+          * @li extractItemFromUri(QUrl)
+          *
+          * and return its data via:
+          * @li error(QString);
+          * @li log(QString);
+          * @li searchResults(QVariantList);
+          * @li itemResults(QVariantMap);
+          *
+          */
+        class KrossExtractor : public WebExtractor
+        {
+            Q_OBJECT
+        public:
+            explicit KrossExtractor(const QString &scriptFile, QObject *parent = 0);
+            ~KrossExtractor();
 
-    WebExtractor::Info info() const;
+            WebExtractor::Info info() const;
 
-    void search(const QVariantMap &parameters);
-    void extractItem(const QUrl &url);
+            void search(const QVariantMap &parameters);
+            void extractItem(const QUrl &url);
 
-signals:
-    void searchItems(const QVariantMap &parameters);
-    void extractItemFromUri(const QUrl &url);
+        signals:
+            void searchItems(const QVariantMap &parameters);
+            void extractItemFromUri(const QUrl &url);
 
-private:
-    Kross::Action *m_scriptFile;
-    WebExtractor::Info m_scriptInfo;
-};
+        private:
+            Kross::Action *m_scriptFile;
+            WebExtractor::Info m_scriptInfo;
+        };
+    }
+}
 
 #endif // KROSSEXTRACTOR_H

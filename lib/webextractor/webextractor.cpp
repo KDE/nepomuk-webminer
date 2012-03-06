@@ -17,10 +17,10 @@
 
 #include "webextractor.h"
 
-WebExtractor::WebExtractor(QObject *parent)
+NepomukMetaDataExtractor::WebExtractor::WebExtractor::WebExtractor(QObject *parent)
 {
 }
 
-WebExtractor::~WebExtractor()
+NepomukMetaDataExtractor::WebExtractor::WebExtractor::~WebExtractor()
 {
 }

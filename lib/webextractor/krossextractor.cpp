@@ -19,7 +19,7 @@
 
 #include <KDE/Kross/Manager>
 
-KrossExtractor::KrossExtractor(const QString &scriptFile, QObject *parent)
+NepomukMetaDataExtractor::WebExtractor::KrossExtractor::KrossExtractor(const QString &scriptFile, QObject *parent)
     : WebExtractor(parent)
 {
     m_scriptFile = new Kross::Action(this, "WebExtractor");
@@ -41,22 +41,22 @@ KrossExtractor::KrossExtractor(const QString &scriptFile, QObject *parent)
     m_scriptInfo.file = m_scriptFile->file();
 }
 
-KrossExtractor::~KrossExtractor()
+NepomukMetaDataExtractor::WebExtractor::KrossExtractor::~KrossExtractor()
 {
     delete m_scriptFile;
 }
 
-WebExtractor::Info KrossExtractor::info() const
+NepomukMetaDataExtractor::WebExtractor::WebExtractor::Info NepomukMetaDataExtractor::WebExtractor::KrossExtractor::info() const
 {
     return m_scriptInfo;
 }
 
-void KrossExtractor::search(const QVariantMap &parameters)
+void NepomukMetaDataExtractor::WebExtractor::KrossExtractor::search(const QVariantMap &parameters)
 {
     emit searchItems(parameters);
 }
 
-void KrossExtractor::extractItem(const QUrl &url)
+void NepomukMetaDataExtractor::WebExtractor::KrossExtractor::extractItem(const QUrl &url)
 {
     emit extractItemFromUri(url);
 }

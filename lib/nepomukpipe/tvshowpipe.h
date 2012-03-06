@@ -27,25 +27,59 @@
 #include "nmm/tvseason.h"
 #include "nco/personcontact.h"
 
-/**
-  * @brief Handles the import of tvshows
-  *
-  * @todo support bulk import of a complete series with all its episodes
-  */
-class TvShowPipe : public NepomukPipe
-{
-public:
-    TvShowPipe(QObject *parent = 0);
-    virtual ~TvShowPipe();
+namespace NepomukMetaDataExtractor {
+    namespace Pipe {
+        /**
+          * @brief Pipes a QVariantMap with Tv Shows information into Nempomuk
+          *
+          * The QVariantMap with the information contains several other QVariantMaps.
+          * For the purpose of single episodes this seem overly complicated, but this helps to simply
+          * bulk import complete seasons or even series in one go without quering the web resource all
+          * over again.
+          *
+          * This takes care of the special case that tv shows always come in large series that are all connected
+          * to each other.
+          *
+          * The QVariantMap should have this keys:
+          *
+          * @li @c title
+          * @li @c overview
+          * @li @c imdbid
+          * @li @c banner
+          * @li @c seasons - QVariantList containing more QVariantMaps with series info
+          *
+          * The QVariantmap containing the season information looks like this:
+          *
+          * @li @c number
+          * @li @c banner
+          * @li @c episodes - QVariantList containing more QVariantMaps with episodes info
+          *
+          * The QVariantmap containing the episode information looks like this:
+          * @li @c resourceuri - the file url or nepomuk uri of the resource this data should be added to
+          * @li @c title
+          * @li @c overview
+          * @li @c number
+          * @li @c firstaired - Dateformat for QDateTime TODO what format should be used here? yyyy-mm-dd?
+          * @li @c genres - split by ;
+          * @li @c director - split by ;
+          * @li @c writer - split by ;
+          * @li @c actors - split by ;
+          *
+          * @todo support bulk import of a complete series with all its episodes
+          */
+        class TvShowPipe : public NepomukPipe
+        {
+        public:
+            TvShowPipe(QObject *parent = 0);
+            virtual ~TvShowPipe();
 
-    /**
-      * Imports one episode and its series details
-      */
-    void pipeImport(MetaDataParameters* tvshowEntry);
+            void pipeImport(const QVariantMap &tvshowEntry);
 
-private:
-    Nepomuk::NMM::TVShow createEpisode(QVariantMap episodeInfo, Nepomuk::NMM::TVSeason season);
-    Nepomuk::NCO::PersonContact createPerson(const QString &fullName);
-};
+        private:
+            Nepomuk::NMM::TVShow createEpisode(QVariantMap episodeInfo, Nepomuk::NMM::TVSeason season);
+            Nepomuk::NCO::PersonContact createPerson(const QString &fullName);
+        };
+    }
+}
 
 #endif // TVSHOWPIPE_H
