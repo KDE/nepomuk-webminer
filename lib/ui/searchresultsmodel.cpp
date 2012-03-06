@@ -19,19 +19,20 @@
 
 #include <QtCore/QRegExp>
 #include <QDebug>
-SearchResultsModel::SearchResultsModel(QObject *parent) :
+
+NepomukMetaDataExtractor::Dialog::SearchResultsModel::SearchResultsModel(QObject *parent) :
     QAbstractListModel(parent)
 {
 }
 
-void SearchResultsModel::setSearchResults(const QVariantList & searchResults)
+void NepomukMetaDataExtractor::Dialog::SearchResultsModel::setSearchResults(const QVariantList & searchResults)
 {
     beginInsertRows(QModelIndex(), m_searchResults.size(), m_searchResults.size() + searchResults.size());
     m_searchResults = searchResults;
     endInsertRows();
 }
 
-QVariantMap SearchResultsModel::searchResultEntry( const QModelIndex & index )
+QVariantMap NepomukMetaDataExtractor::Dialog::SearchResultsModel::searchResultEntry( const QModelIndex & index )
 {
     if( index.row() >= 0 && index.row() < m_searchResults.size()) {
         return m_searchResults.at(index.row()).toMap();
@@ -41,21 +42,21 @@ QVariantMap SearchResultsModel::searchResultEntry( const QModelIndex & index )
     }
 }
 
-void SearchResultsModel::clear( )
+void NepomukMetaDataExtractor::Dialog::SearchResultsModel::clear( )
 {
     beginRemoveRows(QModelIndex(), 0, m_searchResults.size());
     m_searchResults.clear();
     endRemoveRows();
 }
 
-int SearchResultsModel::rowCount ( const QModelIndex & parent ) const
+int NepomukMetaDataExtractor::Dialog::SearchResultsModel::rowCount ( const QModelIndex & parent ) const
 {
     Q_UNUSED(parent);
 
     return m_searchResults.size();
 }
 
-QVariant SearchResultsModel::data ( const QModelIndex & index, int role ) const
+QVariant NepomukMetaDataExtractor::Dialog::SearchResultsModel::data ( const QModelIndex & index, int role ) const
 {
     if( role == Qt::DisplayRole) {
         QString title = m_searchResults.at(index.row()).toMap().value("title").toString();

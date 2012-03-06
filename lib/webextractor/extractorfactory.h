@@ -26,7 +26,7 @@
 #include "nepomukmetadataextractor_export.h"
 
 namespace NepomukMetaDataExtractor {
-    namespace WebExtractor {
+    namespace Extractor {
         /**
           * @brief This factory takes care of retrieving the right plugin for the metadata retrieval.
           *
@@ -54,7 +54,7 @@ namespace NepomukMetaDataExtractor {
               * Ownership of the created object is transfered to the caller.
               * The caller must delete it, if it is no longer used
               */
-            NepomukMetaDataExtractor::WebExtractor::WebExtractor *createExtractor( const QString &webEngine );
+            NepomukMetaDataExtractor::Extractor::WebExtractor *createExtractor( const QString &webEngine );
 
             /**
               * Creates a new WebExtractor based in the "url" it can fetch data from
@@ -62,7 +62,7 @@ namespace NepomukMetaDataExtractor {
               * Ownership of the created object is transfered to the caller.
               * The caller must delete it, if it is no longer used
               */
-            NepomukMetaDataExtractor::WebExtractor::WebExtractor *createExtractor( const QUrl &uri );
+            NepomukMetaDataExtractor::Extractor::WebExtractor *createExtractor( const QUrl &uri );
 
             /**
               * returns a list of all available webextractor plugins that fetches data for teh resource @c type
@@ -72,7 +72,7 @@ namespace NepomukMetaDataExtractor {
               * @li tvshow
               * @li movie
               */
-            QList<NepomukMetaDataExtractor::WebExtractor::WebExtractor::Info> listAvailablePlugins( const QString &type );
+            QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> listAvailablePlugins( const QString &type );
 
         private:
             /**
@@ -82,7 +82,7 @@ namespace NepomukMetaDataExtractor {
               */
             void loadScriptInfo();
 
-            QList<NepomukMetaDataExtractor::WebExtractor::WebExtractor::Info> m_availableScripts;
+            QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> m_availableScripts;
         };
     }
 }

@@ -45,8 +45,8 @@ int main( int argc, char *argv[] )
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     KApplication app;
 
-    FetcherDialog fd;
-    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest/");
+    NepomukMetaDataExtractor::Dialog::FetcherDialog fd;
+    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest3/");
     fd.setForceUpdate(true);
     fd.setInitialPathOrFile( debug );
     fd.show();
@@ -54,7 +54,7 @@ int main( int argc, char *argv[] )
 
     if ( args->count() && args->url(0).isValid() ) {
 
-        FetcherDialog fd;
+        NepomukMetaDataExtractor::Dialog::FetcherDialog fd;
 
         if(args->isSet("f")) {
             fd.setForceUpdate(true);

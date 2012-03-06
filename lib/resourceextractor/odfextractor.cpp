@@ -24,12 +24,12 @@
 
 #include <QtXml/QDomDocument>
 
-OdfExtractor::OdfExtractor(QObject *parent)
+NepomukMetaDataExtractor::Extractor::OdfExtractor::OdfExtractor(QObject *parent)
     : QObject(parent)
 {
 }
 
-void OdfExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
+void NepomukMetaDataExtractor::Extractor::OdfExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
 {
     KZip zip( fileUrl.toLocalFile() );
     if ( !zip.open( QIODevice::ReadOnly ) ) {

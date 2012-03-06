@@ -22,6 +22,7 @@
 #include <KDE/KUrl>
 
 #include "nepomukmetadataextractor_export.h"
+#include "ui_fetcherdialog.h"
 
 #include <QtCore/QModelIndex>
 
@@ -30,78 +31,83 @@ namespace Ui {
 }
 
 class MetaDataParameters;
-class ResourceExtractor;
 
 namespace NepomukMetaDataExtractor {
-    namespace WebExtractor {
+    namespace Extractor {
         class ExtractorFactory;
         class WebExtractor;
+        class ResourceExtractor;
+    }
+
+    namespace Dialog {
+        class SearchResultsModel;
     }
 }
 
-class SearchResultsModel;
 class QTextDocument;
 
-class MetaDataFetcher;
+namespace NepomukMetaDataExtractor {
+    namespace Dialog {
 
-/**
-  * @brief Main dialog to show the current progress and some buttons to interact with
-  *
-  */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT FetcherDialog : public QDialog
-{
-    Q_OBJECT
+        /**
+          * @brief Main dialog to show the current progress and some buttons to interact with
+          *
+          */
+        class NEPOMUKMETADATAEXTRACTOR_EXPORT FetcherDialog : public QDialog, private Ui::FetcherDialog
+        {
+            Q_OBJECT
 
-public:
-    explicit FetcherDialog(QWidget *parent = 0);
-    ~FetcherDialog();
+        public:
+            explicit FetcherDialog(QWidget *parent = 0);
+            ~FetcherDialog();
 
-    void setInitialPathOrFile( const KUrl &url );
-    void setForceUpdate(bool update);
+            void setInitialPathOrFile( const KUrl &url );
+            void setForceUpdate(bool update);
 
-private slots:
-    void resourceFetchingDone();
-    void selectNextResourceToLookUp();
-    void selectPreviousResourceToLookUp();
+        private slots:
+            void resourceFetchingDone();
+            void selectNextResourceToLookUp();
+            void selectPreviousResourceToLookUp();
 
-    void startSearch();
-    void selectSearchEntry( QVariantList searchResults );
-    void searchEntrySelected(const QModelIndex &current, const QModelIndex &previous);
+            void startSearch();
+            void selectSearchEntry( QVariantList searchResults );
+            void searchEntrySelected(const QModelIndex &current, const QModelIndex &previous);
 
-    void showSearchParameters();
-    void openDetailsLink(const QString &url);
+            void showSearchParameters();
+            void openDetailsLink(const QString &url);
 
-    void fetchMoreDetails();
-    void fetchedItemDetails(QVariantMap itemDetails);
+            void fetchMoreDetails();
+            void fetchedItemDetails(QVariantMap itemDetails);
 
-    void saveMetaData();
+            void saveMetaData();
 
-    void cancelClose();
+            void cancelClose();
 
-    void addProgressInfo(const QString &status);
-    void showProgressLog();
+            void addProgressInfo(const QString &status);
+            void showProgressLog();
 
-private:
-    void fillEngineList(const QString &category);
-    void showItemDetails();
+        private:
+            void fillEngineList(const QString &category);
+            void showItemDetails();
 
-    void busyFetching();
-    void finishedFetching();
+            void busyFetching();
+            void finishedFetching();
 
-private:
-    Ui::FetcherDialog *ui;
-    ResourceExtractor *m_re;
-    NepomukMetaDataExtractor::WebExtractor::ExtractorFactory *m_ef;
-    NepomukMetaDataExtractor::WebExtractor::WebExtractor *m_webextractor;
-    MetaDataParameters *m_currentItemToupdate;
+        private:
+            NepomukMetaDataExtractor::Extractor::ResourceExtractor *m_re;
+            NepomukMetaDataExtractor::Extractor::ExtractorFactory *m_ef;
+            NepomukMetaDataExtractor::Extractor::WebExtractor *m_webextractor;
+            MetaDataParameters *m_currentItemToupdate;
 
-    QStringList m_categoriesToFetch;
-    int m_currentCategory;
-    int m_currentResource;
+            QStringList m_categoriesToFetch;
+            int m_currentCategory;
+            int m_currentResource;
 
-    SearchResultsModel *m_resultModel;
+            SearchResultsModel *m_resultModel;
 
-    QTextDocument *m_progressLog;
-};
+            QTextDocument *m_progressLog;
+        };
+    }
+}
 
 #endif // FETCHERDIALOG_H

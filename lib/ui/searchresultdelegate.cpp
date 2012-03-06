@@ -20,11 +20,12 @@
 #include <QtGui/QApplication>
 #include <QtGui/QPainter>
 
-SearchResultDelegate::SearchResultDelegate(QObject *parent)
+NepomukMetaDataExtractor::Dialog::SearchResultDelegate::SearchResultDelegate(QObject *parent)
     : QStyledItemDelegate(parent)
 {
 }
-void SearchResultDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,const QModelIndex &index) const
+
+void NepomukMetaDataExtractor::Dialog::SearchResultDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,const QModelIndex &index) const
 {
     QStyleOptionViewItemV4 opt = option;
     initStyleOption(&opt, index);
@@ -65,7 +66,7 @@ void SearchResultDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     opt.displayAlignment, details);
 }
 
-QSize SearchResultDelegate::sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QSize NepomukMetaDataExtractor::Dialog::SearchResultDelegate::sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
 {
     QSize result = QStyledItemDelegate::sizeHint(option, index);
     result.setHeight(result.height()*2);

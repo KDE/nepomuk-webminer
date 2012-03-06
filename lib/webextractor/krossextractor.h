@@ -23,7 +23,7 @@
 #include <KDE/Kross/Action>
 
 namespace NepomukMetaDataExtractor {
-    namespace WebExtractor {
+    namespace Extractor {
         /**
           * @brief Wrapper around the Kross framework to implement plugins in python, ruby or javascript
           *

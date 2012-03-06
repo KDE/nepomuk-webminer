@@ -26,23 +26,27 @@
 
 class MetaDataParameters;
 
-/**
-  * @brief copy of Sebastian Trüg's tvshowfilenameanalyzer
-  *
-  * Defines the file as TvShow if it has S01E0E or simmilar in its name
-  * Otherwise it is a movie
-  */
-class VideoExtractor : public QObject
-{
-    Q_OBJECT
-public:
-    explicit VideoExtractor(QObject *parent = 0);
+namespace NepomukMetaDataExtractor {
+    namespace Extractor {
+        /**
+          * @brief copy of Sebastian Trüg's tvshowfilenameanalyzer
+          *
+          * Defines the file as TvShow if it has S01E0E or simmilar in its name
+          * Otherwise it is a movie
+          */
+        class VideoExtractor : public QObject
+        {
+            Q_OBJECT
+        public:
+            explicit VideoExtractor(QObject *parent = 0);
 
-    void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
+            void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
 
-private:
-    QList<QRegExp> m_filenameRegExps;
+        private:
+            QList<QRegExp> m_filenameRegExps;
 
-};
+        };
+    }
+}
 
 #endif // VIDEOEXTRACTOR_H

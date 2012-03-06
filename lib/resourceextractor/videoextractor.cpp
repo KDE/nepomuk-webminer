@@ -21,7 +21,7 @@
 
 #include <QtCore/QStringList>
 
-VideoExtractor::VideoExtractor(QObject *parent)
+NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *parent)
     : QObject(parent)
 {
     // Regular expressions to parse file based on the ones from tvnamer.py
@@ -55,7 +55,7 @@ VideoExtractor::VideoExtractor(QObject *parent)
                  Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 }
 
-void VideoExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
+void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
 {
 
     mdp->resourceUri = fileUrl;

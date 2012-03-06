@@ -1,0 +1,67 @@
+/** \namespace NepomukMetaDataExtractor::Pipe
+
+\brief The Pipe namespace contains all classes relevant to pipe QVariant data into Nepomuk
+
+Usually the contruction of the Nepomuk relevant semantic data is up to the developer and his implementation.
+as often there already exist structured data it is better to implement this on his own.
+
+When dealing with data that is extracted from the web or a plain file however you wil lalways end up with a huge list of key/value pairs
+that need to be inserted into the Nepomuk database. In this case these Pipe classes come in handy.
+
+Instead of dealing yourself with the transition of such a string based information you can select one of the availabe pipes and let them do their work.
+This helps to simplify the Nepomuk data creation together with the web plugins that only parse kex/value pairs and don't know about Nepomuk.
+
+In order to make this word, the QVariant data need to have a certain look as only specific keys are supported.
+The correct way to create the QVariantData is shown in the pipe class description.
+
+This pipe classes can be used independently from all other MetaDataExtarctor classes in case you want to use them in your program and don't want to work with
+nepomuk but just push your data in the database.
+
+The Pipe classes only handle a small subset of Nepomuks ontology.
+Only classes where a bulk import makes sense are available
+
+\section nepomuk_example Example usage
+
+This shows a very basic example how the movie dta would be created and processed
+
+\code
+QVariantMap metaData;
+metaData.insert("title", "Fancy movie title")
+metaData.insert("plot", "Once upon a time ... ")
+metaData.insert("year", "2012")
+metaData.insert("genres", "Fantasy; Documentation")
+metaData.insert("director", "Adam Test; Max Musterman")
+
+NepomukPipe *np = new MoviePipe();
+
+np->pipeImport(metaData);
+
+delete np;
+\endcode
+
+This creates the new movie resource and takes also care of creating the NCO::PersonContact resources properly.
+
+In most cases someone wanted to create this resource based on a file on the local computer. To connect the movie data
+with the file resource the ocal file url must be added to the metadata information
+
+\code
+KUrl localFile("~/Videos/Fancy.Movie.2012.avi");
+
+QVariantMap metaData;
+metaData.insert("resourceuri", localFile.toLocalFile())
+metaData.insert("title", "Fancy movie title")
+metaData.insert("plot", "Once upon a time ... ")
+metaData.insert("year", "2012")
+metaData.insert("genres", "Fantasy; Documentation")
+metaData.insert("director", "Adam Test; Max Musterman")
+
+NepomukPipe *np = new MoviePipe();
+
+np->pipeImport(metaData);
+
+delete np;
+\endcode
+
+This will double type the resource and add the movie data to the file resource.
+
+*/ 

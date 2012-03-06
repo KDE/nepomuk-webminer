@@ -29,33 +29,37 @@ namespace Poppler {
     class Document;
 }
 
-/**
-  * @brief Extractor for pdf documents via the poppler library
-  *
-  * Extracts the RDF content of the pdf file and the TOC.
-  * Also parse the first page to get the title from it (as often the title is not correctly
-  * inserted into the RDF part. It find the text with the biggest font size that has more
-  * than 1 character, this is most likely the title.
-  */
-class PopplerExtractor : public QObject
-{
-    Q_OBJECT
+namespace NepomukMetaDataExtractor {
+    namespace Extractor {
+        /**
+          * @brief Extractor for pdf documents via the poppler library
+          *
+          * Extracts the RDF content of the pdf file and the TOC.
+          * Also parse the first page to get the title from it (as often the title is not correctly
+          * inserted into the RDF part. It find the text with the biggest font size that has more
+          * than 1 character, this is most likely the title.
+          */
+        class PopplerExtractor : public QObject
+        {
+            Q_OBJECT
 
-public:
-    explicit PopplerExtractor(QObject *parent = 0);
-    ~PopplerExtractor();
+        public:
+            explicit PopplerExtractor(QObject *parent = 0);
+            ~PopplerExtractor();
 
-    /**
-      * Fille the MetaDataParameters with soem more values from the RDF and first page
-      */
-    void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
+            /**
+              * Fille the MetaDataParameters with soem more values from the RDF and first page
+              */
+            void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
 
-private:
-    void tocCreation(const QDomDocument &toc, QDomNode &node);
-    void parseFirstpage();
+        private:
+            void tocCreation(const QDomDocument &toc, QDomNode &node);
+            void parseFirstpage();
 
-    Poppler::Document *m_pdfdoc;
-    MetaDataParameters  *m_publicationEntry;
-};
+            Poppler::Document *m_pdfdoc;
+            MetaDataParameters  *m_publicationEntry;
+        };
+    }
+}
 
 #endif // POPPLEREXTRACTOR_H

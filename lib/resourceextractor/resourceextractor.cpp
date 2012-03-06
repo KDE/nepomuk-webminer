@@ -34,18 +34,18 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QFileInfoList>
 
-ResourceExtractor::ResourceExtractor(QObject *parent)
+NepomukMetaDataExtractor::Extractor::ResourceExtractor::ResourceExtractor(QObject *parent)
     : QObject(parent)
 {
 }
 
-void ResourceExtractor::setForceUpdate(bool update)
+void NepomukMetaDataExtractor::Extractor::ResourceExtractor::setForceUpdate(bool update)
 {
     m_forceUpdate = update;
 }
 
 
-void ResourceExtractor::lookupFiles(const KUrl &fileOrFolder)
+void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupFiles(const KUrl &fileOrFolder)
 {
     emit progressStatus( i18n("Check available files") );
     QDir dir(fileOrFolder.toLocalFile());
@@ -91,17 +91,17 @@ void ResourceExtractor::lookupFiles(const KUrl &fileOrFolder)
     }
 }
 
-void ResourceExtractor::lookupResource(const Nepomuk::Resource &resource)
+void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(const Nepomuk::Resource &resource)
 {
 
 }
 
-void ResourceExtractor::lookupResource(const QList<Nepomuk::Resource> &resources)
+void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(const QList<Nepomuk::Resource> &resources)
 {
 
 }
 
-QStringList ResourceExtractor::availableResourceTypes()
+QStringList NepomukMetaDataExtractor::Extractor::ResourceExtractor::availableResourceTypes()
 {
     QStringList availableTypes;
     foreach(const QString &k, m_resourcesToLookup.keys() ) {
@@ -111,14 +111,14 @@ QStringList ResourceExtractor::availableResourceTypes()
     return availableTypes;
 }
 
-QList<MetaDataParameters *> ResourceExtractor::resourcesToFetch(const QString &type)
+QList<MetaDataParameters *> NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourcesToFetch(const QString &type)
 {
     QList<MetaDataParameters *> mdpList = m_resourcesToLookup.value(type);
 
     return mdpList;
 }
 
-void ResourceExtractor::addFilesToList(const KUrl &fileUrl)
+void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(const KUrl &fileUrl)
 {
     Nepomuk::File fileResource(fileUrl);
 

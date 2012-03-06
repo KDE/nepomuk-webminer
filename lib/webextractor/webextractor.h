@@ -27,7 +27,7 @@
 #include <QtCore/QVariantMap>
 
 namespace NepomukMetaDataExtractor {
-    namespace WebExtractor {
+    namespace Extractor {
         class NEPOMUKMETADATAEXTRACTOR_EXPORT WebExtractor : public QObject
         {
             Q_OBJECT

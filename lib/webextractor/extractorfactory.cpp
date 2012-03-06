@@ -32,18 +32,18 @@
 
 #include <KDE/KDebug>
 
-NepomukMetaDataExtractor::WebExtractor::ExtractorFactory::ExtractorFactory(QObject *parent)
+NepomukMetaDataExtractor::Extractor::ExtractorFactory::ExtractorFactory(QObject *parent)
     : QObject(parent)
 {
     loadScriptInfo();
 }
 
-NepomukMetaDataExtractor::WebExtractor::ExtractorFactory::~ExtractorFactory()
+NepomukMetaDataExtractor::Extractor::ExtractorFactory::~ExtractorFactory()
 {
 
 }
 
-NepomukMetaDataExtractor::WebExtractor::WebExtractor *NepomukMetaDataExtractor::WebExtractor::ExtractorFactory::createExtractor( const QString &webEngine )
+NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::createExtractor( const QString &webEngine )
 {
     foreach(const WebExtractor::Info i, m_availableScripts) {
         if(i.identifier == webEngine) {
@@ -57,7 +57,7 @@ NepomukMetaDataExtractor::WebExtractor::WebExtractor *NepomukMetaDataExtractor::
     return 0;
 }
 
-NepomukMetaDataExtractor::WebExtractor::WebExtractor *NepomukMetaDataExtractor::WebExtractor::ExtractorFactory::createExtractor( const QUrl &uri )
+NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::createExtractor( const QUrl &uri )
 {
     foreach(const WebExtractor::Info i, m_availableScripts) {
         if(uri.toString().contains( i.urlregex )) {
@@ -71,7 +71,7 @@ NepomukMetaDataExtractor::WebExtractor::WebExtractor *NepomukMetaDataExtractor::
     return 0;
 }
 
-QList<NepomukMetaDataExtractor::WebExtractor::WebExtractor::Info> NepomukMetaDataExtractor::WebExtractor::ExtractorFactory::listAvailablePlugins( const QString &type )
+QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> NepomukMetaDataExtractor::Extractor::ExtractorFactory::listAvailablePlugins( const QString &type )
 {
     QList<WebExtractor::Info> pluginList;
 
@@ -84,7 +84,7 @@ QList<NepomukMetaDataExtractor::WebExtractor::WebExtractor::Info> NepomukMetaDat
     return pluginList;
 }
 
-void NepomukMetaDataExtractor::WebExtractor::ExtractorFactory::loadScriptInfo()
+void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
 {
     QStringList acceptedFileTypes;
     QStringList interpreters = Kross::Manager::self().interpreters();

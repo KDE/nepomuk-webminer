@@ -23,17 +23,17 @@
 
 #include <KDE/KDebug>
 
-PopplerExtractor::PopplerExtractor(QObject *parent)
+NepomukMetaDataExtractor::Extractor::PopplerExtractor::PopplerExtractor(QObject *parent)
     : QObject(parent)
 {
 }
 
-PopplerExtractor::~PopplerExtractor()
+NepomukMetaDataExtractor::Extractor::PopplerExtractor::~PopplerExtractor()
 {
     delete m_pdfdoc;
 }
 
-void PopplerExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
+void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
 {
     m_pdfdoc = Poppler::Document::load( fileUrl.toLocalFile(), 0, 0 );
 
@@ -103,7 +103,7 @@ void PopplerExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
     parseFirstpage();
 }
 
-void PopplerExtractor::tocCreation(const QDomDocument &toc, QDomNode &node)
+void NepomukMetaDataExtractor::Extractor::PopplerExtractor::tocCreation(const QDomDocument &toc, QDomNode &node)
 {
     while(!node.isNull()) {
 
@@ -132,7 +132,7 @@ void PopplerExtractor::tocCreation(const QDomDocument &toc, QDomNode &node)
     }
 }
 
-void PopplerExtractor::parseFirstpage()
+void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseFirstpage()
 {
     qDebug() << "parseFirstpage";
     Poppler::Page *p = m_pdfdoc->page(0);
