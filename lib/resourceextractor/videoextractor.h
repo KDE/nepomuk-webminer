@@ -28,6 +28,9 @@ class MetaDataParameters;
 
 namespace NepomukMetaDataExtractor {
     namespace Extractor {
+
+        class VideoExtractorPrivate;
+
         /**
           * @brief copy of Sebastian Trüg's tvshowfilenameanalyzer
           *
@@ -43,8 +46,8 @@ namespace NepomukMetaDataExtractor {
             void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
 
         private:
-            QList<QRegExp> m_filenameRegExps;
-
+            Q_DECLARE_PRIVATE(VideoExtractor)
+            VideoExtractorPrivate *const d_ptr; /**< d-pointer for this class */
         };
     }
 }

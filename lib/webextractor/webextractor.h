@@ -48,7 +48,7 @@ namespace NepomukMetaDataExtractor {
             explicit WebExtractor(QObject *parent = 0);
             ~WebExtractor();
 
-            virtual WebExtractor::Info info() const = 0;
+            virtual WebExtractor::Info info() = 0;
 
         public slots:
             virtual void search(const QVariantMap &parameters) = 0;

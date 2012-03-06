@@ -32,8 +32,19 @@
 
 #include <KDE/KDebug>
 
+namespace NepomukMetaDataExtractor {
+    namespace Extractor {
+        class ExtractorFactoryPrivate {
+        public:
+            QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> availableScripts;
+        };
+    }
+}
+
 NepomukMetaDataExtractor::Extractor::ExtractorFactory::ExtractorFactory(QObject *parent)
     : QObject(parent)
+, d_ptr( new NepomukMetaDataExtractor::Extractor::ExtractorFactoryPrivate )
+
 {
     loadScriptInfo();
 }
@@ -45,7 +56,9 @@ NepomukMetaDataExtractor::Extractor::ExtractorFactory::~ExtractorFactory()
 
 NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::createExtractor( const QString &webEngine )
 {
-    foreach(const WebExtractor::Info i, m_availableScripts) {
+    Q_D( ExtractorFactory );
+
+    foreach(const WebExtractor::Info i, d->availableScripts) {
         if(i.identifier == webEngine) {
 
             kDebug() << "create KROSS web extractor for:" << i.name;
@@ -59,7 +72,9 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
 
 NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::createExtractor( const QUrl &uri )
 {
-    foreach(const WebExtractor::Info i, m_availableScripts) {
+    Q_D( ExtractorFactory );
+
+    foreach(const WebExtractor::Info i, d->availableScripts) {
         if(uri.toString().contains( i.urlregex )) {
 
             kDebug() << "create KROSS web extractor for:" << i.name;
@@ -73,9 +88,11 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
 
 QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> NepomukMetaDataExtractor::Extractor::ExtractorFactory::listAvailablePlugins( const QString &type )
 {
+    Q_D( ExtractorFactory );
+
     QList<WebExtractor::Info> pluginList;
 
-    foreach(const WebExtractor::Info i, m_availableScripts) {
+    foreach(const WebExtractor::Info i, d->availableScripts) {
         if(i.resource == type) {
             pluginList.append(i);
         }
@@ -86,9 +103,12 @@ QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> NepomukMetaDataEx
 
 void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
 {
+    Q_D( ExtractorFactory );
+
     QStringList acceptedFileTypes;
     QStringList interpreters = Kross::Manager::self().interpreters();
     kDebug() << "available interpreters" << interpreters;
+
     foreach(const QString &suffix, interpreters) {
         QString wildcard = Kross::Manager::self().interpreter(suffix)->interpreterInfo()->wildcard();
         acceptedFileTypes << wildcard.remove(QLatin1String("*."));
@@ -122,10 +142,10 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
         scriptInfo.urlregex = result.value("urlregex").toString();
         scriptInfo.file = fileInfo.absoluteFilePath();
 
-        m_availableScripts.append( scriptInfo );
+        d->availableScripts.append( scriptInfo );
 
         kDebug() << "add plugon (" << scriptInfo.name << ") via file: " << scriptInfo.file;
     }
 
-    kDebug() << "found " << m_availableScripts.size() << "search plugins";
+    kDebug() << "found " << d->availableScripts.size() << "search plugins";
 }

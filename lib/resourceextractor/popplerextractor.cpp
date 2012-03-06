@@ -23,44 +23,57 @@
 
 #include <KDE/KDebug>
 
+namespace NepomukMetaDataExtractor {
+    namespace Extractor {
+        class PopplerExtractorPrivate {
+        public:
+            Poppler::Document  *pdfdoc;
+            MetaDataParameters *publicationEntry;
+        };
+    }
+}
+
 NepomukMetaDataExtractor::Extractor::PopplerExtractor::PopplerExtractor(QObject *parent)
     : QObject(parent)
+    , d_ptr( new NepomukMetaDataExtractor::Extractor::PopplerExtractorPrivate )
 {
 }
 
 NepomukMetaDataExtractor::Extractor::PopplerExtractor::~PopplerExtractor()
 {
-    delete m_pdfdoc;
+    Q_D( PopplerExtractor );
+    delete d->pdfdoc;
 }
 
 void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
 {
-    m_pdfdoc = Poppler::Document::load( fileUrl.toLocalFile(), 0, 0 );
+    Q_D( PopplerExtractor );
+    d->pdfdoc = Poppler::Document::load( fileUrl.toLocalFile(), 0, 0 );
 
-    if(!m_pdfdoc) {
+    if(!d->pdfdoc) {
         kWarning() << "could not load " << fileUrl;
         return;
     }
 
-    m_publicationEntry = mdp;
-    m_publicationEntry->resourceUri = fileUrl;
-    m_publicationEntry->resourceType = QLatin1String("publication");
+    d->publicationEntry = mdp;
+    d->publicationEntry->resourceUri = fileUrl;
+    d->publicationEntry->resourceType = QLatin1String("publication");
 
-    QString numOfPages = QString("%1").arg(m_pdfdoc->numPages());
-    m_publicationEntry->metaData.insert(QLatin1String("numpages"), numOfPages);
+    QString numOfPages = QString("%1").arg(d->pdfdoc->numPages());
+    d->publicationEntry->metaData.insert(QLatin1String("numpages"), numOfPages);
 
     // get parsed rdf metadata from poppler
     // strip some unneded info and split the keywords
-    QStringList metaData = m_pdfdoc->infoKeys();
+    QStringList metaData = d->pdfdoc->infoKeys();
     foreach(const QString &key, metaData) {
 
         if(key == QLatin1String("Title")) {
             // sometimes the doi string was added as title value >_<
-            if(m_pdfdoc->info(key).contains(QLatin1String("doi:"))) {
-                m_publicationEntry->metaData.insert(QLatin1String("doi"), m_pdfdoc->info(key).remove(QLatin1String("doi:")));
+            if(d->pdfdoc->info(key).contains(QLatin1String("doi:"))) {
+                d->publicationEntry->metaData.insert(QLatin1String("doi"), d->pdfdoc->info(key).remove(QLatin1String("doi:")));
             }
             else {
-                m_publicationEntry->metaData.insert(QLatin1String("title"), m_pdfdoc->info(key));
+                d->publicationEntry->metaData.insert(QLatin1String("title"), d->pdfdoc->info(key));
             }
         }
         // igrnore the following attributes, they are not of interrest
@@ -75,29 +88,29 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseUrl(MetaDataPar
         // combine subject and keywords and treat them all as pimo:Topic later on
         else if(key == QLatin1String("Subject") ||
                 key == QLatin1String("Keywords")) {
-            QString keywords = m_pdfdoc->info(key);
+            QString keywords = d->pdfdoc->info(key);
             keywords.replace(',', QLatin1String(";"));
 
-            QString currentKeywordList = m_publicationEntry->metaData.value(QLatin1String("keywords"), QString()).toString();
+            QString currentKeywordList = d->publicationEntry->metaData.value(QLatin1String("keywords"), QString()).toString();
             if(!currentKeywordList.isEmpty()) {
                 keywords.append(QLatin1String(";"));
             }
             currentKeywordList.append( keywords );
-            m_publicationEntry->metaData.insert(QLatin1String("keyword"), currentKeywordList);
+            d->publicationEntry->metaData.insert(QLatin1String("keyword"), currentKeywordList);
         }
         else {
-            m_publicationEntry->metaData.insert(key.toLower(), m_pdfdoc->info(key));
+            d->publicationEntry->metaData.insert(key.toLower(), d->pdfdoc->info(key));
         }
     }
 
     // add the toc if available
-    QDomDocument *toc = m_pdfdoc->toc();
+    QDomDocument *toc = d->pdfdoc->toc();
 
     if(toc) {
         QDomNode firstNode = toc->firstChild();
         QDomDocument parsedToc;
         tocCreation( parsedToc , firstNode);
-        m_publicationEntry->metaData.insert(QLatin1String("toc"), parsedToc.toString());
+        d->publicationEntry->metaData.insert(QLatin1String("toc"), parsedToc.toString());
     }
 
     parseFirstpage();
@@ -134,8 +147,9 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::tocCreation(const QD
 
 void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseFirstpage()
 {
-    qDebug() << "parseFirstpage";
-    Poppler::Page *p = m_pdfdoc->page(0);
+    Q_D( PopplerExtractor );
+    kDebug() << "parseFirstpage";
+    Poppler::Page *p = d->pdfdoc->page(0);
 
     QList<Poppler::TextBox*> tbList = p->textList();
     QMap<int, QString> possibleTitleMap;
@@ -199,28 +213,28 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseFirstpage()
     }
 
     newPossibleTitle = newPossibleTitle.toAscii();
-    QString currentTitle = m_publicationEntry->metaData.value( QLatin1String("title"), QString() ).toString();
+    QString currentTitle = d->publicationEntry->metaData.value( QLatin1String("title"), QString() ).toString();
 
     // if no title from metadata was fetched, the possible Title is the title we want
     if( currentTitle.trimmed().isEmpty()) {
-        m_publicationEntry->searchTitle = newPossibleTitle;
+        d->publicationEntry->searchTitle = newPossibleTitle;
         return;
     }
     // otherwise check if the actual metadata title is part of the title we found by fetching
     // if so, we can stop, we didn't get a better result, possible just some wrong words at the  end attached
     else if(newPossibleTitle.contains(currentTitle, Qt::CaseInsensitive)) {
-        m_publicationEntry->searchTitle = currentTitle;
+        d->publicationEntry->searchTitle = currentTitle;
         return;
     }
 
     //if the metadata title has no white space, we assume it was just junk and we take the possible title as real title
     if( !currentTitle.contains(' ') || currentTitle.contains(QLatin1String("Microsoft"))) {
-        m_publicationEntry->searchTitle = newPossibleTitle;
-        m_publicationEntry->searchAltTitle = currentTitle;
+        d->publicationEntry->searchTitle = newPossibleTitle;
+        d->publicationEntry->searchAltTitle = currentTitle;
         return;
     }
 
     // in all other cases the possible title is just and alternative title
-    m_publicationEntry->searchTitle = currentTitle;
-    m_publicationEntry->searchAltTitle = newPossibleTitle;
+    d->publicationEntry->searchTitle = currentTitle;
+    d->publicationEntry->searchAltTitle = newPossibleTitle;
 }

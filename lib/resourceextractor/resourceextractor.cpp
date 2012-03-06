@@ -34,19 +34,33 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QFileInfoList>
 
+namespace NepomukMetaDataExtractor {
+    namespace Extractor {
+        class ResourceExtractorPrivate {
+        public:
+            bool forceUpdate;
+            QMap<QString, QList<MetaDataParameters *> > resourcesToLookup;
+        };
+    }
+}
+
 NepomukMetaDataExtractor::Extractor::ResourceExtractor::ResourceExtractor(QObject *parent)
     : QObject(parent)
+    , d_ptr( new NepomukMetaDataExtractor::Extractor::ResourceExtractorPrivate )
 {
 }
 
 void NepomukMetaDataExtractor::Extractor::ResourceExtractor::setForceUpdate(bool update)
 {
-    m_forceUpdate = update;
+    Q_D( ResourceExtractor );
+    d->forceUpdate = update;
 }
 
 
 void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupFiles(const KUrl &fileOrFolder)
 {
+    Q_D( ResourceExtractor );
+
     emit progressStatus( i18n("Check available files") );
     QDir dir(fileOrFolder.toLocalFile());
 
@@ -71,15 +85,15 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupFiles(const K
 
     emit progressStatus( i18n("Found:") );
 
-    int pubSize = m_resourcesToLookup.value(QLatin1String("publication")).size();
+    int pubSize = d->resourcesToLookup.value(QLatin1String("publication")).size();
     if( pubSize != 0)
         emit progressStatus( i18n("%1 files that miss publication data", pubSize) );
 
-    int tvshowSize = m_resourcesToLookup.value(QLatin1String("tvshow")).size();
+    int tvshowSize = d->resourcesToLookup.value(QLatin1String("tvshow")).size();
     if( tvshowSize != 0)
         emit progressStatus( i18n("%1 files that miss tvshow data", tvshowSize) );
 
-    int movieSize = m_resourcesToLookup.value(QLatin1String("movie")).size();
+    int movieSize = d->resourcesToLookup.value(QLatin1String("movie")).size();
     if( movieSize != 0)
         emit progressStatus( i18n("%1 files that miss movie data", movieSize) );
 
@@ -103,8 +117,10 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(cons
 
 QStringList NepomukMetaDataExtractor::Extractor::ResourceExtractor::availableResourceTypes()
 {
+    Q_D( ResourceExtractor );
+
     QStringList availableTypes;
-    foreach(const QString &k, m_resourcesToLookup.keys() ) {
+    foreach(const QString &k, d->resourcesToLookup.keys() ) {
         availableTypes << k;
     }
 
@@ -113,16 +129,18 @@ QStringList NepomukMetaDataExtractor::Extractor::ResourceExtractor::availableRes
 
 QList<MetaDataParameters *> NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourcesToFetch(const QString &type)
 {
-    QList<MetaDataParameters *> mdpList = m_resourcesToLookup.value(type);
+    Q_D( ResourceExtractor );
+    QList<MetaDataParameters *> mdpList = d->resourcesToLookup.value(type);
 
     return mdpList;
 }
 
 void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(const KUrl &fileUrl)
 {
+    Q_D( ResourceExtractor );
     Nepomuk::File fileResource(fileUrl);
 
-    if( !m_forceUpdate && (
+    if( !d->forceUpdate && (
         fileResource.hasProperty(Nepomuk::Vocabulary::NBIB::publishedAs()) ||
         fileResource.hasType(Nepomuk::Vocabulary::NMM::TVShow()) ||
         fileResource.hasType(Nepomuk::Vocabulary::NMM::Movie()))) {
@@ -152,7 +170,7 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(cons
         kDebug() << "unsupportet mimetype" << kmt.data()->name();
     }
 
-    QList<MetaDataParameters*> currentFileList = m_resourcesToLookup.value( metaDataParameters->resourceType );
+    QList<MetaDataParameters*> currentFileList = d->resourcesToLookup.value( metaDataParameters->resourceType );
     currentFileList.append( metaDataParameters );
-    m_resourcesToLookup.insert( metaDataParameters->resourceType, currentFileList);
+    d->resourcesToLookup.insert( metaDataParameters->resourceType, currentFileList);
 }

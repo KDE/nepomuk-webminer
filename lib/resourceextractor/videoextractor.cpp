@@ -21,42 +21,55 @@
 
 #include <QtCore/QStringList>
 
+namespace NepomukMetaDataExtractor {
+    namespace Extractor {
+        class VideoExtractorPrivate {
+        public:
+            QList<QRegExp> filenameRegExps;
+        };
+    }
+}
+
 NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *parent)
     : QObject(parent)
+    , d_ptr( new NepomukMetaDataExtractor::Extractor::VideoExtractorPrivate )
 {
+    Q_D( VideoExtractor );
+
     // Regular expressions to parse file based on the ones from tvnamer.py
     // Copyright dbr/Ben
     // Regex's to parse filenames with. Must have 3 groups, seriesname, season number
     // and episode number. Use (?: optional) non-capturing groups if you need others.
 
     // foo_[s01]_[e01]
-    m_filenameRegExps.append(
+    d->filenameRegExps.append(
         QRegExp( QLatin1String( "(.+)[ \\._\\-]\\[s([0-9]+)\\]_\\[e([0-9]+)\\]?[^\\\\/]*" ),
                  Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
     // foo.1x09*
-    m_filenameRegExps.append(
+    d->filenameRegExps.append(
         QRegExp( QLatin1String( "(.+)[ \\._\\-]\\[?([0-9]+)x([0-9]+)[^\\d]?[^\\\\/]*" ),
                  Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
     // foo.s01.e01, foo.s01_e01
-    m_filenameRegExps.append(
+    d->filenameRegExps.append(
         QRegExp( QLatin1String( "(.+)[ \\._\\-]s([0-9]+)[\\._\\- ]?e([0-9]+)[^\\\\/]*" ),
                  Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
     // foo.103* (the strange part at the end is used to 1. prevent another digit and 2. allow the name to end)
-    m_filenameRegExps.append(
+    d->filenameRegExps.append(
         QRegExp( QLatin1String( "(.+)[ \\._\\-]([0-9]{1})([0-9]{2})(?:[^\\d][^\\\\/]*)?" ),
                  Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
     // foo.0103* (the strange part at the end is used to 1. prevent another digit and 2. allow the name to end)
-    m_filenameRegExps.append(
+    d->filenameRegExps.append(
         QRegExp( QLatin1String( "(.+)[ \\._\\-]([0-9]{2})([0-9]{2,3})(?:[^\\d][^\\\\/]*)?" ),
                  Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 }
 
 void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
 {
+    Q_D( VideoExtractor );
 
     mdp->resourceUri = fileUrl;
     mdp->resourceType = QLatin1String("publication");
@@ -67,8 +80,8 @@ void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(MetaDataParam
 
     // 2. run the base name through all regular expressions we have
     bool foundSeries = false;
-    for ( int i = 0; i < m_filenameRegExps.count(); ++i ) {
-        QRegExp& exp = m_filenameRegExps[i];
+    for ( int i = 0; i < d->filenameRegExps.count(); ++i ) {
+        QRegExp& exp = d->filenameRegExps[i];
         if ( exp.exactMatch( name ) ) {
 
             foundSeries = true;

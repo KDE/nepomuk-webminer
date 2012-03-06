@@ -31,6 +31,9 @@ namespace Poppler {
 
 namespace NepomukMetaDataExtractor {
     namespace Extractor {
+
+        class PopplerExtractorPrivate;
+
         /**
           * @brief Extractor for pdf documents via the poppler library
           *
@@ -56,8 +59,8 @@ namespace NepomukMetaDataExtractor {
             void tocCreation(const QDomDocument &toc, QDomNode &node);
             void parseFirstpage();
 
-            Poppler::Document *m_pdfdoc;
-            MetaDataParameters  *m_publicationEntry;
+            Q_DECLARE_PRIVATE(PopplerExtractor)
+            PopplerExtractorPrivate *const d_ptr; /**< d-pointer for this class */
         };
     }
 }

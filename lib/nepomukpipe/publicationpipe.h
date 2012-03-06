@@ -58,7 +58,7 @@ namespace NepomukMetaDataExtractor {
               */
             void pipeImport(const QVariantMap &bibEntry);
 
-        private slots:
+        private Q_SLOTS:
             void slotSaveToNepomukDone(KJob *job);
 
         private:

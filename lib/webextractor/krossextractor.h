@@ -24,6 +24,9 @@
 
 namespace NepomukMetaDataExtractor {
     namespace Extractor {
+
+        class KrossExtractorPrivate;
+
         /**
           * @brief Wrapper around the Kross framework to implement plugins in python, ruby or javascript
           *
@@ -50,7 +53,7 @@ namespace NepomukMetaDataExtractor {
             explicit KrossExtractor(const QString &scriptFile, QObject *parent = 0);
             ~KrossExtractor();
 
-            WebExtractor::Info info() const;
+            WebExtractor::Info info();
 
             void search(const QVariantMap &parameters);
             void extractItem(const QUrl &url);
@@ -60,8 +63,8 @@ namespace NepomukMetaDataExtractor {
             void extractItemFromUri(const QUrl &url);
 
         private:
-            Kross::Action *m_scriptFile;
-            WebExtractor::Info m_scriptInfo;
+            Q_DECLARE_PRIVATE(KrossExtractor)
+            KrossExtractorPrivate *const d_ptr; /**< d-pointer for this class */
         };
     }
 }

@@ -27,6 +27,9 @@
 
 namespace NepomukMetaDataExtractor {
     namespace Extractor {
+
+        class ExtractorFactoryPrivate;
+
         /**
           * @brief This factory takes care of retrieving the right plugin for the metadata retrieval.
           *
@@ -82,7 +85,9 @@ namespace NepomukMetaDataExtractor {
               */
             void loadScriptInfo();
 
-            QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> m_availableScripts;
+            Q_DECLARE_PRIVATE(ExtractorFactory)
+            ExtractorFactoryPrivate *const d_ptr; /**< d-pointer for this class */
+
         };
     }
 }

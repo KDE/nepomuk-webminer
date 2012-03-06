@@ -27,7 +27,8 @@ include_directories(
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/lib
   ${CMAKE_SOURCE_DIR}/lib/sro
-  ${nepomukextractor_BINARY_DIR}
+  ${CMAKE_CURRENT_BUILD_DIR}/lib
+  ${CMAKE_CURRENT_BINARY_DIR}/lib
 )
 
 

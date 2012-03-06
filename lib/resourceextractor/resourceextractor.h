@@ -26,6 +26,9 @@ class MetaDataParameters;
 
 namespace NepomukMetaDataExtractor {
     namespace Extractor {
+
+        class ResourceExtractorPrivate;
+
         /**
           * @brief The resource extarctor is used to retrieve some basic information from files and resources
           *
@@ -98,8 +101,8 @@ namespace NepomukMetaDataExtractor {
               */
             void addFilesToList(const KUrl &fileUrl);
 
-            bool m_forceUpdate;
-            QMap<QString, QList<MetaDataParameters *> > m_resourcesToLookup;
+            Q_DECLARE_PRIVATE(ResourceExtractor)
+            ResourceExtractorPrivate *const d_ptr; /**< d-pointer for this class */
         };
     }
 }

@@ -19,36 +19,51 @@
 
 #include <KDE/Kross/Manager>
 
+namespace NepomukMetaDataExtractor {
+    namespace Extractor {
+        class KrossExtractorPrivate {
+        public:
+            Kross::Action *scriptFile;
+            WebExtractor::Info scriptInfo;
+        };
+    }
+}
+
 NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QString &scriptFile, QObject *parent)
     : WebExtractor(parent)
+    , d_ptr( new NepomukMetaDataExtractor::Extractor::KrossExtractorPrivate )
 {
-    m_scriptFile = new Kross::Action(this, "WebExtractor");
+    Q_D( KrossExtractor );
 
-    m_scriptFile->addObject(this, "WebExtractor", Kross::ChildrenInterface::AutoConnectSignals);
+    d->scriptFile = new Kross::Action(this, "WebExtractor");
 
-    m_scriptFile->setFile( scriptFile );
-    m_scriptFile->trigger();
+    d->scriptFile->addObject(this, "WebExtractor", Kross::ChildrenInterface::AutoConnectSignals);
+
+    d->scriptFile->setFile( scriptFile );
+    d->scriptFile->trigger();
 
     // load script info
-    QVariantMap result = m_scriptFile->callFunction("info").toMap();
-    m_scriptInfo.name = result.value("name").toString();
-    m_scriptInfo.identifier = result.value("identifier").toString();
-    m_scriptInfo.description = result.value("desscription").toString();
-    m_scriptInfo.author = result.value("author").toString();
-    m_scriptInfo.email = result.value("email").toString();
-    m_scriptInfo.resource = result.value("resource").toString();
-    m_scriptInfo.icon = result.value("icon").toString();
-    m_scriptInfo.file = m_scriptFile->file();
+    QVariantMap result = d->scriptFile->callFunction("info").toMap();
+    d->scriptInfo.name = result.value("name").toString();
+    d->scriptInfo.identifier = result.value("identifier").toString();
+    d->scriptInfo.description = result.value("desscription").toString();
+    d->scriptInfo.author = result.value("author").toString();
+    d->scriptInfo.email = result.value("email").toString();
+    d->scriptInfo.resource = result.value("resource").toString();
+    d->scriptInfo.icon = result.value("icon").toString();
+    d->scriptInfo.file = d->scriptFile->file();
 }
 
 NepomukMetaDataExtractor::Extractor::KrossExtractor::~KrossExtractor()
 {
-    delete m_scriptFile;
+    Q_D( KrossExtractor );
+    delete d->scriptFile;
 }
 
-NepomukMetaDataExtractor::Extractor::WebExtractor::Info NepomukMetaDataExtractor::Extractor::KrossExtractor::info() const
+NepomukMetaDataExtractor::Extractor::WebExtractor::Info NepomukMetaDataExtractor::Extractor::KrossExtractor::info()
 {
-    return m_scriptInfo;
+    Q_D( KrossExtractor );
+    return d->scriptInfo;
 }
 
 void NepomukMetaDataExtractor::Extractor::KrossExtractor::search(const QVariantMap &parameters)

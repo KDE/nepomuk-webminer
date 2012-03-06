@@ -25,6 +25,7 @@
 
 namespace NepomukMetaDataExtractor {
     namespace Extractor {
+
         class OdfExtractor : public QObject
         {
             Q_OBJECT
@@ -32,9 +33,6 @@ namespace NepomukMetaDataExtractor {
             explicit OdfExtractor(QObject *parent = 0);
 
             void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
-
-        private:
-            MetaDataParameters *m_publicationEntry;
         };
     }
 }

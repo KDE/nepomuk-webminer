@@ -24,6 +24,22 @@
 
 #include <QtXml/QDomDocument>
 
+namespace NepomukMetaDataExtractor {
+    namespace Extractor{
+        /**
+          * Private class of the OdfExtractorPrivate for the d-pointer
+          */
+        class OdfExtractorPrivate {
+        public:
+            MetaDataParameters *publicationEntry;
+        };
+    }
+}
+
+
+
+
+
 NepomukMetaDataExtractor::Extractor::OdfExtractor::OdfExtractor(QObject *parent)
     : QObject(parent)
 {
@@ -49,9 +65,8 @@ void NepomukMetaDataExtractor::Extractor::OdfExtractor::parseUrl(MetaDataParamet
         return;
     }
 
-    m_publicationEntry = mdp;
-    m_publicationEntry->resourceUri = fileUrl;
-    m_publicationEntry->resourceType = QLatin1String("publication");
+    mdp->resourceUri = fileUrl;
+    mdp->resourceType = QLatin1String("publication");
 
     QDomDocument metaData("metaData");
     const KArchiveFile *file = static_cast<const KArchiveFile*>( directory->entry( "meta.xml" ) );
@@ -68,36 +83,36 @@ void NepomukMetaDataExtractor::Extractor::OdfExtractor::parseUrl(MetaDataParamet
          if(!e.isNull()) {
 
              if( e.tagName() == QLatin1String("dc:description")) {
-                 m_publicationEntry->metaData.insert(QLatin1String("note"), e.text() );
+                 mdp->metaData.insert(QLatin1String("note"), e.text() );
              }
              else if( e.tagName() == QLatin1String("meta:keyword")) {
-                 QString keywords = m_publicationEntry->metaData.value( QLatin1String("keywords"), QString() ).toString();
+                 QString keywords = mdp->metaData.value( QLatin1String("keywords"), QString() ).toString();
                  if(!keywords.isEmpty()) {
                      keywords.append( QLatin1String("; ") );
                  }
                  keywords.append( e.text() );
              }
              else if( e.tagName() == QLatin1String("dc:subject")) {
-                 QString keywords = m_publicationEntry->metaData.value( QLatin1String("keywords"), QString() ).toString();
+                 QString keywords = mdp->metaData.value( QLatin1String("keywords"), QString() ).toString();
                  if(!keywords.isEmpty()) {
                      keywords.append( QLatin1String("; ") );
                  }
                  keywords.append( e.text() );
              }
              else if( e.tagName() == QLatin1String("dc:title")) {
-                 m_publicationEntry->metaData.insert(QLatin1String("title"), e.text() );
+                 mdp->metaData.insert(QLatin1String("title"), e.text() );
              }
              else if( e.tagName() == QLatin1String("meta:document-statistic")) {
-                 m_publicationEntry->metaData.insert(QLatin1String("numofpages"), e.attribute("meta:page-count") );
+                 mdp->metaData.insert(QLatin1String("numofpages"), e.attribute("meta:page-count") );
 
              }
              else if( e.tagName() == QLatin1String("meta:user-defined")) {
-                 m_publicationEntry->metaData.insert(e.attribute("meta:name"), e.text() );
+                 mdp->metaData.insert(e.attribute("meta:name"), e.text() );
              }
          }
          n = n.nextSibling();
      }
 
-     m_publicationEntry->searchTitle    = m_publicationEntry->metaData.value(QLatin1String("title")).toString();
-     m_publicationEntry->searchAltTitle = m_publicationEntry->metaData.value(QLatin1String("altTitle")).toString();
+     mdp->searchTitle    = mdp->metaData.value(QLatin1String("title")).toString();
+     mdp->searchAltTitle = mdp->metaData.value(QLatin1String("altTitle")).toString();
 }
