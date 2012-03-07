@@ -49,9 +49,16 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
     d->scriptInfo.description = result.value("desscription").toString();
     d->scriptInfo.author = result.value("author").toString();
     d->scriptInfo.email = result.value("email").toString();
-    d->scriptInfo.resource = result.value("resource").toString();
     d->scriptInfo.icon = result.value("icon").toString();
     d->scriptInfo.file = d->scriptFile->file();
+
+    QVariantList resList = result.value("resource").toList();
+    foreach(const QVariant &res, resList)
+        d->scriptInfo.resource << res.toString();
+
+    resList = result.value("urlregex").toList();
+    foreach(const QVariant &res, resList)
+        d->scriptInfo.urlregex << res.toString();
 }
 
 NepomukMetaDataExtractor::Extractor::KrossExtractor::~KrossExtractor()
@@ -66,9 +73,9 @@ NepomukMetaDataExtractor::Extractor::WebExtractor::Info NepomukMetaDataExtractor
     return d->scriptInfo;
 }
 
-void NepomukMetaDataExtractor::Extractor::KrossExtractor::search(const QVariantMap &parameters)
+void NepomukMetaDataExtractor::Extractor::KrossExtractor::search(const QString &resourceType, const QVariantMap &parameters)
 {
-    emit searchItems(parameters);
+    emit searchItems(resourceType, parameters);
 }
 
 void NepomukMetaDataExtractor::Extractor::KrossExtractor::extractItem(const QUrl &url)

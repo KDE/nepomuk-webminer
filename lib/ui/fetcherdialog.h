@@ -76,7 +76,7 @@ namespace NepomukMetaDataExtractor {
             void openDetailsLink(const QString &url);
 
             void fetchMoreDetails();
-            void fetchedItemDetails(QVariantMap itemDetails);
+            void fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails);
 
             void saveMetaData();
 

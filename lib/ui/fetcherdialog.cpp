@@ -318,7 +318,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::startSearch()
             return;
         }
         connect(m_webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
-        connect(m_webextractor, SIGNAL(itemResults(QVariantMap)), this, SLOT(fetchedItemDetails(QVariantMap)));
+        connect(m_webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
         connect(m_webextractor, SIGNAL(log(QString)), this, SLOT(addProgressInfo(QString)));
     }
 
@@ -332,7 +332,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::startSearch()
     searchParameters.insert("yearMax", mdp->searchYearMax);
     searchParameters.insert("journal", mdp->searchJournal);
 
-    m_webextractor->search( searchParameters );
+    m_webextractor->search( m_categoriesToFetch.at(m_currentCategory), searchParameters );
 }
 
 void NepomukMetaDataExtractor::Dialog::FetcherDialog::selectSearchEntry( QVariantList searchResults)
@@ -485,7 +485,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::fetchMoreDetails()
     m_webextractor->extractItem( fetchUrl );
 }
 
-void NepomukMetaDataExtractor::Dialog::FetcherDialog::fetchedItemDetails(QVariantMap itemDetails)
+void NepomukMetaDataExtractor::Dialog::FetcherDialog::fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails)
 {
     m_currentItemToupdate->metaData.insert(QLatin1String("resourceuri"), m_currentItemToupdate->resourceUri.url());
 

@@ -34,8 +34,8 @@ def info():
     return dict( name = 'Microsoft Academics Search',
                  icon = 'microsoft-academic-search.png',
                  identifier = 'mas',
-                 resource = 'publication',
-                 urlregex = 'http://academic.research.microsoft.com/Publication/',
+                 resource = ['publication'],
+                 urlregex = ['http://academic.research.microsoft.com/Publication/'],
                  description = 'some description',
                  author = 'Joerg Ehrichs',
                  email = 'some@mail.com')
@@ -52,7 +52,9 @@ def info():
 # When all search results are processed, the list of entries must be returned via:
 # WebExtractor.searchResultsInfo( dict() )
 #
-def searchItems( parameters ):
+def searchItems( resourcetype, parameters ):
+	
+	#resourcetype ignored, we fetch publication only here
 	
 	title = parameters['title']
 	author = parameters['author']
@@ -192,7 +194,7 @@ def extractSearchResults(documentElement, citation=False):
 # just the item without further citation information
 #
 # when all information are retrieved a call via:
-# WebExtractor.itemResults( dict() )
+# WebExtractor.itemResults( 'publication', dict() )
 # will notify the caller that new data is available
 #
 # the dictionary follows the bibtex file standard + few exceptions
@@ -316,7 +318,7 @@ def handleCitationSearch(job):
 	else:
 		logMsg = 'No references found' 
 		WebExtractor.log( logMsg )
-		WebExtractor.itemResults( finalEntry )
+		WebExtractor.itemResults( 'publication', finalEntry )
         
 def fetchNextCitation():
 	
@@ -337,7 +339,7 @@ def handleCitationItemExtraction(job):
         if job.error():
 		error = 'kio job error occured'
 		WebExtractor.error( error )
-		WebExtractor.itemResults( finalEntry )
+		WebExtractor.itemResults( 'publication', finalEntry )
 		return
 
 
@@ -368,7 +370,7 @@ def handleCitationItemExtraction(job):
 		global finalEntry
 		global citationResults
 		finalEntry['references'] = citationResults
-		WebExtractor.itemResults( finalEntry )
+		WebExtractor.itemResults( 'publication', finalEntry )
 	
         
         

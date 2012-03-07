@@ -22,6 +22,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QStringList>
 #include <QtCore/QUrl>
 #include <QtCore/QVariantList>
 #include <QtCore/QVariantMap>
@@ -37,8 +38,8 @@ namespace NepomukMetaDataExtractor {
                 QString name;
                 QString identifier;
                 QString description;
-                QString resource;
-                QString urlregex;
+                QStringList resource;
+                QStringList urlregex;
                 QString author;
                 QString email;
                 QString file;
@@ -51,14 +52,14 @@ namespace NepomukMetaDataExtractor {
             virtual WebExtractor::Info info() = 0;
 
         public slots:
-            virtual void search(const QVariantMap &parameters) = 0;
+            virtual void search(const QString &resourceType, const QVariantMap &parameters) = 0;
             virtual void extractItem(const QUrl &url) = 0;
 
         signals:
             void error(const QString &errorMessage);
             void log(const QString &logMessage);
             void searchResults(const QVariantList &entries);
-            void itemResults(const QVariantMap &entry);
+            void itemResults(const QString &resourceType, const QVariantMap &entry);
         };
     }
 }

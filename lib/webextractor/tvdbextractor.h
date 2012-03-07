@@ -38,7 +38,7 @@ namespace NepomukMetaDataExtractor {
             WebExtractor::Info info();
 
         public slots:
-            void search(const QVariantMap &parameters) ;
+            void search(const QString &resourceType, const QVariantMap &parameters) ;
             void extractItem(const QUrl &url);
 
         private Q_SLOTS:

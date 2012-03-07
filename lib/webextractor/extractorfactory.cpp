@@ -66,7 +66,7 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
         return d->tvdbExtractor;
 
     foreach(const WebExtractor::Info i, d->availableScripts) {
-        if(i.identifier == webEngine) {
+        if( i.identifier.contains(webEngine) ) {
 
             kDebug() << "create KROSS web extractor for:" << i.name;
             KrossExtractor *ke = new KrossExtractor(i.file);
@@ -81,16 +81,21 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
 {
     Q_D( ExtractorFactory );
 
-    if(uri.toString().contains( d->tvdbExtractor->info().urlregex )) {
-        return d->tvdbExtractor;
+    //bad hack ... its late
+    foreach(const QString &urlregex, d->tvdbExtractor->info().urlregex) {
+        if(uri.toString().contains( urlregex )) {
+            return d->tvdbExtractor;
+        }
     }
 
     foreach(const WebExtractor::Info i, d->availableScripts) {
-        if(uri.toString().contains( i.urlregex )) {
+        foreach(const QString &urlregex, i.urlregex) {
+            if(uri.toString().contains( urlregex )) {
 
-            kDebug() << "create KROSS web extractor for:" << i.name;
-            KrossExtractor *ke = new KrossExtractor(i.file);
-            return ke;
+                kDebug() << "create KROSS web extractor for:" << i.name;
+                KrossExtractor *ke = new KrossExtractor(i.file);
+                return ke;
+            }
         }
     }
 
@@ -104,7 +109,7 @@ QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> NepomukMetaDataEx
     QList<WebExtractor::Info> pluginList;
 
     foreach(const WebExtractor::Info i, d->availableScripts) {
-        if(i.resource == type) {
+        if(i.resource.contains(type) ) {
             pluginList.append(i);
         }
     }
@@ -149,9 +154,21 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
         scriptInfo.description = result.value("desscription").toString();
         scriptInfo.author = result.value("author").toString();
         scriptInfo.email = result.value("email").toString();
-        scriptInfo.resource = result.value("resource").toString();
-        scriptInfo.urlregex = result.value("urlregex").toString();
         scriptInfo.file = fileInfo.absoluteFilePath();
+
+        QVariantList resList = result.value("resource").toList();
+        kDebug() << resList;
+        foreach(const QVariant &res, resList) {
+            kDebug() << res;
+            scriptInfo.resource << res.toString();
+        }
+
+        resList = result.value("urlregex").toList();
+        kDebug() << resList;
+        foreach(const QVariant &res, resList) {
+            kDebug() << res;
+            scriptInfo.urlregex << res.toString();
+        }
 
         d->availableScripts.append( scriptInfo );
 

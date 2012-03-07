@@ -27,8 +27,8 @@ def info():
     return dict( name = 'The Internet Movie Database',
                  icon = 'imdb.png',
                  identifier = 'imdbmovies',
-                 urlregex = 'http://www.imdb.com/title/tt',
-                 resource = 'movie',
+                 urlregex = ['http://www.imdb.com/title/tt'],
+                 resource = ['movie','tvshow'],
                  description = 'some description',
                  author = 'Joerg Ehrichs',
                  email = 'some@mail.com')
@@ -45,14 +45,19 @@ def info():
 # When all search results are processed, the list of entries must be returned via:
 # WebExtractor.searchResultsInfo( dict() )
 #
-def searchItems( parameters ):
+def searchItems( resourcetype, parameters ):
 
 	title = parameters['title']
 	yearMin = parameters['yearMin']
 	yearMax = parameters['yearMax']
+	season = parameters['season']
+	episode = parameters['episode']
 
 	ia = IMDb()
-	results = ia.search_movie(title)
+	if resourcetype == 'movie':
+		results = ia.search_movie(title)
+	elif resourcetype == 'tvshow':
+		results = ia.search_episode(title)
 
 	searchResults = []
 	for item in results :
@@ -84,19 +89,6 @@ def extractItemFromUri( url ):
 	ia = IMDb()
 	movie = ia.get_movie(movieId)
 
-        # We can solve the ; bug at the beggining and improve the code a little bit ;).
-	#directorString = ''
-	#for director in movie['director']:
-	#	directorString = directorString + ';' + director['name']
-
-	#writerString = ''
-	#for writer in movie['writer']:
-	#	writerString = writerString + ';' + writer['name']
-
-	#castString = ''
-	#for cast in movie['cast']:
-	#	castString = castString + ';' + cast['name']
-
         result = dict(  title = movie['title'],
                         year = movie['year'],
                         director = ";".join([item["name"] for item in movie['director']]),
@@ -108,4 +100,5 @@ def extractItemFromUri( url ):
                         countries = ';'.join(movie['countries'])
                         )
 
-	WebExtractor.itemResults( result )
+        # todo check how to do the results for tvshows
+	WebExtractor.itemResults( 'movie', result )
