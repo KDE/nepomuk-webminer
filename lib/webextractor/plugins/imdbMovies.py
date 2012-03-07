@@ -27,6 +27,7 @@ def info():
     return dict( name = 'The Internet Movie Database',
                  icon = 'imdb.png',
                  identifier = 'imdbmovies',
+                 urlregex = 'http://www.imdb.com/title/tt',
                  resource = 'movie',
                  description = 'some description',
                  author = 'Joerg Ehrichs',
