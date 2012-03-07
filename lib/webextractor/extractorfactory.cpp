@@ -18,6 +18,7 @@
 #include "extractorfactory.h"
 
 #include "krossextractor.h"
+#include "tvdbextractor.h"
 
 #include <KDE/Kross/Action>
 #include <KDE/Kross/Manager>
@@ -32,18 +33,21 @@
 
 #include <KDE/KDebug>
 
+using namespace NepomukMetaDataExtractor::Extractor;
+
 namespace NepomukMetaDataExtractor {
     namespace Extractor {
         class ExtractorFactoryPrivate {
         public:
             QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> availableScripts;
+            TvdbExtractor *tvdbExtractor;
         };
     }
 }
 
 NepomukMetaDataExtractor::Extractor::ExtractorFactory::ExtractorFactory(QObject *parent)
     : QObject(parent)
-, d_ptr( new NepomukMetaDataExtractor::Extractor::ExtractorFactoryPrivate )
+    , d_ptr( new NepomukMetaDataExtractor::Extractor::ExtractorFactoryPrivate )
 
 {
     loadScriptInfo();
@@ -57,6 +61,9 @@ NepomukMetaDataExtractor::Extractor::ExtractorFactory::~ExtractorFactory()
 NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::createExtractor( const QString &webEngine )
 {
     Q_D( ExtractorFactory );
+
+    if(webEngine == QLatin1String("tvdbc++"))
+        return d->tvdbExtractor;
 
     foreach(const WebExtractor::Info i, d->availableScripts) {
         if(i.identifier == webEngine) {
@@ -73,6 +80,10 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
 NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::createExtractor( const QUrl &uri )
 {
     Q_D( ExtractorFactory );
+
+    if(uri.toString().contains( d->tvdbExtractor->info().urlregex )) {
+        return d->tvdbExtractor;
+    }
 
     foreach(const WebExtractor::Info i, d->availableScripts) {
         if(uri.toString().contains( i.urlregex )) {
@@ -146,6 +157,10 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
 
         kDebug() << "add plugon (" << scriptInfo.name << ") via file: " << scriptInfo.file;
     }
+
+    // also add scriptinfo for the c++ tvdb class
+    d->tvdbExtractor = new TvdbExtractor;
+    d->availableScripts.append( d->tvdbExtractor->info() );
 
     kDebug() << "found " << d->availableScripts.size() << "search plugins";
 }

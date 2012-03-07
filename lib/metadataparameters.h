@@ -23,19 +23,23 @@
 #include <QtCore/QString>
 #include <QtCore/QVariantMap>
 
-struct MetaDataParameters {
-    QString searchTitle;          /**< title of the entry to search for */
-    QString searchAltTitle;       /**< alternative title of the entry to search for in case the first one does not return anything */
-    QString searchEpisode;
-    QString searchSeason;
-    QString searchYearMin;
-    QString searchYearMax;
-    QString searchAuthor;
-    QString searchJournal;
-    QString resourceType;         /**< used to select the right set of python modules that allow retrieving data for this resoruce */
-    KUrl resourceUri;             /**< the nepomuk or file url where the retrieved data will be added to */
-    QVariantMap metaData;         /**< here all fetched data is pushed into @todo define proper api how the data should be saved in her (key=value list) */
-    bool metaDataSaved;
-};
+namespace NepomukMetaDataExtractor {
+    namespace Extractor {
+        struct MetaDataParameters {
+            QString searchTitle;          /**< title of the entry to search for */
+            QString searchAltTitle;       /**< alternative title of the entry to search for in case the first one does not return anything */
+            QString searchEpisode;
+            QString searchSeason;
+            QString searchYearMin;
+            QString searchYearMax;
+            QString searchAuthor;
+            QString searchJournal;
+            QString resourceType;         /**< used to select the right set of python modules that allow retrieving data for this resoruce */
+            KUrl resourceUri;             /**< the nepomuk or file url where the retrieved data will be added to */
+            QVariantMap metaData;         /**< here all fetched data is pushed into @todo define proper api how the data should be saved in her (key=value list) */
+            bool metaDataSaved;
+        };
+    }
+}
 
 #endif // PUBLICATIONENTRY_H

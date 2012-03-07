@@ -22,11 +22,10 @@
 #include <KDE/KUrl>
 #include <Nepomuk/Resource>
 
-class MetaDataParameters;
-
 namespace NepomukMetaDataExtractor {
     namespace Extractor {
 
+        class MetaDataParameters;
         class ResourceExtractorPrivate;
 
         /**
@@ -86,7 +85,7 @@ namespace NepomukMetaDataExtractor {
               */
             QStringList availableResourceTypes();
 
-            QList<MetaDataParameters *> resourcesToFetch(const QString &type);
+            QList<NepomukMetaDataExtractor::Extractor::MetaDataParameters *> resourcesToFetch(const QString &type);
 
         signals:
             void progressStatus(const QString &status);

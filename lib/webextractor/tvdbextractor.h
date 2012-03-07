@@ -15,40 +15,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VIDEOEXTRACTOR_H
-#define VIDEOEXTRACTOR_H
+#ifndef TVDB_H
+#define TVDB_H
 
-#include <QtCore/QObject>
-#include <QtCore/QList>
-#include <QtCore/QRegExp>
+#include "webextractor.h"
 
-#include <KDE/KUrl>
+#include <tvdb/series.h>
+
+namespace Tvdb {
+    class Client;
+}
 
 namespace NepomukMetaDataExtractor {
     namespace Extractor {
-
-        class VideoExtractorPrivate;
-        class MetaDataParameters;
-
-        /**
-          * @brief copy of Sebastian Trüg's tvshowfilenameanalyzer
-          *
-          * Defines the file as TvShow if it has S01E0E or simmilar in its name
-          * Otherwise it is a movie
-          */
-        class VideoExtractor : public QObject
+        class TvdbExtractor : public WebExtractor
         {
             Q_OBJECT
         public:
-            explicit VideoExtractor(QObject *parent = 0);
+            explicit TvdbExtractor(QObject *parent = 0);
+            ~TvdbExtractor();
 
-            void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
+            WebExtractor::Info info();
+
+        public slots:
+            void search(const QVariantMap &parameters) ;
+            void extractItem(const QUrl &url);
+
+        private Q_SLOTS:
+            void slotFinished( const Tvdb::Series& series );
+            void slotMultipleResultsFound( const QList<Tvdb::Series>& series );
 
         private:
-            Q_DECLARE_PRIVATE(VideoExtractor)
-            VideoExtractorPrivate *const d_ptr; /**< d-pointer for this class */
+            Tvdb::Client* m_client;
+            QList<Tvdb::Series> m_seriesCache;
+            QVariantMap m_searchParameters;
         };
     }
 }
 
-#endif // VIDEOEXTRACTOR_H
+#endif // TVDB_H

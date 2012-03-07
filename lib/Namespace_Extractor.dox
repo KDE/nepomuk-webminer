@@ -8,9 +8,10 @@ Overview |
 \ref resourceextractor "ResourceExtractor" |
 </b></p>
 
-There extist two different types of extractor the \ref resourceextractor "ResourceExtractor" is used to retrieve some basic informations from files and already existing resources. They are used to get some initial search parameters for the WebExtarctor.
+There extist two different types of extractor the \ref resourceextractor "ResourceExtractor" is used to retrieve some basic informations from files and already existing resources.
+They are used to get some initial search parameters for the @link NepomukMetaDataExtractor::Extractor::WebExtractor WebExtractor @endlink.
 
-These information are retrieved by parsing the filename / RDF and filecontent or reuse the data that already esit in the Npomuk database.
+These information are retrieved by parsing the filename / RDF and filecontent or reuse the data that already esit in the Nepomuk database.
 
 The second set of extractors are the \ref webextractor "WebExtractor" they offer a way to fetch metadata from certain webpages based on some search parameters or urls given.
 
@@ -29,8 +30,8 @@ Additional metadata can be found on various webpages. How the dta is presented t
 The classes in this namespace deal with a plugin based system to help processing these data and transform it into a unified form
 that can be used by the Pipe classes.
 
-The plugin system is realized by the ExtractorFactory that will create the right plugin for the extraction.
-In most cases the plugins will be realized by the Kross framework as Python, Ruby or JavaScript. In the case one wants to add a c++ based plugin it simply has to subclass the WebExtractor interface.
+The plugin system is realized by the @link NepomukMetaDataExtractor::Extractor::ExtractorFactory ExtractorFactory @endlink that will create the right plugin for the extraction.
+In most cases the plugins will be realized by the <a href="http://api.kde.org/4.x-api/kdelibs-apidocs/kross/html/index.html">Kross framework</a> as @c Python, @c Ruby or @c JavaScript. In the case one wants to add a @c c++ @c based @c plugin it simply has to subclass the @link NepomukMetaDataExtractor::Extractor::WebExtractor WebExtractor @endlink interface.
 
 The plugins that will be used are determined by either the @c url that will be fetched or a @c unique @c identifier for the plugin.
 
@@ -41,7 +42,7 @@ This shows a very basic example how the movie data would be created and processe
 Important functions are:
 
 @li info()
-@li searchItems (QVariantMap)
+@li searchItems(QVariantMap)
 @li extractItemFromUri(QUrl)
 
 To interact with the calling c++ part you can use the following methods of the object @c WebExtractor
@@ -105,7 +106,10 @@ def extractItemFromUri( url ):
 	WebExtractor.itemResults( result )
 \endcode
 
-You can also write plugins via Ruby or JavaScript or any other scriptlanguage where interpreters for Kross exist
+You can also write plugins via @c Ruby or @c JavaScript or any other scriptlanguage where interpreters for <a href="http://api.kde.org/4.x-api/kdelibs-apidocs/kross/html/index.html">Kross</a> exist
+
+@see http://api.kde.org/4.x-api/kdelibs-apidocs/kross/html/index.html
+@see http://techbase.kde.org/Development/Tutorials/Kross-Tutorial
 
 \section nepomuk_example WebExtractor usage sample
 
@@ -142,11 +146,15 @@ we->extractItem( url );
 ResourceExtractor |
 </b></p>
 
-The ResourceExtractor is used to extract possible search parameters for the WebExtractor.
+The @link NepomukMetaDataExtractor::Extractor::ResourceExtractor ResourceExtractor @endlink is used to extract possible search parameters for the @link NepomukMetaDataExtractor::Extractor::WebExtractor WebExtractor @endlink.
 
-They way it works is by passing the url of a folder or file to it and it tries to identify possible search parameters via the filename or by parsing the document directly. as the file parsing is also done by the libstreamanalyzer also the nepomu kresource is checked for more details.
+They way it works is by passing the @c url of a @c folder or @c file to it and it tries to identify possible search parameters via the @c filename or
+by @c parsing @c the @c document directly. As the file parsing is also done by the @c libstreamanalyzer also the @cnepomuk @c resource is checked for more details.
 
-In the case that no file exist it is also possible to zse a list of already available Nepomuk resources that will be updated with more metadata. 
+The main reason to do filename and file parsing here again is the lack of the @c libstreamanalyzer too detect all files (especially .pdf files) correctly.
+This extarctor works around the current issue.
 
+In the case that no file exist it is also possible to use a list of already available Nepomuk resources that will be updated with more metadata.
+This way also metadata extraction for @c nco:Contact is possible.
 
 */

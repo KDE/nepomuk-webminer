@@ -127,10 +127,10 @@ QStringList NepomukMetaDataExtractor::Extractor::ResourceExtractor::availableRes
     return availableTypes;
 }
 
-QList<MetaDataParameters *> NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourcesToFetch(const QString &type)
+QList<NepomukMetaDataExtractor::Extractor::MetaDataParameters *> NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourcesToFetch(const QString &type)
 {
     Q_D( ResourceExtractor );
-    QList<MetaDataParameters *> mdpList = d->resourcesToLookup.value(type);
+    QList<NepomukMetaDataExtractor::Extractor::MetaDataParameters *> mdpList = d->resourcesToLookup.value(type);
 
     return mdpList;
 }

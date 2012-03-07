@@ -10,6 +10,7 @@ set( nepomukextractor_LIB_SRCS
   webextractor/extractorfactory.cpp
   webextractor/webextractor.cpp
   webextractor/krossextractor.cpp
+  webextractor/tvdbextractor.cpp
 
   resourceextractor/resourceextractor.cpp
   resourceextractor/popplerextractor.cpp
@@ -21,7 +22,6 @@ set( nepomukextractor_LIB_SRCS
   nepomukpipe/moviepipe.cpp
   nepomukpipe/tvshowpipe.cpp
   
-
   ui/fetcherdialog.cpp
   ui/searchresultsmodel.cpp
   ui/searchresultdelegate.cpp
@@ -50,6 +50,7 @@ target_link_libraries( nepomukmetadataextractor
 
 # other parts
   ${POPPLER_LIBRARY}
+  ${LIBTVDB_LIBRARIES}
 )
 
 set_target_properties( nepomukmetadataextractor
@@ -64,6 +65,7 @@ set( nepomukmetadataextractor_LIB_HDRS
 
   webextractor/extractorfactory.h
   webextractor/webextractor.h
+  webextractor/tvdbextractor.h
 
   ui/fetcherdialog.h
 )

@@ -30,13 +30,12 @@ namespace Ui {
     class FetcherDialog;
 }
 
-class MetaDataParameters;
-
 namespace NepomukMetaDataExtractor {
     namespace Extractor {
         class ExtractorFactory;
         class WebExtractor;
         class ResourceExtractor;
+        class MetaDataParameters;
     }
 
     namespace Dialog {
@@ -97,7 +96,7 @@ namespace NepomukMetaDataExtractor {
             NepomukMetaDataExtractor::Extractor::ResourceExtractor *m_re;
             NepomukMetaDataExtractor::Extractor::ExtractorFactory *m_ef;
             NepomukMetaDataExtractor::Extractor::WebExtractor *m_webextractor;
-            MetaDataParameters *m_currentItemToupdate;
+            NepomukMetaDataExtractor::Extractor::MetaDataParameters *m_currentItemToupdate;
 
             QStringList m_categoriesToFetch;
             int m_currentCategory;
