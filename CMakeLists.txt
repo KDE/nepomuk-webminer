@@ -13,7 +13,6 @@ include(KDE4Defaults)
 include(SopranoAddOntology)
 include(MacroLibrary)
 include(MacroOptionalAddSubdirectory)
-find_package(LibTvdb "0.3.53" REQUIRED)
 set(SDO_MIN_VERSION "0.8.53")
 find_package(SharedDesktopOntologies)
 
