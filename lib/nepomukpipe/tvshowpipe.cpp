@@ -29,6 +29,8 @@
 #include <Soprano/Vocabulary/RDFS>
 #include <Soprano/Vocabulary/NAO>
 
+#include <KDE/KDebug>
+
 using namespace Soprano::Vocabulary;
 
 NepomukMetaDataExtractor::Pipe::TvShowPipe::TvShowPipe(QObject *parent)
@@ -62,7 +64,10 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
         graph << imdbRes;
     }
 
-    QString seriesBanner = tvshowEntry.value(QLatin1String("Banner")).toString();
+    QString seriesBanner = tvshowEntry.value(QLatin1String("banner")).toString();
+    QString seriesPoster = tvshowEntry.value(QLatin1String("poster")).toString();
+    kDebug() << "seriesBanner" << seriesBanner;
+    kDebug() << "seriesPoster" << seriesPoster;
     //const KUrl localUrl = downloadBanner(series.name(), seriesBanner;
 //    if(!localUrl.isEmpty()) {
 //        Nepomuk::NFO::Image banner(localUrl);
@@ -73,6 +78,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
     // now add all the available series
     QVariantList seasonList = tvshowEntry.value(QLatin1String("seasons")).toList();
 
+    kDebug() << "add" << seasonList.size() << "seasons";
     foreach( const QVariant &season, seasonList) {
         QVariantMap seasonInfo = season.toMap();
 
@@ -92,8 +98,9 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
 //            graph << banner;
 //        }
 
-        QVariantMap episodeList = seasonInfo.value(QLatin1String("episodes")).toMap();
+        QVariantList episodeList = seasonInfo.value(QLatin1String("episodes")).toList();
 
+        kDebug() << "add" << episodeList.size() << "episodes";
         foreach( const QVariant &episode, episodeList) {
             QVariantMap episodeInfo = episode.toMap();
 
@@ -101,6 +108,9 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
 
             seasonRes.addSeasonEpisode(episodeRes.uri());
             episodeRes.setIsPartOfSeason(seasonRes.uri());
+
+            QString episodeBanner = seasonInfo.value(QLatin1String("banner")).toString();
+            kDebug() << "episodeBanner" << episodeBanner;
 
             // we make the seasons sub-resources of the episodes since they do not make sense without them
             episodeRes.addProperty(NAO::hasSubResource(), seasonRes.uri());
@@ -147,17 +157,20 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
 
         } // end episodeList
 
-        graph << seriesRes;
+        graph << seasonRes;
 
     } // end seasonList
 
     graph << seriesRes;
 
-    Nepomuk::storeResources(graph, Nepomuk::IdentifyNew, Nepomuk::OverwriteProperties);
+    Nepomuk::StoreResourcesJob *srj = Nepomuk::storeResources(graph, Nepomuk::IdentifyNew, Nepomuk::OverwriteProperties);
+    connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
+    srj->exec();
 }
 
 Nepomuk::NMM::TVShow NepomukMetaDataExtractor::Pipe::TvShowPipe::createEpisode(QVariantMap episodeInfo, Nepomuk::NMM::TVSeason season )
 {
+    kDebug() << "create new episode with url" << episodeInfo.value(QLatin1String("resourceuri")).toString();
     KUrl localFile( episodeInfo.value(QLatin1String("resourceuri")).toString() );
     Nepomuk::NMM::TVShow episodeRes(localFile);
 

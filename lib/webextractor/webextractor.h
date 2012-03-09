@@ -53,7 +53,7 @@ namespace NepomukMetaDataExtractor {
 
         public slots:
             virtual void search(const QString &resourceType, const QVariantMap &parameters) = 0;
-            virtual void extractItem(const QUrl &url) = 0;
+            virtual void extractItem(const QUrl &url, const QVariantMap &options) = 0;
 
         signals:
             void error(const QString &errorMessage);

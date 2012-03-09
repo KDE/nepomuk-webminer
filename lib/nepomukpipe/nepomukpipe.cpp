@@ -17,6 +17,11 @@
 
 #include "nepomukpipe.h"
 
+#include "dms-copy/storeresourcesjob.h"
+#include <KDE/KJob>
+
+#include <KDE/KDebug>
+
 NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe(QObject *parent)
     : QObject(parent)
 {
@@ -26,4 +31,11 @@ NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe(QObject *parent)
 NepomukMetaDataExtractor::Pipe::NepomukPipe::~NepomukPipe()
 {
 
+}
+
+void NepomukMetaDataExtractor::Pipe::NepomukPipe::slotSaveToNepomukDone(KJob *job)
+{
+    if(job->error()) {
+        kDebug() << "Failed to store information in Nepomuk. " << job->errorString();
+    }
 }

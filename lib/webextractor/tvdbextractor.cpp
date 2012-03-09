@@ -43,7 +43,10 @@ NepomukMetaDataExtractor::Extractor::WebExtractor::Info NepomukMetaDataExtractor
     scriptInfo.name = QLatin1String("TVDb");
     scriptInfo.identifier = QLatin1String("tvdbcpp");
     scriptInfo.description = QLatin1String("An open database for television fans");
-    scriptInfo.urlregex << QLatin1String("http://thetvdb.com");
+    scriptInfo.urlregex << QLatin1String("http://thetvdb.com/?tab=episode&seriesid=(\\d+)&seasonid=(\\d+)&id=(\\d+).*");
+    scriptInfo.urlregex << QLatin1String("http://thetvdb.com/?tab=season&seriesid=(\\d+)&seasonid=(\\d+).*");
+    scriptInfo.urlregex << QLatin1String("http://thetvdb.com/?tab=series&id=(\\d+).*");
+
     scriptInfo.author = QLatin1String("");
     scriptInfo.email = QLatin1String("");
     scriptInfo.resource << QLatin1String("tvshow");

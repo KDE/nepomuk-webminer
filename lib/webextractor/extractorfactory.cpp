@@ -62,8 +62,8 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
 {
     Q_D( ExtractorFactory );
 
-    if(webEngine == QLatin1String("tvdbc++"))
-        return d->tvdbExtractor;
+//    if(webEngine == QLatin1String("tvdbc++"))
+//        return d->tvdbExtractor;
 
     foreach(const WebExtractor::Info i, d->availableScripts) {
         if( i.identifier.contains(webEngine) ) {
@@ -82,11 +82,11 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
     Q_D( ExtractorFactory );
 
     //bad hack ... its late
-    foreach(const QString &urlregex, d->tvdbExtractor->info().urlregex) {
-        if(uri.toString().contains( urlregex )) {
-            return d->tvdbExtractor;
-        }
-    }
+//    foreach(const QString &urlregex, d->tvdbExtractor->info().urlregex) {
+//        if(uri.toString().contains( urlregex )) {
+//            return d->tvdbExtractor;
+//        }
+//    }
 
     foreach(const WebExtractor::Info i, d->availableScripts) {
         foreach(const QString &urlregex, i.urlregex) {
@@ -131,7 +131,8 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
     }
 
     Kross::Action action(this, "ExtractorFactory");
-    QString lookupurl = KStandardDirs::locate("data", "nepomukmetadataextractor/plugins/");
+    //QString lookupurl = KStandardDirs::locate("data", "nepomukmetadataextractor/plugins/");
+    QString lookupurl = QString("/home/joerg/Development/KDE/metadataextractor/lib/webextractor/plugins/");
 
     kDebug() << "look for plugins on the folder" << lookupurl;
 
@@ -176,8 +177,8 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
     }
 
     // also add scriptinfo for the c++ tvdb class
-    d->tvdbExtractor = new TvdbExtractor;
-    d->availableScripts.append( d->tvdbExtractor->info() );
+//    d->tvdbExtractor = new TvdbExtractor;
+//    d->availableScripts.append( d->tvdbExtractor->info() );
 
     kDebug() << "found " << d->availableScripts.size() << "search plugins";
 }

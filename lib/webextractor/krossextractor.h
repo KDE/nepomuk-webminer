@@ -56,11 +56,11 @@ namespace NepomukMetaDataExtractor {
             WebExtractor::Info info();
 
             void search(const QString &resourceType, const QVariantMap &parameters);
-            void extractItem(const QUrl &url);
+            void extractItem(const QUrl &url, const QVariantMap &options);
 
         signals:
             void searchItems(const QString &resourceType, const QVariantMap &parameters);
-            void extractItemFromUri(const QUrl &url);
+            void extractItemFromUri(const QUrl &url, const QVariantMap &options);
 
         private:
             Q_DECLARE_PRIVATE(KrossExtractor)

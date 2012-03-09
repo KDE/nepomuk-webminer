@@ -59,6 +59,7 @@ namespace NepomukMetaDataExtractor {
           * @li @c title
           * @li @c overview
           * @li @c number
+          * @li @c banner
           * @li @c firstaired - Dateformat for QDateTime TODO what format should be used here? yyyy-mm-dd?
           * @li @c genres - split by ;
           * @li @c director - split by ;

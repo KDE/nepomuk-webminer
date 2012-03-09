@@ -20,6 +20,9 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QVariantMap>
+#include <QtCore/QUrl>
+
+class KJob;
 
 namespace NepomukMetaDataExtractor {
     namespace Pipe {
@@ -43,6 +46,8 @@ namespace NepomukMetaDataExtractor {
 
             virtual void pipeImport(const QVariantMap &entry) = 0;
 
+        private slots:
+            void slotSaveToNepomukDone(KJob *job);
         };
     }
 }

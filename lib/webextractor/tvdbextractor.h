@@ -46,6 +46,7 @@ namespace NepomukMetaDataExtractor {
             void slotMultipleResultsFound( const QList<Tvdb::Series>& series );
 
         private:
+            QVariant seriesToVariant( const Tvdb::Series& series );
             Tvdb::Client* m_client;
             QList<Tvdb::Series> m_seriesCache;
             QVariantMap m_searchParameters;

@@ -29,6 +29,7 @@
 #include "nepomukpipe/nepomukpipe.h"
 #include "nepomukpipe/moviepipe.h"
 #include "nepomukpipe/publicationpipe.h"
+#include "nepomukpipe/tvshowpipe.h"
 
 #include <KDE/KStandardDirs>
 #include <KDE/KDialog>
@@ -482,7 +483,8 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::fetchMoreDetails()
     m_currentItemToupdate = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
     KUrl fetchUrl( entry.value(QLatin1String("url")).toString() );
 
-    m_webextractor->extractItem( fetchUrl );
+    //QVariantMap options;
+    m_webextractor->extractItem( fetchUrl, entry );
 }
 
 void NepomukMetaDataExtractor::Dialog::FetcherDialog::fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails)
@@ -493,6 +495,26 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::fetchedItemDetails(const Q
     while (i.hasNext()) {
         i.next();
         m_currentItemToupdate->metaData.insert(i.key(), i.value());
+    }
+
+    // TODO support batch download of many episodes at once
+    if( resourceType == QLatin1String("tvshow")) {
+        QVariantList seasons = m_currentItemToupdate->metaData.value(QLatin1String("seasons")).toList();
+        if(!seasons.isEmpty()) {
+            QVariantMap season = seasons.takeFirst().toMap();
+            QVariantList episodes = season.value(QLatin1String("episodes")).toList();
+
+            if(!episodes.isEmpty()) {
+                QVariantMap episodesMap = episodes.takeFirst().toMap();
+                kDebug() << "add to episode" << episodesMap.value(QLatin1String("title")) << "url" << m_currentItemToupdate->resourceUri.url();
+                episodesMap.insert(QLatin1String("resourceuri"), m_currentItemToupdate->resourceUri.url());
+
+                episodes << episodesMap;
+                season.insert( QLatin1String("episodes"), episodes);
+                seasons << season;
+                m_currentItemToupdate->metaData.insert( QLatin1String("seasons"), seasons);
+            }
+        }
     }
     m_currentItemToupdate = 0;
 
@@ -514,8 +536,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::saveMetaData()
         nepomukPipe = new PublicationPipe;
     }
     else if(type == QLatin1String("tvshow")) {
-        nepomukPipe = 0;
-        //m_nepomukPipe = new PubEntryToNepomukPipe;
+        nepomukPipe = new TvShowPipe;
     }
     else if(type == QLatin1String("movie")) {
         nepomukPipe = new MoviePipe;

@@ -78,7 +78,7 @@ void NepomukMetaDataExtractor::Extractor::KrossExtractor::search(const QString &
     emit searchItems(resourceType, parameters);
 }
 
-void NepomukMetaDataExtractor::Extractor::KrossExtractor::extractItem(const QUrl &url)
+void NepomukMetaDataExtractor::Extractor::KrossExtractor::extractItem(const QUrl &url, const QVariantMap &options)
 {
-    emit extractItemFromUri(url);
+    emit extractItemFromUri(url, options);
 }

@@ -79,7 +79,7 @@ def searchItems( resourcetype, parameters ):
 	WebExtractor.searchResults( searchResults )
 
 
-def extractItemFromUri( url ):
+def extractItemFromUri( url, options ):
 	exp = re.compile(r'title/tt(\d*)')
 	match = exp.search(url)
 	if not match:

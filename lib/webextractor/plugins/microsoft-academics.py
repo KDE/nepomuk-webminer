@@ -203,7 +203,7 @@ def extractSearchResults(documentElement, citation=False):
 # references = ...              list of dicts, where each dict is another publication dict
 #
 
-def extractItemFromUri( url ):
+def extractItemFromUri( url, options ):
 	
 	logMsg = 'start item extraction via: ' + url 
 	WebExtractor.log( logMsg )
