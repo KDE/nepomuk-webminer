@@ -10,7 +10,6 @@ set( nepomukextractor_LIB_SRCS
   webextractor/extractorfactory.cpp
   webextractor/webextractor.cpp
   webextractor/krossextractor.cpp
-  webextractor/tvdbextractor.cpp
 
   resourceextractor/resourceextractor.cpp
   resourceextractor/popplerextractor.cpp

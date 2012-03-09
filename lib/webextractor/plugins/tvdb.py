@@ -19,7 +19,7 @@ except:
 
 #------------------------------------------------------------------------------
 # Module options
-
+#
 # Must have:
 # name          = Long name of the service
 # icon          = download the favicon and put is as png in the folder, icon is than name.png
@@ -35,7 +35,7 @@ except:
 # email         = plugin author email
 #
 def info():
-    return dict( name = 'TVDb',
+    return dict( name = 'The TVDb',
                  icon = 'tvdb.png',
                  identifier = 'tvdb',
                  urlregex = ['http://thetvdb.com/?tab=episode&seriesid=(\\d+)&seasonid=(\\d+)&id=(\\d+).*', 'http://thetvdb.com/?tab=season&seriesid=(\\d+)&seasonid=(\\d+).*', 'http://thetvdb.com/?tab=series&id=(\\d+).*'],
@@ -55,9 +55,9 @@ def info():
 #                'season'  = the season number.
 #                'episode' = the episode number.
 #
-# If season Number and episode number is missing, return all episodes of the show.
-# If only episode number is missing return all episodes of the season
-# if only season number is missing return all episodes with correct number for any season
+# If season Number and episode number is missing, return all episodes of the show. + all seasons + the show object
+# If only episode number is missing return all episodes of the season + season entry
+# if only season number is missing return all episodes with correct number for any season + show object
 #
 # @todo add resourcetype 'series', 'season' to retrieve overview info not all episodes
 #       good for bulk download/select a folder and then fetch all episode info

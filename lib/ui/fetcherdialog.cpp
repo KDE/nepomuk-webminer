@@ -322,6 +322,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::startSearch()
         connect(m_webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
         connect(m_webextractor, SIGNAL(log(QString)), this, SLOT(addProgressInfo(QString)));
     }
+    mdp->searchEpisodeTitle = QString("");//QLatin1String("The one where");
 
     QVariantMap searchParameters;
     searchParameters.insert("title", mdp->searchTitle);
@@ -332,6 +333,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::startSearch()
     searchParameters.insert("yearMin", mdp->searchYearMin);
     searchParameters.insert("yearMax", mdp->searchYearMax);
     searchParameters.insert("journal", mdp->searchJournal);
+    searchParameters.insert("episodetitle", mdp->searchEpisodeTitle);
 
     m_webextractor->search( m_categoriesToFetch.at(m_currentCategory), searchParameters );
 }

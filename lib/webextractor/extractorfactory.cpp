@@ -18,7 +18,6 @@
 #include "extractorfactory.h"
 
 #include "krossextractor.h"
-#include "tvdbextractor.h"
 
 #include <KDE/Kross/Action>
 #include <KDE/Kross/Manager>
@@ -40,7 +39,6 @@ namespace NepomukMetaDataExtractor {
         class ExtractorFactoryPrivate {
         public:
             QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> availableScripts;
-            TvdbExtractor *tvdbExtractor;
         };
     }
 }
@@ -62,9 +60,6 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
 {
     Q_D( ExtractorFactory );
 
-//    if(webEngine == QLatin1String("tvdbc++"))
-//        return d->tvdbExtractor;
-
     foreach(const WebExtractor::Info i, d->availableScripts) {
         if( i.identifier.contains(webEngine) ) {
 
@@ -80,13 +75,6 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
 NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::createExtractor( const QUrl &uri )
 {
     Q_D( ExtractorFactory );
-
-    //bad hack ... its late
-//    foreach(const QString &urlregex, d->tvdbExtractor->info().urlregex) {
-//        if(uri.toString().contains( urlregex )) {
-//            return d->tvdbExtractor;
-//        }
-//    }
 
     foreach(const WebExtractor::Info i, d->availableScripts) {
         foreach(const QString &urlregex, i.urlregex) {
@@ -131,15 +119,20 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
     }
 
     Kross::Action action(this, "ExtractorFactory");
-    //QString lookupurl = KStandardDirs::locate("data", "nepomukmetadataextractor/plugins/");
-    QString lookupurl = QString("/home/joerg/Development/KDE/metadataextractor/lib/webextractor/plugins/");
+    QStringList pluginDirs;
+    // TODO read this values from KConfig
+    pluginDirs << KStandardDirs::locate("data", "nepomukmetadataextractor/plugins/");
+    pluginDirs << QString("/home/joerg/Development/KDE/metadataextractor/lib/webextractor/plugins/");
 
-    kDebug() << "look for plugins on the folder" << lookupurl;
+    QFileInfoList pluginList;
+    foreach(const QString &folder, pluginDirs) {
 
-    QDir dir( lookupurl );
-    QFileInfoList list = dir.entryInfoList();
+        kDebug() << "look for plugins in the folder: " << folder;
+        QDir dir( folder );
+        pluginList.append( dir.entryInfoList() );
+    }
 
-    foreach( const QFileInfo &fileInfo, list) {
+    foreach( const QFileInfo &fileInfo, pluginList) {
 
         if( !acceptedFileTypes.contains(fileInfo.completeSuffix()))
             continue;
@@ -147,6 +140,12 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
         action.setFile( fileInfo.absoluteFilePath() );
 
         QVariantMap result = action.callFunction("info").toMap();
+
+        if(result.value(QLatin1String("isAvailable")).toBool() == false) {
+            kDebug() << "failed loading the plugin: " << result.value("name").toString() << " from:" << fileInfo.absoluteFilePath()
+                     << " Reason:" << result.value("errorMsg").toString();
+            continue;
+        }
 
         WebExtractor::Info scriptInfo;
         scriptInfo.name = result.value("name").toString();
@@ -158,27 +157,19 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
         scriptInfo.file = fileInfo.absoluteFilePath();
 
         QVariantList resList = result.value("resource").toList();
-        kDebug() << resList;
         foreach(const QVariant &res, resList) {
-            kDebug() << res;
             scriptInfo.resource << res.toString();
         }
 
         resList = result.value("urlregex").toList();
-        kDebug() << resList;
         foreach(const QVariant &res, resList) {
-            kDebug() << res;
             scriptInfo.urlregex << res.toString();
         }
 
         d->availableScripts.append( scriptInfo );
 
-        kDebug() << "add plugon (" << scriptInfo.name << ") via file: " << scriptInfo.file;
+        kDebug() << "add plugin (" << scriptInfo.name << ") via file: " << scriptInfo.file;
     }
-
-    // also add scriptinfo for the c++ tvdb class
-//    d->tvdbExtractor = new TvdbExtractor;
-//    d->availableScripts.append( d->tvdbExtractor->info() );
 
     kDebug() << "found " << d->availableScripts.size() << "search plugins";
 }
