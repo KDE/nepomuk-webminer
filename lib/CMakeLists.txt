@@ -19,6 +19,7 @@ set( nepomukextractor_LIB_SRCS
   nepomukpipe/nepomukpipe.cpp
   nepomukpipe/publicationpipe.cpp
   nepomukpipe/moviepipe.cpp
+  nepomukpipe/tvshowpipe.cpp
   
   ui/fetcherdialog.cpp
   ui/searchresultsmodel.cpp
@@ -63,7 +64,6 @@ set( nepomukmetadataextractor_LIB_HDRS
 
   webextractor/extractorfactory.h
   webextractor/webextractor.h
-  webextractor/tvdbextractor.h
 
   ui/fetcherdialog.h
 )
