@@ -28,7 +28,7 @@ namespace NepomukMetaDataExtractor {
         struct MetaDataParameters {
             QString searchTitle;          /**< title of the entry to search for */
             QString searchAltTitle;       /**< alternative title of the entry to search for in case the first one does not return anything */
-            QString searchEpisodeTitle;
+            QString searchShowTitle;
             QString searchEpisode;
             QString searchSeason;
             QString searchYearMin;

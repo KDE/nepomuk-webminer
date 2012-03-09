@@ -63,11 +63,11 @@ def info():
 def searchItems( resourcetype, parameters ):
 
     title = parameters['title']
-    episodetitle = parameters['episodetitle']
     yearMin = parameters['yearMin']
     yearMax = parameters['yearMax']
     season = parameters['season']
     episode = parameters['episode']
+    showtitle = parameters['showtitle']
 
     ia = IMDb()
 
@@ -78,14 +78,14 @@ def searchItems( resourcetype, parameters ):
         searchMovieResults( results )
 
     elif resourcetype == 'tvshow':
-        if episodetitle:
-            WebExtractor.log( 'search episode with title: ' + episodetitle )
-            results = ia.search_episode(episodetitle)
+        if title:
+            WebExtractor.log( 'search episode with title: ' + title )
+            results = ia.search_episode(title)
             searchTvEpisodeResults( ia, results, season, episode )
 
         else:
-            WebExtractor.log( 'search tvshow with title: ' + title )
-            results = ia.search_movie(title)
+            WebExtractor.log( 'search tvshow with title: ' + showtitle )
+            results = ia.search_movie(showtitle)
             searchTvShowResults( ia, results, season, episode )
 
     #except IMDbError, err:

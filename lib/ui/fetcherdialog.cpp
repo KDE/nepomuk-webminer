@@ -201,12 +201,17 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::selectNextResourceToLookUp
         labelEpisode->setVisible(true);
         lineEditEpisode->setVisible(true);
         lineEditEpisode->setText(  mdp->searchEpisode );
+        labelShow->setVisible(true);
+        lineEditShow->setVisible(true);
+        lineEditShow->setText(  mdp->searchShowTitle );
     }
     else {
         labelSeason->setVisible(false);
         lineEditSeason->setVisible(false);
         labelEpisode->setVisible(false);
         lineEditEpisode->setVisible(false);
+        labelShow->setVisible(false);
+        lineEditShow->setVisible(false);
     }
 
     buttonFetchMore->setEnabled(false);
@@ -300,6 +305,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::startSearch()
     mdp->searchTitle = lineEditTitle->text();
     mdp->searchSeason = lineEditSeason->text();
     mdp->searchEpisode = lineEditEpisode->text();
+    mdp->searchShowTitle = lineEditShow->text();
 
     int currentEngine = comboBoxSearchEngine->currentIndex();
     QString engineId = comboBoxSearchEngine->itemData( currentEngine ).toString();
@@ -322,7 +328,6 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::startSearch()
         connect(m_webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
         connect(m_webextractor, SIGNAL(log(QString)), this, SLOT(addProgressInfo(QString)));
     }
-    mdp->searchEpisodeTitle = QString("");//QLatin1String("The one where");
 
     QVariantMap searchParameters;
     searchParameters.insert("title", mdp->searchTitle);
@@ -333,7 +338,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::startSearch()
     searchParameters.insert("yearMin", mdp->searchYearMin);
     searchParameters.insert("yearMax", mdp->searchYearMax);
     searchParameters.insert("journal", mdp->searchJournal);
-    searchParameters.insert("episodetitle", mdp->searchEpisodeTitle);
+    searchParameters.insert("showtitle", mdp->searchShowTitle);
 
     m_webextractor->search( m_categoriesToFetch.at(m_currentCategory), searchParameters );
 }
@@ -416,6 +421,9 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::showSearchParameters()
     QLabel *labelEpisode = 0;
     QLineEdit *editEpisode = 0;
 
+    QLabel *labelShow = 0;
+    QLineEdit *editShow = 0;
+
     if(mdp->resourceType == QLatin1String("publication")) {
         labelAuthor = new QLabel(i18n("Author:"),w);
         editAuthor = new QLineEdit(mdp->searchAuthor,w);
@@ -437,6 +445,11 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::showSearchParameters()
         editEpisode = new QLineEdit(mdp->searchEpisode,w);
         gl->addWidget(labelEpisode, 5,0);
         gl->addWidget(editEpisode, 5,1);
+
+        labelShow = new QLabel(i18n("Show:"),w);
+        editShow = new QLineEdit(mdp->searchShowTitle,w);
+        gl->addWidget(labelShow, 6,0);
+        gl->addWidget(editShow, 6,1);
     }
 
     spd->setMainWidget(w);
@@ -459,6 +472,9 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::showSearchParameters()
 
             mdp->searchEpisode = editEpisode->text();
             lineEditEpisode->setText( mdp->searchEpisode );
+
+            mdp->searchShowTitle = editShow->text();
+            lineEditShow->setText( mdp->searchShowTitle );
         }
 
         lineEditTitle->setText( mdp->searchTitle );

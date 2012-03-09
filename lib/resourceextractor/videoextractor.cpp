@@ -86,16 +86,16 @@ void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(MetaDataParam
 
             foundSeries = true;
 
-            mdp->searchTitle = exp.cap( 1 ).simplified();
+            mdp->searchShowTitle = exp.cap( 1 ).simplified();
             mdp->searchSeason = exp.cap( 2 );
             mdp->searchEpisode = exp.cap( 3 );
 
             // 3. clean up tv show name
-            mdp->searchTitle.replace( '.', ' ' );
-            mdp->searchTitle.replace( '_', ' ' );
-            if ( mdp->searchTitle.endsWith( '-' ) )
-                mdp->searchTitle.truncate( mdp->searchTitle.length()-1 );
-            mdp->searchTitle = mdp->searchTitle.simplified();
+            mdp->searchShowTitle.replace( '.', ' ' );
+            mdp->searchShowTitle.replace( '_', ' ' );
+            if ( mdp->searchShowTitle.endsWith( '-' ) )
+                mdp->searchShowTitle.truncate( mdp->searchShowTitle.length()-1 );
+            mdp->searchShowTitle = mdp->searchShowTitle.simplified();
         }
     }
 

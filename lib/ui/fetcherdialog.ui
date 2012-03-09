@@ -87,6 +87,16 @@
         </widget>
        </item>
        <item>
+        <widget class="QLabel" name="labelShow">
+         <property name="text">
+          <string>Show:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEditShow"/>
+       </item>
+       <item>
         <widget class="QLabel" name="labelSeason">
          <property name="text">
           <string>Season:</string>
@@ -306,7 +316,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>427</width>
+               <width>361</width>
                <height>264</height>
               </rect>
              </property>

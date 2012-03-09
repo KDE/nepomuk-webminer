@@ -67,23 +67,24 @@ def searchItems( resourcetype, parameters ):
     title = parameters['title']
     season = parameters['season']
     episode = parameters['episode']
+    showtitle = parameters['showtitle']
 
     searchResults = []
     t = tvdb_api.Tvdb()
 
-    if title and season and episode:
-        episodeResult = t[title][int(season)][int(episode)]
+    if showtitle and season and episode:
+        episodeResult = t[showtitle][int(season)][int(episode)]
         searchResults.append( getEpisodeDetails(episodeResult) )
 
-    elif title and season:
-        seasonResult = t[title][int(season)]
+    elif showtitle and season:
+        seasonResult = t[showtitle][int(season)]
 
         for episodeNumber in seasonResult:
             episodeResult = seasonResult[episodeNumber]
             searchResults.append( getEpisodeDetails(episodeResult) )
 
-    elif title:
-        showResult = t[title]
+    elif showtitle:
+        showResult = t[showtitle]
 
         for seasonNumber in showResult:
             seasonResult = showResult[seasonNumber]
