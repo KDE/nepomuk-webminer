@@ -65,35 +65,6 @@ public:
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#attendee", QUrl::StrictMode), value);
     }
 
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#duration. 
-     * The duration of the meeting. Begin and end time. 
-     */
-    QUrl duration() const {
-        QUrl value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#duration", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#duration", QUrl::StrictMode)).first().value<QUrl>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#duration. 
-     * The duration of the meeting. Begin and end time. 
-     */
-    void setDuration(const QUrl& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#duration", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#duration. 
-     * The duration of the meeting. Begin and end time. 
-     */
-    void addDuration(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#duration", QUrl::StrictMode), value);
-    }
-
 protected:
     SocialEvent(const QUrl& uri, const QUrl& type)
       : SimpleResource(uri), PIMO::ClassOrThingOrPropertyOrAssociation(uri, type), PIMO::ClassOrThing(uri, type), PIMO::Thing(uri, type), PIMO::ProcessConcept(uri, type), PIMO::Event(uri, type), PIMO::Locatable(uri, type) {

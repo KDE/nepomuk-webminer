@@ -128,6 +128,35 @@ public:
     }
 
     /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#occupiedSpace. 
+     * Occupied storage space of the filesystem. 
+     */
+    qint64 occupiedSpace() const {
+        qint64 value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#occupiedSpace", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#occupiedSpace", QUrl::StrictMode)).first().value<qint64>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#occupiedSpace. 
+     * Occupied storage space of the filesystem. 
+     */
+    void setOccupiedSpace(const qint64& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#occupiedSpace", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#occupiedSpace. 
+     * Occupied storage space of the filesystem. 
+     */
+    void addOccupiedSpace(const qint64& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#occupiedSpace", QUrl::StrictMode), value);
+    }
+
+    /**
      * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#totalSpace. 
      * Total storage space of the filesystem, which can be different 
      * from nie:contentSize because the latter includes filesystem 
@@ -160,35 +189,6 @@ public:
      */
     void addTotalSpace(const qint64& value) {
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#totalSpace", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#occupiedSpace. 
-     * Occupied storage space of the filesystem. 
-     */
-    qint64 occupiedSpace() const {
-        qint64 value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#occupiedSpace", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#occupiedSpace", QUrl::StrictMode)).first().value<qint64>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#occupiedSpace. 
-     * Occupied storage space of the filesystem. 
-     */
-    void setOccupiedSpace(const qint64& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#occupiedSpace", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#occupiedSpace. 
-     * Occupied storage space of the filesystem. 
-     */
-    void addOccupiedSpace(const qint64& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#occupiedSpace", QUrl::StrictMode), value);
     }
 
 protected:

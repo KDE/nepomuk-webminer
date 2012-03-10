@@ -22,10 +22,8 @@
 
 #include "dms-copy/simpleresourcegraph.h"
 
-#include "nmm/tvshow.h"
-#include "nmm/tvseries.h"
 #include "nmm/tvseason.h"
-#include "nco/personcontact.h"
+#include "nmm/tvshow.h"
 
 namespace NepomukMetaDataExtractor {
     namespace Pipe {
@@ -78,7 +76,6 @@ namespace NepomukMetaDataExtractor {
 
         private:
             Nepomuk::NMM::TVShow createEpisode(QVariantMap episodeInfo, Nepomuk::NMM::TVSeason season);
-            Nepomuk::NCO::PersonContact createPerson(const QString &fullName);
         };
     }
 }

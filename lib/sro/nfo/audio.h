@@ -35,32 +35,32 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate. 
-     * The amount of audio samples per second. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitsPerSample. 
+     * Amount of bits in each audio sample. 
      */
-    double sampleRate() const {
-        double value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate", QUrl::StrictMode)).first().value<double>();
+    qint64 bitsPerSample() const {
+        qint64 value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitsPerSample", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitsPerSample", QUrl::StrictMode)).first().value<qint64>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate. 
-     * The amount of audio samples per second. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitsPerSample. 
+     * Amount of bits in each audio sample. 
      */
-    void setSampleRate(const double& value) {
+    void setBitsPerSample(const qint64& value) {
         QVariantList values;
         values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitsPerSample", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate. 
-     * The amount of audio samples per second. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitsPerSample. 
+     * Amount of bits in each audio sample. 
      */
-    void addSampleRate(const double& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate", QUrl::StrictMode), value);
+    void addBitsPerSample(const qint64& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitsPerSample", QUrl::StrictMode), value);
     }
 
     /**
@@ -99,32 +99,32 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitsPerSample. 
-     * Amount of bits in each audio sample. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate. 
+     * The amount of audio samples per second. 
      */
-    qint64 bitsPerSample() const {
-        qint64 value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitsPerSample", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitsPerSample", QUrl::StrictMode)).first().value<qint64>();
+    double sampleRate() const {
+        double value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate", QUrl::StrictMode)).first().value<double>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitsPerSample. 
-     * Amount of bits in each audio sample. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate. 
+     * The amount of audio samples per second. 
      */
-    void setBitsPerSample(const qint64& value) {
+    void setSampleRate(const double& value) {
         QVariantList values;
         values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitsPerSample", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitsPerSample. 
-     * Amount of bits in each audio sample. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate. 
+     * The amount of audio samples per second. 
      */
-    void addBitsPerSample(const qint64& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitsPerSample", QUrl::StrictMode), value);
+    void addSampleRate(const double& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate", QUrl::StrictMode), value);
     }
 
     /**

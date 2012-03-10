@@ -35,6 +35,36 @@ public:
     }
 
     /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesClass. 
+     * Name of a class defined in the source code file. 
+     */
+    QStringList definesClasses() const {
+        QStringList value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesClass", QUrl::StrictMode)))
+            value << v.value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesClass. 
+     * Name of a class defined in the source code file. 
+     */
+    void setDefinesClasses(const QStringList& value) {
+        QVariantList values;
+        foreach(const QString& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesClass", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesClass. 
+     * Name of a class defined in the source code file. 
+     */
+    void addDefinesClass(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesClass", QUrl::StrictMode), value);
+    }
+
+    /**
      * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesFunction. 
      * A name of a function/method defined in the given source code 
      * file. 
@@ -65,6 +95,68 @@ public:
      */
     void addDefinesFunction(const QString& value) {
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesFunction", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#commentCharacterCount. 
+     * The amount of character in comments i.e. characters ignored 
+     * by the compiler/interpreter. 
+     */
+    qint64 commentCharacterCount() const {
+        qint64 value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#commentCharacterCount", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#commentCharacterCount", QUrl::StrictMode)).first().value<qint64>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#commentCharacterCount. 
+     * The amount of character in comments i.e. characters ignored 
+     * by the compiler/interpreter. 
+     */
+    void setCommentCharacterCount(const qint64& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#commentCharacterCount", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#commentCharacterCount. 
+     * The amount of character in comments i.e. characters ignored 
+     * by the compiler/interpreter. 
+     */
+    void addCommentCharacterCount(const qint64& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#commentCharacterCount", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesGlobalVariable. 
+     * Name of a global variable defined within the source code file. 
+     */
+    QStringList definesGlobalVariables() const {
+        QStringList value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesGlobalVariable", QUrl::StrictMode)))
+            value << v.value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesGlobalVariable. 
+     * Name of a global variable defined within the source code file. 
+     */
+    void setDefinesGlobalVariables(const QStringList& value) {
+        QVariantList values;
+        foreach(const QString& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesGlobalVariable", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesGlobalVariable. 
+     * Name of a global variable defined within the source code file. 
+     */
+    void addDefinesGlobalVariable(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesGlobalVariable", QUrl::StrictMode), value);
     }
 
     /**
@@ -101,98 +193,6 @@ public:
      */
     void addProgrammingLanguage(const QString& value) {
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#programmingLanguage", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesClass. 
-     * Name of a class defined in the source code file. 
-     */
-    QStringList definesClasses() const {
-        QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesClass", QUrl::StrictMode)))
-            value << v.value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesClass. 
-     * Name of a class defined in the source code file. 
-     */
-    void setDefinesClasses(const QStringList& value) {
-        QVariantList values;
-        foreach(const QString& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesClass", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesClass. 
-     * Name of a class defined in the source code file. 
-     */
-    void addDefinesClass(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesClass", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesGlobalVariable. 
-     * Name of a global variable defined within the source code file. 
-     */
-    QStringList definesGlobalVariables() const {
-        QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesGlobalVariable", QUrl::StrictMode)))
-            value << v.value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesGlobalVariable. 
-     * Name of a global variable defined within the source code file. 
-     */
-    void setDefinesGlobalVariables(const QStringList& value) {
-        QVariantList values;
-        foreach(const QString& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesGlobalVariable", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesGlobalVariable. 
-     * Name of a global variable defined within the source code file. 
-     */
-    void addDefinesGlobalVariable(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#definesGlobalVariable", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#commentCharacterCount. 
-     * The amount of character in comments i.e. characters ignored 
-     * by the compiler/interpreter. 
-     */
-    qint64 commentCharacterCount() const {
-        qint64 value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#commentCharacterCount", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#commentCharacterCount", QUrl::StrictMode)).first().value<qint64>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#commentCharacterCount. 
-     * The amount of character in comments i.e. characters ignored 
-     * by the compiler/interpreter. 
-     */
-    void setCommentCharacterCount(const qint64& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#commentCharacterCount", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#commentCharacterCount. 
-     * The amount of character in comments i.e. characters ignored 
-     * by the compiler/interpreter. 
-     */
-    void addCommentCharacterCount(const qint64& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#commentCharacterCount", QUrl::StrictMode), value);
     }
 
 protected:

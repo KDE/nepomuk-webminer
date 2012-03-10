@@ -38,86 +38,6 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#role. 
-     * Role an object represented by this contact represents in the 
-     * organization. This might include 'Programmer', 'Manager', 
-     * 'Sales Representative'. Be careful to avoid confusion with 
-     * the title property. An equivalent of the 'ROLE' property as 
-     * defined in RFC 2426. Sec. 3.5.2. Note the difference between 
-     * nco:Role class and nco:role property. 
-     */
-    QStringList roles() const {
-        QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#role", QUrl::StrictMode)))
-            value << v.value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#role. 
-     * Role an object represented by this contact represents in the 
-     * organization. This might include 'Programmer', 'Manager', 
-     * 'Sales Representative'. Be careful to avoid confusion with 
-     * the title property. An equivalent of the 'ROLE' property as 
-     * defined in RFC 2426. Sec. 3.5.2. Note the difference between 
-     * nco:Role class and nco:role property. 
-     */
-    void setRoles(const QStringList& value) {
-        QVariantList values;
-        foreach(const QString& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#role", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#role. 
-     * Role an object represented by this contact represents in the 
-     * organization. This might include 'Programmer', 'Manager', 
-     * 'Sales Representative'. Be careful to avoid confusion with 
-     * the title property. An equivalent of the 'ROLE' property as 
-     * defined in RFC 2426. Sec. 3.5.2. Note the difference between 
-     * nco:Role class and nco:role property. 
-     */
-    void addRole(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#role", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#org. 
-     * Name of an organization or a unit within an organization the 
-     * object represented by a Contact is associated with. An equivalent 
-     * of the 'ORG' property defined in RFC 2426 Sec. 3.5.5 
-     */
-    QUrl org() const {
-        QUrl value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#org", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#org", QUrl::StrictMode)).first().value<QUrl>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#org. 
-     * Name of an organization or a unit within an organization the 
-     * object represented by a Contact is associated with. An equivalent 
-     * of the 'ORG' property defined in RFC 2426 Sec. 3.5.5 
-     */
-    void setOrg(const QUrl& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#org", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#org. 
-     * Name of an organization or a unit within an organization the 
-     * object represented by a Contact is associated with. An equivalent 
-     * of the 'ORG' property defined in RFC 2426 Sec. 3.5.5 
-     */
-    void addOrg(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#org", QUrl::StrictMode), value);
-    }
-
-    /**
      * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#title. 
      * The official title the object represented by this contact in 
      * an organization. E.g. 'CEO', 'Director, Research and Development', 
@@ -183,6 +103,86 @@ public:
      */
     void addDepartment(const QString& value) {
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#department", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#org. 
+     * Name of an organization or a unit within an organization the 
+     * object represented by a Contact is associated with. An equivalent 
+     * of the 'ORG' property defined in RFC 2426 Sec. 3.5.5 
+     */
+    QUrl org() const {
+        QUrl value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#org", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#org", QUrl::StrictMode)).first().value<QUrl>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#org. 
+     * Name of an organization or a unit within an organization the 
+     * object represented by a Contact is associated with. An equivalent 
+     * of the 'ORG' property defined in RFC 2426 Sec. 3.5.5 
+     */
+    void setOrg(const QUrl& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#org", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#org. 
+     * Name of an organization or a unit within an organization the 
+     * object represented by a Contact is associated with. An equivalent 
+     * of the 'ORG' property defined in RFC 2426 Sec. 3.5.5 
+     */
+    void addOrg(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#org", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#role. 
+     * Role an object represented by this contact represents in the 
+     * organization. This might include 'Programmer', 'Manager', 
+     * 'Sales Representative'. Be careful to avoid confusion with 
+     * the title property. An equivalent of the 'ROLE' property as 
+     * defined in RFC 2426. Sec. 3.5.2. Note the difference between 
+     * nco:Role class and nco:role property. 
+     */
+    QStringList roles() const {
+        QStringList value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#role", QUrl::StrictMode)))
+            value << v.value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#role. 
+     * Role an object represented by this contact represents in the 
+     * organization. This might include 'Programmer', 'Manager', 
+     * 'Sales Representative'. Be careful to avoid confusion with 
+     * the title property. An equivalent of the 'ROLE' property as 
+     * defined in RFC 2426. Sec. 3.5.2. Note the difference between 
+     * nco:Role class and nco:role property. 
+     */
+    void setRoles(const QStringList& value) {
+        QVariantList values;
+        foreach(const QString& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#role", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#role. 
+     * Role an object represented by this contact represents in the 
+     * organization. This might include 'Programmer', 'Manager', 
+     * 'Sales Representative'. Be careful to avoid confusion with 
+     * the title property. An equivalent of the 'ROLE' property as 
+     * defined in RFC 2426. Sec. 3.5.2. Note the difference between 
+     * nco:Role class and nco:role property. 
+     */
+    void addRole(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#role", QUrl::StrictMode), value);
     }
 
 protected:

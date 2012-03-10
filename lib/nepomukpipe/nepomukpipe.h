@@ -21,6 +21,11 @@
 #include <QtCore/QObject>
 #include <QtCore/QVariantMap>
 #include <QtCore/QUrl>
+#include <QtCore/QDateTime>
+
+#include <KDE/KUrl>
+
+#include "nco/personcontact.h"
 
 class KJob;
 
@@ -46,8 +51,30 @@ namespace NepomukMetaDataExtractor {
 
             virtual void pipeImport(const QVariantMap &entry) = 0;
 
+        protected:
+            KUrl downloadBanner(const QUrl &bannerUrl, const QString& additionalLocationInfo ) const;
+            QDateTime createDateTime(const QString &dateString) const;
+            QList<Nepomuk::NCO::PersonContact> createPersonContacts(const QString & listOfPersonNames) const;
+
         private slots:
             void slotSaveToNepomukDone(KJob *job);
+
+        private:
+            /**
+              * Struct to hold parsed name parts
+              */
+            struct Name {
+                QString first;
+                QString last;
+                QString suffix;
+                QString full;
+            };
+
+            QList<NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name> splitPersonList(const QString & persons) const;
+
+            // taken from KBibtex, so
+            // @author Thomas Fischer <fischer@unix-ag.uni-kl.de> with some modifications
+            NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name splitPersonString(const QString & persos) const;
         };
     }
 }

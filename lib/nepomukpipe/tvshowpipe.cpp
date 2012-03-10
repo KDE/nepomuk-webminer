@@ -25,6 +25,7 @@
 #include <KDE/KUrl>
 #include "nfo/image.h"
 #include "nfo/webdataobject.h"
+#include "nmm/tvseries.h"
 
 #include <Soprano/Vocabulary/RDFS>
 #include <Soprano/Vocabulary/NAO>
@@ -64,24 +65,34 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
         graph << imdbRes;
     }
 
-    QString seriesBanner = tvshowEntry.value(QLatin1String("banner")).toString();
-    QString seriesPoster = tvshowEntry.value(QLatin1String("poster")).toString();
-    kDebug() << "seriesBanner" << seriesBanner;
-    kDebug() << "seriesPoster" << seriesPoster;
-    //const KUrl localUrl = downloadBanner(series.name(), seriesBanner;
-//    if(!localUrl.isEmpty()) {
-//        Nepomuk::NFO::Image banner(localUrl);
-//        seriesRes.addDepiction(banner.uri());
-//        graph << banner;
-//    }
+
+    QString showBannerUrl = tvshowEntry.value(QLatin1String("banner")).toString();
+    if( !showBannerUrl.isEmpty() ) {
+        const KUrl localUrl = downloadBanner( showBannerUrl, seriesTitle );
+        if(!localUrl.isEmpty()) {
+            Nepomuk::NFO::Image banner(localUrl);
+            seriesRes.addDepiction(banner.uri());
+            graph << banner;
+        }
+    }
+
+    QString showPosterUrl = tvshowEntry.value(QLatin1String("poster")).toString();
+    if( !showPosterUrl.isEmpty() ) {
+        const KUrl localUrl = downloadBanner( showPosterUrl, seriesTitle );
+        if(!localUrl.isEmpty()) {
+            Nepomuk::NFO::Image banner(localUrl);
+            seriesRes.addDepiction(banner.uri());
+            graph << banner;
+        }
+    }
 
     // now add all the available series
     QVariantList seasonList = tvshowEntry.value(QLatin1String("seasons")).toList();
 
-    kDebug() << "add" << seasonList.size() << "seasons";
     foreach( const QVariant &season, seasonList) {
         QVariantMap seasonInfo = season.toMap();
 
+        //TODO add title/name to it like Season 1
         Nepomuk::NMM::TVSeason seasonRes;
 
         QString seasonNumber = seasonInfo.value(QLatin1String("number")).toString();
@@ -90,13 +101,25 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
         seasonRes.setSeasonOf(seriesRes.uri());
         seriesRes.addSeason(seasonRes.uri());
 
-        QString seasonBanner = seasonInfo.value(QLatin1String("banner")).toString();
-//        const KUrl localUrl = downloadBanner(series.name(), seriesBanner;
-//        if(!localUrl.isEmpty()) {
-//            Nepomuk::NFO::Image banner(localUrl);
-//            seasonRes.addDepiction(banner.uri());
-//            graph << banner;
-//        }
+        QString seriesBannerUrl = seasonInfo.value(QLatin1String("banner")).toString();
+        if( !seriesBannerUrl.isEmpty() ) {
+            const KUrl localUrl = downloadBanner( seriesBannerUrl, seriesTitle );
+            if(!localUrl.isEmpty()) {
+                Nepomuk::NFO::Image banner(localUrl);
+                seasonRes.addDepiction(banner.uri());
+                graph << banner;
+            }
+        }
+
+        QString seriesPosterUrl = seasonInfo.value(QLatin1String("poster")).toString();
+        if( !seriesPosterUrl.isEmpty() ) {
+            const KUrl localUrl = downloadBanner( seriesPosterUrl, seriesTitle );
+            if(!localUrl.isEmpty()) {
+                Nepomuk::NFO::Image banner(localUrl);
+                seasonRes.addDepiction(banner.uri());
+                graph << banner;
+            }
+        }
 
         QVariantList episodeList = seasonInfo.value(QLatin1String("episodes")).toList();
 
@@ -106,49 +129,53 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
 
             Nepomuk::NMM::TVShow episodeRes = createEpisode(episodeInfo, seasonRes );
 
+            QString episodeBannerUrl = episodeInfo.value(QLatin1String("banner")).toString();
+            if( !episodeBannerUrl.isEmpty() ) {
+                const KUrl localUrl = downloadBanner( episodeBannerUrl, seriesTitle );
+                if(!localUrl.isEmpty()) {
+                    Nepomuk::NFO::Image banner(localUrl);
+                    episodeRes.addDepiction(banner.uri());
+                    graph << banner;
+                }
+            }
+
+            QString episodePosterUrl = episodeInfo.value(QLatin1String("poster")).toString();
+            if( !episodePosterUrl.isEmpty() ) {
+                const KUrl localUrl = downloadBanner( episodePosterUrl, seriesTitle );
+                if(!localUrl.isEmpty()) {
+                    Nepomuk::NFO::Image banner(localUrl);
+                    episodeRes.addDepiction(banner.uri());
+                    graph << banner;
+                }
+            }
+
             seasonRes.addSeasonEpisode(episodeRes.uri());
             episodeRes.setIsPartOfSeason(seasonRes.uri());
-
-            QString episodeBanner = seasonInfo.value(QLatin1String("banner")).toString();
-            kDebug() << "episodeBanner" << episodeBanner;
 
             // we make the seasons sub-resources of the episodes since they do not make sense without them
             episodeRes.addProperty(NAO::hasSubResource(), seasonRes.uri());
 
             // Now add all the actors and guest stars
-            QString actorList = episodeInfo.value(QLatin1String("actors")).toString();
-            QStringList actors = actorList.split(';');
 
-            foreach(const QString &actor, actors) {
-                Nepomuk::NCO::PersonContact actorResource = createPerson(actor);
-
-                graph << actorResource;
-                episodeRes.addActor( actorResource.uri() );
-                episodeRes.addProperty(NAO::hasSubResource(), actorResource.uri());
+            QList<Nepomuk::NCO::PersonContact> actorList = createPersonContacts( episodeInfo.value(QLatin1String("actors")).toString() );
+            foreach(const Nepomuk::NCO::PersonContact &actor, actorList) {
+                graph << actor;
+                episodeRes.addActor( actor.uri() );
+                episodeRes.addProperty(NAO::hasSubResource(), actor.uri());
             }
 
-            // the script writers
-            QString writerList = episodeInfo.value(QLatin1String("writer")).toString();
-            QStringList writers = writerList.split(';');
-
-            foreach(const QString &writer, writers) {
-                Nepomuk::NCO::PersonContact writerResource = createPerson(writer);
-
-                graph << writerResource;
-                episodeRes.addWriter( writerResource.uri() );
-                episodeRes.addProperty(NAO::hasSubResource(), writerResource.uri());
+            QList<Nepomuk::NCO::PersonContact> writerList = createPersonContacts( episodeInfo.value(QLatin1String("writer")).toString() );
+            foreach(const Nepomuk::NCO::PersonContact &writer, writerList) {
+                graph << writer;
+                episodeRes.addWriter( writer.uri() );
+                episodeRes.addProperty(NAO::hasSubResource(), writer.uri());
             }
 
-            // the directos responsible for it
-            QString directorList = episodeInfo.value(QLatin1String("director")).toString();
-            QStringList directors = directorList.split(';');
-
-            foreach(const QString &director, directors) {
-                Nepomuk::NCO::PersonContact directorResource = createPerson(director);
-
-                graph << directorResource;
-                episodeRes.addWriter( directorResource.uri() );
-                episodeRes.addProperty(NAO::hasSubResource(), directorResource.uri());
+            QList<Nepomuk::NCO::PersonContact> directorList = createPersonContacts( episodeInfo.value(QLatin1String("director")).toString() );
+            foreach(const Nepomuk::NCO::PersonContact &director, directorList) {
+                graph << director;
+                episodeRes.addDirector( director.uri() );
+                episodeRes.addProperty(NAO::hasSubResource(), director.uri());
             }
 
             seriesRes.addEpisode(episodeRes.uri());
@@ -187,11 +214,9 @@ Nepomuk::NMM::TVShow NepomukMetaDataExtractor::Pipe::TvShowPipe::createEpisode(Q
         episodeRes.setSynopsis( episodeOverview );
     }
 
-    QString episodeFirstAired = episodeInfo.value(QLatin1String("firstaired")).toString();
-    QDateTime firstAired = QDateTime::fromString(episodeFirstAired, Qt::ISODate);
-    if(firstAired.isValid()) {
+    QDateTime firstAired = createDateTime( episodeInfo.value(QLatin1String("firstaired")).toString() );
+    if(firstAired.isValid())
         episodeRes.setReleaseDate( firstAired );
-    }
 
     QString genres = episodeInfo.value(QLatin1String("genres")).toString();
     QStringList genreList = genres.split(';');
@@ -202,24 +227,4 @@ Nepomuk::NMM::TVShow NepomukMetaDataExtractor::Pipe::TvShowPipe::createEpisode(Q
     episodeRes.setGenres( genreList2 );
 
     return episodeRes;
-}
-
-Nepomuk::NCO::PersonContact NepomukMetaDataExtractor::Pipe::TvShowPipe::createPerson(const QString &fullName)
-{
-    QStringList nameParts = fullName.split(' ');
-
-    Nepomuk::NCO::PersonContact personResource;
-    personResource.setFullname( fullName );
-    personResource.setNameFamily( nameParts.last() );
-    personResource.setNameGiven( nameParts.first() );
-    /*
-    nameParts.takeFirst();
-    nameParts.takeLast();
-
-    if(!nameParts.isEmpty()) {
-        personResource.setNameAdditionals( nameParts );
-    }
-    */
-
-    return personResource;
 }

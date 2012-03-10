@@ -35,36 +35,32 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameHonorificPrefix. 
-     * A prefix for the name of the object represented by this Contact. 
-     * See documentation for the 'nameFamily' property for details. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#gender. 
+     * Gender of the given contact. 
      */
-    QStringList nameHonorificPrefixs() const {
-        QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameHonorificPrefix", QUrl::StrictMode)))
-            value << v.value<QString>();
+    QUrl gender() const {
+        QUrl value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#gender", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#gender", QUrl::StrictMode)).first().value<QUrl>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameHonorificPrefix. 
-     * A prefix for the name of the object represented by this Contact. 
-     * See documentation for the 'nameFamily' property for details. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#gender. 
+     * Gender of the given contact. 
      */
-    void setNameHonorificPrefixs(const QStringList& value) {
+    void setGender(const QUrl& value) {
         QVariantList values;
-        foreach(const QString& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameHonorificPrefix", QUrl::StrictMode), values);
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#gender", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameHonorificPrefix. 
-     * A prefix for the name of the object represented by this Contact. 
-     * See documentation for the 'nameFamily' property for details. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#gender. 
+     * Gender of the given contact. 
      */
-    void addNameHonorificPrefix(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameHonorificPrefix", QUrl::StrictMode), value);
+    void addGender(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#gender", QUrl::StrictMode), value);
     }
 
     /**
@@ -98,6 +94,98 @@ public:
      */
     void addNameHonorificSuffix(const QString& value) {
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameHonorificSuffix", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameFamily. 
+     * The family name of an Object represented by this Contact. These 
+     * applies to people that have more than one given name. The 'first' 
+     * one is considered 'the' given name (see nameGiven) property. 
+     * All additional ones are considered 'additional' names. The 
+     * name inherited from parents is the 'family name'. e.g. For Dr. 
+     * John Phil Paul Stevenson Jr. M.D. A.C.P. we have contact with: 
+     * honorificPrefix: 'Dr.', nameGiven: 'John', nameAdditional: 
+     * 'Phil', nameAdditional: 'Paul', nameFamily: 'Stevenson', 
+     * honorificSuffix: 'Jr.', honorificSuffix: 'M.D.', honorificSuffix: 
+     * 'A.C.P.'. These properties form an equivalent of the compound 
+     * 'N' property as defined in RFC 2426 Sec. 3.1.2 
+     */
+    QString nameFamily() const {
+        QString value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameFamily", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameFamily", QUrl::StrictMode)).first().value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameFamily. 
+     * The family name of an Object represented by this Contact. These 
+     * applies to people that have more than one given name. The 'first' 
+     * one is considered 'the' given name (see nameGiven) property. 
+     * All additional ones are considered 'additional' names. The 
+     * name inherited from parents is the 'family name'. e.g. For Dr. 
+     * John Phil Paul Stevenson Jr. M.D. A.C.P. we have contact with: 
+     * honorificPrefix: 'Dr.', nameGiven: 'John', nameAdditional: 
+     * 'Phil', nameAdditional: 'Paul', nameFamily: 'Stevenson', 
+     * honorificSuffix: 'Jr.', honorificSuffix: 'M.D.', honorificSuffix: 
+     * 'A.C.P.'. These properties form an equivalent of the compound 
+     * 'N' property as defined in RFC 2426 Sec. 3.1.2 
+     */
+    void setNameFamily(const QString& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameFamily", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameFamily. 
+     * The family name of an Object represented by this Contact. These 
+     * applies to people that have more than one given name. The 'first' 
+     * one is considered 'the' given name (see nameGiven) property. 
+     * All additional ones are considered 'additional' names. The 
+     * name inherited from parents is the 'family name'. e.g. For Dr. 
+     * John Phil Paul Stevenson Jr. M.D. A.C.P. we have contact with: 
+     * honorificPrefix: 'Dr.', nameGiven: 'John', nameAdditional: 
+     * 'Phil', nameAdditional: 'Paul', nameFamily: 'Stevenson', 
+     * honorificSuffix: 'Jr.', honorificSuffix: 'M.D.', honorificSuffix: 
+     * 'A.C.P.'. These properties form an equivalent of the compound 
+     * 'N' property as defined in RFC 2426 Sec. 3.1.2 
+     */
+    void addNameFamily(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameFamily", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameHonorificPrefix. 
+     * A prefix for the name of the object represented by this Contact. 
+     * See documentation for the 'nameFamily' property for details. 
+     */
+    QStringList nameHonorificPrefixs() const {
+        QStringList value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameHonorificPrefix", QUrl::StrictMode)))
+            value << v.value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameHonorificPrefix. 
+     * A prefix for the name of the object represented by this Contact. 
+     * See documentation for the 'nameFamily' property for details. 
+     */
+    void setNameHonorificPrefixs(const QStringList& value) {
+        QVariantList values;
+        foreach(const QString& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameHonorificPrefix", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameHonorificPrefix. 
+     * A prefix for the name of the object represented by this Contact. 
+     * See documentation for the 'nameFamily' property for details. 
+     */
+    void addNameHonorificPrefix(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameHonorificPrefix", QUrl::StrictMode), value);
     }
 
     /**
@@ -164,35 +252,6 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#gender. 
-     * Gender of the given contact. 
-     */
-    QUrl gender() const {
-        QUrl value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#gender", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#gender", QUrl::StrictMode)).first().value<QUrl>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#gender. 
-     * Gender of the given contact. 
-     */
-    void setGender(const QUrl& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#gender", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#gender. 
-     * Gender of the given contact. 
-     */
-    void addGender(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#gender", QUrl::StrictMode), value);
-    }
-
-    /**
      * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#hobby. 
      * A hobby associated with a PersonContact. This property can 
      * be used to express hobbies and interests. 
@@ -223,65 +282,6 @@ public:
      */
     void addHobby(const QString& value) {
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#hobby", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameFamily. 
-     * The family name of an Object represented by this Contact. These 
-     * applies to people that have more than one given name. The 'first' 
-     * one is considered 'the' given name (see nameGiven) property. 
-     * All additional ones are considered 'additional' names. The 
-     * name inherited from parents is the 'family name'. e.g. For Dr. 
-     * John Phil Paul Stevenson Jr. M.D. A.C.P. we have contact with: 
-     * honorificPrefix: 'Dr.', nameGiven: 'John', nameAdditional: 
-     * 'Phil', nameAdditional: 'Paul', nameFamily: 'Stevenson', 
-     * honorificSuffix: 'Jr.', honorificSuffix: 'M.D.', honorificSuffix: 
-     * 'A.C.P.'. These properties form an equivalent of the compound 
-     * 'N' property as defined in RFC 2426 Sec. 3.1.2 
-     */
-    QString nameFamily() const {
-        QString value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameFamily", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameFamily", QUrl::StrictMode)).first().value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameFamily. 
-     * The family name of an Object represented by this Contact. These 
-     * applies to people that have more than one given name. The 'first' 
-     * one is considered 'the' given name (see nameGiven) property. 
-     * All additional ones are considered 'additional' names. The 
-     * name inherited from parents is the 'family name'. e.g. For Dr. 
-     * John Phil Paul Stevenson Jr. M.D. A.C.P. we have contact with: 
-     * honorificPrefix: 'Dr.', nameGiven: 'John', nameAdditional: 
-     * 'Phil', nameAdditional: 'Paul', nameFamily: 'Stevenson', 
-     * honorificSuffix: 'Jr.', honorificSuffix: 'M.D.', honorificSuffix: 
-     * 'A.C.P.'. These properties form an equivalent of the compound 
-     * 'N' property as defined in RFC 2426 Sec. 3.1.2 
-     */
-    void setNameFamily(const QString& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameFamily", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameFamily. 
-     * The family name of an Object represented by this Contact. These 
-     * applies to people that have more than one given name. The 'first' 
-     * one is considered 'the' given name (see nameGiven) property. 
-     * All additional ones are considered 'additional' names. The 
-     * name inherited from parents is the 'family name'. e.g. For Dr. 
-     * John Phil Paul Stevenson Jr. M.D. A.C.P. we have contact with: 
-     * honorificPrefix: 'Dr.', nameGiven: 'John', nameAdditional: 
-     * 'Phil', nameAdditional: 'Paul', nameFamily: 'Stevenson', 
-     * honorificSuffix: 'Jr.', honorificSuffix: 'M.D.', honorificSuffix: 
-     * 'A.C.P.'. These properties form an equivalent of the compound 
-     * 'N' property as defined in RFC 2426 Sec. 3.1.2 
-     */
-    void addNameFamily(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameFamily", QUrl::StrictMode), value);
     }
 
     /**

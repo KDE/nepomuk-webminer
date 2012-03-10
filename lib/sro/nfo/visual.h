@@ -35,6 +35,35 @@ public:
     }
 
     /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#interlaceMode. 
+     * True if the image is interlaced, false if not. 
+     */
+    bool interlaceMode() const {
+        bool value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#interlaceMode", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#interlaceMode", QUrl::StrictMode)).first().value<bool>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#interlaceMode. 
+     * True if the image is interlaced, false if not. 
+     */
+    void setInterlaceMode(const bool& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#interlaceMode", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#interlaceMode. 
+     * True if the image is interlaced, false if not. 
+     */
+    void addInterlaceMode(const bool& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#interlaceMode", QUrl::StrictMode), value);
+    }
+
+    /**
      * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#colorDepth. 
      * Amount of bits used to express the color of each pixel. 
      */
@@ -148,35 +177,6 @@ public:
      */
     void addAspectRatio(const double& value) {
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#aspectRatio", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#interlaceMode. 
-     * True if the image is interlaced, false if not. 
-     */
-    bool interlaceMode() const {
-        bool value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#interlaceMode", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#interlaceMode", QUrl::StrictMode)).first().value<bool>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#interlaceMode. 
-     * True if the image is interlaced, false if not. 
-     */
-    void setInterlaceMode(const bool& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#interlaceMode", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#interlaceMode. 
-     * True if the image is interlaced, false if not. 
-     */
-    void addInterlaceMode(const bool& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#interlaceMode", QUrl::StrictMode), value);
     }
 
 protected:

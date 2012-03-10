@@ -37,6 +37,38 @@ public:
     }
 
     /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#dtstart. 
+     * This property specifies when the process begins. Inspired 
+     * by NCAL:dtstart. 
+     */
+    QDateTime dtstart() const {
+        QDateTime value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#dtstart", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#dtstart", QUrl::StrictMode)).first().value<QDateTime>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#dtstart. 
+     * This property specifies when the process begins. Inspired 
+     * by NCAL:dtstart. 
+     */
+    void setDtstart(const QDateTime& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#dtstart", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#dtstart. 
+     * This property specifies when the process begins. Inspired 
+     * by NCAL:dtstart. 
+     */
+    void addDtstart(const QDateTime& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#dtstart", QUrl::StrictMode), value);
+    }
+
+    /**
      * Get property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#dtend. 
      * This property specifies the date and time when a process ends. 
      * Inspired by NCAL:dtend. 
@@ -69,35 +101,35 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#dtstart. 
-     * This property specifies when the process begins. Inspired 
-     * by NCAL:dtstart. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#duration. 
+     * The duration of the process (meeting, event, etc). Difference 
+     * between start and end time. 
      */
-    QDateTime dtstart() const {
-        QDateTime value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#dtstart", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#dtstart", QUrl::StrictMode)).first().value<QDateTime>();
+    QUrl duration() const {
+        QUrl value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#duration", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#duration", QUrl::StrictMode)).first().value<QUrl>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#dtstart. 
-     * This property specifies when the process begins. Inspired 
-     * by NCAL:dtstart. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#duration. 
+     * The duration of the process (meeting, event, etc). Difference 
+     * between start and end time. 
      */
-    void setDtstart(const QDateTime& value) {
+    void setDuration(const QUrl& value) {
         QVariantList values;
         values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#dtstart", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#duration", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#dtstart. 
-     * This property specifies when the process begins. Inspired 
-     * by NCAL:dtstart. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#duration. 
+     * The duration of the process (meeting, event, etc). Difference 
+     * between start and end time. 
      */
-    void addDtstart(const QDateTime& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#dtstart", QUrl::StrictMode), value);
+    void addDuration(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#duration", QUrl::StrictMode), value);
     }
 
 protected:

@@ -37,38 +37,32 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitDepth. 
-     * A common superproperty for all properties signifying the amount 
-     * of bits for an atomic unit of data. Examples of subproperties 
-     * may include bitsPerSample and bitsPerPixel 
+     * Get property http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#releaseDate. 
+     * The date the media was released. 
      */
-    QString bitDepth() const {
-        QString value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitDepth", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitDepth", QUrl::StrictMode)).first().value<QString>();
+    QDateTime releaseDate() const {
+        QDateTime value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#releaseDate", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#releaseDate", QUrl::StrictMode)).first().value<QDateTime>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitDepth. 
-     * A common superproperty for all properties signifying the amount 
-     * of bits for an atomic unit of data. Examples of subproperties 
-     * may include bitsPerSample and bitsPerPixel 
+     * Set property http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#releaseDate. 
+     * The date the media was released. 
      */
-    void setBitDepth(const QString& value) {
+    void setReleaseDate(const QDateTime& value) {
         QVariantList values;
         values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitDepth", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#releaseDate", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitDepth. 
-     * A common superproperty for all properties signifying the amount 
-     * of bits for an atomic unit of data. Examples of subproperties 
-     * may include bitsPerSample and bitsPerPixel 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#releaseDate. 
+     * The date the media was released. 
      */
-    void addBitDepth(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitDepth", QUrl::StrictMode), value);
+    void addReleaseDate(const QDateTime& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#releaseDate", QUrl::StrictMode), value);
     }
 
     /**
@@ -101,90 +95,36 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#releaseDate. 
-     * The date the media was released. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hasMediaStream. 
+     * Connects a media container with a single media stream contained 
+     * within. 
      */
-    QDateTime releaseDate() const {
-        QDateTime value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#releaseDate", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#releaseDate", QUrl::StrictMode)).first().value<QDateTime>();
+    QList<QUrl> mediaStreams() const {
+        QList<QUrl> value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hasMediaStream", QUrl::StrictMode)))
+            value << v.value<QUrl>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#releaseDate. 
-     * The date the media was released. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hasMediaStream. 
+     * Connects a media container with a single media stream contained 
+     * within. 
      */
-    void setReleaseDate(const QDateTime& value) {
+    void setMediaStreams(const QList<QUrl>& value) {
         QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#releaseDate", QUrl::StrictMode), values);
+        foreach(const QUrl& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hasMediaStream", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#releaseDate. 
-     * The date the media was released. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hasMediaStream. 
+     * Connects a media container with a single media stream contained 
+     * within. 
      */
-    void addReleaseDate(const QDateTime& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#releaseDate", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration. 
-     * Duration of a media piece. 
-     */
-    QUrl duration() const {
-        QUrl value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", QUrl::StrictMode)).first().value<QUrl>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration. 
-     * Duration of a media piece. 
-     */
-    void setDuration(const QUrl& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration. 
-     * Duration of a media piece. 
-     */
-    void addDuration(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#compressionType. 
-     * The type of the compression. Values include, 'lossy' and 'lossless'. 
-     */
-    QUrl compressionType() const {
-        QUrl value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#compressionType", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#compressionType", QUrl::StrictMode)).first().value<QUrl>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#compressionType. 
-     * The type of the compression. Values include, 'lossy' and 'lossless'. 
-     */
-    void setCompressionType(const QUrl& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#compressionType", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#compressionType. 
-     * The type of the compression. Values include, 'lossy' and 'lossless'. 
-     */
-    void addCompressionType(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#compressionType", QUrl::StrictMode), value);
+    void addMediaStream(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hasMediaStream", QUrl::StrictMode), value);
     }
 
     /**
@@ -215,42 +155,6 @@ public:
      */
     void addCodec(const QString& value) {
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#codec", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#count. 
-     * A common superproperty for all properties signifying the amount 
-     * of atomic media data units. Examples of subproperties may include 
-     * sampleCount and frameCount. 
-     */
-    QList<qint64> counts() const {
-        QList<qint64> value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#count", QUrl::StrictMode)))
-            value << v.value<qint64>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#count. 
-     * A common superproperty for all properties signifying the amount 
-     * of atomic media data units. Examples of subproperties may include 
-     * sampleCount and frameCount. 
-     */
-    void setCounts(const QList<qint64>& value) {
-        QVariantList values;
-        foreach(const qint64& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#count", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#count. 
-     * A common superproperty for all properties signifying the amount 
-     * of atomic media data units. Examples of subproperties may include 
-     * sampleCount and frameCount. 
-     */
-    void addCount(const qint64& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#count", QUrl::StrictMode), value);
     }
 
     /**
@@ -293,36 +197,96 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hasMediaStream. 
-     * Connects a media container with a single media stream contained 
-     * within. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate. 
+     * The average overall bitrate of a media container. (i.e. the 
+     * size of the piece of media in bits, divided by it's duration expressed 
+     * in seconds). 
      */
-    QList<QUrl> mediaStreams() const {
-        QList<QUrl> value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hasMediaStream", QUrl::StrictMode)))
-            value << v.value<QUrl>();
+    double averageBitrate() const {
+        double value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", QUrl::StrictMode)).first().value<double>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hasMediaStream. 
-     * Connects a media container with a single media stream contained 
-     * within. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate. 
+     * The average overall bitrate of a media container. (i.e. the 
+     * size of the piece of media in bits, divided by it's duration expressed 
+     * in seconds). 
      */
-    void setMediaStreams(const QList<QUrl>& value) {
+    void setAverageBitrate(const double& value) {
         QVariantList values;
-        foreach(const QUrl& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hasMediaStream", QUrl::StrictMode), values);
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hasMediaStream. 
-     * Connects a media container with a single media stream contained 
-     * within. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate. 
+     * The average overall bitrate of a media container. (i.e. the 
+     * size of the piece of media in bits, divided by it's duration expressed 
+     * in seconds). 
      */
-    void addMediaStream(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hasMediaStream", QUrl::StrictMode), value);
+    void addAverageBitrate(const double& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#compressionType. 
+     * The type of the compression. Values include, 'lossy' and 'lossless'. 
+     */
+    QUrl compressionType() const {
+        QUrl value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#compressionType", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#compressionType", QUrl::StrictMode)).first().value<QUrl>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#compressionType. 
+     * The type of the compression. Values include, 'lossy' and 'lossless'. 
+     */
+    void setCompressionType(const QUrl& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#compressionType", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#compressionType. 
+     * The type of the compression. Values include, 'lossy' and 'lossless'. 
+     */
+    void addCompressionType(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#compressionType", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration. 
+     * Duration of a media piece. 
+     */
+    QUrl duration() const {
+        QUrl value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", QUrl::StrictMode)).first().value<QUrl>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration. 
+     * Duration of a media piece. 
+     */
+    void setDuration(const QUrl& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration. 
+     * Duration of a media piece. 
+     */
+    void addDuration(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", QUrl::StrictMode), value);
     }
 
     /**
@@ -356,38 +320,74 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate. 
-     * The average overall bitrate of a media container. (i.e. the 
-     * size of the piece of media in bits, divided by it's duration expressed 
-     * in seconds). 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#count. 
+     * A common superproperty for all properties signifying the amount 
+     * of atomic media data units. Examples of subproperties may include 
+     * sampleCount and frameCount. 
      */
-    double averageBitrate() const {
-        double value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", QUrl::StrictMode)).first().value<double>();
+    QList<qint64> counts() const {
+        QList<qint64> value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#count", QUrl::StrictMode)))
+            value << v.value<qint64>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate. 
-     * The average overall bitrate of a media container. (i.e. the 
-     * size of the piece of media in bits, divided by it's duration expressed 
-     * in seconds). 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#count. 
+     * A common superproperty for all properties signifying the amount 
+     * of atomic media data units. Examples of subproperties may include 
+     * sampleCount and frameCount. 
      */
-    void setAverageBitrate(const double& value) {
+    void setCounts(const QList<qint64>& value) {
         QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", QUrl::StrictMode), values);
+        foreach(const qint64& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#count", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate. 
-     * The average overall bitrate of a media container. (i.e. the 
-     * size of the piece of media in bits, divided by it's duration expressed 
-     * in seconds). 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#count. 
+     * A common superproperty for all properties signifying the amount 
+     * of atomic media data units. Examples of subproperties may include 
+     * sampleCount and frameCount. 
      */
-    void addAverageBitrate(const double& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", QUrl::StrictMode), value);
+    void addCount(const qint64& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#count", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitDepth. 
+     * A common superproperty for all properties signifying the amount 
+     * of bits for an atomic unit of data. Examples of subproperties 
+     * may include bitsPerSample and bitsPerPixel 
+     */
+    QString bitDepth() const {
+        QString value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitDepth", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitDepth", QUrl::StrictMode)).first().value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitDepth. 
+     * A common superproperty for all properties signifying the amount 
+     * of bits for an atomic unit of data. Examples of subproperties 
+     * may include bitsPerSample and bitsPerPixel 
+     */
+    void setBitDepth(const QString& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitDepth", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitDepth. 
+     * A common superproperty for all properties signifying the amount 
+     * of bits for an atomic unit of data. Examples of subproperties 
+     * may include bitsPerSample and bitsPerPixel 
+     */
+    void addBitDepth(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#bitDepth", QUrl::StrictMode), value);
     }
 
     /**

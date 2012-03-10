@@ -20,8 +20,6 @@
 
 #include "nepomukpipe.h"
 
-#include "sro/nco/personcontact.h"
-
 namespace NepomukMetaDataExtractor {
     namespace Pipe {
         /**
@@ -47,9 +45,6 @@ namespace NepomukMetaDataExtractor {
             virtual ~MoviePipe();
 
             void pipeImport(const QVariantMap &movieEntry);
-
-        private:
-            Nepomuk::NCO::PersonContact createPerson(const QString &fullName);
         };
     }
 }

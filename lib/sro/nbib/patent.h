@@ -35,33 +35,62 @@ public:
     }
 
     /**
-     * Get property http://www.example.com/nbib#patentReferences. 
-     * The references for this patent 
+     * Get property http://www.example.com/nbib#attorneyAgent. 
+     * A attorney agent related to a patent 
      */
-    QStringList patentReferenceses() const {
-        QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.example.com/nbib#patentReferences", QUrl::StrictMode)))
-            value << v.value<QString>();
+    QList<QUrl> attorneyAgents() const {
+        QList<QUrl> value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.example.com/nbib#attorneyAgent", QUrl::StrictMode)))
+            value << v.value<QUrl>();
         return value;
     }
 
     /**
-     * Set property http://www.example.com/nbib#patentReferences. 
-     * The references for this patent 
+     * Set property http://www.example.com/nbib#attorneyAgent. 
+     * A attorney agent related to a patent 
      */
-    void setPatentReferenceses(const QStringList& value) {
+    void setAttorneyAgents(const QList<QUrl>& value) {
         QVariantList values;
-        foreach(const QString& v, value)
+        foreach(const QUrl& v, value)
             values << v;
-        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#patentReferences", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#attorneyAgent", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.example.com/nbib#patentReferences. 
-     * The references for this patent 
+     * Add value to property http://www.example.com/nbib#attorneyAgent. 
+     * A attorney agent related to a patent 
      */
-    void addPatentReferences(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#patentReferences", QUrl::StrictMode), value);
+    void addAttorneyAgent(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#attorneyAgent", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.example.com/nbib#applicationNumber. 
+     * The application number of a patent 
+     */
+    QString applicationNumber() const {
+        QString value;
+        if(contains(QUrl::fromEncoded("http://www.example.com/nbib#applicationNumber", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.example.com/nbib#applicationNumber", QUrl::StrictMode)).first().value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.example.com/nbib#applicationNumber. 
+     * The application number of a patent 
+     */
+    void setApplicationNumber(const QString& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#applicationNumber", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.example.com/nbib#applicationNumber. 
+     * The application number of a patent 
+     */
+    void addApplicationNumber(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#applicationNumber", QUrl::StrictMode), value);
     }
 
     /**
@@ -95,33 +124,33 @@ public:
     }
 
     /**
-     * Get property http://www.example.com/nbib#attorneyAgent. 
-     * A attorney agent related to a patent 
+     * Get property http://www.example.com/nbib#priorityNumbers. 
+     * The priority number of a patent 
      */
-    QList<QUrl> attorneyAgents() const {
-        QList<QUrl> value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.example.com/nbib#attorneyAgent", QUrl::StrictMode)))
-            value << v.value<QUrl>();
+    QStringList priorityNumberses() const {
+        QStringList value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.example.com/nbib#priorityNumbers", QUrl::StrictMode)))
+            value << v.value<QString>();
         return value;
     }
 
     /**
-     * Set property http://www.example.com/nbib#attorneyAgent. 
-     * A attorney agent related to a patent 
+     * Set property http://www.example.com/nbib#priorityNumbers. 
+     * The priority number of a patent 
      */
-    void setAttorneyAgents(const QList<QUrl>& value) {
+    void setPriorityNumberses(const QStringList& value) {
         QVariantList values;
-        foreach(const QUrl& v, value)
+        foreach(const QString& v, value)
             values << v;
-        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#attorneyAgent", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#priorityNumbers", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.example.com/nbib#attorneyAgent. 
-     * A attorney agent related to a patent 
+     * Add value to property http://www.example.com/nbib#priorityNumbers. 
+     * The priority number of a patent 
      */
-    void addAttorneyAgent(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#attorneyAgent", QUrl::StrictMode), value);
+    void addPriorityNumbers(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#priorityNumbers", QUrl::StrictMode), value);
     }
 
     /**
@@ -157,62 +186,33 @@ public:
     }
 
     /**
-     * Get property http://www.example.com/nbib#applicationNumber. 
-     * The application number of a patent 
+     * Get property http://www.example.com/nbib#patentReferences. 
+     * The references for this patent 
      */
-    QString applicationNumber() const {
-        QString value;
-        if(contains(QUrl::fromEncoded("http://www.example.com/nbib#applicationNumber", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.example.com/nbib#applicationNumber", QUrl::StrictMode)).first().value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.example.com/nbib#applicationNumber. 
-     * The application number of a patent 
-     */
-    void setApplicationNumber(const QString& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#applicationNumber", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.example.com/nbib#applicationNumber. 
-     * The application number of a patent 
-     */
-    void addApplicationNumber(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#applicationNumber", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.example.com/nbib#priorityNumbers. 
-     * The priority number of a patent 
-     */
-    QStringList priorityNumberses() const {
+    QStringList patentReferenceses() const {
         QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.example.com/nbib#priorityNumbers", QUrl::StrictMode)))
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.example.com/nbib#patentReferences", QUrl::StrictMode)))
             value << v.value<QString>();
         return value;
     }
 
     /**
-     * Set property http://www.example.com/nbib#priorityNumbers. 
-     * The priority number of a patent 
+     * Set property http://www.example.com/nbib#patentReferences. 
+     * The references for this patent 
      */
-    void setPriorityNumberses(const QStringList& value) {
+    void setPatentReferenceses(const QStringList& value) {
         QVariantList values;
         foreach(const QString& v, value)
             values << v;
-        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#priorityNumbers", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#patentReferences", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.example.com/nbib#priorityNumbers. 
-     * The priority number of a patent 
+     * Add value to property http://www.example.com/nbib#patentReferences. 
+     * The references for this patent 
      */
-    void addPriorityNumbers(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#priorityNumbers", QUrl::StrictMode), value);
+    void addPatentReferences(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#patentReferences", QUrl::StrictMode), value);
     }
 
     /**

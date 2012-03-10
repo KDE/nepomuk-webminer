@@ -41,45 +41,6 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#associationMember. 
-     * An super-property of all roles that an entity can have in an association. 
-     * Member is the generic role of a thing in an association. Association 
-     * subclasses should define sub-properties of this property. 
-     * Associations can have Things as 
-     */
-    QList<QUrl> associationMembers() const {
-        QList<QUrl> value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#associationMember", QUrl::StrictMode)))
-            value << v.value<QUrl>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#associationMember. 
-     * An super-property of all roles that an entity can have in an association. 
-     * Member is the generic role of a thing in an association. Association 
-     * subclasses should define sub-properties of this property. 
-     * Associations can have Things as 
-     */
-    void setAssociationMembers(const QList<QUrl>& value) {
-        QVariantList values;
-        foreach(const QUrl& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#associationMember", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#associationMember. 
-     * An super-property of all roles that an entity can have in an association. 
-     * Member is the generic role of a thing in an association. Association 
-     * subclasses should define sub-properties of this property. 
-     * Associations can have Things as 
-     */
-    void addAssociationMember(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#associationMember", QUrl::StrictMode), value);
-    }
-
-    /**
      * Get property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#associationEffectual. 
      * During which time is this association effective? If omitted, 
      * the association is always effective. Start time and end-time 
@@ -122,6 +83,45 @@ public:
      */
     void addAssociationEffectual(const QUrl& value) {
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#associationEffectual", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#associationMember. 
+     * An super-property of all roles that an entity can have in an association. 
+     * Member is the generic role of a thing in an association. Association 
+     * subclasses should define sub-properties of this property. 
+     * Associations can have Things as 
+     */
+    QList<QUrl> associationMembers() const {
+        QList<QUrl> value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#associationMember", QUrl::StrictMode)))
+            value << v.value<QUrl>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#associationMember. 
+     * An super-property of all roles that an entity can have in an association. 
+     * Member is the generic role of a thing in an association. Association 
+     * subclasses should define sub-properties of this property. 
+     * Associations can have Things as 
+     */
+    void setAssociationMembers(const QList<QUrl>& value) {
+        QVariantList values;
+        foreach(const QUrl& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#associationMember", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#associationMember. 
+     * An super-property of all roles that an entity can have in an association. 
+     * Member is the generic role of a thing in an association. Association 
+     * subclasses should define sub-properties of this property. 
+     * Associations can have Things as 
+     */
+    void addAssociationMember(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#associationMember", QUrl::StrictMode), value);
     }
 
 protected:

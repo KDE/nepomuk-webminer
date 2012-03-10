@@ -36,292 +36,124 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment. 
-     * A user comment about an InformationElement. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#editor. 
+     * The name(s) of the editor(s). 
      */
-    QStringList comments() const {
-        QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment", QUrl::StrictMode)))
-            value << v.value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment. 
-     * A user comment about an InformationElement. 
-     */
-    void setComments(const QStringList& value) {
-        QVariantList values;
-        foreach(const QString& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment. 
-     * A user comment about an InformationElement. 
-     */
-    void addComment(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#encryptionStatus. 
-     * The status of the encryption of the InformationElement. 
-     */
-    QUrl encryptionStatus() const {
-        QUrl value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#encryptionStatus", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#encryptionStatus", QUrl::StrictMode)).first().value<QUrl>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#encryptionStatus. 
-     * The status of the encryption of the InformationElement. 
-     */
-    void setEncryptionStatus(const QUrl& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#encryptionStatus", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#encryptionStatus. 
-     * The status of the encryption of the InformationElement. 
-     */
-    void addEncryptionStatus(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#encryptionStatus", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#language. 
-     * Language the InformationElement is expressed in. This property 
-     * applies to the data object in its entirety. If the data object 
-     * is divisible into parts expressed in multiple languages - more 
-     * specific properties should be used. Users are encouraged to 
-     * use the two-letter code specified in the RFC 3066 
-     */
-    QString language() const {
-        QString value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#language", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#language", QUrl::StrictMode)).first().value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#language. 
-     * Language the InformationElement is expressed in. This property 
-     * applies to the data object in its entirety. If the data object 
-     * is divisible into parts expressed in multiple languages - more 
-     * specific properties should be used. Users are encouraged to 
-     * use the two-letter code specified in the RFC 3066 
-     */
-    void setLanguage(const QString& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#language", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#language. 
-     * Language the InformationElement is expressed in. This property 
-     * applies to the data object in its entirety. If the data object 
-     * is divisible into parts expressed in multiple languages - more 
-     * specific properties should be used. Users are encouraged to 
-     * use the two-letter code specified in the RFC 3066 
-     */
-    void addLanguage(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#language", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title. 
-     * Name given to an InformationElement 
-     */
-    QString title() const {
-        QString value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title", QUrl::StrictMode)).first().value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title. 
-     * Name given to an InformationElement 
-     */
-    void setTitle(const QString& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title. 
-     * Name given to an InformationElement 
-     */
-    void addTitle(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.example.com/sync#serverSyncData. 
-     * adds the server sync data to the publication 
-     */
-    QList<QUrl> serverSyncDatas() const {
+    QList<QUrl> editors() const {
         QList<QUrl> value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.example.com/sync#serverSyncData", QUrl::StrictMode)))
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#editor", QUrl::StrictMode)))
             value << v.value<QUrl>();
         return value;
     }
 
     /**
-     * Set property http://www.example.com/sync#serverSyncData. 
-     * adds the server sync data to the publication 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#editor. 
+     * The name(s) of the editor(s). 
      */
-    void setServerSyncDatas(const QList<QUrl>& value) {
+    void setEditors(const QList<QUrl>& value) {
         QVariantList values;
         foreach(const QUrl& v, value)
             values << v;
-        setProperty(QUrl::fromEncoded("http://www.example.com/sync#serverSyncData", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#editor", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.example.com/sync#serverSyncData. 
-     * adds the server sync data to the publication 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#editor. 
+     * The name(s) of the editor(s). 
      */
-    void addServerSyncData(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.example.com/sync#serverSyncData", QUrl::StrictMode), value);
+    void addEditor(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#editor", QUrl::StrictMode), value);
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#abstract. 
-     * An abstract of the work. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#doi. 
+     * The Digital object identifier. see http://www.doi.org/ for 
+     * more information 
      */
-    QString abstract() const {
+    QString doi() const {
         QString value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#abstract", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#abstract", QUrl::StrictMode)).first().value<QString>();
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#doi", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#doi", QUrl::StrictMode)).first().value<QString>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#abstract. 
-     * An abstract of the work. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#doi. 
+     * The Digital object identifier. see http://www.doi.org/ for 
+     * more information 
      */
-    void setAbstract(const QString& value) {
+    void setDoi(const QString& value) {
         QVariantList values;
         values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#abstract", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#doi", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#abstract. 
-     * An abstract of the work. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#doi. 
+     * The Digital object identifier. see http://www.doi.org/ for 
+     * more information 
      */
-    void addAbstract(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#abstract", QUrl::StrictMode), value);
+    void addDoi(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#doi", QUrl::StrictMode), value);
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sideChannels. 
-     * Number of side channels 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright. 
+     * Content copyright 
      */
-    qint64 sideChannels() const {
-        qint64 value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sideChannels", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sideChannels", QUrl::StrictMode)).first().value<qint64>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sideChannels. 
-     * Number of side channels 
-     */
-    void setSideChannels(const qint64& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sideChannels", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sideChannels. 
-     * Number of side channels 
-     */
-    void addSideChannels(const qint64& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sideChannels", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#informationElementDate. 
-     * A point or period of time associated with an event in the lifecycle 
-     * of an Information Element. A common superproperty for all date-related 
-     * properties of InformationElements in the NIE Framework. 
-     */
-    QList<QDateTime> informationElementDates() const {
-        QList<QDateTime> value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#informationElementDate", QUrl::StrictMode)))
-            value << v.value<QDateTime>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#informationElementDate. 
-     * A point or period of time associated with an event in the lifecycle 
-     * of an Information Element. A common superproperty for all date-related 
-     * properties of InformationElements in the NIE Framework. 
-     */
-    void setInformationElementDates(const QList<QDateTime>& value) {
-        QVariantList values;
-        foreach(const QDateTime& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#informationElementDate", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#informationElementDate. 
-     * A point or period of time associated with an event in the lifecycle 
-     * of an Information Element. A common superproperty for all date-related 
-     * properties of InformationElements in the NIE Framework. 
-     */
-    void addInformationElementDate(const QDateTime& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#informationElementDate", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#version. 
-     * The current version of the given data object. Exact semantics 
-     * is unspecified at this level. Use more specific subproperties 
-     * if needed. 
-     */
-    QStringList versions() const {
+    QStringList copyrights() const {
         QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#version", QUrl::StrictMode)))
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright", QUrl::StrictMode)))
             value << v.value<QString>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#version. 
-     * The current version of the given data object. Exact semantics 
-     * is unspecified at this level. Use more specific subproperties 
-     * if needed. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright. 
+     * Content copyright 
      */
-    void setVersions(const QStringList& value) {
+    void setCopyrights(const QStringList& value) {
         QVariantList values;
         foreach(const QString& v, value)
             values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#version", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#version. 
-     * The current version of the given data object. Exact semantics 
-     * is unspecified at this level. Use more specific subproperties 
-     * if needed. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright. 
+     * Content copyright 
      */
-    void addVersion(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#version", QUrl::StrictMode), value);
+    void addCopyright(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frontChannels. 
+     * Number of front channels. 
+     */
+    qint64 frontChannels() const {
+        qint64 value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frontChannels", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frontChannels", QUrl::StrictMode)).first().value<qint64>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frontChannels. 
+     * Number of front channels. 
+     */
+    void setFrontChannels(const qint64& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frontChannels", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frontChannels. 
+     * Number of front channels. 
+     */
+    void addFrontChannels(const qint64& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frontChannels", QUrl::StrictMode), value);
     }
 
     /**
@@ -354,32 +186,6 @@ public:
      */
     void addHtmlContent(const QString& value) {
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#htmlContent", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
-     */
-    double longgeo() const {
-        double value;
-        if(contains(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode)).first().value<double>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
-     */
-    void setLong(const double& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
-     */
-    void addLong(const double& value) {
-        addProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode), value);
     }
 
     /**
@@ -428,83 +234,36 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet. 
-     * Characterset in which the content of the InformationElement 
-     * was created. Example: ISO-8859-1, UTF-8. One of the registered 
-     * character sets at http://www.iana.org/assignments/character-sets. 
-     * This characterSet is used to interpret any textual parts of 
-     * the content. If more than one characterSet is used within one 
-     * data object, use more specific properties. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#links. 
+     * A linking relation. A piece of content links/mentions a piece 
+     * of data 
      */
-    QString characterSet() const {
-        QString value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet", QUrl::StrictMode)).first().value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet. 
-     * Characterset in which the content of the InformationElement 
-     * was created. Example: ISO-8859-1, UTF-8. One of the registered 
-     * character sets at http://www.iana.org/assignments/character-sets. 
-     * This characterSet is used to interpret any textual parts of 
-     * the content. If more than one characterSet is used within one 
-     * data object, use more specific properties. 
-     */
-    void setCharacterSet(const QString& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet. 
-     * Characterset in which the content of the InformationElement 
-     * was created. Example: ISO-8859-1, UTF-8. One of the registered 
-     * character sets at http://www.iana.org/assignments/character-sets. 
-     * This characterSet is used to interpret any textual parts of 
-     * the content. If more than one characterSet is used within one 
-     * data object, use more specific properties. 
-     */
-    void addCharacterSet(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#rootElementOf. 
-     * DataObjects extracted from a single data source are organized 
-     * into a containment tree. This property links the root of that 
-     * tree with the datasource it has been extracted from 
-     */
-    QList<QUrl> rootElementOfs() const {
+    QList<QUrl> linkses() const {
         QList<QUrl> value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#rootElementOf", QUrl::StrictMode)))
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#links", QUrl::StrictMode)))
             value << v.value<QUrl>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#rootElementOf. 
-     * DataObjects extracted from a single data source are organized 
-     * into a containment tree. This property links the root of that 
-     * tree with the datasource it has been extracted from 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#links. 
+     * A linking relation. A piece of content links/mentions a piece 
+     * of data 
      */
-    void setRootElementOfs(const QList<QUrl>& value) {
+    void setLinkses(const QList<QUrl>& value) {
         QVariantList values;
         foreach(const QUrl& v, value)
             values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#rootElementOf", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#links", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#rootElementOf. 
-     * DataObjects extracted from a single data source are organized 
-     * into a containment tree. This property links the root of that 
-     * tree with the datasource it has been extracted from 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#links. 
+     * A linking relation. A piece of content links/mentions a piece 
+     * of data 
      */
-    void addRootElementOf(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#rootElementOf", QUrl::StrictMode), value);
+    void addLinks(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#links", QUrl::StrictMode), value);
     }
 
     /**
@@ -541,67 +300,32 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated. 
-     * The date of the content creation. This may not necessarily be 
-     * equal to the date when the DataObject (i.e. the physical representation) 
-     * itself was created. Compare with nie:created property. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title. 
+     * Name given to an InformationElement 
      */
-    QDateTime contentCreated() const {
-        QDateTime value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated", QUrl::StrictMode)).first().value<QDateTime>();
+    QString title() const {
+        QString value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title", QUrl::StrictMode)).first().value<QString>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated. 
-     * The date of the content creation. This may not necessarily be 
-     * equal to the date when the DataObject (i.e. the physical representation) 
-     * itself was created. Compare with nie:created property. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title. 
+     * Name given to an InformationElement 
      */
-    void setContentCreated(const QDateTime& value) {
+    void setTitle(const QString& value) {
         QVariantList values;
         values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated. 
-     * The date of the content creation. This may not necessarily be 
-     * equal to the date when the DataObject (i.e. the physical representation) 
-     * itself was created. Compare with nie:created property. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title. 
+     * Name given to an InformationElement 
      */
-    void addContentCreated(const QDateTime& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels. 
-     * Number of Low Frequency Expansion (subwoofer) channels. 
-     */
-    qint64 lfeChannels() const {
-        qint64 value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode)).first().value<qint64>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels. 
-     * Number of Low Frequency Expansion (subwoofer) channels. 
-     */
-    void setLfeChannels(const qint64& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels. 
-     * Number of Low Frequency Expansion (subwoofer) channels. 
-     */
-    void addLfeChannels(const qint64& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode), value);
+    void addTitle(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title", QUrl::StrictMode), value);
     }
 
     /**
@@ -653,198 +377,131 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#licenseType. 
-     * The type of the license. Possible values for this field may include 
-     * "GPL", "BSD", "Creative Commons" etc. 
+     * Get property http://www.example.com/nbib#citedReference. 
+     * Links all cited references from one publication. Good way to 
+     * find new sources to read 
      */
-    QStringList licenseTypes() const {
-        QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#licenseType", QUrl::StrictMode)))
-            value << v.value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#licenseType. 
-     * The type of the license. Possible values for this field may include 
-     * "GPL", "BSD", "Creative Commons" etc. 
-     */
-    void setLicenseTypes(const QStringList& value) {
-        QVariantList values;
-        foreach(const QString& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#licenseType", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#licenseType. 
-     * The type of the license. Possible values for this field may include 
-     * "GPL", "BSD", "Creative Commons" etc. 
-     */
-    void addLicenseType(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#licenseType", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#rearChannels. 
-     * Number of rear channels. 
-     */
-    qint64 rearChannels() const {
-        qint64 value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#rearChannels", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#rearChannels", QUrl::StrictMode)).first().value<qint64>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#rearChannels. 
-     * Number of rear channels. 
-     */
-    void setRearChannels(const qint64& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#rearChannels", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#rearChannels. 
-     * Number of rear channels. 
-     */
-    void addRearChannels(const qint64& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#rearChannels", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent. 
-     * Plain-text representation of the content of a InformationElement 
-     * with all markup removed. The main purpose of this property is 
-     * full-text indexing and search. Its exact content is considered 
-     * application-specific. The user can make no assumptions about 
-     * what is and what is not contained within. Applications should 
-     * use more specific properties wherever possible. 
-     */
-    QString plainTextContent() const {
-        QString value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent", QUrl::StrictMode)).first().value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent. 
-     * Plain-text representation of the content of a InformationElement 
-     * with all markup removed. The main purpose of this property is 
-     * full-text indexing and search. Its exact content is considered 
-     * application-specific. The user can make no assumptions about 
-     * what is and what is not contained within. Applications should 
-     * use more specific properties wherever possible. 
-     */
-    void setPlainTextContent(const QString& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent. 
-     * Plain-text representation of the content of a InformationElement 
-     * with all markup removed. The main purpose of this property is 
-     * full-text indexing and search. Its exact content is considered 
-     * application-specific. The user can make no assumptions about 
-     * what is and what is not contained within. Applications should 
-     * use more specific properties wherever possible. 
-     */
-    void addPlainTextContent(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#hasPart. 
-     * Generic property used to express 'physical' containment relationships 
-     * between DataObjects. NIE extensions are encouraged to provide 
-     * more specific subproperties of this one. It is advisable for 
-     * actual instances of DataObjects to use those specific subproperties. 
-     * Note to the developers: Please be aware of the distinction between 
-     * containment relation and provenance. The hasPart relation 
-     * models physical containment, an InformationElement (a nmo:Message) 
-     * can have a 'physical' part (an nfo:Attachment). Also, please 
-     * note the difference between physical containment (hasPart) 
-     * and logical containment (hasLogicalPart) the former has more 
-     * strict meaning. They may occur independently of each other. 
-     */
-    QList<QUrl> parts() const {
+    QList<QUrl> citedReferences() const {
         QList<QUrl> value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#hasPart", QUrl::StrictMode)))
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.example.com/nbib#citedReference", QUrl::StrictMode)))
             value << v.value<QUrl>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#hasPart. 
-     * Generic property used to express 'physical' containment relationships 
-     * between DataObjects. NIE extensions are encouraged to provide 
-     * more specific subproperties of this one. It is advisable for 
-     * actual instances of DataObjects to use those specific subproperties. 
-     * Note to the developers: Please be aware of the distinction between 
-     * containment relation and provenance. The hasPart relation 
-     * models physical containment, an InformationElement (a nmo:Message) 
-     * can have a 'physical' part (an nfo:Attachment). Also, please 
-     * note the difference between physical containment (hasPart) 
-     * and logical containment (hasLogicalPart) the former has more 
-     * strict meaning. They may occur independently of each other. 
+     * Set property http://www.example.com/nbib#citedReference. 
+     * Links all cited references from one publication. Good way to 
+     * find new sources to read 
      */
-    void setParts(const QList<QUrl>& value) {
+    void setCitedReferences(const QList<QUrl>& value) {
         QVariantList values;
         foreach(const QUrl& v, value)
             values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#hasPart", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#citedReference", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#hasPart. 
-     * Generic property used to express 'physical' containment relationships 
-     * between DataObjects. NIE extensions are encouraged to provide 
-     * more specific subproperties of this one. It is advisable for 
-     * actual instances of DataObjects to use those specific subproperties. 
-     * Note to the developers: Please be aware of the distinction between 
-     * containment relation and provenance. The hasPart relation 
-     * models physical containment, an InformationElement (a nmo:Message) 
-     * can have a 'physical' part (an nfo:Attachment). Also, please 
-     * note the difference between physical containment (hasPart) 
-     * and logical containment (hasLogicalPart) the former has more 
-     * strict meaning. They may occur independently of each other. 
+     * Add value to property http://www.example.com/nbib#citedReference. 
+     * Links all cited references from one publication. Good way to 
+     * find new sources to read 
      */
-    void addPart(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#hasPart", QUrl::StrictMode), value);
+    void addCitedReference(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#citedReference", QUrl::StrictMode), value);
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#publicationDate. 
-     * The date of the publication 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor. 
+     * An entity responsible for making contributions to the content 
+     * of the InformationElement. 
      */
-    QDateTime publicationDate() const {
-        QDateTime value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#publicationDate", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#publicationDate", QUrl::StrictMode)).first().value<QDateTime>();
+    QList<QUrl> contributors() const {
+        QList<QUrl> value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor", QUrl::StrictMode)))
+            value << v.value<QUrl>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#publicationDate. 
-     * The date of the publication 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor. 
+     * An entity responsible for making contributions to the content 
+     * of the InformationElement. 
      */
-    void setPublicationDate(const QDateTime& value) {
+    void setContributors(const QList<QUrl>& value) {
         QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#publicationDate", QUrl::StrictMode), values);
+        foreach(const QUrl& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#publicationDate. 
-     * The date of the publication 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor. 
+     * An entity responsible for making contributions to the content 
+     * of the InformationElement. 
      */
-    void addPublicationDate(const QDateTime& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#publicationDate", QUrl::StrictMode), value);
+    void addContributor(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#abstract. 
+     * An abstract of the work. 
+     */
+    QString abstract() const {
+        QString value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#abstract", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#abstract", QUrl::StrictMode)).first().value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#abstract. 
+     * An abstract of the work. 
+     */
+    void setAbstract(const QString& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#abstract", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#abstract. 
+     * An abstract of the work. 
+     */
+    void addAbstract(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#abstract", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isStoredAs. 
+     * Links the information element with the DataObject it is stored 
+     * in. 
+     */
+    QList<QUrl> isStoredAses() const {
+        QList<QUrl> value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isStoredAs", QUrl::StrictMode)))
+            value << v.value<QUrl>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isStoredAs. 
+     * Links the information element with the DataObject it is stored 
+     * in. 
+     */
+    void setIsStoredAses(const QList<QUrl>& value) {
+        QVariantList values;
+        foreach(const QUrl& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isStoredAs", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isStoredAs. 
+     * Links the information element with the DataObject it is stored 
+     * in. 
+     */
+    void addIsStoredAs(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isStoredAs", QUrl::StrictMode), value);
     }
 
     /**
@@ -881,102 +538,153 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#legal. 
-     * A common superproperty for all properties that point at legal 
-     * information about an Information Element 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#rearChannels. 
+     * Number of rear channels. 
      */
-    QStringList legals() const {
+    qint64 rearChannels() const {
+        qint64 value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#rearChannels", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#rearChannels", QUrl::StrictMode)).first().value<qint64>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#rearChannels. 
+     * Number of rear channels. 
+     */
+    void setRearChannels(const qint64& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#rearChannels", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#rearChannels. 
+     * Number of rear channels. 
+     */
+    void addRearChannels(const qint64& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#rearChannels", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     */
+    double lat() const {
+        double value;
+        if(contains(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode)).first().value<double>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     */
+    void setLat(const double& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     */
+    void addLat(const double& value) {
+        addProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels. 
+     * Number of Low Frequency Expansion (subwoofer) channels. 
+     */
+    qint64 lfeChannels() const {
+        qint64 value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode)).first().value<qint64>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels. 
+     * Number of Low Frequency Expansion (subwoofer) channels. 
+     */
+    void setLfeChannels(const qint64& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels. 
+     * Number of Low Frequency Expansion (subwoofer) channels. 
+     */
+    void addLfeChannels(const qint64& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#licenseType. 
+     * The type of the license. Possible values for this field may include 
+     * "GPL", "BSD", "Creative Commons" etc. 
+     */
+    QStringList licenseTypes() const {
         QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#legal", QUrl::StrictMode)))
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#licenseType", QUrl::StrictMode)))
             value << v.value<QString>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#legal. 
-     * A common superproperty for all properties that point at legal 
-     * information about an Information Element 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#licenseType. 
+     * The type of the license. Possible values for this field may include 
+     * "GPL", "BSD", "Creative Commons" etc. 
      */
-    void setLegals(const QStringList& value) {
+    void setLicenseTypes(const QStringList& value) {
         QVariantList values;
         foreach(const QString& v, value)
             values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#legal", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#licenseType", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#legal. 
-     * A common superproperty for all properties that point at legal 
-     * information about an Information Element 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#licenseType. 
+     * The type of the license. Possible values for this field may include 
+     * "GPL", "BSD", "Creative Commons" etc. 
      */
-    void addLegal(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#legal", QUrl::StrictMode), value);
+    void addLicenseType(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#licenseType", QUrl::StrictMode), value);
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#license. 
-     * Terms and intellectual property rights licensing conditions. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#depiction. 
+     * Relates an information element to an image which depicts said 
+     * element. 
      */
-    QStringList licenses() const {
-        QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#license", QUrl::StrictMode)))
-            value << v.value<QString>();
+    QList<QUrl> depictions() const {
+        QList<QUrl> value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#depiction", QUrl::StrictMode)))
+            value << v.value<QUrl>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#license. 
-     * Terms and intellectual property rights licensing conditions. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#depiction. 
+     * Relates an information element to an image which depicts said 
+     * element. 
      */
-    void setLicenses(const QStringList& value) {
+    void setDepictions(const QList<QUrl>& value) {
         QVariantList values;
-        foreach(const QString& v, value)
+        foreach(const QUrl& v, value)
             values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#license", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#depiction", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#license. 
-     * Terms and intellectual property rights licensing conditions. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#depiction. 
+     * Relates an information element to an image which depicts said 
+     * element. 
      */
-    void addLicense(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#license", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#isWriteable. 
-     * Defines if this information model can be modified by the user 
-     * of the system. This is usually false for imported ontologies 
-     * and true for the user's own PersonalInformationModel. 
-     */
-    QStringList isWriteables() const {
-        QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#isWriteable", QUrl::StrictMode)))
-            value << v.value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#isWriteable. 
-     * Defines if this information model can be modified by the user 
-     * of the system. This is usually false for imported ontologies 
-     * and true for the user's own PersonalInformationModel. 
-     */
-    void setIsWriteables(const QStringList& value) {
-        QVariantList values;
-        foreach(const QString& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#isWriteable", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#isWriteable. 
-     * Defines if this information model can be modified by the user 
-     * of the system. This is usually false for imported ontologies 
-     * and true for the user's own PersonalInformationModel. 
-     */
-    void addIsWriteable(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#isWriteable", QUrl::StrictMode), value);
+    void addDepiction(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#depiction", QUrl::StrictMode), value);
     }
 
     /**
@@ -1049,153 +757,47 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description. 
-     * A textual description of the resource. This property may be 
-     * used for any metadata fields that provide some meta-information 
-     * or comment about a resource in the form of a passage of text. This 
-     * property is not to be confused with nie:plainTextContent. 
-     * Use more specific subproperties wherever possible. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet. 
+     * Characterset in which the content of the InformationElement 
+     * was created. Example: ISO-8859-1, UTF-8. One of the registered 
+     * character sets at http://www.iana.org/assignments/character-sets. 
+     * This characterSet is used to interpret any textual parts of 
+     * the content. If more than one characterSet is used within one 
+     * data object, use more specific properties. 
      */
-    QStringList descriptions() const {
-        QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description", QUrl::StrictMode)))
-            value << v.value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description. 
-     * A textual description of the resource. This property may be 
-     * used for any metadata fields that provide some meta-information 
-     * or comment about a resource in the form of a passage of text. This 
-     * property is not to be confused with nie:plainTextContent. 
-     * Use more specific subproperties wherever possible. 
-     */
-    void setDescriptions(const QStringList& value) {
-        QVariantList values;
-        foreach(const QString& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description. 
-     * A textual description of the resource. This property may be 
-     * used for any metadata fields that provide some meta-information 
-     * or comment about a resource in the form of a passage of text. This 
-     * property is not to be confused with nie:plainTextContent. 
-     * Use more specific subproperties wherever possible. 
-     */
-    void addDescription(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#classRole. 
-     * Annotating abstract and concrete classes. Implementations 
-     * may offer the feature to hide abstract classes. By default, 
-     * classes are concrete. Classes can be declared abstract by setting 
-     * their classRole to abstract. Instances should not have an abstract 
-     * class as type (if not inferred). 
-     */
-    QUrl classRole() const {
-        QUrl value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#classRole", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#classRole", QUrl::StrictMode)).first().value<QUrl>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#classRole. 
-     * Annotating abstract and concrete classes. Implementations 
-     * may offer the feature to hide abstract classes. By default, 
-     * classes are concrete. Classes can be declared abstract by setting 
-     * their classRole to abstract. Instances should not have an abstract 
-     * class as type (if not inferred). 
-     */
-    void setClassRole(const QUrl& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#classRole", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#classRole. 
-     * Annotating abstract and concrete classes. Implementations 
-     * may offer the feature to hide abstract classes. By default, 
-     * classes are concrete. Classes can be declared abstract by setting 
-     * their classRole to abstract. Instances should not have an abstract 
-     * class as type (if not inferred). 
-     */
-    void addClassRole(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#classRole", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified. 
-     * The date of the last modification of the original content (not 
-     * its corresponding DataObject or local copy). Compare with 
-     * nie:lastModified. 
-     */
-    QDateTime contentLastModified() const {
-        QDateTime value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified", QUrl::StrictMode)).first().value<QDateTime>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified. 
-     * The date of the last modification of the original content (not 
-     * its corresponding DataObject or local copy). Compare with 
-     * nie:lastModified. 
-     */
-    void setContentLastModified(const QDateTime& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified. 
-     * The date of the last modification of the original content (not 
-     * its corresponding DataObject or local copy). Compare with 
-     * nie:lastModified. 
-     */
-    void addContentLastModified(const QDateTime& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#doi. 
-     * The Digital object identifier. see http://www.doi.org/ for 
-     * more information 
-     */
-    QString doi() const {
+    QString characterSet() const {
         QString value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#doi", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#doi", QUrl::StrictMode)).first().value<QString>();
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet", QUrl::StrictMode)).first().value<QString>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#doi. 
-     * The Digital object identifier. see http://www.doi.org/ for 
-     * more information 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet. 
+     * Characterset in which the content of the InformationElement 
+     * was created. Example: ISO-8859-1, UTF-8. One of the registered 
+     * character sets at http://www.iana.org/assignments/character-sets. 
+     * This characterSet is used to interpret any textual parts of 
+     * the content. If more than one characterSet is used within one 
+     * data object, use more specific properties. 
      */
-    void setDoi(const QString& value) {
+    void setCharacterSet(const QString& value) {
         QVariantList values;
         values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#doi", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#doi. 
-     * The Digital object identifier. see http://www.doi.org/ for 
-     * more information 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet. 
+     * Characterset in which the content of the InformationElement 
+     * was created. Example: ISO-8859-1, UTF-8. One of the registered 
+     * character sets at http://www.iana.org/assignments/character-sets. 
+     * This characterSet is used to interpret any textual parts of 
+     * the content. If more than one characterSet is used within one 
+     * data object, use more specific properties. 
      */
-    void addDoi(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#doi", QUrl::StrictMode), value);
+    void addCharacterSet(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet", QUrl::StrictMode), value);
     }
 
     /**
@@ -1229,6 +831,452 @@ public:
      */
     void addDepends(const QUrl& value) {
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#depends", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#version. 
+     * The current version of the given data object. Exact semantics 
+     * is unspecified at this level. Use more specific subproperties 
+     * if needed. 
+     */
+    QStringList versions() const {
+        QStringList value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#version", QUrl::StrictMode)))
+            value << v.value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#version. 
+     * The current version of the given data object. Exact semantics 
+     * is unspecified at this level. Use more specific subproperties 
+     * if needed. 
+     */
+    void setVersions(const QStringList& value) {
+        QVariantList values;
+        foreach(const QString& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#version", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#version. 
+     * The current version of the given data object. Exact semantics 
+     * is unspecified at this level. Use more specific subproperties 
+     * if needed. 
+     */
+    void addVersion(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#version", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType. 
+     * The mime type of the resource, if available. Example: "text/plain". 
+     * See http://www.iana.org/assignments/media-types/. This 
+     * property applies to data objects that can be described with 
+     * one mime type. In cases where the object as a whole has one mime 
+     * type, while it's parts have other mime types, or there is no mime 
+     * type that can be applied to the object as a whole, but some parts 
+     * of the content have mime types - use more specific properties. 
+     */
+    QString mimeType() const {
+        QString value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType", QUrl::StrictMode)).first().value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType. 
+     * The mime type of the resource, if available. Example: "text/plain". 
+     * See http://www.iana.org/assignments/media-types/. This 
+     * property applies to data objects that can be described with 
+     * one mime type. In cases where the object as a whole has one mime 
+     * type, while it's parts have other mime types, or there is no mime 
+     * type that can be applied to the object as a whole, but some parts 
+     * of the content have mime types - use more specific properties. 
+     */
+    void setMimeType(const QString& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType. 
+     * The mime type of the resource, if available. Example: "text/plain". 
+     * See http://www.iana.org/assignments/media-types/. This 
+     * property applies to data objects that can be described with 
+     * one mime type. In cases where the object as a whole has one mime 
+     * type, while it's parts have other mime types, or there is no mime 
+     * type that can be applied to the object as a whole, but some parts 
+     * of the content have mime types - use more specific properties. 
+     */
+    void addMimeType(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sideChannels. 
+     * Number of side channels 
+     */
+    qint64 sideChannels() const {
+        qint64 value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sideChannels", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sideChannels", QUrl::StrictMode)).first().value<qint64>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sideChannels. 
+     * Number of side channels 
+     */
+    void setSideChannels(const qint64& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sideChannels", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sideChannels. 
+     * Number of side channels 
+     */
+    void addSideChannels(const qint64& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sideChannels", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#rootElementOf. 
+     * DataObjects extracted from a single data source are organized 
+     * into a containment tree. This property links the root of that 
+     * tree with the datasource it has been extracted from 
+     */
+    QList<QUrl> rootElementOfs() const {
+        QList<QUrl> value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#rootElementOf", QUrl::StrictMode)))
+            value << v.value<QUrl>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#rootElementOf. 
+     * DataObjects extracted from a single data source are organized 
+     * into a containment tree. This property links the root of that 
+     * tree with the datasource it has been extracted from 
+     */
+    void setRootElementOfs(const QList<QUrl>& value) {
+        QVariantList values;
+        foreach(const QUrl& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#rootElementOf", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#rootElementOf. 
+     * DataObjects extracted from a single data source are organized 
+     * into a containment tree. This property links the root of that 
+     * tree with the datasource it has been extracted from 
+     */
+    void addRootElementOf(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#rootElementOf", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#informationElementDate. 
+     * A point or period of time associated with an event in the lifecycle 
+     * of an Information Element. A common superproperty for all date-related 
+     * properties of InformationElements in the NIE Framework. 
+     */
+    QList<QDateTime> informationElementDates() const {
+        QList<QDateTime> value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#informationElementDate", QUrl::StrictMode)))
+            value << v.value<QDateTime>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#informationElementDate. 
+     * A point or period of time associated with an event in the lifecycle 
+     * of an Information Element. A common superproperty for all date-related 
+     * properties of InformationElements in the NIE Framework. 
+     */
+    void setInformationElementDates(const QList<QDateTime>& value) {
+        QVariantList values;
+        foreach(const QDateTime& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#informationElementDate", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#informationElementDate. 
+     * A point or period of time associated with an event in the lifecycle 
+     * of an Information Element. A common superproperty for all date-related 
+     * properties of InformationElements in the NIE Framework. 
+     */
+    void addInformationElementDate(const QDateTime& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#informationElementDate", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#license. 
+     * Terms and intellectual property rights licensing conditions. 
+     */
+    QStringList licenses() const {
+        QStringList value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#license", QUrl::StrictMode)))
+            value << v.value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#license. 
+     * Terms and intellectual property rights licensing conditions. 
+     */
+    void setLicenses(const QStringList& value) {
+        QVariantList values;
+        foreach(const QString& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#license", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#license. 
+     * Terms and intellectual property rights licensing conditions. 
+     */
+    void addLicense(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#license", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#encryptionStatus. 
+     * The status of the encryption of the InformationElement. 
+     */
+    QUrl encryptionStatus() const {
+        QUrl value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#encryptionStatus", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#encryptionStatus", QUrl::StrictMode)).first().value<QUrl>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#encryptionStatus. 
+     * The status of the encryption of the InformationElement. 
+     */
+    void setEncryptionStatus(const QUrl& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#encryptionStatus", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#encryptionStatus. 
+     * The status of the encryption of the InformationElement. 
+     */
+    void addEncryptionStatus(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#encryptionStatus", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize. 
+     * The size of the content. This property can be used whenever the 
+     * size of the content of an InformationElement differs from the 
+     * size of the DataObject. (e.g. because of compression, encoding, 
+     * encryption or any other representation issues). The contentSize 
+     * in expressed in bytes. 
+     */
+    qint64 contentSize() const {
+        qint64 value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize", QUrl::StrictMode)).first().value<qint64>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize. 
+     * The size of the content. This property can be used whenever the 
+     * size of the content of an InformationElement differs from the 
+     * size of the DataObject. (e.g. because of compression, encoding, 
+     * encryption or any other representation issues). The contentSize 
+     * in expressed in bytes. 
+     */
+    void setContentSize(const qint64& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize. 
+     * The size of the content. This property can be used whenever the 
+     * size of the content of an InformationElement differs from the 
+     * size of the DataObject. (e.g. because of compression, encoding, 
+     * encryption or any other representation issues). The contentSize 
+     * in expressed in bytes. 
+     */
+    void addContentSize(const qint64& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated. 
+     * The date of the content creation. This may not necessarily be 
+     * equal to the date when the DataObject (i.e. the physical representation) 
+     * itself was created. Compare with nie:created property. 
+     */
+    QDateTime contentCreated() const {
+        QDateTime value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated", QUrl::StrictMode)).first().value<QDateTime>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated. 
+     * The date of the content creation. This may not necessarily be 
+     * equal to the date when the DataObject (i.e. the physical representation) 
+     * itself was created. Compare with nie:created property. 
+     */
+    void setContentCreated(const QDateTime& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated. 
+     * The date of the content creation. This may not necessarily be 
+     * equal to the date when the DataObject (i.e. the physical representation) 
+     * itself was created. Compare with nie:created property. 
+     */
+    void addContentCreated(const QDateTime& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#publicationDate. 
+     * The date of the publication 
+     */
+    QDateTime publicationDate() const {
+        QDateTime value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#publicationDate", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#publicationDate", QUrl::StrictMode)).first().value<QDateTime>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#publicationDate. 
+     * The date of the publication 
+     */
+    void setPublicationDate(const QDateTime& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#publicationDate", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#publicationDate. 
+     * The date of the publication 
+     */
+    void addPublicationDate(const QDateTime& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#publicationDate", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#legal. 
+     * A common superproperty for all properties that point at legal 
+     * information about an Information Element 
+     */
+    QStringList legals() const {
+        QStringList value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#legal", QUrl::StrictMode)))
+            value << v.value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#legal. 
+     * A common superproperty for all properties that point at legal 
+     * information about an Information Element 
+     */
+    void setLegals(const QStringList& value) {
+        QVariantList values;
+        foreach(const QString& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#legal", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#legal. 
+     * A common superproperty for all properties that point at legal 
+     * information about an Information Element 
+     */
+    void addLegal(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#legal", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword. 
+     * Adapted DublinCore: The topic of the content of the resource, 
+     * as keyword. No sentences here. Recommended best practice is 
+     * to select a value from a controlled vocabulary or formal classification 
+     * scheme. 
+     */
+    QStringList keywords() const {
+        QStringList value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword", QUrl::StrictMode)))
+            value << v.value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword. 
+     * Adapted DublinCore: The topic of the content of the resource, 
+     * as keyword. No sentences here. Recommended best practice is 
+     * to select a value from a controlled vocabulary or formal classification 
+     * scheme. 
+     */
+    void setKeywords(const QStringList& value) {
+        QVariantList values;
+        foreach(const QString& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword. 
+     * Adapted DublinCore: The topic of the content of the resource, 
+     * as keyword. No sentences here. Recommended best practice is 
+     * to select a value from a controlled vocabulary or formal classification 
+     * scheme. 
+     */
+    void addKeyword(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.w3.org/2003/01/geo/wgs84_pos#alt. 
+     */
+    double alt() const {
+        double value;
+        if(contains(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#alt", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#alt", QUrl::StrictMode)).first().value<double>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.w3.org/2003/01/geo/wgs84_pos#alt. 
+     */
+    void setAlt(const double& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#alt", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.w3.org/2003/01/geo/wgs84_pos#alt. 
+     */
+    void addAlt(const double& value) {
+        addProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#alt", QUrl::StrictMode), value);
     }
 
     /**
@@ -1277,47 +1325,6 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize. 
-     * The size of the content. This property can be used whenever the 
-     * size of the content of an InformationElement differs from the 
-     * size of the DataObject. (e.g. because of compression, encoding, 
-     * encryption or any other representation issues). The contentSize 
-     * in expressed in bytes. 
-     */
-    qint64 contentSize() const {
-        qint64 value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize", QUrl::StrictMode)).first().value<qint64>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize. 
-     * The size of the content. This property can be used whenever the 
-     * size of the content of an InformationElement differs from the 
-     * size of the DataObject. (e.g. because of compression, encoding, 
-     * encryption or any other representation issues). The contentSize 
-     * in expressed in bytes. 
-     */
-    void setContentSize(const qint64& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize. 
-     * The size of the content. This property can be used whenever the 
-     * size of the content of an InformationElement differs from the 
-     * size of the DataObject. (e.g. because of compression, encoding, 
-     * encryption or any other representation issues). The contentSize 
-     * in expressed in bytes. 
-     */
-    void addContentSize(const qint64& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize", QUrl::StrictMode), value);
-    }
-
-    /**
      * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#generator. 
      * Software used to "generate" the contents. E.g. a word processor 
      * name. 
@@ -1351,125 +1358,47 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#links. 
-     * A linking relation. A piece of content links/mentions a piece 
-     * of data 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent. 
+     * Plain-text representation of the content of a InformationElement 
+     * with all markup removed. The main purpose of this property is 
+     * full-text indexing and search. Its exact content is considered 
+     * application-specific. The user can make no assumptions about 
+     * what is and what is not contained within. Applications should 
+     * use more specific properties wherever possible. 
      */
-    QList<QUrl> linkses() const {
-        QList<QUrl> value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#links", QUrl::StrictMode)))
-            value << v.value<QUrl>();
+    QString plainTextContent() const {
+        QString value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent", QUrl::StrictMode)).first().value<QString>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#links. 
-     * A linking relation. A piece of content links/mentions a piece 
-     * of data 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent. 
+     * Plain-text representation of the content of a InformationElement 
+     * with all markup removed. The main purpose of this property is 
+     * full-text indexing and search. Its exact content is considered 
+     * application-specific. The user can make no assumptions about 
+     * what is and what is not contained within. Applications should 
+     * use more specific properties wherever possible. 
      */
-    void setLinkses(const QList<QUrl>& value) {
-        QVariantList values;
-        foreach(const QUrl& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#links", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#links. 
-     * A linking relation. A piece of content links/mentions a piece 
-     * of data 
-     */
-    void addLinks(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#links", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#editor. 
-     * The name(s) of the editor(s). 
-     */
-    QList<QUrl> editors() const {
-        QList<QUrl> value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#editor", QUrl::StrictMode)))
-            value << v.value<QUrl>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#editor. 
-     * The name(s) of the editor(s). 
-     */
-    void setEditors(const QList<QUrl>& value) {
-        QVariantList values;
-        foreach(const QUrl& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#editor", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#editor. 
-     * The name(s) of the editor(s). 
-     */
-    void addEditor(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#editor", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isStoredAs. 
-     * Links the information element with the DataObject it is stored 
-     * in. 
-     */
-    QList<QUrl> isStoredAses() const {
-        QList<QUrl> value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isStoredAs", QUrl::StrictMode)))
-            value << v.value<QUrl>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isStoredAs. 
-     * Links the information element with the DataObject it is stored 
-     * in. 
-     */
-    void setIsStoredAses(const QList<QUrl>& value) {
-        QVariantList values;
-        foreach(const QUrl& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isStoredAs", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isStoredAs. 
-     * Links the information element with the DataObject it is stored 
-     * in. 
-     */
-    void addIsStoredAs(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isStoredAs", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
-     */
-    double lat() const {
-        double value;
-        if(contains(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode)).first().value<double>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
-     */
-    void setLat(const double& value) {
+    void setPlainTextContent(const QString& value) {
         QVariantList values;
         values << value;
-        setProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent. 
+     * Plain-text representation of the content of a InformationElement 
+     * with all markup removed. The main purpose of this property is 
+     * full-text indexing and search. Its exact content is considered 
+     * application-specific. The user can make no assumptions about 
+     * what is and what is not contained within. Applications should 
+     * use more specific properties wherever possible. 
      */
-    void addLat(const double& value) {
-        addProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode), value);
+    void addPlainTextContent(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent", QUrl::StrictMode), value);
     }
 
     /**
@@ -1500,131 +1429,6 @@ public:
      */
     void addPublisher(const QUrl& value) {
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#publisher", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.w3.org/2003/01/geo/wgs84_pos#alt. 
-     */
-    double alt() const {
-        double value;
-        if(contains(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#alt", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#alt", QUrl::StrictMode)).first().value<double>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.w3.org/2003/01/geo/wgs84_pos#alt. 
-     */
-    void setAlt(const double& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#alt", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.w3.org/2003/01/geo/wgs84_pos#alt. 
-     */
-    void addAlt(const double& value) {
-        addProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#alt", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright. 
-     * Content copyright 
-     */
-    QStringList copyrights() const {
-        QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright", QUrl::StrictMode)))
-            value << v.value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright. 
-     * Content copyright 
-     */
-    void setCopyrights(const QStringList& value) {
-        QVariantList values;
-        foreach(const QString& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright. 
-     * Content copyright 
-     */
-    void addCopyright(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer. 
-     * A disclaimer 
-     */
-    QStringList disclaimers() const {
-        QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer", QUrl::StrictMode)))
-            value << v.value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer. 
-     * A disclaimer 
-     */
-    void setDisclaimers(const QStringList& value) {
-        QVariantList values;
-        foreach(const QString& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer. 
-     * A disclaimer 
-     */
-    void addDisclaimer(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword. 
-     * Adapted DublinCore: The topic of the content of the resource, 
-     * as keyword. No sentences here. Recommended best practice is 
-     * to select a value from a controlled vocabulary or formal classification 
-     * scheme. 
-     */
-    QStringList keywords() const {
-        QStringList value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword", QUrl::StrictMode)))
-            value << v.value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword. 
-     * Adapted DublinCore: The topic of the content of the resource, 
-     * as keyword. No sentences here. Recommended best practice is 
-     * to select a value from a controlled vocabulary or formal classification 
-     * scheme. 
-     */
-    void setKeywords(const QStringList& value) {
-        QVariantList values;
-        foreach(const QString& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword. 
-     * Adapted DublinCore: The topic of the content of the resource, 
-     * as keyword. No sentences here. Recommended best practice is 
-     * to select a value from a controlled vocabulary or formal classification 
-     * scheme. 
-     */
-    void addKeyword(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword", QUrl::StrictMode), value);
     }
 
     /**
@@ -1664,145 +1468,344 @@ public:
     }
 
     /**
-     * Get property http://www.example.com/nbib#citedReference. 
-     * Links all cited references from one publication. Good way to 
-     * find new sources to read 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description. 
+     * A textual description of the resource. This property may be 
+     * used for any metadata fields that provide some meta-information 
+     * or comment about a resource in the form of a passage of text. This 
+     * property is not to be confused with nie:plainTextContent. 
+     * Use more specific subproperties wherever possible. 
      */
-    QList<QUrl> citedReferences() const {
-        QList<QUrl> value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.example.com/nbib#citedReference", QUrl::StrictMode)))
-            value << v.value<QUrl>();
+    QStringList descriptions() const {
+        QStringList value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description", QUrl::StrictMode)))
+            value << v.value<QString>();
         return value;
     }
 
     /**
-     * Set property http://www.example.com/nbib#citedReference. 
-     * Links all cited references from one publication. Good way to 
-     * find new sources to read 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description. 
+     * A textual description of the resource. This property may be 
+     * used for any metadata fields that provide some meta-information 
+     * or comment about a resource in the form of a passage of text. This 
+     * property is not to be confused with nie:plainTextContent. 
+     * Use more specific subproperties wherever possible. 
      */
-    void setCitedReferences(const QList<QUrl>& value) {
+    void setDescriptions(const QStringList& value) {
         QVariantList values;
-        foreach(const QUrl& v, value)
+        foreach(const QString& v, value)
             values << v;
-        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#citedReference", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.example.com/nbib#citedReference. 
-     * Links all cited references from one publication. Good way to 
-     * find new sources to read 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description. 
+     * A textual description of the resource. This property may be 
+     * used for any metadata fields that provide some meta-information 
+     * or comment about a resource in the form of a passage of text. This 
+     * property is not to be confused with nie:plainTextContent. 
+     * Use more specific subproperties wherever possible. 
      */
-    void addCitedReference(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#citedReference", QUrl::StrictMode), value);
+    void addDescription(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description", QUrl::StrictMode), value);
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor. 
-     * An entity responsible for making contributions to the content 
-     * of the InformationElement. 
+     * Get property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
      */
-    QList<QUrl> contributors() const {
-        QList<QUrl> value;
-        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor", QUrl::StrictMode)))
-            value << v.value<QUrl>();
+    double longGeo() const {
+        double value;
+        if(contains(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode)).first().value<double>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor. 
-     * An entity responsible for making contributions to the content 
-     * of the InformationElement. 
+     * Set property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
      */
-    void setContributors(const QList<QUrl>& value) {
-        QVariantList values;
-        foreach(const QUrl& v, value)
-            values << v;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor. 
-     * An entity responsible for making contributions to the content 
-     * of the InformationElement. 
-     */
-    void addContributor(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frontChannels. 
-     * Number of front channels. 
-     */
-    qint64 frontChannels() const {
-        qint64 value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frontChannels", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frontChannels", QUrl::StrictMode)).first().value<qint64>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frontChannels. 
-     * Number of front channels. 
-     */
-    void setFrontChannels(const qint64& value) {
+    void setLong(const double& value) {
         QVariantList values;
         values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frontChannels", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frontChannels. 
-     * Number of front channels. 
+     * Add value to property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
      */
-    void addFrontChannels(const qint64& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frontChannels", QUrl::StrictMode), value);
+    void addLong(const double& value) {
+        addProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode), value);
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType. 
-     * The mime type of the resource, if available. Example: "text/plain". 
-     * See http://www.iana.org/assignments/media-types/. This 
-     * property applies to data objects that can be described with 
-     * one mime type. In cases where the object as a whole has one mime 
-     * type, while it's parts have other mime types, or there is no mime 
-     * type that can be applied to the object as a whole, but some parts 
-     * of the content have mime types - use more specific properties. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#hasPart. 
+     * Generic property used to express 'physical' containment relationships 
+     * between DataObjects. NIE extensions are encouraged to provide 
+     * more specific subproperties of this one. It is advisable for 
+     * actual instances of DataObjects to use those specific subproperties. 
+     * Note to the developers: Please be aware of the distinction between 
+     * containment relation and provenance. The hasPart relation 
+     * models physical containment, an InformationElement (a nmo:Message) 
+     * can have a 'physical' part (an nfo:Attachment). Also, please 
+     * note the difference between physical containment (hasPart) 
+     * and logical containment (hasLogicalPart) the former has more 
+     * strict meaning. They may occur independently of each other. 
      */
-    QString mimeType() const {
+    QList<QUrl> parts() const {
+        QList<QUrl> value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#hasPart", QUrl::StrictMode)))
+            value << v.value<QUrl>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#hasPart. 
+     * Generic property used to express 'physical' containment relationships 
+     * between DataObjects. NIE extensions are encouraged to provide 
+     * more specific subproperties of this one. It is advisable for 
+     * actual instances of DataObjects to use those specific subproperties. 
+     * Note to the developers: Please be aware of the distinction between 
+     * containment relation and provenance. The hasPart relation 
+     * models physical containment, an InformationElement (a nmo:Message) 
+     * can have a 'physical' part (an nfo:Attachment). Also, please 
+     * note the difference between physical containment (hasPart) 
+     * and logical containment (hasLogicalPart) the former has more 
+     * strict meaning. They may occur independently of each other. 
+     */
+    void setParts(const QList<QUrl>& value) {
+        QVariantList values;
+        foreach(const QUrl& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#hasPart", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#hasPart. 
+     * Generic property used to express 'physical' containment relationships 
+     * between DataObjects. NIE extensions are encouraged to provide 
+     * more specific subproperties of this one. It is advisable for 
+     * actual instances of DataObjects to use those specific subproperties. 
+     * Note to the developers: Please be aware of the distinction between 
+     * containment relation and provenance. The hasPart relation 
+     * models physical containment, an InformationElement (a nmo:Message) 
+     * can have a 'physical' part (an nfo:Attachment). Also, please 
+     * note the difference between physical containment (hasPart) 
+     * and logical containment (hasLogicalPart) the former has more 
+     * strict meaning. They may occur independently of each other. 
+     */
+    void addPart(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#hasPart", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#language. 
+     * Language the InformationElement is expressed in. This property 
+     * applies to the data object in its entirety. If the data object 
+     * is divisible into parts expressed in multiple languages - more 
+     * specific properties should be used. Users are encouraged to 
+     * use the two-letter code specified in the RFC 3066 
+     */
+    QString language() const {
         QString value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType", QUrl::StrictMode)).first().value<QString>();
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#language", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#language", QUrl::StrictMode)).first().value<QString>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType. 
-     * The mime type of the resource, if available. Example: "text/plain". 
-     * See http://www.iana.org/assignments/media-types/. This 
-     * property applies to data objects that can be described with 
-     * one mime type. In cases where the object as a whole has one mime 
-     * type, while it's parts have other mime types, or there is no mime 
-     * type that can be applied to the object as a whole, but some parts 
-     * of the content have mime types - use more specific properties. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#language. 
+     * Language the InformationElement is expressed in. This property 
+     * applies to the data object in its entirety. If the data object 
+     * is divisible into parts expressed in multiple languages - more 
+     * specific properties should be used. Users are encouraged to 
+     * use the two-letter code specified in the RFC 3066 
      */
-    void setMimeType(const QString& value) {
+    void setLanguage(const QString& value) {
         QVariantList values;
         values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#language", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType. 
-     * The mime type of the resource, if available. Example: "text/plain". 
-     * See http://www.iana.org/assignments/media-types/. This 
-     * property applies to data objects that can be described with 
-     * one mime type. In cases where the object as a whole has one mime 
-     * type, while it's parts have other mime types, or there is no mime 
-     * type that can be applied to the object as a whole, but some parts 
-     * of the content have mime types - use more specific properties. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#language. 
+     * Language the InformationElement is expressed in. This property 
+     * applies to the data object in its entirety. If the data object 
+     * is divisible into parts expressed in multiple languages - more 
+     * specific properties should be used. Users are encouraged to 
+     * use the two-letter code specified in the RFC 3066 
      */
-    void addMimeType(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType", QUrl::StrictMode), value);
+    void addLanguage(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#language", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer. 
+     * A disclaimer 
+     */
+    QStringList disclaimers() const {
+        QStringList value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer", QUrl::StrictMode)))
+            value << v.value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer. 
+     * A disclaimer 
+     */
+    void setDisclaimers(const QStringList& value) {
+        QVariantList values;
+        foreach(const QString& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer. 
+     * A disclaimer 
+     */
+    void addDisclaimer(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#isWriteable. 
+     * Defines if this information model can be modified by the user 
+     * of the system. This is usually false for imported ontologies 
+     * and true for the user's own PersonalInformationModel. 
+     */
+    QStringList isWriteables() const {
+        QStringList value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#isWriteable", QUrl::StrictMode)))
+            value << v.value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#isWriteable. 
+     * Defines if this information model can be modified by the user 
+     * of the system. This is usually false for imported ontologies 
+     * and true for the user's own PersonalInformationModel. 
+     */
+    void setIsWriteables(const QStringList& value) {
+        QVariantList values;
+        foreach(const QString& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#isWriteable", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#isWriteable. 
+     * Defines if this information model can be modified by the user 
+     * of the system. This is usually false for imported ontologies 
+     * and true for the user's own PersonalInformationModel. 
+     */
+    void addIsWriteable(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#isWriteable", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified. 
+     * The date of the last modification of the original content (not 
+     * its corresponding DataObject or local copy). Compare with 
+     * nie:lastModified. 
+     */
+    QDateTime contentLastModified() const {
+        QDateTime value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified", QUrl::StrictMode)).first().value<QDateTime>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified. 
+     * The date of the last modification of the original content (not 
+     * its corresponding DataObject or local copy). Compare with 
+     * nie:lastModified. 
+     */
+    void setContentLastModified(const QDateTime& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified. 
+     * The date of the last modification of the original content (not 
+     * its corresponding DataObject or local copy). Compare with 
+     * nie:lastModified. 
+     */
+    void addContentLastModified(const QDateTime& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment. 
+     * A user comment about an InformationElement. 
+     */
+    QStringList comments() const {
+        QStringList value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment", QUrl::StrictMode)))
+            value << v.value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment. 
+     * A user comment about an InformationElement. 
+     */
+    void setComments(const QStringList& value) {
+        QVariantList values;
+        foreach(const QString& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment. 
+     * A user comment about an InformationElement. 
+     */
+    void addComment(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#classRole. 
+     * Annotating abstract and concrete classes. Implementations 
+     * may offer the feature to hide abstract classes. By default, 
+     * classes are concrete. Classes can be declared abstract by setting 
+     * their classRole to abstract. Instances should not have an abstract 
+     * class as type (if not inferred). 
+     */
+    QUrl classRole() const {
+        QUrl value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#classRole", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#classRole", QUrl::StrictMode)).first().value<QUrl>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#classRole. 
+     * Annotating abstract and concrete classes. Implementations 
+     * may offer the feature to hide abstract classes. By default, 
+     * classes are concrete. Classes can be declared abstract by setting 
+     * their classRole to abstract. Instances should not have an abstract 
+     * class as type (if not inferred). 
+     */
+    void setClassRole(const QUrl& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#classRole", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#classRole. 
+     * Annotating abstract and concrete classes. Implementations 
+     * may offer the feature to hide abstract classes. By default, 
+     * classes are concrete. Classes can be declared abstract by setting 
+     * their classRole to abstract. Instances should not have an abstract 
+     * class as type (if not inferred). 
+     */
+    void addClassRole(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#classRole", QUrl::StrictMode), value);
     }
 
 protected:

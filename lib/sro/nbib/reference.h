@@ -35,6 +35,35 @@ public:
     }
 
     /**
+     * Get property http://www.example.com/nbib#citeKey. Used 
+     * to identify the reference. 
+     */
+    QString citeKey() const {
+        QString value;
+        if(contains(QUrl::fromEncoded("http://www.example.com/nbib#citeKey", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.example.com/nbib#citeKey", QUrl::StrictMode)).first().value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.example.com/nbib#citeKey. Used 
+     * to identify the reference. 
+     */
+    void setCiteKey(const QString& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#citeKey", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.example.com/nbib#citeKey. 
+     * Used to identify the reference. 
+     */
+    void addCiteKey(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#citeKey", QUrl::StrictMode), value);
+    }
+
+    /**
      * Get property http://www.example.com/nbib#referencedPart. 
      * The specific part of the document of a reference. Used to reference 
      * a chapter or quote a small portion of a publication 
@@ -67,64 +96,6 @@ public:
     }
 
     /**
-     * Get property http://www.example.com/nbib#publication. 
-     * The publication used for this reference 
-     */
-    QUrl publication() const {
-        QUrl value;
-        if(contains(QUrl::fromEncoded("http://www.example.com/nbib#publication", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.example.com/nbib#publication", QUrl::StrictMode)).first().value<QUrl>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.example.com/nbib#publication. 
-     * The publication used for this reference 
-     */
-    void setPublication(const QUrl& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#publication", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.example.com/nbib#publication. 
-     * The publication used for this reference 
-     */
-    void addPublication(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#publication", QUrl::StrictMode), value);
-    }
-
-    /**
-     * Get property http://www.example.com/nbib#citeKey. Used 
-     * to identify the reference. 
-     */
-    QString citeKey() const {
-        QString value;
-        if(contains(QUrl::fromEncoded("http://www.example.com/nbib#citeKey", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.example.com/nbib#citeKey", QUrl::StrictMode)).first().value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.example.com/nbib#citeKey. Used 
-     * to identify the reference. 
-     */
-    void setCiteKey(const QString& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#citeKey", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.example.com/nbib#citeKey. 
-     * Used to identify the reference. 
-     */
-    void addCiteKey(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#citeKey", QUrl::StrictMode), value);
-    }
-
-    /**
      * Get property http://www.example.com/nbib#pages. Page numbers, 
      * separated either by commas or double-hyphens. 
      */
@@ -151,6 +122,35 @@ public:
      */
     void addPages(const QString& value) {
         addProperty(QUrl::fromEncoded("http://www.example.com/nbib#pages", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.example.com/nbib#publication. 
+     * The publication used for this reference 
+     */
+    QUrl publication() const {
+        QUrl value;
+        if(contains(QUrl::fromEncoded("http://www.example.com/nbib#publication", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.example.com/nbib#publication", QUrl::StrictMode)).first().value<QUrl>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.example.com/nbib#publication. 
+     * The publication used for this reference 
+     */
+    void setPublication(const QUrl& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#publication", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.example.com/nbib#publication. 
+     * The publication used for this reference 
+     */
+    void addPublication(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#publication", QUrl::StrictMode), value);
     }
 
 protected:

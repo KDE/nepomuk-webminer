@@ -35,35 +35,6 @@ public:
     }
 
     /**
-     * Get property http://www.example.com/nbib#codeOfLaw. The 
-     * code of law the legislation is contained in 
-     */
-    QUrl codeOfLaw() const {
-        QUrl value;
-        if(contains(QUrl::fromEncoded("http://www.example.com/nbib#codeOfLaw", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.example.com/nbib#codeOfLaw", QUrl::StrictMode)).first().value<QUrl>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.example.com/nbib#codeOfLaw. The 
-     * code of law the legislation is contained in 
-     */
-    void setCodeOfLaw(const QUrl& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#codeOfLaw", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.example.com/nbib#codeOfLaw. 
-     * The code of law the legislation is contained in 
-     */
-    void addCodeOfLaw(const QUrl& value) {
-        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#codeOfLaw", QUrl::StrictMode), value);
-    }
-
-    /**
      * Get property http://www.example.com/nbib#coSponsor. The 
      * co-sponsor [of a bill] 
      */
@@ -91,6 +62,35 @@ public:
      */
     void addCoSponsor(const QUrl& value) {
         addProperty(QUrl::fromEncoded("http://www.example.com/nbib#coSponsor", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.example.com/nbib#codeOfLaw. The 
+     * code of law the legislation is contained in 
+     */
+    QUrl codeOfLaw() const {
+        QUrl value;
+        if(contains(QUrl::fromEncoded("http://www.example.com/nbib#codeOfLaw", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.example.com/nbib#codeOfLaw", QUrl::StrictMode)).first().value<QUrl>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.example.com/nbib#codeOfLaw. The 
+     * code of law the legislation is contained in 
+     */
+    void setCodeOfLaw(const QUrl& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#codeOfLaw", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.example.com/nbib#codeOfLaw. 
+     * The code of law the legislation is contained in 
+     */
+    void addCodeOfLaw(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#codeOfLaw", QUrl::StrictMode), value);
     }
 
 protected:
