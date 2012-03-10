@@ -99,6 +99,23 @@ QList<Nepomuk::NCO::PersonContact> NepomukMetaDataExtractor::Pipe::NepomukPipe::
     return resultList;
 }
 
+
+QList<Nepomuk::NCO::OrganizationContact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createOrganizationContacts(const QString & listOfOrganizations) const
+{
+    QList<Nepomuk::NCO::OrganizationContact> resultList;
+    QList<Name> personList = splitPersonList( listOfOrganizations );
+
+    foreach(const Name &person, personList) {
+        // create new contact resource, duplicates will be merged by the DMS later on
+        Nepomuk::NCO::OrganizationContact organizationResource;
+        organizationResource.setFullname( person.full );
+
+        resultList << organizationResource;
+    }
+
+    return resultList;
+}
+
 QList<NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name> NepomukMetaDataExtractor::Pipe::NepomukPipe::splitPersonList(const QString & person) const
 {
     // split list of names into single Strings

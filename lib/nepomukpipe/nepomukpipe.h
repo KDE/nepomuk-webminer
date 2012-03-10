@@ -26,6 +26,7 @@
 #include <KDE/KUrl>
 
 #include "nco/personcontact.h"
+#include "nco/organizationcontact.h"
 
 class KJob;
 
@@ -55,6 +56,7 @@ namespace NepomukMetaDataExtractor {
             KUrl downloadBanner(const QUrl &bannerUrl, const QString& additionalLocationInfo ) const;
             QDateTime createDateTime(const QString &dateString) const;
             QList<Nepomuk::NCO::PersonContact> createPersonContacts(const QString & listOfPersonNames) const;
+            QList<Nepomuk::NCO::OrganizationContact> createOrganizationContacts(const QString & listOfOrganizations) const;
 
         private slots:
             void slotSaveToNepomukDone(KJob *job);

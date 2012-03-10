@@ -65,6 +65,15 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
         graph << imdbRes;
     }
 
+    QString genreList = tvshowEntry.value(QLatin1String("genre")).toString();
+    QStringList genresSplitted = genreList.split(';');
+    QStringList genres;
+
+    foreach(const QString &genre, genresSplitted) {
+        QString gen = genre.trimmed();
+        if(!gen.isEmpty())
+            genres << gen;
+    }
 
     QString showBannerUrl = tvshowEntry.value(QLatin1String("banner")).toString();
     if( !showBannerUrl.isEmpty() ) {
@@ -128,6 +137,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
             QVariantMap episodeInfo = episode.toMap();
 
             Nepomuk::NMM::TVShow episodeRes = createEpisode(episodeInfo, seasonRes );
+            episodeRes.setGenres( genres );
 
             QString episodeBannerUrl = episodeInfo.value(QLatin1String("banner")).toString();
             if( !episodeBannerUrl.isEmpty() ) {

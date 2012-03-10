@@ -58,9 +58,6 @@ namespace NepomukMetaDataExtractor {
               */
             void pipeImport(const QVariantMap &bibEntry);
 
-        private Q_SLOTS:
-            void slotSaveToNepomukDone(KJob *job);
-
         private:
             /**
               * @return QPair with first = publicationUr and second = referenceUri
@@ -117,30 +114,6 @@ namespace NepomukMetaDataExtractor {
               */
             void addContact(const QString &contentValue, Nepomuk::SimpleResource &resource, Nepomuk::SimpleResourceGraph &graph, QUrl contactProperty, QUrl contactType );
 
-            /**
-              * simply sets the value
-              */
-            void addValue(const QString &content, Nepomuk::SimpleResource &resource, QUrl property);
-
-
-            /**
-              * Used to transform the KBibTeX Person ValueItem.
-              *
-              * This is necessary because the Person does not contain a full name and this way around it makes
-              * it easier to handle cases where one of the entries are missing
-              */
-            struct Name {
-                QString first;
-                QString last;
-                QString suffix;
-                QString full;
-            };
-
-            QList<PublicationPipe::Name> splitPersonList(const QString & persons);
-
-            // taken from KBibtex, so
-            // @author Thomas Fischer <fischer@unix-ag.uni-kl.de> with some modifications
-            PublicationPipe::Name splitPersonString(const QString & persons);
         };
     }
 }

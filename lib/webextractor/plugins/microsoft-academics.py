@@ -180,16 +180,16 @@ def extractSearchResults(documentElement, citation=False):
                 authorString = authorString[:-2]
                 detailString = authorString
 
-                if citationTag is not None:
-                    detailString = detailString + ', ' + citationTag.renderContents()
+            if citationTag is not None:
+                detailString = detailString + ', ' + citationTag.renderContents()
 
-                    entryDict = dict(
-                                    title = entryTitleTag.renderContents(),
-                                    details = detailString,
-                                    url = fullUrl
-                                    )
+                entryDict = dict(
+                                 title = entryTitleTag.renderContents(),
+                                 details = detailString,
+                                 url = fullUrl
+                                )
 
-                    searchResults.append(entryDict)
+                searchResults.append(entryDict)
 
             i += 1
 
