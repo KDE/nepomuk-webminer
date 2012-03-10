@@ -36,14 +36,14 @@ namespace NepomukMetaDataExtractor {
           * @see http://techbase.kde.org/Development/Tutorials#Kross
           *
           * All script plugins must implement the slots:
-          * @li searchItems(QVariantMap)
-          * @li extractItemFromUri(QUrl)
+          * @li searchItems(QString, QVariantMap)
+          * @li extractItemFromUri(QUrl, QVariantMap)
           *
           * and return its data via:
           * @li error(QString);
           * @li log(QString);
           * @li searchResults(QVariantList);
-          * @li itemResults(QVariantMap);
+          * @li itemResults(QString, QVariantMap);
           *
           */
         class KrossExtractor : public WebExtractor

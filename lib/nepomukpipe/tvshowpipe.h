@@ -20,8 +20,6 @@
 
 #include "nepomukpipe.h"
 
-#include "dms-copy/simpleresourcegraph.h"
-
 #include "nmm/tvseason.h"
 #include "nmm/tvshow.h"
 
@@ -44,12 +42,14 @@ namespace NepomukMetaDataExtractor {
           * @li @c overview
           * @li @c imdbid
           * @li @c banner
+          * @li @c poster
           * @li @c seasons - QVariantList containing more QVariantMaps with series info
           *
           * The QVariantmap containing the season information looks like this:
           *
           * @li @c number
           * @li @c banner
+          * @li @c poster
           * @li @c episodes - QVariantList containing more QVariantMaps with episodes info
           *
           * The QVariantmap containing the episode information looks like this:
@@ -58,13 +58,12 @@ namespace NepomukMetaDataExtractor {
           * @li @c overview
           * @li @c number
           * @li @c banner
-          * @li @c firstaired - Dateformat for QDateTime TODO what format should be used here? yyyy-mm-dd?
+          * @li @c poster
+          * @li @c firstaired - use yyyy or yyy-mm-dd
           * @li @c genres - split by ;
           * @li @c director - split by ;
           * @li @c writer - split by ;
           * @li @c actors - split by ;
-          *
-          * @todo support bulk import of a complete series with all its episodes
           */
         class TvShowPipe : public NepomukPipe
         {
@@ -75,6 +74,9 @@ namespace NepomukMetaDataExtractor {
             void pipeImport(const QVariantMap &tvshowEntry);
 
         private:
+            /**
+              * helper function to generate the basic episode details
+              */
             Nepomuk::NMM::TVShow createEpisode(QVariantMap episodeInfo, Nepomuk::NMM::TVSeason season);
         };
     }

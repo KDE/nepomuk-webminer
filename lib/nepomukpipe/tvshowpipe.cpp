@@ -18,6 +18,7 @@
 #include "tvshowpipe.h"
 
 #include "dms-copy/simpleresource.h"
+#include "dms-copy/simpleresourcegraph.h"
 #include "dms-copy/datamanagement.h"
 #include "dms-copy/storeresourcesjob.h"
 #include <KDE/KJob>

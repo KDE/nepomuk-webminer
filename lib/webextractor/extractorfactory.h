@@ -52,7 +52,7 @@ namespace NepomukMetaDataExtractor {
             ~ExtractorFactory();
 
             /**
-              * Creates a new WebExtractor based in the "identifier" name
+              * Creates a new WebExtractor based on the @c "identifier" name
               *
               * Ownership of the created object is transfered to the caller.
               * The caller must delete it, if it is no longer used
@@ -60,7 +60,7 @@ namespace NepomukMetaDataExtractor {
             NepomukMetaDataExtractor::Extractor::WebExtractor *createExtractor( const QString &webEngine );
 
             /**
-              * Creates a new WebExtractor based in the "url" it can fetch data from
+              * Creates a new WebExtractor based in the @c "url" it can fetch data from
               *
               * Ownership of the created object is transfered to the caller.
               * The caller must delete it, if it is no longer used
@@ -68,7 +68,7 @@ namespace NepomukMetaDataExtractor {
             NepomukMetaDataExtractor::Extractor::WebExtractor *createExtractor( const QUrl &uri );
 
             /**
-              * returns a list of all available webextractor plugins that fetches data for teh resource @c type
+              * returns a list of all available webextractor plugins that fetches data for the resource @c type
               *
               * type can be:
               * @li publication

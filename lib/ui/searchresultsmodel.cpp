@@ -18,7 +18,6 @@
 #include "searchresultsmodel.h"
 
 #include <QtCore/QRegExp>
-#include <QDebug>
 
 NepomukMetaDataExtractor::Dialog::SearchResultsModel::SearchResultsModel(QObject *parent) :
     QAbstractListModel(parent)

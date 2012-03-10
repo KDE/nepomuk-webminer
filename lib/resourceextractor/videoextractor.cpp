@@ -56,6 +56,7 @@ NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *par
         QRegExp( QLatin1String( "(.+)[ \\._\\-]s([0-9]+)[\\._\\- ]?e([0-9]+)[^\\\\/]*" ),
                  Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
+    /* ignored as they clash with movie detection. for example The.Matrix.1999
     // foo.103* (the strange part at the end is used to 1. prevent another digit and 2. allow the name to end)
     d->filenameRegExps.append(
         QRegExp( QLatin1String( "(.+)[ \\._\\-]([0-9]{1})([0-9]{2})(?:[^\\d][^\\\\/]*)?" ),
@@ -65,6 +66,7 @@ NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *par
     d->filenameRegExps.append(
         QRegExp( QLatin1String( "(.+)[ \\._\\-]([0-9]{2})([0-9]{2,3})(?:[^\\d][^\\\\/]*)?" ),
                  Qt::CaseInsensitive, QRegExp::RegExp2 ) );
+    */
 }
 
 void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)

@@ -632,7 +632,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addContent(const QString 
             publication.setProperty( NBIB::filingDate(), dateString );
         }
     }
-    else if(key == QLatin1String("volume")) {
+    else if(key == QLatin1String("volume")) {file:///home/joerg/Dokumente/meta-data-extractor/fetchtest/00839890.pdf
         publication.setVolume( value );
     }
     else if(key == QLatin1String("accessdate")) {

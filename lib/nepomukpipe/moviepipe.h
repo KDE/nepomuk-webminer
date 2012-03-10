@@ -34,8 +34,6 @@ namespace NepomukMetaDataExtractor {
           * @li @c director - split by ;
           * @li @c writer - split by ;
           * @li @c cast - split by ;
-          *
-          * @todo handle poster/cover download. Given an url on the web, download it to a location specified via KConfig or use directly the localfile
           */
         class MoviePipe : public NepomukPipe
         {
