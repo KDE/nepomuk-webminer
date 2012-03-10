@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>866</width>
-    <height>604</height>
+    <height>630</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,10 +39,10 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
+     <item row="0" column="1" colspan="2">
       <widget class="KComboBox" name="comboBoxSearchEngine"/>
      </item>
-     <item row="0" column="2">
+     <item row="0" column="3">
       <widget class="QPushButton" name="buttonEngineSettings">
        <property name="minimumSize">
         <size>
@@ -69,30 +69,88 @@
       </widget>
      </item>
      <item row="1" column="1">
+      <widget class="KLineEdit" name="lineEditTitle">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="KComboBox" name="cbSelectType">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>Movie</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>TvShow</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QPushButton" name="buttonSearchDetails">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>22</width>
+         <height>22</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>22</width>
+         <height>22</height>
+        </size>
+       </property>
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>22</width>
+         <height>22</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QPushButton" name="buttonSearch">
+       <property name="text">
+        <string>Search</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelShow">
+       <property name="text">
+        <string>Show:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="KLineEdit" name="lineEditTitle">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="labelShow">
-         <property name="text">
-          <string>Show:</string>
-         </property>
-        </widget>
-       </item>
        <item>
         <widget class="QLineEdit" name="lineEditShow"/>
        </item>
@@ -143,44 +201,6 @@
         </widget>
        </item>
       </layout>
-     </item>
-     <item row="1" column="2">
-      <widget class="QPushButton" name="buttonSearchDetails">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>22</width>
-         <height>22</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>22</width>
-         <height>22</height>
-        </size>
-       </property>
-       <property name="text">
-        <string notr="true"/>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>22</width>
-         <height>22</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QPushButton" name="buttonSearch">
-       <property name="text">
-        <string>Search</string>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>
@@ -317,7 +337,7 @@
                <x>0</x>
                <y>0</y>
                <width>361</width>
-               <height>264</height>
+               <height>260</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -400,20 +420,6 @@
         </size>
        </property>
       </spacer>
-     </item>
-     <item>
-      <widget class="QLabel" name="labelCategoryCount">
-       <property name="text">
-        <string notr="true">CategoryCount</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="line">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
      </item>
      <item>
       <widget class="QLabel" name="labelResourceCount">

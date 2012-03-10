@@ -80,9 +80,10 @@ NepomukMetaDataExtractor::Dialog::FetcherDialog::FetcherDialog(QWidget *parent)
 
     connect(buttonCancel, SIGNAL(clicked()), this, SLOT(cancelClose()));
 
-    connect(m_re, SIGNAL(progressStatus(QString)), this, SLOT(addProgressInfo(QString)));
+    connect(m_re, SIGNAL(progressStatus(QString)), this, SLOT(addToProgressLog(QString)));
     connect(buttonLog, SIGNAL(clicked()), this, SLOT(showProgressLog()));
     connect(detailsUrl, SIGNAL(leftClickedUrl(QString)), this, SLOT(openDetailsLink(QString)));
+    connect(cbSelectType, SIGNAL(currentIndexChanged(int)), this, SLOT(resourceTypeSelectionChanged(int)));
 
     QGridLayout * gridLayout = new QGridLayout;
     metaDataList->setLayout( gridLayout );
@@ -115,7 +116,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::setForceUpdate(bool update
     m_re->setForceUpdate(update);
 }
 
-void NepomukMetaDataExtractor::Dialog::FetcherDialog::addProgressInfo(const QString &status)
+void NepomukMetaDataExtractor::Dialog::FetcherDialog::addToProgressLog(const QString &status)
 {
     QTextCursor qtc(m_progressLog);
     qtc.movePosition( QTextCursor::End );
@@ -140,33 +141,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::showProgressLog()
 
 void NepomukMetaDataExtractor::Dialog::FetcherDialog::resourceFetchingDone()
 {
-    m_categoriesToFetch = m_re->availableResourceTypes();
-    m_currentCategory = 0;
     m_currentResource = -1;
-
-    if( m_categoriesToFetch.size() > 1) {
-        labelCategoryCount->setVisible(true);
-        line->setVisible(true);
-    }
-    else {
-        labelCategoryCount->setVisible(false);
-        line->setVisible(false);
-    }
-
-    int resourceCount = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).size();
-    if(resourceCount > 1 || m_categoriesToFetch.size() > 1) {
-        labelResourceCount->setVisible(true);
-        buttonPrevious->setVisible(true);
-        buttonNext->setVisible(true);
-    }
-    else {
-        labelResourceCount->setVisible(false);
-        buttonPrevious->setVisible(false);
-        buttonNext->setVisible(false);
-    }
-
-    // fill search engine combobox with the right items for the first category
-    fillEngineList( m_categoriesToFetch.at(m_currentCategory) );
 
     selectNextResourceToLookUp();
 }
@@ -175,21 +150,26 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::selectNextResourceToLookUp
 {
     m_currentResource++;
 
-    int resourceCount = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).size();
+    setupCurrentResourceToLookup();
+}
 
-    if( m_currentResource >= resourceCount) {
-        m_currentCategory++;
-        m_currentResource = 0;
+void NepomukMetaDataExtractor::Dialog::FetcherDialog::selectPreviousResourceToLookUp()
+{
+    m_currentResource--;
 
-        resourceCount = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).size();
-        fillEngineList( m_categoriesToFetch.at(m_currentCategory) );
-    }
+    setupCurrentResourceToLookup();
+}
 
-    labelCategoryCount->setText(i18n("Category %1 of %2 (%3)", m_currentCategory + 1, m_categoriesToFetch.size(), m_categoriesToFetch.at(m_currentCategory)));
-    labelResourceCount->setText(i18n("Resource %1 of %2", m_currentResource + 1, resourceCount));
+void NepomukMetaDataExtractor::Dialog::FetcherDialog::setupCurrentResourceToLookup()
+{
+    int resourceCount = m_re->resourcesList().size();
 
     // get next resourceInformation
-    MetaDataParameters *mdp = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
+    MetaDataParameters *mdp = m_re->resourcesList().at( m_currentResource );
+
+    fillEngineList( mdp->resourceType );
+
+    labelResourceCount->setText(i18n("Resource %1 of %2", m_currentResource + 1, resourceCount));
 
     labelDescription->setText( i18n("Fetch metadata for the resource: <b>%1</b>", mdp->resourceUri.fileName()));
     lineEditTitle->setText( mdp->searchTitle );
@@ -214,11 +194,22 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::selectNextResourceToLookUp
         lineEditShow->setVisible(false);
     }
 
+    if( mdp->resourceType == QLatin1String("tvshow")) {
+        cbSelectType->setVisible(true);
+        cbSelectType->setCurrentIndex(1);
+    }
+    else if( mdp->resourceType == QLatin1String("movie")) {
+        cbSelectType->setVisible(true);
+        cbSelectType->setCurrentIndex(0);
+    }
+    else {
+        cbSelectType->setVisible(false);
+    }
+
     buttonFetchMore->setEnabled(false);
 
     // don't show next button if there is no next item
-    if(m_currentCategory == m_categoriesToFetch.size()-1 &&
-       m_currentResource == resourceCount-1) {
+    if(m_currentResource == resourceCount-1) {
         buttonNext->setEnabled(false);
     }
     else {
@@ -226,7 +217,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::selectNextResourceToLookUp
     }
 
     // don't enable previous button, if there is no previous item
-    if(m_currentCategory == 0 && m_currentResource == 0) {
+    if(m_currentResource == 0) {
         buttonPrevious->setEnabled(false);
     }
     else {
@@ -238,70 +229,37 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::selectNextResourceToLookUp
     showItemDetails();
 }
 
-void NepomukMetaDataExtractor::Dialog::FetcherDialog::selectPreviousResourceToLookUp()
+void NepomukMetaDataExtractor::Dialog::FetcherDialog::resourceTypeSelectionChanged(int selection)
 {
-    m_currentResource--;
+    MetaDataParameters *mdp = m_re->resourcesList().at( m_currentResource );
 
-    int resourceCount = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).size();
-    if( m_currentResource < 0) {
-        m_currentCategory--;
-        resourceCount = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).size();
-        m_currentResource = resourceCount-1;
-
-        fillEngineList( m_categoriesToFetch.at(m_currentCategory) );
-    }
-
-    labelCategoryCount->setText(i18n("Category %1 of %2 (%3)", m_currentCategory + 1, m_categoriesToFetch.size(), m_categoriesToFetch.at(m_currentCategory)));
-    labelResourceCount->setText(i18n("Resource %1 of %2", m_currentResource + 1, resourceCount));
-
-    // get next resourceInformation
-    MetaDataParameters *mdp = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
-
-    labelDescription->setText( i18n("Fetch metadata for the resource: <b>%1</b>", mdp->resourceUri.fileName()));
-    lineEditTitle->setText( mdp->searchTitle );
-
-    if(mdp->resourceType == QLatin1String("tvshow")) {
-        labelSeason->setVisible(true);
-        lineEditSeason->setVisible(true);
-        lineEditSeason->setText(  mdp->searchSeason );
-        labelEpisode->setVisible(true);
-        lineEditEpisode->setVisible(true);
-        lineEditEpisode->setText(  mdp->searchEpisode );
-    }
-    else {
+    if (selection == 0) { // movies
         labelSeason->setVisible(false);
         lineEditSeason->setVisible(false);
         labelEpisode->setVisible(false);
         lineEditEpisode->setVisible(false);
+        labelShow->setVisible(false);
+        lineEditShow->setVisible(false);
+        mdp->resourceType = QLatin1String("movie");
+    }
+    else { // tvshows
+        labelSeason->setVisible(true);
+        lineEditSeason->setVisible(true);
+        labelEpisode->setVisible(true);
+        lineEditEpisode->setVisible(true);
+        labelShow->setVisible(true);
+        lineEditShow->setVisible(true);
+        mdp->resourceType = QLatin1String("tvshow");
     }
 
-    // don't enable next button if there is no next item
-    if(m_currentCategory == m_categoriesToFetch.size()-1 &&
-       m_currentResource == resourceCount-1) {
-        buttonNext->setEnabled(false);
-    }
-    else {
-        buttonNext->setEnabled(true);
-    }
-
-    // don't enable previous button, if there is no previous item
-    if(m_currentCategory == 0 && m_currentResource == 0) {
-        buttonPrevious->setEnabled(false);
-    }
-    else {
-        buttonPrevious->setEnabled(true);
-    }
-
-    m_resultModel->clear();
-
-    showItemDetails();
+    fillEngineList( mdp->resourceType );
 }
 
 void NepomukMetaDataExtractor::Dialog::FetcherDialog::startSearch()
 {
     busyFetching();
 
-    MetaDataParameters *mdp = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
+    MetaDataParameters *mdp = m_re->resourcesList().at( m_currentResource );
     mdp->searchTitle = lineEditTitle->text();
     mdp->searchSeason = lineEditSeason->text();
     mdp->searchEpisode = lineEditEpisode->text();
@@ -326,7 +284,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::startSearch()
         }
         connect(m_webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
         connect(m_webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
-        connect(m_webextractor, SIGNAL(log(QString)), this, SLOT(addProgressInfo(QString)));
+        connect(m_webextractor, SIGNAL(log(QString)), this, SLOT(addToProgressLog(QString)));
     }
 
     QVariantMap searchParameters;
@@ -340,7 +298,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::startSearch()
     searchParameters.insert("journal", mdp->searchJournal);
     searchParameters.insert("showtitle", mdp->searchShowTitle);
 
-    m_webextractor->search( m_categoriesToFetch.at(m_currentCategory), searchParameters );
+    m_webextractor->search( mdp->resourceType, searchParameters );
 }
 
 void NepomukMetaDataExtractor::Dialog::FetcherDialog::selectSearchEntry( QVariantList searchResults)
@@ -389,7 +347,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::showSearchParameters()
     vbl->addStretch(0);
     w->setLayout(vbl);
 
-    MetaDataParameters *mdp = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
+    MetaDataParameters *mdp = m_re->resourcesList().at( m_currentResource );
     QLabel *labelTitle = new QLabel(i18n("Title:"),w);
     QLineEdit *editTitle = new QLineEdit(mdp->searchTitle,w);
     gl->addWidget(labelTitle, 0,0);
@@ -498,7 +456,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::fetchMoreDetails()
     QModelIndex currentEntry = searchResults->currentIndex();
     QVariantMap entry = m_resultModel->searchResultEntry(currentEntry);
 
-    m_currentItemToupdate = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
+    m_currentItemToupdate = m_re->resourcesList().at( m_currentResource );
     KUrl fetchUrl( entry.value(QLatin1String("url")).toString() );
 
     //QVariantMap options;
@@ -543,7 +501,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::fetchedItemDetails(const Q
 
 void NepomukMetaDataExtractor::Dialog::FetcherDialog::saveMetaData()
 {
-    MetaDataParameters *mdp = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
+    MetaDataParameters *mdp = m_re->resourcesList().at( m_currentResource );
 
     busyFetching();
 
@@ -565,7 +523,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::saveMetaData()
         mdp->metaDataSaved = true;
     }
     else {
-        addProgressInfo(i18n("No nepomuk pipe available for the resoure type %1", type));
+        addToProgressLog(i18n("No nepomuk pipe available for the resoure type %1", type));
     }
 
     finishedFetching();
@@ -578,6 +536,11 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::cancelClose()
 
 void NepomukMetaDataExtractor::Dialog::FetcherDialog::fillEngineList(const QString &category)
 {
+    // don't fetch information we already have
+    if( comboBoxSearchEngine->property("currentListCategory").toString() == category)
+        return;
+
+    comboBoxSearchEngine->setProperty("currentListCategory", category);
     comboBoxSearchEngine->clear();
 
     QList<WebExtractor::Info> engines = m_ef->listAvailablePlugins( category );
@@ -587,7 +550,6 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::fillEngineList(const QStri
         QFileInfo fileInfo(engine.file);
 
         QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + engine.icon;
-        //QString iconPath = KStandardDirs::locate("data", searchString);
 
         comboBoxSearchEngine->addItem(QIcon( iconPath ),
                                           engine.name,
@@ -612,7 +574,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::showItemDetails()
     QGridLayout * gridLayout = qobject_cast<QGridLayout *>(mdlayout);
 
     // current Item metadata
-    MetaDataParameters *mdp = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
+    MetaDataParameters *mdp = m_re->resourcesList().at( m_currentResource );
 
     QMapIterator<QString, QVariant> i(mdp->metaData);
     int line = 0;
@@ -653,22 +615,20 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::finishedFetching()
 {
     QWidget::setCursor( Qt::ArrowCursor );
 
-    MetaDataParameters *mdp = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).at( m_currentResource );
+    MetaDataParameters *mdp = m_re->resourcesList().at( m_currentResource );
     buttonSave->setEnabled( !mdp->metaDataSaved );
 
     buttonSearch->setEnabled( true );
 
     QModelIndex currentEntry = searchResults->currentIndex();
     QVariantMap entry = m_resultModel->searchResultEntry(currentEntry);
+
     if( entry.contains(QLatin1String("url")) ) {
         buttonFetchMore->setEnabled(true);
     }
 
-    int resourceCount = m_re->resourcesToFetch( m_categoriesToFetch.at(m_currentCategory) ).size();
-
-    // don't enable next button if there is no next item
-    if(m_currentCategory == m_categoriesToFetch.size()-1 &&
-       m_currentResource == resourceCount-1) {
+    int resourceCount = m_re->resourcesList().size();
+    if(m_currentResource == resourceCount-1) {
         buttonNext->setEnabled(false);
     }
     else {
@@ -676,7 +636,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::finishedFetching()
     }
 
     // don't enable previous button, if there is no previous item
-    if(m_currentCategory == 0 && m_currentResource == 0) {
+    if(m_currentResource == 0) {
         buttonPrevious->setEnabled(false);
     }
     else {

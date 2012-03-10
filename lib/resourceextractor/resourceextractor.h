@@ -18,7 +18,7 @@
 #ifndef RESOURCEEXTRACTOR_H
 #define RESOURCEEXTRACTOR_H
 
-#include <QObject>
+#include <QtCore/QObject>
 #include <KDE/KUrl>
 #include <Nepomuk/Resource>
 
@@ -36,12 +36,7 @@ namespace NepomukMetaDataExtractor {
           * resource can be looked up and used for the retrival. As the libstreamanalyzer might fail on several pdf files this class
           * uses its own pdf parsing to get the right details.
           *
-          * The out put of this class is a ordered Hash where all files are sorted by category:
-          * @li publication
-          * @li tvshow
-          * @li movie
-          *
-          * Where each file/resource is represented by its MetaDataParameters that is used for the actaul search
+          * Each file/resource is represented by its MetaDataParameters that is used for the actaul search
           */
         class ResourceExtractor : public QObject
         {
@@ -79,13 +74,11 @@ namespace NepomukMetaDataExtractor {
             void lookupResource(const QList<Nepomuk::Resource> &resources);
 
             /**
-              * If a folder with different filetypes is scanned this returnes the list of types
+              * Returns the complete list of resources that are ready for the metadata fetching
               *
-              * the types are "publication", "tvshow", "movie"
+              * To get the type of resource check the resourceType parameter
               */
-            QStringList availableResourceTypes();
-
-            QList<NepomukMetaDataExtractor::Extractor::MetaDataParameters *> resourcesToFetch(const QString &type);
+            QList<NepomukMetaDataExtractor::Extractor::MetaDataParameters *> resourcesList();
 
         signals:
             void progressStatus(const QString &status);

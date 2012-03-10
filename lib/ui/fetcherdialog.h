@@ -67,6 +67,7 @@ namespace NepomukMetaDataExtractor {
             void resourceFetchingDone();
             void selectNextResourceToLookUp();
             void selectPreviousResourceToLookUp();
+            void resourceTypeSelectionChanged(int selection);
 
             void startSearch();
             void selectSearchEntry( QVariantList searchResults );
@@ -82,10 +83,11 @@ namespace NepomukMetaDataExtractor {
 
             void cancelClose();
 
-            void addProgressInfo(const QString &status);
+            void addToProgressLog(const QString &status);
             void showProgressLog();
 
         private:
+            void setupCurrentResourceToLookup();
             void fillEngineList(const QString &category);
             void showItemDetails();
 
@@ -98,8 +100,6 @@ namespace NepomukMetaDataExtractor {
             NepomukMetaDataExtractor::Extractor::WebExtractor *m_webextractor;
             NepomukMetaDataExtractor::Extractor::MetaDataParameters *m_currentItemToupdate;
 
-            QStringList m_categoriesToFetch;
-            int m_currentCategory;
             int m_currentResource;
 
             SearchResultsModel *m_resultModel;
