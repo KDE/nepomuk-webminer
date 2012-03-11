@@ -4,6 +4,7 @@ X-KDE-ServiceTypes=KonqPopupMenu/Plugin
 MimeType=application/*;video/*;inode/directory;
 Actions=mdfetcher;mdfetcher2;
 X-KDE-Submenu=Desktop Search
+X-KDE-Submenu[nds]=Schriefdischsöök
 X-KDE-Submenu[nl]=Bureaublad-zoekopdracht
 X-KDE-Submenu[pt]=Pesquisa no Ambiente de Trabalho
 X-KDE-Submenu[pt_BR]=Pesquisa no ambiente de trabalho
