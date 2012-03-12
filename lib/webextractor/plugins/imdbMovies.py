@@ -69,28 +69,38 @@ def searchItems( resourcetype, parameters ):
     episode = parameters['episode']
     showtitle = parameters['showtitle']
 
-    ia = IMDb()
+    try:
+        ia = IMDb()
+        if resourcetype == 'movie':
+            WebExtractor.log( 'search movie with title: ' + title )
+            results = ia.search_movie(title)
+            searchMovieResults( results )
 
-    #try:
-    if resourcetype == 'movie':
-        WebExtractor.log( 'search movie with title: ' + title )
-        results = ia.search_movie(title)
-        searchMovieResults( results )
+        elif resourcetype == 'tvshow':
+            if title:
+                WebExtractor.log( 'search episode with title: ' + title )
+                results = ia.search_episode(title)
+                searchTvEpisodeResults( ia, results, season, episode )
 
-    elif resourcetype == 'tvshow':
-        if title:
-            WebExtractor.log( 'search episode with title: ' + title )
-            results = ia.search_episode(title)
-            searchTvEpisodeResults( ia, results, season, episode )
+            else:
+                WebExtractor.log( 'search tvshow with title: ' + showtitle )
+                results = ia.search_movie(showtitle)
+                searchTvShowResults( ia, results, season, episode )
+
+        elif resourceType == "person":
+            raise Exception("Person search not available yet.")
 
         else:
-            WebExtractor.log( 'search tvshow with title: ' + showtitle )
-            results = ia.search_movie(showtitle)
-            searchTvShowResults( ia, results, season, episode )
+            if (type(resourceType).__name__ == "str"):
+                aise Exception("\"%s\" search not available yet." % resourceType)
 
-    #except IMDbError, err:
-    #    WebExtractor.error(err)
-    #    return
+            else:
+                raise Exception("Can't identify search type.")
+
+    except  Exception as err:
+        WebExtractor.error(err)
+
+    return True
 
 def searchMovieResults(results):
     searchResults = []

@@ -66,6 +66,7 @@ set( nepomukmetadataextractor_LIB_HDRS
   webextractor/webextractor.h
 
   ui/fetcherdialog.h
+  ${CMAKE_CURRENT_BINARY_DIR}/ui_fetcherdialog.h
 )
 
 install( FILES ${nepomukmetadataextractor_LIB_HDRS}
