@@ -39,6 +39,7 @@ namespace NepomukMetaDataExtractor {
         class ResourceExtractorPrivate {
         public:
             bool forceUpdate;
+            KUrl baseCallUrl;
             QList<MetaDataParameters *> resourcesToLookup;
         };
     }
@@ -59,6 +60,8 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::setForceUpdate(bool
 void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupFiles(const KUrl &fileOrFolder)
 {
     Q_D( ResourceExtractor );
+    if(!d->baseCallUrl.isValid())
+        d->baseCallUrl = fileOrFolder;
 
     emit progressStatus( i18n("Check available files") );
     QDir dir(fileOrFolder.toLocalFile());
@@ -79,7 +82,7 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupFiles(const K
         }
     }
     else {
-        addFilesToList(fileOrFolder.toLocalFile());
+        addFilesToList(fileOrFolder.toLocalFile() );
     }
 
     int resourceSize = d->resourcesToLookup.size();
@@ -140,10 +143,12 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(cons
 
     else if(kmt.data()->name().contains(QLatin1String("video/"))) {
         VideoExtractor videoExtractor;
-        videoExtractor.parseUrl( metaDataParameters, fileUrl );
+        videoExtractor.parseUrl( metaDataParameters, fileUrl, d->baseCallUrl );
     }
     else {
         kDebug() << "unsupportet mimetype" << kmt.data()->name();
+        delete metaDataParameters;
+        return;
     }
 
     d->resourcesToLookup.append( metaDataParameters );

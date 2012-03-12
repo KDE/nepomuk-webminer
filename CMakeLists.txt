@@ -43,7 +43,7 @@ add_subdirectory( lib )
 # bulk extractor from the lib
 # -------------------------------------------
 
-set( metadataextractor_SRCS main.cpp )
+set( metadataextractor_SRCS main.cpp)
 
 kde4_add_executable( metadataextractor ${metadataextractor_SRCS})
 

@@ -116,6 +116,11 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::setForceUpdate(bool update
     m_re->setForceUpdate(update);
 }
 
+void NepomukMetaDataExtractor::Dialog::FetcherDialog::setTvShowMode(bool tvshowmode)
+{
+
+}
+
 void NepomukMetaDataExtractor::Dialog::FetcherDialog::addToProgressLog(const QString &status)
 {
     QTextCursor qtc(m_progressLog);
@@ -143,7 +148,12 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::resourceFetchingDone()
 {
     m_currentResource = -1;
 
-    selectNextResourceToLookUp();
+    if( !m_re->resourcesList().isEmpty() ) {
+        selectNextResourceToLookUp();
+    }
+    else {
+        addToProgressLog(i18n("now files for the metadata fetching found"));
+    }
 }
 
 void NepomukMetaDataExtractor::Dialog::FetcherDialog::selectNextResourceToLookUp()
@@ -177,13 +187,10 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::setupCurrentResourceToLook
     if(mdp->resourceType == QLatin1String("tvshow")) {
         labelSeason->setVisible(true);
         lineEditSeason->setVisible(true);
-        lineEditSeason->setText(  mdp->searchSeason );
         labelEpisode->setVisible(true);
         lineEditEpisode->setVisible(true);
-        lineEditEpisode->setText(  mdp->searchEpisode );
         labelShow->setVisible(true);
         lineEditShow->setVisible(true);
-        lineEditShow->setText(  mdp->searchShowTitle );
     }
     else {
         labelSeason->setVisible(false);
@@ -193,6 +200,10 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::setupCurrentResourceToLook
         labelShow->setVisible(false);
         lineEditShow->setVisible(false);
     }
+
+    lineEditSeason->setText(  mdp->searchSeason );
+    lineEditEpisode->setText(  mdp->searchEpisode );
+    lineEditShow->setText(  mdp->searchShowTitle );
 
     if( mdp->resourceType == QLatin1String("tvshow")) {
         cbSelectType->setVisible(true);

@@ -40,11 +40,15 @@ namespace NepomukMetaDataExtractor {
         {
             Q_OBJECT
         public:
-            explicit VideoExtractor(QObject *parent = 0);
+            explicit VideoExtractor(QObject *parent = 0, bool tvshowOnly = false);
 
-            void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
+            void parseUrl(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl = KUrl());
 
         private:
+            bool parseTvShowFolder(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl = KUrl());
+            bool parseTvShowFileName(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const QString &fileName);
+            bool parseMovieFileName(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const QString &fileName);
+
             Q_DECLARE_PRIVATE(VideoExtractor)
             VideoExtractorPrivate *const d_ptr; /**< d-pointer for this class */
         };

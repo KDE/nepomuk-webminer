@@ -39,18 +39,12 @@ int main( int argc, char *argv[] )
 
     KCmdLineOptions options;
     options.add("f", ki18n("Force meta data fetching even for files that already have them"));
+    options.add("tvshow", ki18n("Helper parameter. Defines that the folder we are working on contains a tvshow. Works with einer Series/Episode1.avi or Series/Season/Episode1.avi. Will fetch metadata for all episodes"));
     options.add("+url", ki18n("The file or folder url used for the input"));
 
     KCmdLineArgs::addCmdLineOptions( options );
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     KApplication app;
-
-//    NepomukMetaDataExtractor::Dialog::FetcherDialog fd;
-//    KUrl debug("/home/joerg/Dokumente/meta-data-extractor/fetchtest3/");
-//    fd.setForceUpdate(true);
-//    fd.setInitialPathOrFile( debug );
-//    fd.show();
-//    return app.exec();
 
     if ( args->count() && args->url(0).isValid() ) {
 

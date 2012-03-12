@@ -62,6 +62,7 @@ namespace NepomukMetaDataExtractor {
 
             void setInitialPathOrFile( const KUrl &url );
             void setForceUpdate(bool update);
+            void setTvShowMode(bool tvshowmode);
 
         private slots:
             void resourceFetchingDone();
@@ -101,6 +102,7 @@ namespace NepomukMetaDataExtractor {
             NepomukMetaDataExtractor::Extractor::MetaDataParameters *m_currentItemToupdate;
 
             int m_currentResource;
+            bool tvshowmode;
 
             SearchResultsModel *m_resultModel;
 
