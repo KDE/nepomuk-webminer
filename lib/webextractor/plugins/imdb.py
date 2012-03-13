@@ -92,15 +92,14 @@ def searchItems( resourcetype, parameters ):
 
         else:
             if (type(resourceType).__name__ == "str"):
-                aise Exception("\"%s\" search not available yet." % resourceType)
+                raise Exception("\"%s\" search not available yet." % resourceType)
 
             else:
                 raise Exception("Can't identify search type.")
 
-    except  Exception as err:
+    except Exception as err:
+        WebExtractor.log(err)
         WebExtractor.error(err)
-
-    return True
 
 def searchMovieResults(results):
     searchResults = []
@@ -189,7 +188,6 @@ def getEpisodeInfo(episode):
     return entryDict
 
 def extractItemFromUri( url, options ):
-    url = 'http://www.imdb.com/title/tt0411008/'
     exp = re.compile(r'title/tt(\d*)')
     match = exp.search(url)
 
@@ -198,12 +196,13 @@ def extractItemFromUri( url, options ):
         return
 
     movieId = match.group(1)
+    WebExtractor.log('parse imdb id: ' + movieId)
 
     ia = IMDb()
 
     try:
         movie = i.get_movie(movieId)
-    except IMDbError, err:
+    except Exception as err:
         WebExtractor.error(err)
         return
 
