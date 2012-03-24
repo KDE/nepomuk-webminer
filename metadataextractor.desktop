@@ -5,6 +5,7 @@ MimeType=application/*;video/*;inode/directory;
 Actions=mdfetcher;mdfetcher2;
 X-KDE-Submenu=Desktop Search
 X-KDE-Submenu[cs]=Vyhledávací služby
+X-KDE-Submenu[es]=Búsqueda de escritorio
 X-KDE-Submenu[nds]=Schriefdischsöök
 X-KDE-Submenu[nl]=Bureaublad-zoekopdracht
 X-KDE-Submenu[pt]=Pesquisa no Ambiente de Trabalho
@@ -17,6 +18,7 @@ Icon=nepomuk
 
 [Desktop Action mdfetcher]
 Name=Fetch MetaData for this file or folder
+Name[es]=Obtener metadatos para este archivo o carpeta
 Name[nl]=Metagegevens voor dit bestand of map ophalen
 Name[pt]=Obter os meta-dados desta pasta ou ficheiro
 Name[pt_BR]=Obter metadados para este arquivo ou pasta
@@ -28,6 +30,7 @@ Exec=metadataextractor %f
 
 [Desktop Action mdfetcher2]
 Name=Fetch MetaData for this file or folder (force download)
+Name[es]=Obtener metadatos para este archivo o carpeta (descarga forzada)
 Name[nl]=Metagegevens voor dit bestand of map ophalen (downloaden forceren)
 Name[pt]=Obter os meta-dados desta pasta ou ficheiro (forçar a transferência)
 Name[pt_BR]=Obter metadados para este arquivo ou pasta (forçar download)
