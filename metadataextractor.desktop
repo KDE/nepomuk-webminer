@@ -5,6 +5,7 @@ MimeType=application/*;video/*;inode/directory;
 Actions=mdfetcher;mdfetcher2;
 X-KDE-Submenu=Desktop Search
 X-KDE-Submenu[cs]=Vyhledávací služby
+X-KDE-Submenu[de]=Desktop-Suche
 X-KDE-Submenu[es]=Búsqueda de escritorio
 X-KDE-Submenu[fr]=Recherche sur le bureau
 X-KDE-Submenu[nds]=Schriefdischsöök
