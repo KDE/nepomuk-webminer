@@ -7,6 +7,7 @@ X-KDE-Submenu=Desktop Search
 X-KDE-Submenu[cs]=Vyhledávací služby
 X-KDE-Submenu[de]=Desktop-Suche
 X-KDE-Submenu[es]=Búsqueda de escritorio
+X-KDE-Submenu[et]=Töölauaotsing
 X-KDE-Submenu[fr]=Recherche sur le bureau
 X-KDE-Submenu[ga]=Cuardach Deisce
 X-KDE-Submenu[nds]=Schriefdischsöök
@@ -23,6 +24,7 @@ Icon=nepomuk
 [Desktop Action mdfetcher]
 Name=Fetch MetaData for this file or folder
 Name[es]=Obtener metadatos para este archivo o carpeta
+Name[et]=Faili või kataloogi metaandmete hankimine
 Name[fr]=Extraction des métadonnées pour ce fichier ou ce dossier
 Name[nl]=Metagegevens voor dit bestand of map ophalen
 Name[pl]=Pobierz meta dane dla tego pliku lub katalogu
@@ -37,6 +39,7 @@ Exec=metadataextractor %f
 [Desktop Action mdfetcher2]
 Name=Fetch MetaData for this file or folder (force download)
 Name[es]=Obtener metadatos para este archivo o carpeta (descarga forzada)
+Name[et]=Faili või kataloogi metaandmete hankimine (jõuga allalaadimine)
 Name[fr]=Extraction de métadonnées pour ce fichier ou ce dossier (forcer le téléchargement)
 Name[nl]=Metagegevens voor dit bestand of map ophalen (downloaden forceren)
 Name[pl]=Pobierz meta dane dla tego pliku lub katalogu (wymuszone pobieranie)
