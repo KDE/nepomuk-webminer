@@ -495,12 +495,21 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::fetchMoreDetails()
 void NepomukMetaDataExtractor::Dialog::FetcherDialog::fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails)
 {
     m_currentItemToupdate->metaData.insert(QLatin1String("resourceuri"), m_currentItemToupdate->resourceUri.url());
+    m_currentItemToupdate->metaData = itemDetails;
 
-    QMapIterator<QString, QVariant> i(itemDetails);
-    while (i.hasNext()) {
-        i.next();
-        m_currentItemToupdate->metaData.insert(i.key(), i.value());
-    }
+    qDebug() << "#################################################################################";
+    qDebug() << itemDetails;
+    qDebug() << "#################################################################################";
+
+//    QMapIterator<QString, QVariant> i(itemDetails);
+//    while (i.hasNext()) {
+//        i.next();
+//        m_currentItemToupdate->metaData.insert(i.key(), i.value());
+//    }
+
+    qDebug() << "#################################################################################";
+    qDebug() << m_currentItemToupdate->metaData;
+    qDebug() << "#################################################################################";
 
     // TODO: support batch download of many episodes at once
     if( resourceType == QLatin1String("tvshow")) {
@@ -511,13 +520,17 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::fetchedItemDetails(const Q
 
             if(!episodes.isEmpty()) {
                 QVariantMap episodesMap = episodes.takeFirst().toMap();
-                kDebug() << "add to episode" << episodesMap.value(QLatin1String("title")) << "url" << m_currentItemToupdate->resourceUri.url();
+                kDebug() << "add to episode" << episodesMap.value(QLatin1String("title")).toString() << "url" << m_currentItemToupdate->resourceUri.url();
                 episodesMap.insert(QLatin1String("resourceuri"), m_currentItemToupdate->resourceUri.url());
 
                 episodes << episodesMap;
                 season.insert( QLatin1String("episodes"), episodes);
                 seasons << season;
                 m_currentItemToupdate->metaData.insert( QLatin1String("seasons"), seasons);
+
+                qDebug() << "#################################################################################";
+                qDebug() << m_currentItemToupdate->metaData;
+                qDebug() << "#################################################################################";
             }
         }
     }

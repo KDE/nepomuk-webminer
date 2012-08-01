@@ -190,6 +190,8 @@ def extractItemFromUri( url, options ):
                         genre = genreList
                        )
 
+
+    print seriesDict
     WebExtractor.itemResults( 'tvshow', seriesDict )
 
 if __name__=="__main__":
