@@ -17,10 +17,10 @@
 
 #include "tvshowpipe.h"
 
-#include "dms-copy/simpleresource.h"
-#include "dms-copy/simpleresourcegraph.h"
-#include "dms-copy/datamanagement.h"
-#include "dms-copy/storeresourcesjob.h"
+#include <Nepomuk2/SimpleResource>
+#include <Nepomuk2/SimpleResourceGraph>
+#include <Nepomuk2/DataManagement>
+#include <Nepomuk2/StoreResourcesJob>
 #include <KDE/KJob>
 
 #include <KDE/KUrl>
@@ -36,7 +36,7 @@
 using namespace Soprano::Vocabulary;
 
 NepomukMetaDataExtractor::Pipe::TvShowPipe::TvShowPipe(QObject *parent)
-: NepomukPipe(parent)
+    : NepomukPipe(parent)
 {
 }
 
@@ -47,7 +47,7 @@ NepomukMetaDataExtractor::Pipe::TvShowPipe::~TvShowPipe()
 
 void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &tvshowEntry)
 {
-    Nepomuk::SimpleResourceGraph graph;
+    Nepomuk2::SimpleResourceGraph graph;
 
     // get all the series information
     Nepomuk::NMM::TVSeries seriesRes;
@@ -102,7 +102,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
     foreach( const QVariant &season, seasonList) {
         QVariantMap seasonInfo = season.toMap();
 
-        //TODO add title/name to it like Season 1
+        //TODO: add title/name to it like Season 1
         Nepomuk::NMM::TVSeason seasonRes;
 
         QString seasonNumber = seasonInfo.value(QLatin1String("number")).toString();
@@ -201,7 +201,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
 
     graph << seriesRes;
 
-    Nepomuk::StoreResourcesJob *srj = Nepomuk::storeResources(graph, Nepomuk::IdentifyNew, Nepomuk::OverwriteProperties);
+    Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph, Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties);
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
 }

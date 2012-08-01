@@ -8,7 +8,7 @@
 #include <QtCore/QTime>
 #include <QtCore/QDateTime>
 
-#include "dms-copy/simpleresource.h"
+#include <Nepomuk2/SimpleResource>
 
 namespace Nepomuk {
 namespace NIE {
@@ -22,7 +22,7 @@ namespace NIE {
  * is not intended to be instantiated by itself. Use more specific 
  * subclasses. 
  */
-class DataObject : public virtual Nepomuk::SimpleResource
+class DataObject : public virtual Nepomuk2::SimpleResource
 {
 public:
     DataObject(const QUrl& uri = QUrl())

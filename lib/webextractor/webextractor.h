@@ -28,40 +28,40 @@
 #include <QtCore/QVariantMap>
 
 namespace NepomukMetaDataExtractor {
-    namespace Extractor {
-        class NEPOMUKMETADATAEXTRACTOR_EXPORT WebExtractor : public QObject
-        {
-            Q_OBJECT
+namespace Extractor {
+class NEPOMUKMETADATAEXTRACTOR_EXPORT WebExtractor : public QObject
+{
+    Q_OBJECT
 
-        public:
-            struct Info {
-                QString name;
-                QString identifier;
-                QString description;
-                QStringList resource;
-                QStringList urlregex;
-                QString author;
-                QString email;
-                QString file;
-                QString icon;
-            };
+public:
+    struct Info {
+        QString name;
+        QString identifier;
+        QString description;
+        QStringList resource;
+        QStringList urlregex;
+        QString author;
+        QString email;
+        QString file;
+        QString icon;
+    };
 
-            explicit WebExtractor(QObject *parent = 0);
-            ~WebExtractor();
+    explicit WebExtractor(QObject *parent = 0);
+    ~WebExtractor();
 
-            virtual WebExtractor::Info info() = 0;
+    virtual WebExtractor::Info info() = 0;
 
-        public slots:
-            virtual void search(const QString &resourceType, const QVariantMap &parameters) = 0;
-            virtual void extractItem(const QUrl &url, const QVariantMap &options) = 0;
+public slots:
+    virtual void search(const QString &resourceType, const QVariantMap &parameters) = 0;
+    virtual void extractItem(const QUrl &url, const QVariantMap &options) = 0;
 
-        signals:
-            void error(const QString &errorMessage);
-            void log(const QString &logMessage);
-            void searchResults(const QVariantList &entries);
-            void itemResults(const QString &resourceType, const QVariantMap &entry);
-        };
-    }
+signals:
+    void error(const QString &errorMessage);
+    void log(const QString &logMessage);
+    void searchResults(const QVariantList &entries);
+    void itemResults(const QString &resourceType, const QVariantMap &entry);
+};
+}
 }
 
 #endif // WEBEXTRACTOR_H

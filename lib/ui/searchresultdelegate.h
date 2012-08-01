@@ -21,24 +21,23 @@
 #include <QtGui/QStyledItemDelegate>
 
 namespace NepomukMetaDataExtractor {
-    namespace Dialog {
-        /**
-          * @brief Delegate to show the search result information in a nice way.
-          *
-          * Displays the title in bold font and the details in a smaller italic font below it
-          */
-        class SearchResultDelegate : public QStyledItemDelegate
-        {
-            Q_OBJECT
-        public:
-            explicit SearchResultDelegate(QObject *parent = 0);
+namespace Dialog {
+/**
+  * @brief Delegate to show the search result information in a nice way.
+  *
+  * Displays the title in bold font and the details in a smaller italic font below it
+  */
+class SearchResultDelegate : public QStyledItemDelegate
+{
+    Q_OBJECT
+public:
+    explicit SearchResultDelegate(QObject *parent = 0);
 
-            void paint(QPainter *painter, const QStyleOptionViewItem &option,const QModelIndex &index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,const QModelIndex &index) const;
 
-            QSize sizeHint( const QStyleOptionViewItem & option, const QModelIndex & index ) const;
-
-        };
-    }
+    QSize sizeHint( const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+};
+}
 }
 
 #endif // SEARCHRESULTDELEGATE_H

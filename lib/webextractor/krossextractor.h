@@ -23,50 +23,50 @@
 #include <KDE/Kross/Action>
 
 namespace NepomukMetaDataExtractor {
-    namespace Extractor {
+namespace Extractor {
 
-        class KrossExtractorPrivate;
+class KrossExtractorPrivate;
 
-        /**
-          * @brief Wrapper around the Kross framework to implement plugins in python, ruby or javascript
-          *
-          * The plugin itself is implemented in the scriptfile that will be passed via its constructor.
-          * Afterwards the signals/slots are passed directly to the script.
-          *
-          * @see http://techbase.kde.org/Development/Tutorials#Kross
-          *
-          * All script plugins must implement the slots:
-          * @li searchItems(QString, QVariantMap)
-          * @li extractItemFromUri(QUrl, QVariantMap)
-          *
-          * and return its data via:
-          * @li error(QString);
-          * @li log(QString);
-          * @li searchResults(QVariantList);
-          * @li itemResults(QString, QVariantMap);
-          *
-          */
-        class KrossExtractor : public WebExtractor
-        {
-            Q_OBJECT
-        public:
-            explicit KrossExtractor(const QString &scriptFile, QObject *parent = 0);
-            ~KrossExtractor();
+/**
+  * @brief Wrapper around the Kross framework to implement plugins in python, ruby or javascript
+  *
+  * The plugin itself is implemented in the scriptfile that will be passed via its constructor.
+  * Afterwards the signals/slots are passed directly to the script.
+  *
+  * @see http://techbase.kde.org/Development/Tutorials#Kross
+  *
+  * All script plugins must implement the slots:
+  * @li searchItems(QString, QVariantMap)
+  * @li extractItemFromUri(QUrl, QVariantMap)
+  *
+  * and return its data via:
+  * @li error(QString);
+  * @li log(QString);
+  * @li searchResults(QVariantList);
+  * @li itemResults(QString, QVariantMap);
+  *
+  */
+class KrossExtractor : public WebExtractor
+{
+    Q_OBJECT
+public:
+    explicit KrossExtractor(const QString &scriptFile, QObject *parent = 0);
+    ~KrossExtractor();
 
-            WebExtractor::Info info();
+    WebExtractor::Info info();
 
-            void search(const QString &resourceType, const QVariantMap &parameters);
-            void extractItem(const QUrl &url, const QVariantMap &options);
+    void search(const QString &resourceType, const QVariantMap &parameters);
+    void extractItem(const QUrl &url, const QVariantMap &options);
 
-        signals:
-            void searchItems(const QString &resourceType, const QVariantMap &parameters);
-            void extractItemFromUri(const QUrl &url, const QVariantMap &options);
+signals:
+    void searchItems(const QString &resourceType, const QVariantMap &parameters);
+    void extractItemFromUri(const QUrl &url, const QVariantMap &options);
 
-        private:
-            Q_DECLARE_PRIVATE(KrossExtractor)
-            KrossExtractorPrivate *const d_ptr; /**< d-pointer for this class */
-        };
-    }
+private:
+    Q_DECLARE_PRIVATE(KrossExtractor)
+    KrossExtractorPrivate *const d_ptr; /**< d-pointer for this class */
+};
+}
 }
 
 #endif // KROSSEXTRACTOR_H

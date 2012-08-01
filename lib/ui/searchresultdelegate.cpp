@@ -55,7 +55,7 @@ void NepomukMetaDataExtractor::Dialog::SearchResultDelegate::paint(QPainter *pai
     titleFont.setPointSize(9);
     painter->setFont(titleFont);
     painter->drawText(QRect(rect.left(), rect.top(), rect.width(), rect.height()/2),
-    opt.displayAlignment, title);
+                      opt.displayAlignment, title);
 
     QFont infoFont;
     infoFont.setBold(false);
@@ -63,7 +63,7 @@ void NepomukMetaDataExtractor::Dialog::SearchResultDelegate::paint(QPainter *pai
     infoFont.setPointSize(8);
     painter->setFont(infoFont);
     painter->drawText(QRect(rect.left(), rect.top()+rect.height()/2, rect.width(), rect.height()/2),
-    opt.displayAlignment, details);
+                      opt.displayAlignment, details);
 }
 
 QSize NepomukMetaDataExtractor::Dialog::SearchResultDelegate::sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const

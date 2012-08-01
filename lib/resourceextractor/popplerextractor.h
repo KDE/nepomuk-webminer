@@ -23,46 +23,61 @@
 
 #include <KDE/KUrl>
 
-#include "metadataparameters.h"
-
 namespace Poppler {
     class Document;
 }
 
 namespace NepomukMetaDataExtractor {
-    namespace Extractor {
+namespace Extractor {
 
-        class PopplerExtractorPrivate;
+    class MetaDataParameters;
+    class PopplerExtractorPrivate;
 
-        /**
-          * @brief Extractor for pdf documents via the poppler library
-          *
-          * Extracts the RDF content of the pdf file and the TOC.
-          * Also parse the first page to get the title from it (as often the title is not correctly
-          * inserted into the RDF part. It find the text with the biggest font size that has more
-          * than 1 character, this is most likely the title.
-          */
-        class PopplerExtractor : public QObject
-        {
-            Q_OBJECT
+/**
+  * @brief Extractor for pdf documents via the poppler library
+  *
+  * Extracts the RDF content of the pdf file and the TOC.
+  * Also parse the first page to get the title from it (as often the title is not correctly
+  * inserted into the RDF part. It find the text with the biggest font size that has more
+  * than 1 character, this is most likely the title.
+  */
+class PopplerExtractor : public QObject
+{
+    Q_OBJECT
 
-        public:
-            explicit PopplerExtractor(QObject *parent = 0);
-            ~PopplerExtractor();
+public:
+    /**
+     * @brief Standard constructor
+     * @param parent
+     */
+    explicit PopplerExtractor(QObject *parent = 0);
+    ~PopplerExtractor();
 
-            /**
-              * Fille the MetaDataParameters with soem more values from the RDF and first page
-              */
-            void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
+    /**
+      * Fills the MetaDataParameters with some more values from the RDF and first page
+      *
+     * @param mdp the MetaDataParameters where the parsed data will be saved to
+     * @param fileUrl the url of the file on the harddrive
+      */
+    void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
 
-        private:
-            void tocCreation(const QDomDocument &toc, QDomNode &node);
-            void parseFirstpage();
+private:
+    /**
+     * @brief creates the TOC from the given pdf data
+     * @param toc the doc xml document of the pdf file
+     * @param node the current node
+     */
+    void tocCreation(const QDomDocument &toc, QDomNode &node);
 
-            Q_DECLARE_PRIVATE(PopplerExtractor)
-            PopplerExtractorPrivate *const d_ptr; /**< d-pointer for this class */
-        };
-    }
+    /**
+     * @brief Exctract additional data from the pdf first page
+     */
+    void parseFirstpage();
+
+    Q_DECLARE_PRIVATE(PopplerExtractor)
+    PopplerExtractorPrivate *const d_ptr; /**< d-pointer for this class */
+};
+}
 }
 
 #endif // POPPLEREXTRACTOR_H

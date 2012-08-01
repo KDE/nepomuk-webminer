@@ -22,18 +22,16 @@
 #include <QtCore/QStringList>
 #include <QtCore/QDir>
 
-#include <QDebug>
-
 namespace NepomukMetaDataExtractor {
-    namespace Extractor {
-        class VideoExtractorPrivate {
-        public:
-            QList<QRegExp> tvshowFolderRegExpsCompiled;
-            QList<QRegExp> tvshowFilenameRegExps;
-            QList<QRegExp> movieFilenameRegExps;
-            bool tvshowOnly;
-        };
-    }
+namespace Extractor {
+class VideoExtractorPrivate {
+public:
+    QList<QRegExp> tvshowFolderRegExpsCompiled;
+    QList<QRegExp> tvshowFilenameRegExps;
+    QList<QRegExp> movieFilenameRegExps;
+    bool tvshowOnly;
+};
+}
 }
 
 NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *parent, bool tvshowOnly)
@@ -41,6 +39,7 @@ NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *par
     , d_ptr( new NepomukMetaDataExtractor::Extractor::VideoExtractorPrivate )
 {
     Q_D( VideoExtractor );
+    d->tvshowOnly = tvshowOnly;
 
     // -----------------------------------------------------------------------------------
     // Regular expressions for the folder structure
@@ -53,13 +52,13 @@ NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *par
     // Title/Season 1/filename or xyz/Title/1 Season/filename or xyz/Title/S1/filename
     // include specials like Blood+
     d->tvshowFolderRegExpsCompiled.append(
-    QRegExp( QLatin1String( "[\\\\/](.*)[\\\\/]") + seasonRe + QLatin1String( "([0-9]{1,2})") + seasonRe + QLatin1String( "[\\\\/]$" ),
-             Qt::CaseInsensitive, QRegExp::RegExp2 ) );
+                QRegExp( QLatin1String( "[\\\\/](.*)[\\\\/]") + seasonRe + QLatin1String( "([0-9]{1,2})") + seasonRe + QLatin1String( "[\\\\/]$" ),
+                         Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
     // Title/filename
     d->tvshowFolderRegExpsCompiled.append(
-    QRegExp( QLatin1String( "^[\\\\/]?([^\\\\/]*)[\\\\/]$" ),
-             Qt::CaseInsensitive, QRegExp::RegExp2 ) );
+                QRegExp( QLatin1String( "^[\\\\/]?([^\\\\/]*)[\\\\/]$" ),
+                         Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
     // Regular expressions to parse file based on the ones from tvnamer.py
     // Copyright dbr/Ben
@@ -68,52 +67,52 @@ NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *par
 
     // foo_[s01]_[e01]
     d->tvshowFilenameRegExps.append(
-        QRegExp( QLatin1String( "(.+)[ \\._\\-]\\[s([0-9]+)\\]_\\[e([0-9]+)\\]?[^\\\\/]*" ),
-                 Qt::CaseInsensitive, QRegExp::RegExp2 ) );
+                QRegExp( QLatin1String( "(.+)[ \\._\\-]\\[s([0-9]+)\\]_\\[e([0-9]+)\\]?[^\\\\/]*" ),
+                         Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
     // foo.1x09*
     d->tvshowFilenameRegExps.append(
-        QRegExp( QLatin1String( "(.+)[ \\._\\-]\\[?([0-9]+)x([0-9]+)[^\\d]?[^\\\\/]*" ),
-                 Qt::CaseInsensitive, QRegExp::RegExp2 ) );
+                QRegExp( QLatin1String( "(.+)[ \\._\\-]\\[?([0-9]+)x([0-9]+)[^\\d]?[^\\\\/]*" ),
+                         Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
     // foo.s01.e01, foo.s01_e01
     d->tvshowFilenameRegExps.append(
-        QRegExp( QLatin1String( "(.+)[ \\._\\-]s([0-9]+)[\\._\\- ]?e([0-9]+)[^\\\\/]*" ),
-                 Qt::CaseInsensitive, QRegExp::RegExp2 ) );
+                QRegExp( QLatin1String( "(.+)[ \\._\\-]s([0-9]+)[\\._\\- ]?e([0-9]+)[^\\\\/]*" ),
+                         Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
     // foo - Episode 01 or foo - e01
     d->tvshowFilenameRegExps.append(
-    QRegExp( QLatin1String( "(.*)\\s?[\\.|\\_|\\-]+\\s?(?:Episode|e)+[\\s|\\.|\\_|\\-]?([0-9]{1,2})\\s?\\-?\\s?.*" ),
-                 Qt::CaseInsensitive, QRegExp::RegExp2 ) );
+                QRegExp( QLatin1String( "(.*)\\s?[\\.|\\_|\\-]+\\s?(?:Episode|e)+[\\s|\\.|\\_|\\-]?([0-9]{1,2})\\s?\\-?\\s?.*" ),
+                         Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
     // would also match movies like Matrix.1999
     if(d->tvshowOnly) {
         // foo.103* (the strange part at the end is used to 1. prevent another digit and 2. allow the name to end)
         d->tvshowFilenameRegExps.append(
-            QRegExp( QLatin1String( "(.+)[ \\._\\-]([0-9]{1})([0-9]{2})(?:[^\\d][^\\\\/]*)?" ),
-                     Qt::CaseInsensitive, QRegExp::RegExp2 ) );
+                    QRegExp( QLatin1String( "(.+)[ \\._\\-]([0-9]{1})([0-9]{2})(?:[^\\d][^\\\\/]*)?" ),
+                             Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
         // foo.0103* (the strange part at the end is used to 1. prevent another digit and 2. allow the name to end)
         d->tvshowFilenameRegExps.append(
-            QRegExp( QLatin1String( "(.+)[ \\._\\-]([0-9]{2})([0-9]{2,3})(?:[^\\d][^\\\\/]*)?" ),
-                     Qt::CaseInsensitive, QRegExp::RegExp2 ) );
+                    QRegExp( QLatin1String( "(.+)[ \\._\\-]([0-9]{2})([0-9]{2,3})(?:[^\\d][^\\\\/]*)?" ),
+                             Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
         // Episode 01
         d->tvshowFilenameRegExps.append(
-            QRegExp( QLatin1String( ".*(?:Episode)+[\\s|\\.|\\_|\\-]?([0-9]{1,2})\\s?\\-?\\s?.*" ),
-                     Qt::CaseInsensitive, QRegExp::RegExp2 ) );
+                    QRegExp( QLatin1String( ".*(?:Episode)+[\\s|\\.|\\_|\\-]?([0-9]{1,2})\\s?\\-?\\s?.*" ),
+                             Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
         // e01 or e01 - episode title
         d->tvshowFilenameRegExps.append(
-            QRegExp( QLatin1String( ".*e+([0-9]{1,2})[\\s|\\-|\\s]+.*" ),
-                     Qt::CaseInsensitive, QRegExp::RegExp2 ) );
+                    QRegExp( QLatin1String( ".*e+([0-9]{1,2})[\\s|\\-|\\s]+.*" ),
+                             Qt::CaseInsensitive, QRegExp::RegExp2 ) );
     }
 
     // The following try to extract the movie name and year
     // match The.Title.2012 or The.Title.(2012) or The.Title.[2012]
     d->movieFilenameRegExps.append(
-    QRegExp( QLatin1String( "(.*)(?:\\s|\\.|\\-|\\_|\\(|\\[)+([0-9]{4}).*" ),
-                 Qt::CaseInsensitive, QRegExp::RegExp2 ) );
+                QRegExp( QLatin1String( "(.*)(?:\\s|\\.|\\-|\\_|\\(|\\[)+([0-9]{4}).*" ),
+                         Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 }
 
 void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl)
@@ -136,25 +135,6 @@ void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(NepomukMetaDa
 bool NepomukMetaDataExtractor::Extractor::VideoExtractor::parseTvShowFolder(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl)
 {
     Q_D( VideoExtractor );
-
-//    QString strippedFolder = fileUrl.directory( KUrl::AppendTrailingSlash ).remove( baseUrl.toLocalFile() );
-//    foreach(const QRegExp &re, d->tvshowFolderRegExpsCompiled) {
-
-//        if ( re.exactMatch( strippedFolder ) ) {
-
-//            if( !re.cap( 1 ).simplified().isEmpty())
-//                mdp->searchShowTitle = re.cap( 1 ).simplified();
-//            if(re.captureCount() == 4) {
-//                if( !re.cap( 3 ).isEmpty())
-//                    mdp->searchSeason = re.cap( 3 );
-//            }
-//            else {
-//                if( !re.cap( 2 ).isEmpty())
-//                    mdp->searchSeason = re.cap( 2 );
-//            }
-//            return true;
-//        }
-//    }
 
     QString strippedFolderUpOne = fileUrl.directory( KUrl::AppendTrailingSlash ).remove( baseUrl.upUrl().toLocalFile() );
 

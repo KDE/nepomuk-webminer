@@ -8,7 +8,7 @@
 #include <QtCore/QTime>
 #include <QtCore/QDateTime>
 
-#include "dms-copy/simpleresource.h"
+#include <Nepomuk2/SimpleResource>
 
 namespace Nepomuk {
 namespace NCO {
@@ -19,7 +19,7 @@ namespace NCO {
  * usually have one role. Each role can introduce additional contact 
  * media. 
  */
-class Role : public virtual Nepomuk::SimpleResource
+class Role : public virtual Nepomuk2::SimpleResource
 {
 public:
     Role(const QUrl& uri = QUrl())

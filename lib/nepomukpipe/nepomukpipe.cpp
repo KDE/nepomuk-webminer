@@ -17,7 +17,7 @@
 
 #include "nepomukpipe.h"
 
-#include "dms-copy/storeresourcesjob.h"
+#include <Nepomuk2/StoreResourcesJob>
 #include <KDE/KJob>
 #include <KDE/KIO/CopyJob>
 #include <KDE/KStandardDirs>
@@ -29,7 +29,7 @@
 NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe(QObject *parent)
     : QObject(parent)
 {
-	
+
 }
 
 NepomukMetaDataExtractor::Pipe::NepomukPipe::~NepomukPipe()

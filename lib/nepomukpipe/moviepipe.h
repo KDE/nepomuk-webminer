@@ -21,30 +21,30 @@
 #include "nepomukpipe.h"
 
 namespace NepomukMetaDataExtractor {
-    namespace Pipe {
-        /**
-          * @brief Pipes a QVariantMap with movie information into Nempomuk
-          *
-          * The following keys will be used in this trasition:
-          * @li @c resourceuri - the file url or nepomuk uri of the resource this data should be added to
-          * @li @c title
-          * @li @c plot
-          * @li @c genres - split by ;
-          * @li @c year
-          * @li @c director - split by ;
-          * @li @c writer - split by ;
-          * @li @c cast - split by ;
-          */
-        class MoviePipe : public NepomukPipe
-        {
+namespace Pipe {
+/**
+  * @brief Pipes a QVariantMap with movie information into Nempomuk
+  *
+  * The following keys will be used in this trasition:
+  * @li @c resourceuri - the file url or nepomuk uri of the resource this data should be added to
+  * @li @c title
+  * @li @c plot
+  * @li @c genres - split by ;
+  * @li @c year
+  * @li @c director - split by ;
+  * @li @c writer - split by ;
+  * @li @c cast - split by ;
+  */
+class MoviePipe : public NepomukPipe
+{
 
-        public:
-            MoviePipe(QObject *parent = 0);
-            virtual ~MoviePipe();
+public:
+    MoviePipe(QObject *parent = 0);
+    virtual ~MoviePipe();
 
-            void pipeImport(const QVariantMap &movieEntry);
-        };
-    }
+    void pipeImport(const QVariantMap &movieEntry);
+};
+}
 }
 
 #endif // MOVIEPIPE_H

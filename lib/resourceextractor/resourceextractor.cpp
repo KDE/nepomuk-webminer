@@ -35,14 +35,14 @@
 #include <QtCore/QFileInfoList>
 
 namespace NepomukMetaDataExtractor {
-    namespace Extractor {
-        class ResourceExtractorPrivate {
-        public:
-            bool forceUpdate;
-            KUrl baseCallUrl;
-            QList<MetaDataParameters *> resourcesToLookup;
-        };
-    }
+namespace Extractor {
+class ResourceExtractorPrivate {
+public:
+    bool forceUpdate;
+    KUrl baseCallUrl;
+    QList<MetaDataParameters *> resourcesToLookup;
+};
+}
 }
 
 NepomukMetaDataExtractor::Extractor::ResourceExtractor::ResourceExtractor(QObject *parent)
@@ -60,8 +60,9 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::setForceUpdate(bool
 void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupFiles(const KUrl &fileOrFolder)
 {
     Q_D( ResourceExtractor );
-    if(!d->baseCallUrl.isValid())
+    if(!d->baseCallUrl.isValid()) {
         d->baseCallUrl = fileOrFolder;
+    }
 
     emit progressStatus( i18n("Check available files") );
     QDir dir(fileOrFolder.toLocalFile());

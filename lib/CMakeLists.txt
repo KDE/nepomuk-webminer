@@ -1,7 +1,4 @@
 
-add_subdirectory( dms-copy )
-
-
 # -------------------------------------------
 # create the extractor library part
 # -------------------------------------------
@@ -45,11 +42,12 @@ target_link_libraries( nepomukmetadataextractor
   ${SOPRANO_LIBRARIES}
   ${NEPOMUK_LIBRARIES}
   ${NEPOMUK_QUERY_LIBRARIES}
-  nepomukdatamanagement-copy
+  nepomukcore
+  nepomuksync
 
 # other parts
   ${POPPLER_LIBRARY}
-  ${LIBTVDB_LIBRARIES}
+  #${LIBTVDB_LIBRARIES}
 )
 
 set_target_properties( nepomukmetadataextractor

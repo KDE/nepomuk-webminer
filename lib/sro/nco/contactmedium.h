@@ -8,7 +8,7 @@
 #include <QtCore/QTime>
 #include <QtCore/QDateTime>
 
-#include "dms-copy/simpleresource.h"
+#include <Nepomuk2/SimpleResource>
 
 namespace Nepomuk {
 namespace NCO {
@@ -26,7 +26,7 @@ namespace NCO {
  * whereas media with TYPE=work parameter should be attached 
  * to nco:Affiliation or nco:OrganizationContact. 
  */
-class ContactMedium : public virtual Nepomuk::SimpleResource
+class ContactMedium : public virtual Nepomuk2::SimpleResource
 {
 public:
     ContactMedium(const QUrl& uri = QUrl())

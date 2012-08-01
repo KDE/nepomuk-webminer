@@ -24,13 +24,13 @@
 #include <KDE/KDebug>
 
 namespace NepomukMetaDataExtractor {
-    namespace Extractor {
-        class PopplerExtractorPrivate {
-        public:
-            Poppler::Document  *pdfdoc;
-            MetaDataParameters *publicationEntry;
-        };
-    }
+namespace Extractor {
+class PopplerExtractorPrivate {
+public:
+    Poppler::Document  *pdfdoc;
+    MetaDataParameters *publicationEntry;
+};
+}
 }
 
 NepomukMetaDataExtractor::Extractor::PopplerExtractor::PopplerExtractor(QObject *parent)
@@ -45,7 +45,7 @@ NepomukMetaDataExtractor::Extractor::PopplerExtractor::~PopplerExtractor()
     delete d->pdfdoc;
 }
 
-void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
+void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseUrl(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl)
 {
     Q_D( PopplerExtractor );
     d->pdfdoc = Poppler::Document::load( fileUrl.toLocalFile(), 0, 0 );
@@ -76,7 +76,7 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseUrl(MetaDataPar
                 d->publicationEntry->metaData.insert(QLatin1String("title"), d->pdfdoc->info(key));
             }
         }
-        // igrnore the following attributes, they are not of interrest
+        // ignore the following attributes, they are not of interrest
         else if(key == QLatin1String("Creator") ||
                 key == QLatin1String("Producer") ||
                 key == QLatin1String("CreationDate") ||
@@ -133,7 +133,7 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::tocCreation(const QD
             QString chapterNumber = e.attribute(QLatin1String("DestinationName"));
             chapterNumber.remove(QRegExp("(sub)*section\\."));
             //TODO create toc ...
-//            qDebug() << chapterNumber << ":"  << chapterName;
+            //            qDebug() << chapterNumber << ":"  << chapterName;
         }
 
         if(e.hasChildNodes()) {
@@ -148,7 +148,6 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::tocCreation(const QD
 void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseFirstpage()
 {
     Q_D( PopplerExtractor );
-    kDebug() << "parseFirstpage";
     Poppler::Page *p = d->pdfdoc->page(0);
 
     QList<Poppler::TextBox*> tbList = p->textList();

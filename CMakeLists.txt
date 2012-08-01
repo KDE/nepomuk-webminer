@@ -53,6 +53,8 @@ target_link_libraries( metadataextractor
   ${KDE4_KDEUI_LIBS}
 
   nepomukmetadataextractor
+  ${NEPOMUK_LIBRARIES}
+  ${NEPOMUK_QUERY_LIBRARIES}
 )
 
 install(TARGETS metadataextractor ${INSTALL_TARGETS_DEFAULT_ARGS})

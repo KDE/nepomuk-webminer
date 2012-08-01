@@ -17,15 +17,15 @@
 
 #include "moviepipe.h"
 
-#include "dms-copy/simpleresource.h"
-#include "dms-copy/simpleresourcegraph.h"
-#include "dms-copy/datamanagement.h"
-#include "dms-copy/storeresourcesjob.h"
-#include <KDE/KJob>
+#include <Nepomuk2/SimpleResource>
+#include <Nepomuk2/SimpleResourceGraph>
+#include <Nepomuk2/DataManagement>
+#include <Nepomuk2/StoreResourcesJob>
 
 #include "sro/nmm/movie.h"
-
 #include <Soprano/Vocabulary/NAO>
+
+#include <KDE/KJob>
 
 #include <KDE/KDebug>
 
@@ -43,9 +43,9 @@ NepomukMetaDataExtractor::Pipe::MoviePipe::~MoviePipe()
 
 void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &movieEntry)
 {
-    Nepomuk::SimpleResourceGraph graph;
+    Nepomuk2::SimpleResourceGraph graph;
 
-    //TODO do not use local file url here, this will double type the resource
+    //TODO: do not use local file url here, this will double type the resource
     // for now this is the best way to deal with this
     QString resourceUri = movieEntry.value(QLatin1String("resourceuri"), QString()).toString();
     QUrl existingUri(resourceUri);
@@ -99,5 +99,5 @@ void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &mo
 
     graph << movieResource;
 
-    Nepomuk::storeResources(graph, Nepomuk::IdentifyNew, Nepomuk::OverwriteProperties);
+    Nepomuk2::storeResources(graph, Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties);
 }

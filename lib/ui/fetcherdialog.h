@@ -30,85 +30,80 @@ namespace Ui {
     class FetcherDialog;
 }
 
-namespace NepomukMetaDataExtractor {
-    namespace Extractor {
-        class ExtractorFactory;
-        class WebExtractor;
-        class ResourceExtractor;
-        class MetaDataParameters;
-    }
-
-    namespace Dialog {
-        class SearchResultsModel;
-    }
-}
-
 class QTextDocument;
 
 namespace NepomukMetaDataExtractor {
-    namespace Dialog {
+namespace Extractor {
+    class ExtractorFactory;
+    class WebExtractor;
+    class ResourceExtractor;
+    class MetaDataParameters;
+}
 
-        /**
-          * @brief Main dialog to show the current progress and some buttons to interact with
-          *
-          */
-        class NEPOMUKMETADATAEXTRACTOR_EXPORT FetcherDialog : public QDialog, private Ui::FetcherDialog
-        {
-            Q_OBJECT
+namespace Dialog {
+    class SearchResultsModel;
 
-        public:
-            explicit FetcherDialog(QWidget *parent = 0);
-            ~FetcherDialog();
+/**
+  * @brief Main dialog to show the current progress and some buttons to interact with
+  *
+  */
+class NEPOMUKMETADATAEXTRACTOR_EXPORT FetcherDialog : public QDialog, private Ui::FetcherDialog
+{
+    Q_OBJECT
 
-            void setInitialPathOrFile( const KUrl &url );
-            void setForceUpdate(bool update);
-            void setTvShowMode(bool tvshowmode);
+public:
+    explicit FetcherDialog(QWidget *parent = 0);
+    ~FetcherDialog();
 
-        private slots:
-            void resourceFetchingDone();
-            void selectNextResourceToLookUp();
-            void selectPreviousResourceToLookUp();
-            void resourceTypeSelectionChanged(int selection);
+    void setInitialPathOrFile( const KUrl &url );
+    void setForceUpdate(bool update);
+    void setTvShowMode(bool tvshowmode);
 
-            void startSearch();
-            void selectSearchEntry( QVariantList searchResults );
-            void searchEntrySelected(const QModelIndex &current, const QModelIndex &previous);
+private slots:
+    void resourceFetchingDone();
+    void selectNextResourceToLookUp();
+    void selectPreviousResourceToLookUp();
+    void resourceTypeSelectionChanged(int selection);
 
-            void showSearchParameters();
-            void openDetailsLink(const QString &url);
+    void startSearch();
+    void selectSearchEntry( QVariantList searchResults );
+    void searchEntrySelected(const QModelIndex &current, const QModelIndex &previous);
 
-            void fetchMoreDetails();
-            void fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails);
+    void showSearchParameters();
+    void openDetailsLink(const QString &url);
 
-            void saveMetaData();
+    void fetchMoreDetails();
+    void fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails);
 
-            void cancelClose();
+    void saveMetaData();
 
-            void addToProgressLog(const QString &status);
-            void showProgressLog();
+    void cancelClose();
 
-        private:
-            void setupCurrentResourceToLookup();
-            void fillEngineList(const QString &category);
-            void showItemDetails();
+    void addToProgressLog(const QString &status);
+    void showProgressLog();
 
-            void busyFetching();
-            void finishedFetching();
+private:
+    void setupCurrentResourceToLookup();
+    void fillEngineList(const QString &category);
+    void showItemDetails();
 
-        private:
-            NepomukMetaDataExtractor::Extractor::ResourceExtractor *m_re;
-            NepomukMetaDataExtractor::Extractor::ExtractorFactory *m_ef;
-            NepomukMetaDataExtractor::Extractor::WebExtractor *m_webextractor;
-            NepomukMetaDataExtractor::Extractor::MetaDataParameters *m_currentItemToupdate;
+    void busyFetching();
+    void finishedFetching();
 
-            int m_currentResource;
-            bool tvshowmode;
+private:
+    NepomukMetaDataExtractor::Extractor::ResourceExtractor *m_re;
+    NepomukMetaDataExtractor::Extractor::ExtractorFactory *m_ef;
+    NepomukMetaDataExtractor::Extractor::WebExtractor *m_webextractor;
+    NepomukMetaDataExtractor::Extractor::MetaDataParameters *m_currentItemToupdate;
 
-            SearchResultsModel *m_resultModel;
+    int m_currentResource;
+    bool tvshowmode;
 
-            QTextDocument *m_progressLog;
-        };
-    }
+    SearchResultsModel *m_resultModel;
+
+    QTextDocument *m_progressLog;
+};
+}
 }
 
 #endif // FETCHERDIALOG_H

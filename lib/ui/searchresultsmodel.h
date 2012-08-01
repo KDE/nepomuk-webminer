@@ -21,29 +21,29 @@
 #include <QtCore/QAbstractListModel>
 
 namespace NepomukMetaDataExtractor {
-    namespace Dialog {
-        /**
-          * @brief ListModel to present the @c search @c result @c entries in a nice way
-          *
-          * Uses the @c title and @c details key of the @c QVariantMap from the python call
-          */
-        class SearchResultsModel : public QAbstractListModel
-        {
-            Q_OBJECT
-        public:
-            explicit SearchResultsModel(QObject *parent = 0);
+namespace Dialog {
+/**
+  * @brief ListModel to present the @c search @c result @c entries in a nice way
+  *
+  * Uses the @c title and @c details key of the @c QVariantMap from the python call
+  */
+class SearchResultsModel : public QAbstractListModel
+{
+    Q_OBJECT
+public:
+    explicit SearchResultsModel(QObject *parent = 0);
 
-            void setSearchResults(const QVariantList & searchResults);
-            QVariantMap searchResultEntry( const QModelIndex & index );
-            void clear( );
+    void setSearchResults(const QVariantList & searchResults);
+    QVariantMap searchResultEntry( const QModelIndex & index );
+    void clear( );
 
-            int rowCount ( const QModelIndex & parent = QModelIndex() ) const ;
-            QVariant data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    int rowCount ( const QModelIndex & parent = QModelIndex() ) const ;
+    QVariant data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;
 
-        private:
-            QVariantList m_searchResults;
-        };
-    }
+private:
+    QVariantList m_searchResults;
+};
+}
 }
 
 #endif // SEARCHRESULTSMODEL_H

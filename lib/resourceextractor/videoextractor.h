@@ -25,34 +25,73 @@
 #include <KDE/KUrl>
 
 namespace NepomukMetaDataExtractor {
-    namespace Extractor {
+namespace Extractor {
 
-        class VideoExtractorPrivate;
-        class MetaDataParameters;
+class VideoExtractorPrivate;
+class MetaDataParameters;
 
-        /**
-          * @brief copy of Sebastian Trüg's tvshowfilenameanalyzer
-          *
-          * Defines the file as TvShow if it has S01E0E or simmilar in its name
-          * Otherwise it is a movie
-          */
-        class VideoExtractor : public QObject
-        {
-            Q_OBJECT
-        public:
-            explicit VideoExtractor(QObject *parent = 0, bool tvshowOnly = false);
+/**
+  * @brief copy of Sebastian Trüg's tvshowfilenameanalyzer
+  *
+  * Defines the file as TvShow if it has S01E0E or simmilar in its name
+  * Otherwise it is a movie
+  *
+  * @todo TODO: parse also meta data not only the filename
+  */
+class VideoExtractor : public QObject
+{
+    Q_OBJECT
+public:
+    /**
+     * @brief Constructor that creates all necessary regular expressions
+     * @param parent some parrent
+     * @param tvshowOnly if @arg true will match only tv shows
+     *                   if @arg false will match also movie titles
+     */
+    explicit VideoExtractor(QObject *parent = 0, bool tvshowOnly = false);
 
-            void parseUrl(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl = KUrl());
+    /**
+     * @brief Parse the video filename at the given url
+     * @param mdp the MetaDataParameters where the parsed data will be saved to
+     * @param fileUrl the url of the file on the harddrive
+     */
+    void parseUrl(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl = KUrl());
 
-        private:
-            bool parseTvShowFolder(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl = KUrl());
-            bool parseTvShowFileName(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const QString &fileName);
-            bool parseMovieFileName(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const QString &fileName);
+private:
+    /**
+     * @brief Parse all files in a given folder
+     * @param mdp the MetaDataParameters where the parsed data will be saved to
+     * @param fileUrl filename that will be parsed
+     * @param baseUrl the base folder url
+     * @return @arg true if regexp matched some case
+     *         @arg false if nothing matched
+     */
+    bool parseTvShowFolder(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl = KUrl());
 
-            Q_DECLARE_PRIVATE(VideoExtractor)
-            VideoExtractorPrivate *const d_ptr; /**< d-pointer for this class */
-        };
-    }
+    /**
+     * @brief Parse a TvShow at a given fileurl
+     * @param mdp the MetaDataParameters where the parsed data will be saved to
+     * @param fileName filename that will be parsed
+     * @param baseUrl the base folder url
+     * @return @arg true if regexp matched some case
+     *         @arg false if nothing matched
+     */
+    bool parseTvShowFileName(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const QString &fileName);
+
+    /**
+     * @brief Parse a Movie at a given fileurl
+     * @param mdp the MetaDataParameters where the parsed data will be saved to
+     * @param fileName filename that will be parsed
+     * @param baseUrl the base folder url
+     * @return @arg true if regexp matched some case
+     *         @arg false if nothing matched
+     */
+    bool parseMovieFileName(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const QString &fileName);
+
+    Q_DECLARE_PRIVATE(VideoExtractor)
+    VideoExtractorPrivate *const d_ptr; /**< d-pointer for this class */
+};
+}
 }
 
 #endif // VIDEOEXTRACTOR_H

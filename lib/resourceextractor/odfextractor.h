@@ -21,20 +21,40 @@
 #include <QtCore/QObject>
 #include <KDE/KUrl>
 
-#include "metadataparameters.h"
 
 namespace NepomukMetaDataExtractor {
-    namespace Extractor {
+namespace Extractor {
 
-        class OdfExtractor : public QObject
-        {
-            Q_OBJECT
-        public:
-            explicit OdfExtractor(QObject *parent = 0);
+class MetaDataParameters;
 
-            void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
-        };
-    }
+/**
+ * @brief The OdfExtractor parse some additional data from .odt files
+ *
+ * The following data fields from the embedded xml file will be used:
+ * @li @c dc:title for the @c title key
+ * @li @c meta:keyword for the @c keywords key
+ * @li @c dc:subject for the @c keywords key
+ * @li @c meta:page-count
+ * @li @c dc:description for the @c note key
+ */
+class OdfExtractor : public QObject
+{
+    Q_OBJECT
+public:
+    /**
+     * @brief Standard constructor
+     * @param parent
+     */
+    explicit OdfExtractor(QObject *parent = 0);
+
+    /**
+     * @brief Parse the odf document at the given url
+     * @param mdp the MetaDataParameters where the parsed data will be saved to
+     * @param fileUrl the url of the file on the harddrive
+     */
+    void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
+};
+}
 }
 
 #endif // ODFEXTRACTOR_H
