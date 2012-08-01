@@ -14,7 +14,7 @@ try:
 
 except:
     isAvailable = False
-    errorMsg = "The IMDbPY 4.8.2 module is needed. See http://imdbpy.sourceforge.net/"
+    errorMsg = "The IMDbPY 4.9 module is needed. See http://imdbpy.sourceforge.net/"
 
 
 #------------------------------------------------------------------------------
@@ -98,8 +98,8 @@ def searchItems( resourcetype, parameters ):
                 raise Exception("Can't identify search type.")
 
     except Exception as err:
-        WebExtractor.log(err)
-        WebExtractor.error(err)
+        WebExtractor.log("Script error: \n" + str(err))
+        WebExtractor.error("Script error: \n" + str(err))
 
 def searchMovieResults(results):
     searchResults = []

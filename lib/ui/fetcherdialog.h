@@ -79,6 +79,7 @@ private slots:
 
     void cancelClose();
 
+    void errorInScriptExecution(const QString &error);
     void addToProgressLog(const QString &status);
     void showProgressLog();
 

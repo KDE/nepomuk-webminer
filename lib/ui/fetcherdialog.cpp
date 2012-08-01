@@ -43,6 +43,7 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QTextDocument>
 #include <QtGui/QTextEdit>
+#include <QtGui/QMessageBox>
 
 using namespace NepomukMetaDataExtractor::Pipe;
 using namespace NepomukMetaDataExtractor::Extractor;
@@ -119,6 +120,22 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::setForceUpdate(bool update
 void NepomukMetaDataExtractor::Dialog::FetcherDialog::setTvShowMode(bool tvshowmode)
 {
 
+}
+
+void NepomukMetaDataExtractor::Dialog::FetcherDialog::errorInScriptExecution(const QString &error)
+{
+    finishedFetching();
+
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::critical(this, i18n("Critical script error"),
+                                  error,
+                                  QMessageBox::Abort | QMessageBox::Retry);
+
+    if (reply == QMessageBox::Retry) {
+        startSearch();
+    }
+
+    addToProgressLog(error);
 }
 
 void NepomukMetaDataExtractor::Dialog::FetcherDialog::addToProgressLog(const QString &status)
@@ -296,6 +313,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::startSearch()
         connect(m_webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
         connect(m_webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
         connect(m_webextractor, SIGNAL(log(QString)), this, SLOT(addToProgressLog(QString)));
+        connect(m_webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
     }
 
     QVariantMap searchParameters;
@@ -484,7 +502,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::fetchedItemDetails(const Q
         m_currentItemToupdate->metaData.insert(i.key(), i.value());
     }
 
-    // TODO support batch download of many episodes at once
+    // TODO: support batch download of many episodes at once
     if( resourceType == QLatin1String("tvshow")) {
         QVariantList seasons = m_currentItemToupdate->metaData.value(QLatin1String("seasons")).toList();
         if(!seasons.isEmpty()) {
@@ -567,7 +585,7 @@ void NepomukMetaDataExtractor::Dialog::FetcherDialog::fillEngineList(const QStri
                                           engine.identifier);
     }
 
-    //TODO select the default engine from some config file
+    //TODO: select the default engine from some config file
     comboBoxSearchEngine->setCurrentIndex( 0 );
 }
 
