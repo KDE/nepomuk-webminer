@@ -20,7 +20,10 @@
 
 #include <QtCore/QObject>
 #include <KDE/KUrl>
-#include <Nepomuk/Resource>
+
+namespace Nepomuk2 {
+    class Resource;
+}
 
 namespace NepomukMetaDataExtractor {
 namespace Extractor {
@@ -76,8 +79,8 @@ public:
       *
       * @todo TODO: implement data extracting from existing resources
       */
-    void lookupResource(const Nepomuk::Resource &resource);
-    void lookupResource(const QList<Nepomuk::Resource> &resources);
+    void lookupResource(const Nepomuk2::Resource &resource);
+    void lookupResource(const QList<Nepomuk2::Resource> &resources);
 
     /**
       * Returns the complete list of resources that are ready for the metadata fetching

@@ -24,9 +24,10 @@
 #include <KDE/KJob>
 
 #include <KDE/KUrl>
-#include "nfo/image.h"
-#include "nfo/webdataobject.h"
-#include "nmm/tvseries.h"
+#include "sro/nfo/image.h"
+#include "sro/nfo/webdataobject.h"
+#include "sro/nmm/tvseries.h"
+#include "sro/nco/personcontact.h"
 
 #include <Soprano/Vocabulary/RDFS>
 #include <Soprano/Vocabulary/NAO>
@@ -50,18 +51,19 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
     Nepomuk2::SimpleResourceGraph graph;
 
     // get all the series information
-    Nepomuk::NMM::TVSeries seriesRes;
+    Nepomuk2::NMM::TVSeries seriesRes;
 
     QString seriesTitle = tvshowEntry.value(QLatin1String("title")).toString();
     QString seriesOverview = tvshowEntry.value(QLatin1String("overview")).toString();
 
     seriesRes.setTitle( seriesTitle );
-    seriesRes.addDescription( seriesOverview );
+    //FIXME: why nao description? seems addDescription for TVSeries is not available anymore
+    seriesRes.addNaoDescription( seriesOverview );
 
     QString seriesImdbId = tvshowEntry.value(QLatin1String("imdbid")).toString();
     if( !seriesImdbId.isEmpty() ) {
         // TODO: this is not nice: the DMS does not allow to simply use an http URL as object
-        Nepomuk::NFO::WebDataObject imdbRes( seriesImdbId );
+        Nepomuk2::NFO::WebDataObject imdbRes( seriesImdbId );
         seriesRes.addProperty(RDFS::seeAlso(), imdbRes.uri());
         graph << imdbRes;
     }
@@ -80,7 +82,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
     if( !showBannerUrl.isEmpty() ) {
         const KUrl localUrl = downloadBanner( showBannerUrl, seriesTitle );
         if(!localUrl.isEmpty()) {
-            Nepomuk::NFO::Image banner(localUrl);
+            Nepomuk2::NFO::Image banner(localUrl);
             seriesRes.addDepiction(banner.uri());
             graph << banner;
         }
@@ -90,7 +92,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
     if( !showPosterUrl.isEmpty() ) {
         const KUrl localUrl = downloadBanner( showPosterUrl, seriesTitle );
         if(!localUrl.isEmpty()) {
-            Nepomuk::NFO::Image banner(localUrl);
+            Nepomuk2::NFO::Image banner(localUrl);
             seriesRes.addDepiction(banner.uri());
             graph << banner;
         }
@@ -103,7 +105,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
         QVariantMap seasonInfo = season.toMap();
 
         //TODO: add title/name to it like Season 1
-        Nepomuk::NMM::TVSeason seasonRes;
+        Nepomuk2::NMM::TVSeason seasonRes;
 
         QString seasonNumber = seasonInfo.value(QLatin1String("number")).toString();
 
@@ -115,7 +117,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
         if( !seriesBannerUrl.isEmpty() ) {
             const KUrl localUrl = downloadBanner( seriesBannerUrl, seriesTitle );
             if(!localUrl.isEmpty()) {
-                Nepomuk::NFO::Image banner(localUrl);
+                Nepomuk2::NFO::Image banner(localUrl);
                 seasonRes.addDepiction(banner.uri());
                 graph << banner;
             }
@@ -125,7 +127,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
         if( !seriesPosterUrl.isEmpty() ) {
             const KUrl localUrl = downloadBanner( seriesPosterUrl, seriesTitle );
             if(!localUrl.isEmpty()) {
-                Nepomuk::NFO::Image banner(localUrl);
+                Nepomuk2::NFO::Image banner(localUrl);
                 seasonRes.addDepiction(banner.uri());
                 graph << banner;
             }
@@ -137,14 +139,14 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
         foreach( const QVariant &episode, episodeList) {
             QVariantMap episodeInfo = episode.toMap();
 
-            Nepomuk::NMM::TVShow episodeRes = createEpisode(episodeInfo, seasonRes );
+            Nepomuk2::NMM::TVShow episodeRes = createEpisode(episodeInfo, seasonRes );
             episodeRes.setGenres( genres );
 
             QString episodeBannerUrl = episodeInfo.value(QLatin1String("banner")).toString();
             if( !episodeBannerUrl.isEmpty() ) {
                 const KUrl localUrl = downloadBanner( episodeBannerUrl, seriesTitle );
                 if(!localUrl.isEmpty()) {
-                    Nepomuk::NFO::Image banner(localUrl);
+                    Nepomuk2::NFO::Image banner(localUrl);
                     episodeRes.addDepiction(banner.uri());
                     graph << banner;
                 }
@@ -154,7 +156,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
             if( !episodePosterUrl.isEmpty() ) {
                 const KUrl localUrl = downloadBanner( episodePosterUrl, seriesTitle );
                 if(!localUrl.isEmpty()) {
-                    Nepomuk::NFO::Image banner(localUrl);
+                    Nepomuk2::NFO::Image banner(localUrl);
                     episodeRes.addDepiction(banner.uri());
                     graph << banner;
                 }
@@ -168,22 +170,22 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
 
             // Now add all the actors and guest stars
 
-            QList<Nepomuk::NCO::PersonContact> actorList = createPersonContacts( episodeInfo.value(QLatin1String("actors")).toString() );
-            foreach(const Nepomuk::NCO::PersonContact &actor, actorList) {
+            QList<Nepomuk2::NCO::PersonContact> actorList = createPersonContacts( episodeInfo.value(QLatin1String("actors")).toString() );
+            foreach(const Nepomuk2::NCO::PersonContact &actor, actorList) {
                 graph << actor;
                 episodeRes.addActor( actor.uri() );
                 episodeRes.addProperty(NAO::hasSubResource(), actor.uri());
             }
 
-            QList<Nepomuk::NCO::PersonContact> writerList = createPersonContacts( episodeInfo.value(QLatin1String("writer")).toString() );
-            foreach(const Nepomuk::NCO::PersonContact &writer, writerList) {
+            QList<Nepomuk2::NCO::PersonContact> writerList = createPersonContacts( episodeInfo.value(QLatin1String("writer")).toString() );
+            foreach(const Nepomuk2::NCO::PersonContact &writer, writerList) {
                 graph << writer;
                 episodeRes.addWriter( writer.uri() );
                 episodeRes.addProperty(NAO::hasSubResource(), writer.uri());
             }
 
-            QList<Nepomuk::NCO::PersonContact> directorList = createPersonContacts( episodeInfo.value(QLatin1String("director")).toString() );
-            foreach(const Nepomuk::NCO::PersonContact &director, directorList) {
+            QList<Nepomuk2::NCO::PersonContact> directorList = createPersonContacts( episodeInfo.value(QLatin1String("director")).toString() );
+            foreach(const Nepomuk2::NCO::PersonContact &director, directorList) {
                 graph << director;
                 episodeRes.addDirector( director.uri() );
                 episodeRes.addProperty(NAO::hasSubResource(), director.uri());
@@ -206,11 +208,11 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
     srj->exec();
 }
 
-Nepomuk::NMM::TVShow NepomukMetaDataExtractor::Pipe::TvShowPipe::createEpisode(QVariantMap episodeInfo, Nepomuk::NMM::TVSeason season )
+Nepomuk2::NMM::TVShow NepomukMetaDataExtractor::Pipe::TvShowPipe::createEpisode(QVariantMap episodeInfo, Nepomuk2::NMM::TVSeason season )
 {
     kDebug() << "create new episode with url" << episodeInfo.value(QLatin1String("resourceuri")).toString();
     KUrl localFile( episodeInfo.value(QLatin1String("resourceuri")).toString() );
-    Nepomuk::NMM::TVShow episodeRes(localFile);
+    Nepomuk2::NMM::TVShow episodeRes(localFile);
 
     QString episodeNumber = episodeInfo.value(QLatin1String("number")).toString();
     episodeRes.setEpisodeNumber(episodeNumber.toInt());

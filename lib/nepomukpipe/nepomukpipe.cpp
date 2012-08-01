@@ -26,6 +26,9 @@
 
 #include <QtCore/QFile>
 
+#include "nco/personcontact.h"
+#include "nco/organizationcontact.h"
+
 NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe(QObject *parent)
     : QObject(parent)
 {
@@ -41,6 +44,9 @@ void NepomukMetaDataExtractor::Pipe::NepomukPipe::slotSaveToNepomukDone(KJob *jo
 {
     if(job->error()) {
         kDebug() << "Failed to store information in Nepomuk. " << job->errorString();
+    }
+    else {
+        kDebug() << "Successfully stored data into Nepomuk";
     }
 }
 
@@ -78,14 +84,14 @@ QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QStr
     return dateTime;
 }
 
-QList<Nepomuk2::PersonContact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createPersonContacts(const QString & listOfPersonNames) const
+QList<Nepomuk2::NCO::PersonContact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createPersonContacts(const QString & listOfPersonNames) const
 {
-    QList<Nepomuk2::PersonContact> resultList;
+    QList<Nepomuk2::NCO::PersonContact> resultList;
     QList<Name> personList = splitPersonList( listOfPersonNames );
 
     foreach(const Name &person, personList) {
         // create new contact resource, duplicates will be merged by the DMS later on
-        Nepomuk2::PersonContact personResource;
+        Nepomuk2::NCO::PersonContact personResource;
         personResource.setFullname( person.full );
         personResource.setNameGiven( person.first );
         personResource.setNameFamily( person.last );
@@ -100,14 +106,14 @@ QList<Nepomuk2::PersonContact> NepomukMetaDataExtractor::Pipe::NepomukPipe::crea
 }
 
 
-QList<Nepomuk2::OrganizationContact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createOrganizationContacts(const QString & listOfOrganizations) const
+QList<Nepomuk2::NCO::OrganizationContact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createOrganizationContacts(const QString & listOfOrganizations) const
 {
-    QList<Nepomuk2::OrganizationContact> resultList;
+    QList<Nepomuk2::NCO::OrganizationContact> resultList;
     QList<Name> personList = splitPersonList( listOfOrganizations );
 
     foreach(const Name &person, personList) {
         // create new contact resource, duplicates will be merged by the DMS later on
-        Nepomuk2::OrganizationContact organizationResource;
+        Nepomuk2::NCO::OrganizationContact organizationResource;
         organizationResource.setFullname( person.full );
 
         resultList << organizationResource;

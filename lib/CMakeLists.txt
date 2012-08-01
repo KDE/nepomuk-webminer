@@ -14,13 +14,15 @@ set( nepomukextractor_LIB_SRCS
   resourceextractor/videoextractor.cpp
   
   nepomukpipe/nepomukpipe.cpp
-  #nepomukpipe/publicationpipe.cpp
+  nepomukpipe/publicationpipe.cpp
   nepomukpipe/moviepipe.cpp
   nepomukpipe/tvshowpipe.cpp
   
   ui/fetcherdialog.cpp
   ui/searchresultsmodel.cpp
   ui/searchresultdelegate.cpp
+
+  sro/nbib.cpp
 )
 
 kde4_add_ui_files( nepomukextractor_LIB_SRCS

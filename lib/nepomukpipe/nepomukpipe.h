@@ -25,8 +25,13 @@
 
 #include <KDE/KUrl>
 
-#include "nco/personcontact.h"
-#include "nco/organizationcontact.h"
+
+namespace Nepomuk2 {
+namespace NCO {
+    class PersonContact;
+    class OrganizationContact;
+}
+}
 
 class KJob;
 
@@ -77,12 +82,12 @@ protected:
       * Takes care of Hans Wurst and Franz Ferdinant or Wurst, Hans; Ferdinant, Franz and so on.
       * Also tries to determine family/given name and suffix values
       */
-    QList<Nepomuk2::PersonContact> createPersonContacts(const QString & listOfPersonNames) const;
+    QList<Nepomuk2::NCO::PersonContact> createPersonContacts(const QString & listOfPersonNames) const;
 
     /**
       * Splits a list of organization names and create the @c nco:OrganizationContact from them
       */
-    QList<Nepomuk2::OrganizationContact> createOrganizationContacts(const QString & listOfOrganizations) const;
+    QList<Nepomuk2::NCO::OrganizationContact> createOrganizationContacts(const QString & listOfOrganizations) const;
 
 private slots:
     /**

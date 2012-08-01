@@ -67,48 +67,48 @@ private:
       * @return QPair with first = publicationUr and second = referenceUri
       */
     QPair<QUrl, QUrl> importPublication( QVariantMap &metaData );
-    void addPublicationSubTypes(Nepomuk2::Publication &publication, const QVariantMap &metaData);
-    void handleSpecialCases(QVariantMap &metaData, Nepomuk2::SimpleResourceGraph &graph, Nepomuk2::Publication &publication, Nepomuk2::Reference &reference);
+    void addPublicationSubTypes(Nepomuk2::NBIB::Publication &publication, const QVariantMap &metaData);
+    void handleSpecialCases(QVariantMap &metaData, Nepomuk2::SimpleResourceGraph &graph, Nepomuk2::NBIB::Publication &publication, Nepomuk2::NBIB::Reference &reference);
 
 
     /* Helping functions */
-    void addPublisher(const QString &publisherValue, const QString &addressValue, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
+    void addPublisher(const QString &publisherValue, const QString &addressValue, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
 
-    void addJournal(const QString &journal, const QString &volume, const QString &number, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph,
-                    QUrl seriesUrl = Nepomuk2::Journal::resourceTypeUri(),
-                    QUrl issueUrl = Nepomuk2::JournalIssue::resourceTypeUri());
-    void addSpecialArticle(const QString &titleValue, Nepomuk2::Publication &article, Nepomuk2::SimpleResourceGraph &graph, QUrl collectionUrl = Nepomuk2::Encyclopedia::resourceTypeUri());
+    void addJournal(const QString &journal, const QString &volume, const QString &number, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph,
+                    QUrl seriesUrl = Nepomuk2::NBIB::Journal().uri(),
+                    QUrl issueUrl = Nepomuk2::NBIB::JournalIssue().uri());
+    void addSpecialArticle(const QString &titleValue, Nepomuk2::NBIB::Publication &article, Nepomuk2::SimpleResourceGraph &graph, QUrl collectionUrl = Nepomuk2::NBIB::Encyclopedia().uri());
 
-    void addContent(const QString &key, const QString &value, Nepomuk2::Publication &publication,
-                    Nepomuk2::Reference &reference, Nepomuk2::SimpleResourceGraph &graph,
+    void addContent(const QString &key, const QString &value, Nepomuk2::NBIB::Publication &publication,
+                    Nepomuk2::NBIB::Reference &reference, Nepomuk2::SimpleResourceGraph &graph,
                     const QString & originalEntryType, const QString & citeKey);
 
-    void addNote(const QString &content, const QString &noteType, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
+    void addNote(const QString &content, const QString &noteType, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
 
 
-    void addAuthor(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::Reference &reference, Nepomuk2::SimpleResourceGraph &graph, const QString & originalEntryType);
-    void addBooktitle(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph, const QString & originalEntryType);
-    void addSeriesEditor(const QString &contentValue, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
-    void addChapter(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::Reference &reference, Nepomuk2::SimpleResourceGraph &graph);
-    void addChapterName(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::Reference &reference, Nepomuk2::SimpleResourceGraph &graph);
-    void addIssn(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
+    void addAuthor(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::NBIB::Reference &reference, Nepomuk2::SimpleResourceGraph &graph, const QString & originalEntryType);
+    void addBooktitle(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph, const QString & originalEntryType);
+    void addSeriesEditor(const QString &contentValue, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
+    void addChapter(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::NBIB::Reference &reference, Nepomuk2::SimpleResourceGraph &graph);
+    void addChapterName(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::NBIB::Reference &reference, Nepomuk2::SimpleResourceGraph &graph);
+    void addIssn(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
 
-    void addOrganization(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
-    void addCode(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
-    void addCodeNumber(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
-    void addCodeVolume(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
-    void addReporter(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
-    void addReporterVolume(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
-    void addEvent(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
-    void addSeries(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
-    void addTitle(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::Reference &reference, Nepomuk2::SimpleResourceGraph &graph, const QString & originalEntryType);
+    void addOrganization(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
+    void addCode(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
+    void addCodeNumber(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
+    void addCodeVolume(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
+    void addReporter(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
+    void addReporterVolume(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
+    void addEvent(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
+    void addSeries(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
+    void addTitle(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::NBIB::Reference &reference, Nepomuk2::SimpleResourceGraph &graph, const QString & originalEntryType);
     /**
       * @bug split webpages by ',' or ';' if necessary
       */
-    void addWebsite(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
-    void addFileUrl(const QString &content, Nepomuk2::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
-    void addPublicationDate(const QString &fullDate, Nepomuk2::Publication &publication);
-    void addPublicationDate(const QString &year, const QString &month, const QString &day, Nepomuk2::Publication &publication);
+    void addWebsite(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
+    void addFileUrl(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
+    void addPublicationDate(const QString &fullDate, Nepomuk2::NBIB::Publication &publication);
+    void addPublicationDate(const QString &year, const QString &month, const QString &day, Nepomuk2::NBIB::Publication &publication);
 
     void addTag(const QStringList &content, Nepomuk2::SimpleResource &resource, Nepomuk2::SimpleResourceGraph &graph);
     void addTopic(const QStringList &content, Nepomuk2::SimpleResource &resource, Nepomuk2::SimpleResourceGraph &graph);

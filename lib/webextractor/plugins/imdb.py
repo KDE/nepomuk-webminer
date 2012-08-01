@@ -201,9 +201,9 @@ def extractItemFromUri( url, options ):
     ia = IMDb()
 
     try:
-        movie = i.get_movie(movieId)
+        movie = ia.get_movie(movieId)
     except Exception as err:
-        WebExtractor.error(err)
+        WebExtractor.error("Script error: \n" + str(err))
         return
 
     result = dict(  title = movie['title'],

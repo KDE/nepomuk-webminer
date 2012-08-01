@@ -77,7 +77,7 @@ private:
     /**
       * helper function to generate the basic episode details
       */
-    Nepomuk::NMM::TVShow createEpisode(QVariantMap episodeInfo, Nepomuk::NMM::TVSeason season);
+    Nepomuk2::NMM::TVShow createEpisode(QVariantMap episodeInfo, Nepomuk2::NMM::TVSeason season);
 };
 }
 }

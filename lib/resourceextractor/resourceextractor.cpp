@@ -23,8 +23,9 @@
 #include "odfextractor.h"
 #include "videoextractor.h"
 
-#include <KDE/Nepomuk/File>
-#include <Nepomuk/Vocabulary/NMM>
+#include <Nepomuk2/Resource>
+#include <Nepomuk2/File>
+#include <Nepomuk2/Vocabulary/NMM>
 #include "sro/nbib.h"
 
 #include <KDE/KMimeType>
@@ -98,12 +99,12 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupFiles(const K
     emit resourceExtarctionDone();
 }
 
-void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(const Nepomuk::Resource &resource)
+void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(const Nepomuk2::Resource &resource)
 {
 
 }
 
-void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(const QList<Nepomuk::Resource> &resources)
+void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(const QList<Nepomuk2::Resource> &resources)
 {
 
 }
@@ -118,12 +119,12 @@ QList<NepomukMetaDataExtractor::Extractor::MetaDataParameters *> NepomukMetaData
 void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(const KUrl &fileUrl)
 {
     Q_D( ResourceExtractor );
-    Nepomuk::File fileResource(fileUrl);
+    Nepomuk2::File fileResource(fileUrl);
 
     if( !d->forceUpdate && (
-        fileResource.hasProperty(Nepomuk::Vocabulary::NBIB::publishedAs()) ||
-        fileResource.hasType(Nepomuk::Vocabulary::NMM::TVShow()) ||
-        fileResource.hasType(Nepomuk::Vocabulary::NMM::Movie()))) {
+        fileResource.hasProperty(Nepomuk2::Vocabulary::NBIB::publishedAs()) ||
+        fileResource.hasType(Nepomuk2::Vocabulary::NMM::TVShow()) ||
+        fileResource.hasType(Nepomuk2::Vocabulary::NMM::Movie()))) {
         kDebug() << "skip file " << fileUrl;
         return;
     }
