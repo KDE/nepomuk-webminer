@@ -17,11 +17,11 @@ Idea:
 # Dependencies:
 * Nepomuk
 ** with nbib.ontology ~ see end of README
-** SDO master for the nmm: changes with the poster/banner support
+** SDO 0.10.0
 
 * poppler (for pdf parsing)
 * Kross framework with working python interpreters
-* For python: imdbpy, tvdb_api module both current master
+* For python: imdbpy 4.9, tvdb_api module current master
 
 OpenSuse user need to install the python Kross intepreters from source. see:
 https://projects.kde.org/projects/kde/kdebindings/kross-interpreters/repository

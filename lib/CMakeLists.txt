@@ -21,8 +21,6 @@ set( nepomukextractor_LIB_SRCS
   ui/fetcherdialog.cpp
   ui/searchresultsmodel.cpp
   ui/searchresultdelegate.cpp
-
-  sro/nbib.cpp
 )
 
 kde4_add_ui_files( nepomukextractor_LIB_SRCS
@@ -40,10 +38,10 @@ target_link_libraries( nepomukmetadataextractor
 
 # include nepomuk stuff
   ${SOPRANO_LIBRARIES}
-  ${NEPOMUK_LIBRARIES}
-  ${NEPOMUK_QUERY_LIBRARIES}
-  nepomukcore
-  nepomuksync
+  ${NEPOMUK_CORE_LIBRARIES}
+  ${NEPOMUK_CORE_QUERY_LIBRARIES}
+  #nepomukcore
+  #nepomuksync
 
 # other parts
   ${POPPLER_LIBRARY}

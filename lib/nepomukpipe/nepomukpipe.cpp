@@ -78,14 +78,14 @@ QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QStr
     return dateTime;
 }
 
-QList<Nepomuk::NCO::PersonContact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createPersonContacts(const QString & listOfPersonNames) const
+QList<Nepomuk2::PersonContact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createPersonContacts(const QString & listOfPersonNames) const
 {
-    QList<Nepomuk::NCO::PersonContact> resultList;
+    QList<Nepomuk2::PersonContact> resultList;
     QList<Name> personList = splitPersonList( listOfPersonNames );
 
     foreach(const Name &person, personList) {
         // create new contact resource, duplicates will be merged by the DMS later on
-        Nepomuk::NCO::PersonContact personResource;
+        Nepomuk2::PersonContact personResource;
         personResource.setFullname( person.full );
         personResource.setNameGiven( person.first );
         personResource.setNameFamily( person.last );
@@ -100,14 +100,14 @@ QList<Nepomuk::NCO::PersonContact> NepomukMetaDataExtractor::Pipe::NepomukPipe::
 }
 
 
-QList<Nepomuk::NCO::OrganizationContact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createOrganizationContacts(const QString & listOfOrganizations) const
+QList<Nepomuk2::OrganizationContact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createOrganizationContacts(const QString & listOfOrganizations) const
 {
-    QList<Nepomuk::NCO::OrganizationContact> resultList;
+    QList<Nepomuk2::OrganizationContact> resultList;
     QList<Name> personList = splitPersonList( listOfOrganizations );
 
     foreach(const Name &person, personList) {
         // create new contact resource, duplicates will be merged by the DMS later on
-        Nepomuk::NCO::OrganizationContact organizationResource;
+        Nepomuk2::OrganizationContact organizationResource;
         organizationResource.setFullname( person.full );
 
         resultList << organizationResource;
