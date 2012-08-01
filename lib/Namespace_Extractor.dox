@@ -149,7 +149,7 @@ ResourceExtractor |
 The @link NepomukMetaDataExtractor::Extractor::ResourceExtractor ResourceExtractor @endlink is used to extract possible search parameters for the @link NepomukMetaDataExtractor::Extractor::WebExtractor WebExtractor @endlink.
 
 They way it works is by passing the @c url of a @c folder or @c file to it and it tries to identify possible search parameters via the @c filename or
-by @c parsing @c the @c document directly. As the file parsing is also done by the @c libstreamanalyzer also the @cnepomuk @c resource is checked for more details.
+by @c parsing @c the @c document directly. As the file parsing is also done by the @c libstreamanalyzer also the @c nepomuk @c resource is checked for more details.
 
 The main reason to do filename and file parsing here again is the lack of the @c libstreamanalyzer too detect all files (especially .pdf files) correctly.
 This extarctor works around the current issue.
