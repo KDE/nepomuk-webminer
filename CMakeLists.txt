@@ -9,10 +9,11 @@ set(CMAKE_METDADATAEXTRACTOR_VERSION "${CMAKE_METDADATAEXTRACTOR_VERSION_MAJOR}.
 
 find_package(KDE4 4.6.0 REQUIRED)
 find_package(NepomukCore REQUIRED)
+
 include(KDE4Defaults)
-#include(SopranoAddOntology)
 include(MacroLibrary)
 include(MacroOptionalAddSubdirectory)
+
 set(SDO_MIN_VERSION "0.8.53")
 find_package(SharedDesktopOntologies)
 
@@ -53,8 +54,8 @@ target_link_libraries( metadataextractor
   ${KDE4_KDEUI_LIBS}
 
   nepomukmetadataextractor
-  ${NEPOMUK_CORE_LIBRARIES}
-  ${NEPOMUK_CORE_QUERY_LIBRARIES}
+  ${NEPOMUK_CORE_LIBRARY}
+  ${NEPOMUK_CORE_SYNC_LIBRARY}
 )
 
 install(TARGETS metadataextractor ${INSTALL_TARGETS_DEFAULT_ARGS})

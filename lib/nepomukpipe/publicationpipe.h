@@ -31,8 +31,8 @@
 #include "sro/nbib/journalissue.h"
 #include "sro/nbib/encyclopedia.h"
 
-#include <Nepomuk/Resource>
-#include <Nepomuk/Thing>
+#include <Nepomuk2/Resource>
+#include <Nepomuk2/Thing>
 
 #include <QtCore/QUrl>
 #include <QtCore/QList>

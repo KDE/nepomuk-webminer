@@ -26,11 +26,10 @@ namespace Nepomuk2 {
     class Role;
     class Contact;
     class ContactGroup;
-    //class Resource;
+    class Resource;
 
 }
 
-#include <Nepomuk2/Resource>
 #include "role.h"
 
 

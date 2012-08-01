@@ -14,7 +14,7 @@ set( nepomukextractor_LIB_SRCS
   resourceextractor/videoextractor.cpp
   
   nepomukpipe/nepomukpipe.cpp
-  nepomukpipe/publicationpipe.cpp
+  #nepomukpipe/publicationpipe.cpp
   nepomukpipe/moviepipe.cpp
   nepomukpipe/tvshowpipe.cpp
   
@@ -38,14 +38,11 @@ target_link_libraries( nepomukmetadataextractor
 
 # include nepomuk stuff
   ${SOPRANO_LIBRARIES}
-  ${NEPOMUK_CORE_LIBRARIES}
-  ${NEPOMUK_CORE_QUERY_LIBRARIES}
-  #nepomukcore
-  #nepomuksync
+  ${NEPOMUK_CORE_LIBRARY}
+  ${NEPOMUK_CORE_SYNC_LIBRARY}
 
 # other parts
   ${POPPLER_LIBRARY}
-  #${LIBTVDB_LIBRARIES}
 )
 
 set_target_properties( nepomukmetadataextractor

@@ -27,6 +27,8 @@ namespace Nepomuk2 {
 
 }
 
+#include <Nepomuk2/Resource>
+
 
 namespace Nepomuk2 {
 
