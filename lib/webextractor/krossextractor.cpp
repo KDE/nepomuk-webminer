@@ -19,6 +19,8 @@
 
 #include <KDE/Kross/Manager>
 
+#include <qjson/parser.h>
+
 namespace NepomukMetaDataExtractor {
     namespace Extractor {
         class KrossExtractorPrivate {
@@ -34,6 +36,8 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
     , d_ptr( new NepomukMetaDataExtractor::Extractor::KrossExtractorPrivate )
 {
     Q_D( KrossExtractor );
+
+    connect(this, SIGNAL(itemResultsJSON(QString,QString)), this, SLOT(transformJSONResult(QString,QString)) );
 
     d->scriptFile = new Kross::Action(this, "WebExtractor");
 
@@ -81,4 +85,19 @@ void NepomukMetaDataExtractor::Extractor::KrossExtractor::search(const QString &
 void NepomukMetaDataExtractor::Extractor::KrossExtractor::extractItem(const QUrl &url, const QVariantMap &options)
 {
     emit extractItemFromUri(url, options);
+}
+
+void NepomukMetaDataExtractor::Extractor::KrossExtractor::transformJSONResult(const QString &resourceType, const QString &jsonMap)
+{
+
+    QJson::Parser parser;
+    bool ok;
+
+    QVariantMap result = parser.parse (jsonMap.toLatin1(), &ok).toMap();
+    if (!ok) {
+        qFatal("KrossExtractor::transformJSONResult :: An error occurred during json parsing");
+        return;
+    }
+
+    emit itemResults(resourceType, result);
 }

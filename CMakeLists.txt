@@ -17,6 +17,8 @@ include(MacroOptionalAddSubdirectory)
 set(SDO_MIN_VERSION "0.8.53")
 find_package(SharedDesktopOntologies)
 
+find_package(QJSON REQUIRED)
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 find_package(Poppler)

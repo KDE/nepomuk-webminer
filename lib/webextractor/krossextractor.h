@@ -62,6 +62,11 @@ signals:
     void searchItems(const QString &resourceType, const QVariantMap &parameters);
     void extractItemFromUri(const QUrl &url, const QVariantMap &options);
 
+    void itemResultsJSON(const QString &resourceType, const QString &jsonMap);
+
+private slots:
+    void transformJSONResult(const QString &resourceType, const QString &jsonMap);
+
 private:
     Q_DECLARE_PRIVATE(KrossExtractor)
     KrossExtractorPrivate *const d_ptr; /**< d-pointer for this class */

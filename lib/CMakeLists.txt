@@ -45,6 +45,9 @@ target_link_libraries( nepomukmetadataextractor
 
 # other parts
   ${POPPLER_LIBRARY}
+
+  ${QJSON_LIBRARIES} # added because the macro seems to exist with upper and lowercase depending on the distribution
+  ${qjson_LIBRARIES}
 )
 
 set_target_properties( nepomukmetadataextractor

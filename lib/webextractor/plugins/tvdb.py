@@ -1,10 +1,12 @@
-#!/usr/bin/env kross
+#!/usr.bin/python
+# -*- coding: utf-8 -*-
 
 #------------------------------------------------------------------------------
 # @see https://github.com/dbr/tvdb_api need 1.6.2
 #------------------------------------------------------------------------------
 
 import re
+import json
 
 # Prerrequisites.
 isAvailable = True
@@ -190,12 +192,14 @@ def extractItemFromUri( url, options ):
                         genre = genreList
                        )
 
-
-    print seriesDict
-    WebExtractor.itemResults( 'tvshow', seriesDict )
+    # this is a workaround, because multiple nested dictionaries cause some problems with the names of the keys
+    #WebExtractor.itemResults( 'tvshow', seriesDict )
+    data_string = json.dumps(seriesDict)
+    WebExtractor.itemResultsJSON( 'tvshow', data_string )
 
 if __name__=="__main__":
     print "Plugin information:"
     pluginInfo = info()
     for key in pluginInfo:
         print "%15s: %s" % (key, pluginInfo[key])
+        

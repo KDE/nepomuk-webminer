@@ -5,6 +5,7 @@ from PyQt4 import QtCore
 import PyKDE4.kdecore as kdecore
 from PyKDE4.kio import KIO
 
+import json
 import urllib
 import re
 
@@ -326,7 +327,9 @@ def handleCitationSearch(job):
     else:
         logMsg = 'No references found' 
         WebExtractor.log( logMsg )
-        WebExtractor.itemResults( 'publication', finalEntry )
+        #WebExtractor.itemResults( 'publication', finalEntry )
+        data_string = json.dumps(finalEntry)
+        WebExtractor.itemResultsJSON( 'publication', data_string )
 
 def fetchNextCitation():
 
@@ -348,7 +351,9 @@ def handleCitationItemExtraction(job):
     if job.error():
         error = 'kio job error occured'
         WebExtractor.error( error )
-        WebExtractor.itemResults( 'publication', finalEntry )
+        #WebExtractor.itemResults( 'publication', finalEntry )
+        data_string = json.dumps(finalEntry)
+        WebExtractor.itemResultsJSON( 'publication', data_string )
         return
 
     data = job.data()
@@ -375,5 +380,9 @@ def handleCitationItemExtraction(job):
         fetchNextCitation()
     else:
         finalEntry['references'] = citationResults
-        WebExtractor.itemResults( 'publication', finalEntry )
+        #WebExtractor.itemResults( 'publication', finalEntry )
+
+        # this is a workaround, because multiple nested dictionaries cause some problems with the names of the keys
+        data_string = json.dumps(finalEntry)
+        WebExtractor.itemResultsJSON( 'publication', data_string )
 
