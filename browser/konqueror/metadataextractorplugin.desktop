@@ -1,0 +1,20 @@
+[Desktop Entry]
+Icon=metadataextractorplugin
+X-KDE-Library=metadataextractorplugin
+X-KDE-PluginInfo-Author=Jörg Ehrichs
+X-KDE-PluginInfo-Email=Joerg.Ehrichs@gmx.de
+X-KDE-PluginInfo-Name=metadataextractorplugin
+X-KDE-PluginInfo-Version=0.2
+X-KDE-PluginInfo-Website=
+X-KDE-PluginInfo-Category=Tools
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-ParentApp=konqueror
+X-DocPath=metadataextractorplugin/index.html
+Encoding=UTF-8
+
+Comment=Extract meta data from websites and add them to Nepomuk
+Name=Nepomuk Meta Data Extractor Plugin
+GenericName=Nepomuk Meta Data Extractor Plugin
+

@@ -25,6 +25,7 @@
 
 #include <KDE/KUrl>
 
+#include "nepomukmetadataextractor_export.h"
 
 namespace Nepomuk2 {
     namespace NCO {
@@ -49,7 +50,7 @@ namespace Pipe {
   * from the internet. It can also be reused by any other application that simply wants to stay away from nepomuks ontology
   * and rather likes to push a simple QVariantMap into the database
   */
-class NepomukPipe : public QObject
+class NEPOMUKMETADATAEXTRACTOR_EXPORT NepomukPipe : public QObject
 {
     Q_OBJECT
 public:

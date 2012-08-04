@@ -21,6 +21,8 @@
 #include <QtCore/QObject>
 #include <KDE/KUrl>
 
+#include "nepomukmetadataextractor_export.h"
+
 namespace Nepomuk2 {
     class Resource;
 }
@@ -41,7 +43,7 @@ class ResourceExtractorPrivate;
   *
   * Each file/resource is represented by its @c MetaDataParameters that is used for the actual search
   */
-class ResourceExtractor : public QObject
+class NEPOMUKMETADATAEXTRACTOR_EXPORT ResourceExtractor : public QObject
 {
     Q_OBJECT
 public:

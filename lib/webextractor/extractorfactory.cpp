@@ -78,7 +78,7 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
 
     foreach(const WebExtractor::Info i, d->availableScripts) {
         foreach(const QString &urlregex, i.urlregex) {
-            if(uri.toString().contains( urlregex )) {
+            if(uri.toString().contains( QRegExp(urlregex) )) {
 
                 kDebug() << "create KROSS web extractor for:" << i.name;
                 KrossExtractor *ke = new KrossExtractor(i.file);

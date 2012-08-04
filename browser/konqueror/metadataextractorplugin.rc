@@ -1,0 +1,9 @@
+<!DOCTYPE kpartgui>
+<kpartplugin name="metadataextractorplugin" library="metadataextractorplugin" version="2">
+<MenuBar>
+ <Menu name="tools"><Text>&amp;Tools</Text>
+    <separator group="tools_operations" />
+    <Action name="tools_metadataextractorplugin" group="tools_operations"/>
+ </Menu>
+</MenuBar>
+</kpartplugin>

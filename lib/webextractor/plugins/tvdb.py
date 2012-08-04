@@ -40,7 +40,7 @@ def info():
     return dict( name = 'The TVDb',
                  icon = 'tvdb.png',
                  identifier = 'tvdb',
-                 urlregex = ['http://thetvdb.com/?tab=episode&seriesid=(\\d+)&seasonid=(\\d+)&id=(\\d+).*', 'http://thetvdb.com/?tab=season&seriesid=(\\d+)&seasonid=(\\d+).*', 'http://thetvdb.com/?tab=series&id=(\\d+).*'],
+                 urlregex = ['http://thetvdb.com/\\?tab=episode&seriesid=(\\d+)&seasonid=(\\d+)&id=(\\d+).*', 'http://thetvdb.com/\\?tab=season&seriesid=(\\d+)&seasonid=(\\d+).*', 'http://thetvdb.com/\\?tab=series&id=(\\d+).*'],
                  resource = ['tvshow'],
                  description = 'An open database for television fans',
                  author = 'Joerg Ehrichs',

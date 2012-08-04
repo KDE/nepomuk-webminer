@@ -30,6 +30,8 @@
 #include "sro/nbib/journalissue.h"
 #include "sro/nbib/encyclopedia.h"
 
+#include "nepomukmetadataextractor_export.h"
+
 #include <Nepomuk2/Resource>
 
 #include <QtCore/QUrl>
@@ -67,7 +69,7 @@ namespace Pipe {
   * @todo TODO: remove the graph from the function parameters and make class member from it?
   * @todo TODO: check if it is necessary to save some stuff into nepomuk inetween to retrieve the real Nepomuk-Uri or I could work with temporary uri's
   */
-class PublicationPipe : public NepomukPipe
+class NEPOMUKMETADATAEXTRACTOR_EXPORT PublicationPipe : public NepomukPipe
 {
     Q_OBJECT
 

@@ -23,6 +23,8 @@
 #include "nmm/tvseason.h"
 #include "nmm/tvshow.h"
 
+#include "nepomukmetadataextractor_export.h"
+
 namespace NepomukMetaDataExtractor {
 namespace Pipe {
 /**
@@ -69,7 +71,7 @@ namespace Pipe {
   * @li @c writer - split by ;
   * @li @c actors - split by ;
   */
-class TvShowPipe : public NepomukPipe
+class NEPOMUKMETADATAEXTRACTOR_EXPORT TvShowPipe : public NepomukPipe
 {
 public:
     TvShowPipe(QObject *parent = 0);

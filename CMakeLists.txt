@@ -40,7 +40,8 @@ include_directories(
 
 add_subdirectory( lib )
 add_subdirectory( extractor )
-#add_subdirectory( service ) // disabled for now
+#add_subdirectory( service ) // not implemented currently
+add_subdirectory( browser/konqueror )
 
 macro_display_feature_log()
 

@@ -24,6 +24,8 @@
 
 #include <KDE/KUrl>
 
+#include "nepomukmetadataextractor_export.h"
+
 namespace NepomukMetaDataExtractor {
 namespace Extractor {
 
@@ -48,7 +50,7 @@ namespace Extractor {
   * @todo TODO: parse also meta data not only the filename
   * @todo TODO: the regexp mechanism is likely to fail, needs some better checks in here
   */
-class VideoExtractor : public QObject
+class NEPOMUKMETADATAEXTRACTOR_EXPORT VideoExtractor : public QObject
 {
     Q_OBJECT
 public:
