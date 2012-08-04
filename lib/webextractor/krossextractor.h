@@ -54,7 +54,7 @@ public:
     explicit KrossExtractor(const QString &scriptFile, QObject *parent = 0);
     ~KrossExtractor();
 
-    WebExtractor::Info info() const;
+    WebExtractor::Info info();
 
     void search(const QString &resourceType, const QVariantMap &parameters);
     void extractItem(const QUrl &url, const QVariantMap &options);
