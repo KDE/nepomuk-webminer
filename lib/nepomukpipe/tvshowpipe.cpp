@@ -31,6 +31,7 @@
 
 #include <Soprano/Vocabulary/RDFS>
 #include <Soprano/Vocabulary/NAO>
+#include <KDE/KLocalizedString>
 
 #include <KDE/KDebug>
 
