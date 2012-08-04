@@ -70,7 +70,7 @@ public:
      *
      * @return information about the plugin
      */
-    virtual WebExtractor::Info info() const = 0;
+    virtual WebExtractor::Info info() = 0;
 
 public slots:
     /**

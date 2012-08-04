@@ -99,7 +99,6 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
     foreach( const QVariant &season, seasonList) {
         QVariantMap seasonInfo = season.toMap();
 
-        //TODO: add title/name to it like Season 1
         Nepomuk2::NMM::TVSeason seasonRes;
 
         QString seasonNumber = seasonInfo.value(QLatin1String("number")).toString();
