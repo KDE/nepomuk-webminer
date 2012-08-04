@@ -12,15 +12,16 @@ set( nepomukextractor_LIB_SRCS
   resourceextractor/popplerextractor.cpp
   resourceextractor/odfextractor.cpp
   resourceextractor/videoextractor.cpp
-  
+
   nepomukpipe/nepomukpipe.cpp
   nepomukpipe/publicationpipe.cpp
   nepomukpipe/moviepipe.cpp
   nepomukpipe/tvshowpipe.cpp
-  
+
   ui/fetcherdialog.cpp
   ui/searchresultsmodel.cpp
   ui/searchresultdelegate.cpp
+  ui/automaticfetcher.cpp
 
   sro/nbib.cpp
 )
@@ -63,6 +64,7 @@ set( nepomukmetadataextractor_LIB_HDRS
   webextractor/extractorfactory.h
   webextractor/webextractor.h
 
+  ui/automaticfetcher.h
   ui/fetcherdialog.h
   ${CMAKE_CURRENT_BINARY_DIR}/ui_fetcherdialog.h
 )
@@ -74,15 +76,3 @@ install( FILES ${nepomukmetadataextractor_LIB_HDRS}
 
 install(DIRECTORY webextractor/plugins DESTINATION ${DATA_INSTALL_DIR}/nepomukmetadataextractor)
 
-
-# add a target to generate API documentation with Doxygen
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
-
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
-    add_custom_target(doc
-                         ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
-	                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-	                 COMMENT "Generating API documentation with Doxygen" VERBATIM
-                      )
-endif(DOXYGEN_FOUND)

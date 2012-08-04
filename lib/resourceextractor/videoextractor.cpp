@@ -30,16 +30,20 @@ public:
     QList<QRegExp> tvshowFilenameRegExps;
     QList<QRegExp> movieFilenameRegExps;
     bool tvshowOnly;
+    bool useFolderNames;
+    bool movieOnly;
 };
 }
 }
 
-NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *parent, bool tvshowOnly)
+NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *parent)
     : QObject(parent)
     , d_ptr( new NepomukMetaDataExtractor::Extractor::VideoExtractorPrivate )
 {
     Q_D( VideoExtractor );
-    d->tvshowOnly = tvshowOnly;
+    d->tvshowOnly = false;
+    d->useFolderNames = false;
+    d->movieOnly = false;
 
     // -----------------------------------------------------------------------------------
     // Regular expressions for the folder structure
@@ -50,7 +54,7 @@ NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *par
     QLatin1String seasonRe(".*(Season|Staffel|S|Series)?.*");
 
     // Title/Season 1/filename or xyz/Title/1 Season/filename or xyz/Title/S1/filename
-    // include specials like Blood+
+    // include specials like the anime Blood+
     d->tvshowFolderRegExpsCompiled.append(
                 QRegExp( QLatin1String( "[\\\\/](.*)[\\\\/]") + seasonRe + QLatin1String( "([0-9]{1,2})") + seasonRe + QLatin1String( "[\\\\/]$" ),
                          Qt::CaseInsensitive, QRegExp::RegExp2 ) );
@@ -86,7 +90,7 @@ NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *par
                          Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
     // would also match movies like Matrix.1999
-    if(d->tvshowOnly) {
+    //if(d->tvshowOnly) {
         // foo.103* (the strange part at the end is used to 1. prevent another digit and 2. allow the name to end)
         d->tvshowFilenameRegExps.append(
                     QRegExp( QLatin1String( "(.+)[ \\._\\-]([0-9]{1})([0-9]{2})(?:[^\\d][^\\\\/]*)?" ),
@@ -106,7 +110,7 @@ NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *par
         d->tvshowFilenameRegExps.append(
                     QRegExp( QLatin1String( ".*e+([0-9]{1,2})[\\s|\\-|\\s]+.*" ),
                              Qt::CaseInsensitive, QRegExp::RegExp2 ) );
-    }
+    //}
 
     // The following try to extract the movie name and year
     // match The.Title.2012 or The.Title.(2012) or The.Title.[2012]
@@ -115,21 +119,92 @@ NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *par
                          Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 }
 
+void NepomukMetaDataExtractor::Extractor::VideoExtractor::setTvShowMode(bool tvshowmode)
+{
+    Q_D( VideoExtractor );
+    d->tvshowOnly = tvshowmode;
+
+    if( d->movieOnly && d->tvshowOnly) {
+        d->tvshowOnly = false;
+        d->movieOnly = false;
+    }
+}
+
+void NepomukMetaDataExtractor::Extractor::VideoExtractor::setTvShowNamesInFolders(bool useFolderNames)
+{
+    Q_D( VideoExtractor );
+    d->useFolderNames = useFolderNames;
+}
+
+void NepomukMetaDataExtractor::Extractor::VideoExtractor::setMovieMode(bool moviemode)
+{
+    Q_D( VideoExtractor );
+    d->movieOnly = moviemode;
+
+    if( d->movieOnly && d->tvshowOnly) {
+        d->tvshowOnly = false;
+        d->movieOnly = false;
+    }
+}
+
 void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl)
 {
     Q_D( VideoExtractor );
     mdp->resourceUri = fileUrl;
 
-    if (parseTvShowFileName(mdp, fileUrl.fileName()) || d->tvshowOnly) {
-        mdp->resourceType = QLatin1String("tvshow");
-        parseTvShowFolder(mdp, fileUrl, baseUrl);
-    }
-    else {
+    // All we need to check is if we can parse a movie name and year from the file name
+    if( d->movieOnly ) {
+        mdp->resourceType = QLatin1String("movie");
+
+        // in case the detection failed, we use the filename as search title for the web search
         if(!parseMovieFileName(mdp, fileUrl.fileName())) {
             mdp->searchTitle = fileUrl.fileName();
         }
-        mdp->resourceType = QLatin1String("movie");
     }
+
+    // in this case the url is definitly a tv show
+    if( d->tvshowOnly ) {
+        mdp->resourceType = QLatin1String("tvshow");
+
+        // firs tcheck the folder name scheme
+        if(d->useFolderNames) {
+            if(!parseTvShowFolder(mdp, fileUrl, baseUrl)) {
+                // should this fail we fall back to normal file name detection
+                if(!parseTvShowFileName(mdp, fileUrl.fileName()) ) {
+                    // falback to filename if even this fails
+                    mdp->searchTitle = fileUrl.fileName();
+                }
+            }
+        }
+        else {
+            // if we did not specify to use folder names, use filenames only
+            if(!parseTvShowFileName(mdp, fileUrl.fileName()) ) {
+                // falback to filename if even this fails
+                mdp->searchTitle = fileUrl.fileName();
+            }
+        }
+    }
+
+    // if we did not specify movie or tvshow explicit we must try out our luck
+    if( !d->tvshowOnly && !d->movieOnly) {
+        // first check tvshow file name
+        if(parseTvShowFileName(mdp, fileUrl.fileName()) ) {
+            mdp->resourceType = QLatin1String("tvshow");
+            //yay works, stop here
+            return;
+        }
+
+        //if this did not work, check movie file name
+        if(parseMovieFileName(mdp, fileUrl.fileName())) {
+            mdp->resourceType = QLatin1String("movie");
+            //yay works, stop here
+            return;
+        }
+    }
+
+    // still no luck? :(
+    mdp->resourceType = QLatin1String("tvshow");
+    mdp->searchTitle = fileUrl.fileName();
 }
 
 bool NepomukMetaDataExtractor::Extractor::VideoExtractor::parseTvShowFolder(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl)

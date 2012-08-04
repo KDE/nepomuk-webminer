@@ -2,27 +2,28 @@ project(metadataextractor)
 
 ##################  nepomukbulkextractor version  ################################
 set(CMAKE_METDADATAEXTRACTOR_VERSION_MAJOR 0)
-set(CMAKE_METDADATAEXTRACTOR_VERSION_MINOR 1)
+set(CMAKE_METDADATAEXTRACTOR_VERSION_MINOR 2)
 set(CMAKE_METDADATAEXTRACTOR_VERSION_RELEASE 0)
 set(CMAKE_METDADATAEXTRACTOR_VERSION "${CMAKE_METDADATAEXTRACTOR_VERSION_MAJOR}.${CMAKE_METDADATAEXTRACTOR_VERSION_MINOR}.${CMAKE_METDADATAEXTRACTOR_VERSION_RELEASE}")
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules)
 
-find_package(KDE4 4.6.0 REQUIRED)
-find_package(NepomukCore REQUIRED)
-
+set(KDE_MIN_VERSION "4.7.00")
+find_package(KDE4 4.7.0 REQUIRED)
 include(KDE4Defaults)
+
+find_package(NepomukCore REQUIRED)
+set(SDO_MIN_VERSION "0.10.0")
+find_package(SharedDesktopOntologies)
+
 include(MacroLibrary)
 include(MacroOptionalAddSubdirectory)
 
-set(SDO_MIN_VERSION "0.8.53")
-find_package(SharedDesktopOntologies)
-
 find_package(QJSON REQUIRED)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules)
-
-find_package(Poppler)
-macro_log_feature(HAVE_POPPLER_0_12_1 "Poppler-Qt4" "A PDF rendering library" "http://poppler.freedesktop.org" FALSE "0.12.1" "Support for PDF files in okular.")
+find_package(Poppler REQUIRED)
+macro_log_feature(HAVE_POPPLER_0_12_1 "Poppler-Qt4" "A PDF rendering library" "http://poppler.freedesktop.org" TRUE "0.12.1" "Poppler necessary to extract data from pdf files")
+macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" TRUE ${SDO_MIN_VERSION} "Ontologies necessary for the Nepomuk semantic desktop.")
 
 include_directories(
   ${QT_INCLUDES}
@@ -38,27 +39,19 @@ include_directories(
 
 
 add_subdirectory( lib )
+add_subdirectory( extractor )
+#add_subdirectory( service ) // disabled for now
 
+macro_display_feature_log()
 
+# add a target to generate API documentation with Doxygen
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
 
-# -------------------------------------------
-# build the dolphin right click menu
-# bulk extractor from the lib
-# -------------------------------------------
-
-set( metadataextractor_SRCS main.cpp)
-
-kde4_add_executable( metadataextractor ${metadataextractor_SRCS})
-
-target_link_libraries( metadataextractor
-  ${KDE4_KDECORE_LIBS}
-  ${KDE4_KIO_LIBS}
-  ${KDE4_KDEUI_LIBS}
-
-  nepomukmetadataextractor
-  ${NEPOMUK_CORE_LIBRARY}
-  ${NEPOMUK_CORE_SYNC_LIBRARY}
-)
-
-install(TARGETS metadataextractor ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS metadataextractor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
+    add_custom_target(doc
+                         ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                         COMMENT "Generating API documentation with Doxygen" VERBATIM
+                      )
+endif(DOXYGEN_FOUND)

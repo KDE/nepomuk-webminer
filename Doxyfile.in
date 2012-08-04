@@ -31,7 +31,7 @@ PROJECT_NAME           = "Nepomuk Metadata Extraction Library"
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = 0.1
+PROJECT_NUMBER         = 0.2
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer
@@ -612,7 +612,7 @@ WARN_LOGFILE           = doxyerror.txt
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/ui/ @CMAKE_CURRENT_SOURCE_DIR@/webextractor/ @CMAKE_CURRENT_SOURCE_DIR@/Namespace_Extractor.dox @CMAKE_CURRENT_SOURCE_DIR@/resourceextractor/ @CMAKE_CURRENT_SOURCE_DIR@/nepomukpipe/ @CMAKE_CURRENT_SOURCE_DIR@/Namespace_Pipe.dox @CMAKE_CURRENT_SOURCE_DIR@/Mainpage.dox
+INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/lib/ui/ @CMAKE_CURRENT_SOURCE_DIR@/lib/webextractor/ @CMAKE_CURRENT_SOURCE_DIR@/doc/Namespace_Extractor.dox @CMAKE_CURRENT_SOURCE_DIR@/lib/resourceextractor/ @CMAKE_CURRENT_SOURCE_DIR@/lib/nepomukpipe/ @CMAKE_CURRENT_SOURCE_DIR@/doc/Namespace_Pipe.dox @CMAKE_CURRENT_SOURCE_DIR@/doc/Mainpage.dox
 
 # This tag can be used to specify the character encoding of the source files 
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is 
@@ -721,7 +721,7 @@ EXAMPLE_RECURSIVE      = NO
 # directories that contain image that are included in the documentation (see 
 # the \image command).
 
-IMAGE_PATH             = @CMAKE_CURRENT_SOURCE_DIR@/nbib
+IMAGE_PATH             = @CMAKE_CURRENT_SOURCE_DIR@/doc
 
 # The INPUT_FILTER tag can be used to specify a program that doxygen should 
 # invoke to filter for each input file. Doxygen will invoke the filter program 

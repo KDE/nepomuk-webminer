@@ -37,12 +37,15 @@
 
 namespace NepomukMetaDataExtractor {
 namespace Extractor {
-class ResourceExtractorPrivate {
-public:
-    bool forceUpdate;
-    KUrl baseCallUrl;
-    QList<MetaDataParameters *> resourcesToLookup;
-};
+    class ResourceExtractorPrivate {
+    public:
+        bool forceUpdate;
+        bool tvShowMode;
+        bool useTvShowFolderNames;
+        bool movieShowMode;
+        KUrl baseCallUrl; //TODO: remove this parameter? helps in the video extractor in folder name detection
+        QList<MetaDataParameters *> resourcesToLookup;
+    };
 }
 }
 
@@ -56,6 +59,24 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::setForceUpdate(bool
 {
     Q_D( ResourceExtractor );
     d->forceUpdate = update;
+}
+
+void NepomukMetaDataExtractor::Extractor::ResourceExtractor::setTvShowMode(bool tvshowmode)
+{
+    Q_D( ResourceExtractor );
+    d->tvShowMode = tvshowmode;
+}
+
+void NepomukMetaDataExtractor::Extractor::ResourceExtractor::setTvShowNamesInFolders(bool useFolderNames)
+{
+    Q_D( ResourceExtractor );
+    d->useTvShowFolderNames = useFolderNames;
+}
+
+void NepomukMetaDataExtractor::Extractor::ResourceExtractor::setMovieMode(bool moviemode)
+{
+    Q_D( ResourceExtractor );
+    d->movieShowMode = moviemode;
 }
 
 void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupFiles(const KUrl &fileOrFolder)
@@ -101,12 +122,16 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupFiles(const K
 
 void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(const Nepomuk2::Resource &resource)
 {
-
+    //TODO: use nepomuk resoruces to fetch the data
 }
 
 void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(const QList<Nepomuk2::Resource> &resources)
 {
+    foreach(const Nepomuk2::Resource & nr, resources) {
+        lookupResource(nr);
+    }
 
+    emit resourceExtarctionDone();
 }
 
 QList<NepomukMetaDataExtractor::Extractor::MetaDataParameters *> NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourcesList()
@@ -114,6 +139,13 @@ QList<NepomukMetaDataExtractor::Extractor::MetaDataParameters *> NepomukMetaData
     Q_D( ResourceExtractor );
 
     return d->resourcesToLookup;
+}
+
+NepomukMetaDataExtractor::Extractor::MetaDataParameters *NepomukMetaDataExtractor::Extractor::ResourceExtractor::takeNext()
+{
+    Q_D( ResourceExtractor );
+
+    return d->resourcesToLookup.takeFirst();
 }
 
 void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(const KUrl &fileUrl)
@@ -125,7 +157,7 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(cons
         fileResource.hasProperty(Nepomuk2::Vocabulary::NBIB::publishedAs()) ||
         fileResource.hasType(Nepomuk2::Vocabulary::NMM::TVShow()) ||
         fileResource.hasType(Nepomuk2::Vocabulary::NMM::Movie()))) {
-        kDebug() << "skip file " << fileUrl;
+        kDebug() << "skip file " << fileUrl << "because it already has some meta data that would be overwritten use force update to fetch meta data anyway";
         return;
     }
 

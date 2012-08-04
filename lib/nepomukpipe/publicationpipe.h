@@ -32,7 +32,6 @@
 #include "sro/nbib/encyclopedia.h"
 
 #include <Nepomuk2/Resource>
-#include <Nepomuk2/Thing>
 
 #include <QtCore/QUrl>
 #include <QtCore/QList>

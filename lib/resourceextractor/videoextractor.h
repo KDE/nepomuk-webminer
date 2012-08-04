@@ -27,16 +27,26 @@
 namespace NepomukMetaDataExtractor {
 namespace Extractor {
 
-class VideoExtractorPrivate;
-class MetaDataParameters;
+    class VideoExtractorPrivate;
+    class MetaDataParameters;
 
 /**
-  * @brief copy of Sebastian Trüg's tvshowfilenameanalyzer
+  * @brief Extracts some useful search parameters from the video filename or nepomuk resource
   *
-  * Defines the file as TvShow if it has S01E0E or simmilar in its name
-  * Otherwise it is a movie
+  * partly copied from Sebastian Trüg's tvshowfilenameanalyzer
+  *
+  * The file/resource will be analized by its filename or if available some data from the nepomuk resource.
+  * Based on this data (title, series, episode numer, season, year etc) a webbased search can be used to find the
+  * exact item details.
+  *
+  * This class will determine if the given resource is a tvshow or a movie based on its regexp detection.
+  * To help the class with this process some additional hints can be given
+  * @see setTvShowMode
+  * @see setTvShowNamesInFolders
+  * @see setMovieMode
   *
   * @todo TODO: parse also meta data not only the filename
+  * @todo TODO: the regexp mechanism is likely to fail, needs some better checks in here
   */
 class VideoExtractor : public QObject
 {
@@ -44,14 +54,37 @@ class VideoExtractor : public QObject
 public:
     /**
      * @brief Constructor that creates all necessary regular expressions
+     *
      * @param parent some parrent
-     * @param tvshowOnly if @arg true will match only tv shows
-     *                   if @arg false will match also movie titles
      */
-    explicit VideoExtractor(QObject *parent = 0, bool tvshowOnly = false);
+    explicit VideoExtractor(QObject *parent = 0);
+
+    /**
+     * @brief Sets a hint, that the given file is a tvshow
+     *
+     * @param tvshowmode @arg true resource is a tvshow
+     *                   @arg false resource is either a tvshow or movie (default)
+     */
+    void setTvShowMode(bool tvshowmode);
+
+    /**
+     * @brief sets a hint for tvshow resources to check also folder names for title/season/episode
+     * @param useFolderNames @arg true check fodler names
+     *                       @arg false do not check fodler names (default)
+     */
+    void setTvShowNamesInFolders(bool useFolderNames);
+
+    /**
+     * @brief Sets a hint, that the given file is a movie
+     *
+     * @param tvshowmode @arg true resource is a movie
+     *                   @arg false resource is either a tvshow or movie (default)
+     */
+    void setMovieMode(bool moviemode);
 
     /**
      * @brief Parse the video filename at the given url
+     *
      * @param mdp the MetaDataParameters where the parsed data will be saved to
      * @param fileUrl the url of the file on the harddrive
      */
@@ -60,6 +93,7 @@ public:
 private:
     /**
      * @brief Parse all files in a given folder
+     *
      * @param mdp the MetaDataParameters where the parsed data will be saved to
      * @param fileUrl filename that will be parsed
      * @param baseUrl the base folder url
@@ -70,6 +104,7 @@ private:
 
     /**
      * @brief Parse a TvShow at a given fileurl
+     *
      * @param mdp the MetaDataParameters where the parsed data will be saved to
      * @param fileName filename that will be parsed
      * @param baseUrl the base folder url
@@ -80,6 +115,7 @@ private:
 
     /**
      * @brief Parse a Movie at a given fileurl
+     *
      * @param mdp the MetaDataParameters where the parsed data will be saved to
      * @param fileName filename that will be parsed
      * @param baseUrl the base folder url

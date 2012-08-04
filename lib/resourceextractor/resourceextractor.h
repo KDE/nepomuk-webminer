@@ -36,10 +36,10 @@ class ResourceExtractorPrivate;
   *
   * Here we check the file or the Nepomuk resource and extract values from it that can be used for the @c WebExtractor search.
   * Usually it would be enough to check only Nepomuk for this info and when some files are given as input the right nepomuk
-  * resource can be looked up and used for the retrival. As the libstreamanalyzer might fail on several pdf files this class
+  * resource can be looked up and used for the retrival. As the @c libstreamanalyzer might fail on several pdf files this class
   * uses its own pdf parsing to get the right details.
   *
-  * Each file/resource is represented by its MetaDataParameters that is used for the actaul search
+  * Each file/resource is represented by its @c MetaDataParameters that is used for the actual search
   */
 class ResourceExtractor : public QObject
 {
@@ -47,19 +47,42 @@ class ResourceExtractor : public QObject
 public:
     /**
      * @brief standard constructor
-     * @param parent
+     * @param parent some parten object
      */
     explicit ResourceExtractor(QObject *parent = 0);
 
     /**
-      * If force update is @c true metadata is also fetched for files that already have data attached to them.
+      * @brief If force update is @c true metadata is also fetched for files that already have data attached to them.
       *
       * Otherwise those files will be skipped
       */
     void setForceUpdate(bool update);
 
     /**
-      * Prepare a file or folder for the lookup
+     * @brief Sets a hint, that the given file is a tvshow
+     *
+     * @param tvshowmode @arg true resource is a tvshow
+     *                   @arg false resource is either a tvshow or movie (default)
+     */
+    void setTvShowMode(bool tvshowmode);
+
+    /**
+     * @brief sets a hint for tvshow resources to check also folder names for title/season/episode
+     * @param useFolderNames @arg true check fodler names
+     *                       @arg false do not check fodler names (default)
+     */
+    void setTvShowNamesInFolders(bool useFolderNames);
+
+    /**
+     * @brief Sets a hint, that the given file is a movie
+     *
+     * @param tvshowmode @arg true resource is a movie
+     *                   @arg false resource is either a tvshow or movie (default)
+     */
+    void setMovieMode(bool moviemode);
+
+    /**
+      * @brief Prepare a file or folder for the lookup
       *
       * Check each file mimetype if it is supported and parse some additional info from the file
       *
@@ -73,7 +96,7 @@ public:
     void lookupFiles(const KUrl &fileOrFolder);
 
     /**
-      * Prepare a resource for the lookup.
+      * @brief Prepare a nepomuk resource for the lookup.
       *
       * Gets some important search parameters from it
       *
@@ -83,20 +106,36 @@ public:
     void lookupResource(const QList<Nepomuk2::Resource> &resources);
 
     /**
-      * Returns the complete list of resources that are ready for the metadata fetching
+      * @brief Returns the complete list of resources that are ready for the metadata fetching
       *
       * To get the type of resource check the resourceType parameter
       */
     QList<NepomukMetaDataExtractor::Extractor::MetaDataParameters *> resourcesList();
 
+    /**
+     * @brief Removes the first element in the lookup list and returns it
+     *
+     * The caller needs to delete the object if it is not needed anymore
+     * @return next file to process
+     */
+    NepomukMetaDataExtractor::Extractor::MetaDataParameters *takeNext();
+
 signals:
+    /**
+     * @brief Emits some information whats going on internally
+     *
+     * @param status current status message
+     */
     void progressStatus(const QString &status);
 
+    /**
+     * @brief emits if all files in a folder or all resources in a list finished the preprocessing
+     */
     void resourceExtarctionDone();
 
 private:
     /**
-      * called by lookupFiles checks if the metadata matches and extarcts some info
+      * @brief Called by lookupFiles checks if the metadata matches and extarcts some info
       *
       * the results will be added to @c m_resourcesToLookup
       */

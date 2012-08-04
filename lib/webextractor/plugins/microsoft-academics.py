@@ -58,7 +58,7 @@ def info():
 # build the query url from the given parameters
 #
 # currently supported keys are:
-# title, yuthor, yearMin, yearMax, journal, season, episode
+# title, author, yearMin, yearMax, journal, season, episode
 # values might be empty if not specified from the caller
 #
 # When all search results are processed, the list of entries must be returned via:
@@ -118,6 +118,7 @@ def handleSearchQuery(job):
 
     documentElement = BeautifulSoup( html ) # note switch to lxml
 
+    # parse page to retrive all item data
     searchResults = extractSearchResults(documentElement, False)
     WebExtractor.searchResults( searchResults )
 
@@ -143,6 +144,7 @@ def extractSearchResults(documentElement, citation=False):
     searchResults = []
 
     if noResult:
+        WebExtractor.error( 'Could not extract Item info' )
         return searchResults
 
     if citation is True:
@@ -197,7 +199,7 @@ def extractSearchResults(documentElement, citation=False):
     return searchResults
 
 #------------------------------------------------------------------------------
-# extracts the information of one item from the page from url
+# extracts the information of one item from the page at the url location
 #
 # in here it calls either the extarctItem function that loads the citations too or
 # just the item without further citation information
@@ -208,10 +210,10 @@ def extractSearchResults(documentElement, citation=False):
 #
 # the dictionary follows the bibtex file standard + few exceptions
 #
-# bibtexentrytype =...          like book, article, inproceedings
+# bibtexentrytype =...          like book, article, inproceedings // necessary for the PublicationPipe to work properly
 # references = ...              list of dicts, where each dict is another publication dict
 #
-
+# @todo implement option to allow / disallow reference fetching in handleMainItemExtraction, refernce fetching takes a lot of time
 def extractItemFromUri( url, options ):
 
     logMsg = 'start item extraction via: ' + url 
@@ -222,6 +224,13 @@ def extractItemFromUri( url, options ):
     retrieve_job = KIO.storedGet(data_url, KIO.NoReload, KIO.HideProgressInfo)
     retrieve_job.result.connect(handleMainItemExtraction)
 
+#------------------------------------------------------------------------------
+# process the returned item results from the KIO call
+#
+# calls extractItem to extract the items or
+# emits the error signal if kio failed to fetch the data
+# 
+# and fetches the page with the possible reference list we need to process them
 def handleMainItemExtraction(job):
 
     if job.error():
@@ -231,10 +240,7 @@ def handleMainItemExtraction(job):
 
     data = job.data()
 
-    #import os
-    #gSysEncoding = os.environ["LANG"].split(".")[1]
     html = unicode(str(QtCore.QString(data).toUtf8()), 'utf-8')
-    #print QtCore.QString(data).toUtf8()
 
     documentElement = BeautifulSoup( html ) # note switch to lxml
 
@@ -255,6 +261,10 @@ def handleMainItemExtraction(job):
 #------------------------------------------------------------------------------
 # does the dirty work of extracting the html data
 #
+# extracts the mas id and downloads the bibtex data for the item to retrieve all other information
+#
+# returns the parsed dictionary with the publication data
+#
 def extractItem( documentElement ):
     entry = {}
     # 1. lets get the microsoft masid again to do further requests
@@ -267,8 +277,7 @@ def extractItem( documentElement ):
         masidPart = masidHref.rpartition("id=")
         masid = masidPart[2]
     else:
-        error = 'Could not fetch masid.'
-        WebExtractor.error( error )
+        WebExtractor.error( 'Could not fetch masid.' )
         return entry
 
     logMsg = 'masid found: ' + masid 
@@ -277,32 +286,43 @@ def extractItem( documentElement ):
     # 2. we get propper publication data, this is available as bibtex file download
     # http://academic.research.microsoft.com/64764.bib?type=2&format=0&download=1
     # @todo replace urllib by async appraoch
-    logMsg = 'download bibtex file' 
-    WebExtractor.log( logMsg )
+    WebExtractor.log( 'download bibtex file' )
     filehandle = urllib.urlopen('http://academic.research.microsoft.com/' + masid + '.bib?type=2&format=0&download=1')
 
-    bibtexentrytype = re.compile(r'^@(\w+)\{.*')
-    bibtexKeys = re.compile(r'^(\w+)\s=\s\{(.*)\},')
+    bibtexentrytype = re.compile(r'^@(\w+)\{(.*)')   # works on            :: @article{author = {Hans Wurst},
+    bibtexKeys = re.compile(r'^(\w+)\s=\s\{+([^\{\}]*)\}+,') # works on any entry :: key = {value},
 
+    # transform bibtex keys 1:1 into the dictionary we want to return
     for line in filehandle.readlines():
         typeMatch = bibtexentrytype.search(line)
         if(typeMatch):
             entry.update(dict(bibtexentrytype = typeMatch.group(1)))
-            keysMatch = bibtexKeys.search(line)
-            if(keysMatch):
+            #ms does not format bibtex entry correctly, in the first line there is also the author field :/
+            firstLineMatch = bibtexKeys.search(typeMatch.group(2))
+            if(firstLineMatch):
                 entry.update( {keysMatch.group(1) : keysMatch.group(2)})
+
+        keysMatch = bibtexKeys.search(line)
+        if(keysMatch):
+            entry.update( {keysMatch.group(1) : keysMatch.group(2)})
 
     filehandle.close()
 
-    # great, but there is more fetch the abstract from the page
+    # great, but there is more: fetch the abstract from the page
     abstract = documentElement.first('span', {'id':'ctl00_MainContent_PaperItem_snippet'})
     if abstract is not None:
         entry.update(dict(abstract = abstract.text))
 
-    # todo parse downloadable files ...
+    # todo parse downloadable files ... so we get informations on where to get the pdf file and so on
 
     return entry
 
+#------------------------------------------------------------------------------
+# Like the handleMainItemExtraction this processes the page where all references are listed as returned from the KIO call
+#
+# calls extractSearchResults tif we found a valid list to get the proper item info for each item
+# if citations are found fetchNextCitation keeps track of fetching the next citation item until we are finished
+# 
 def handleCitationSearch(job):
 
     if job.error():
@@ -312,10 +332,7 @@ def handleCitationSearch(job):
 
     data = job.data()
 
-    #import os
-    #gSysEncoding = os.environ["LANG"].split(".")[1]
     html = unicode(str(QtCore.QString(data).toUtf8()), 'utf-8')
-    #print QtCore.QString(data).toUtf8()
 
     documentElement = BeautifulSoup( html ) # note switch to lxml
 
@@ -325,12 +342,18 @@ def handleCitationSearch(job):
     if citations:
         fetchNextCitation()
     else:
-        logMsg = 'No references found' 
-        WebExtractor.log( logMsg )
+        WebExtractor.log( 'No references found' )
         #WebExtractor.itemResults( 'publication', finalEntry )
+        # Use JSON was a workaround of an multiple nested dict issue with KROSS
         data_string = json.dumps(finalEntry)
         WebExtractor.itemResultsJSON( 'publication', data_string )
 
+
+#------------------------------------------------------------------------------
+#  checks the global "citations" if more citation etries are available
+# 
+# removes the first citation and parse it item datalobal 
+# asyncron load the page and call handleCitationItemExtraction
 def fetchNextCitation():
 
     global citations
@@ -345,6 +368,11 @@ def fetchNextCitation():
     retrieve_job = KIO.storedGet(data_url, KIO.NoReload, KIO.HideProgressInfo)
     retrieve_job.result.connect(handleCitationItemExtraction)
 
+#------------------------------------------------------------------------------
+#  Process the ite mdata for a single citation element
+#
+# does not fetch any citation of this, to avoid a never endig loop where hundrets of citations are fetched
+#
 def handleCitationItemExtraction(job):
 
     global finalEntry
@@ -358,10 +386,7 @@ def handleCitationItemExtraction(job):
 
     data = job.data()
 
-    #import os
-    #gSysEncoding = os.environ["LANG"].split(".")[1]
     html = unicode(str(QtCore.QString(data).toUtf8()), 'utf-8')
-    #print QtCore.QString(data).toUtf8()
 
     documentElement = BeautifulSoup( html ) # note switch to lxml
 
@@ -370,8 +395,7 @@ def handleCitationItemExtraction(job):
     citation = extractItem( documentElement )
 
     if citation:
-        logMsg = 'citation fetched'
-        WebExtractor.log( logMsg )
+        WebExtractor.log( 'citation fetched' )
 
     global citationResults
     citationResults.append( citation )

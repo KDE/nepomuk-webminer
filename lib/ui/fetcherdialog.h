@@ -40,7 +40,7 @@ namespace Extractor {
     class MetaDataParameters;
 }
 
-namespace Dialog {
+namespace UI {
     class SearchResultsModel;
 
 /**

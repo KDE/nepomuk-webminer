@@ -43,12 +43,14 @@ class OdfExtractor : public QObject
 public:
     /**
      * @brief Standard constructor
-     * @param parent
+     *
+     * @param parent some parent object
      */
     explicit OdfExtractor(QObject *parent = 0);
 
     /**
      * @brief Parse the odf document at the given url
+     *
      * @param mdp the MetaDataParameters where the parsed data will be saved to
      * @param fileUrl the url of the file on the harddrive
      */

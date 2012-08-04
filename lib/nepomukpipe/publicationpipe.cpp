@@ -58,6 +58,7 @@
 #include <Nepomuk2/Vocabulary/NUAO>
 #include <Soprano/Vocabulary/NAO>
 #include <Nepomuk2/Variant>
+#include <Nepomuk2/File>
 
 #include <KDE/KDebug>
 
@@ -112,12 +113,15 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariant
     QString file = bibEntryNonConst.value(QLatin1String("resourceuri")).toString();
     KUrl fileurl(file);
     if( fileurl.isLocalFile()) {
-        kDebug() << "add locafile crosref";
-        // first we create a nepomu kresource from the file
+        kDebug() << "add localfile crosref" << file;
+        Nepomuk2::File localFileRes(fileurl);
+
+
+        // first we create a nepomuk resource from the file
         // if the resoruce existed already (due to fileanalyzer added it before), we get the existing resource back
         // if the analyzer failed a new resource is created
         Nepomuk2::SimpleResourceGraph graph;
-        Nepomuk2::NFO::PaginatedTextDocument localFile(fileurl);
+        Nepomuk2::NFO::PaginatedTextDocument localFile(localFileRes.uri());
 
         localFile.setTitle( bibEntryNonConst.value(QLatin1String("title")).toString() );
 
@@ -163,7 +167,7 @@ QPair<QUrl, QUrl>  NepomukMetaDataExtractor::Pipe::PublicationPipe::importPublic
     addPublicationSubTypes(publication, metaData);
     // we remove it, othewise addContent complains about an unknown key
     // as it is not used anymore, this is fine and reduce wrong debug output
-    //metaData.remove( QLatin1String("bibtexentrytype") );
+    metaData.remove( QLatin1String("bibtexentrytype") );
 
     Nepomuk2::NBIB::Reference reference;
     reference.setCiteKey( citeKey );
@@ -192,7 +196,7 @@ QPair<QUrl, QUrl>  NepomukMetaDataExtractor::Pipe::PublicationPipe::importPublic
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
 
-    // get the nepomu kuri of the newly created resource
+    // get the nepomuk uri of the newly created resource
     QUrl publicationUri( srj->mappings().value( publication.uri() ));
     QUrl referenceUri( srj->mappings().value( reference.uri() ));
 
@@ -506,7 +510,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::handleSpecialCases(QVaria
     }
 
     // IV. archivePrefix + eprint
-    //TODO implement archivePrefix stuff
+    //TODO: implement archivePrefix stuff
 
 
     // V. publication date
@@ -642,7 +646,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addContent(const QString 
 
         if(accessDate.isValid()) {
             QString dateString = accessDate.toString(Qt::ISODate);
-            publication.setProperty( NUAO::lastUsage(), dateString ); //DEBUG: create ontology right so we include NUAO in it
+            publication.setProperty( NUAO::lastUsage(), dateString ); //BUG: create ontology right so we include NUAO in it ??
         }
     }
     else if(key == QLatin1String("date")) {
@@ -787,6 +791,10 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addContent(const QString 
         QString title = citeKey + ": " + key;
         addNote( value, title, publication, graph);
     }
+    else if(key == QLatin1String("bibtexentrytype") || key == QLatin1String("resourceuri") ) {
+        //ignore these cases
+        return;
+    }
     else {
         kDebug() << "unknown bibtex key ::" << key << value;
     }
@@ -905,7 +913,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addAuthor(const QString &
             Nepomuk2::NBIB::Chapter chapterResource;
             chapterResource.setTitle( i18n("unknown chapter") );
             chapterResource.setChapterNumber( 0 );
-            //BUG the chapter needs a "unique identifier, otherwise we merge them with other chapters together";
+            //BUG: the chapter needs a "unique identifier, otherwise we merge them with other chapters together";
             chapterResource.addType(NIE::DataObject());
             chapterResource.setProperty(NAO::identifier(), QUuid::createUuid().toString());
             chapterResource.setProperty(NIE::url(), QUuid::createUuid().toString());
@@ -999,7 +1007,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addChapter(const QString 
         Nepomuk2::NBIB::Chapter chapterResource;
         chapterResource.setTitle( i18n("unknown chapter") );
         chapterResource.setChapterNumber( utfContent );
-        //BUG the chapter needs a "unique identifier, otherwise we merge them with other chapters together";
+        //BUG: the chapter needs a "unique identifier, otherwise we merge them with other chapters together";
         chapterResource.addType(NIE::DataObject());
         chapterResource.setProperty(NAO::identifier(), QUuid::createUuid().toString());
         chapterResource.setProperty(NIE::url(), QUuid::createUuid().toString());
@@ -1030,7 +1038,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addChapterName(const QStr
     if(!chapterUrl.isValid()) {
         Nepomuk2::NBIB::Chapter chapterResource;
         chapterResource.setTitle( utfContent );
-        //BUG the chapter needs a "unique identifier, otherwise we merge them with other chapters together";
+        //BUG: the chapter needs a "unique identifier, otherwise we merge them with other chapters together";
         chapterResource.addType(NIE::DataObject());
         chapterResource.setProperty(NAO::identifier(), QUuid::createUuid().toString());
         chapterResource.setProperty(NIE::url(), QUuid::createUuid().toString());
@@ -1261,7 +1269,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addTitle(const QString &c
         if(!chapterUrl.isValid()) {
             Nepomuk2::NBIB::Chapter chapter;
             chapter.setTitle( utfContent );
-            //BUG  the chapter needs a "unique identifier, otherwise we merge them with other chapters together";
+            //BUG: the chapter needs a "unique identifier, otherwise we merge them with other chapters together";
             chapter.addType(NIE::DataObject());
             chapter.setProperty(NAO::identifier(), QUuid::createUuid().toString());
             chapter.setProperty(NIE::url(), QUuid::createUuid().toString());
@@ -1285,8 +1293,8 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addTitle(const QString &c
 
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addWebsite(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph)
 {
-    //TODO differentiate between webpage and webseite
-    //TODO split webpages if necessary
+    //TODO: differentiate between webpage and webseite
+    //TODO: split webpages if necessary
     KUrl url( QString(content.toUtf8()) );
 
     QString protocol = url.scheme();

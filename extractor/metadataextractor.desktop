@@ -2,7 +2,7 @@
 Type=Service
 X-KDE-ServiceTypes=KonqPopupMenu/Plugin
 MimeType=application/*;video/*;inode/directory;
-Actions=mdfetcher;mdfetcher2;
+Actions=mdfetcher;mdfetcher2;mdfetcher3;mdfetcher4;
 X-KDE-Submenu=Desktop Search
 X-KDE-Submenu[cs]=Vyhledávací služby
 X-KDE-Submenu[de]=Desktop-Suche
@@ -41,6 +41,11 @@ Icon=nepomuk
 Exec=metadataextractor %f
 
 [Desktop Action mdfetcher2]
+Name=Fetch MetaData for this file or folder (automatically)
+Icon=nepomuk
+Exec=metadataextractor -a %f
+
+[Desktop Action mdfetcher3]
 Name=Fetch MetaData for this file or folder (force download)
 Name[es]=Obtener metadatos para este archivo o carpeta (descarga forzada)
 Name[et]=Faili või kataloogi metaandmete hankimine (jõuga allalaadimine)
@@ -57,3 +62,8 @@ Name[x-test]=xxFetch MetaData for this file or folder (force download)xx
 Icon=nepomuk
 Exec=metadataextractor -f %f
 
+
+[Desktop Action mdfetcher4]
+Name=Fetch MetaData for this file or folder (automatically, force download)
+Icon=nepomuk
+Exec=metadataextractor -a -f %f

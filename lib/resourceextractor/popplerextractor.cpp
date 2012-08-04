@@ -63,7 +63,7 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseUrl(NepomukMeta
     d->publicationEntry->metaData.insert(QLatin1String("numpages"), numOfPages);
 
     // get parsed rdf metadata from poppler
-    // strip some unneded info and split the keywords
+    // strip some unneeded info and split the keywords
     QStringList metaData = d->pdfdoc->infoKeys();
     foreach(const QString &key, metaData) {
 
@@ -132,7 +132,7 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::tocCreation(const QD
             QString chapterName = e.tagName();
             QString chapterNumber = e.attribute(QLatin1String("DestinationName"));
             chapterNumber.remove(QRegExp("(sub)*section\\."));
-            //TODO create toc ...
+            //TODO: create toc ...
             //            qDebug() << chapterNumber << ":"  << chapterName;
         }
 

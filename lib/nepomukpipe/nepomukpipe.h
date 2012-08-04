@@ -47,7 +47,7 @@ namespace Pipe {
   *
   * It is not meant to cover all of Nepomuks ontoloy but rather a small defined subset of items that will be fetched
   * from the internet. It can also be reused by any other application that simply wants to stay away from nepomuks ontology
-  * and rather likes to push a simple QVariantMap into teh database
+  * and rather likes to push a simple QVariantMap into the database
   */
 class NepomukPipe : public QObject
 {

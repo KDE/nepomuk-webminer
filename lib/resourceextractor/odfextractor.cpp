@@ -26,13 +26,13 @@
 
 namespace NepomukMetaDataExtractor {
 namespace Extractor{
-/**
-          * Private class of the OdfExtractorPrivate for the d-pointer
-          */
-class OdfExtractorPrivate {
-public:
-    MetaDataParameters *publicationEntry;
-};
+    /**
+      * Private class of the OdfExtractorPrivate for the d-pointer
+      */
+    class OdfExtractorPrivate {
+    public:
+        MetaDataParameters *publicationEntry;
+    };
 }
 }
 

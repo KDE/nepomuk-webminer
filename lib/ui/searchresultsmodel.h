@@ -21,7 +21,7 @@
 #include <QtCore/QAbstractListModel>
 
 namespace NepomukMetaDataExtractor {
-namespace Dialog {
+namespace UI {
 /**
   * @brief ListModel to present the @c search @c result @c entries in a nice way
   *

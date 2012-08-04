@@ -44,7 +44,7 @@ def info():
                  resource = ['tvshow'],
                  description = 'An open database for television fans',
                  author = 'Joerg Ehrichs',
-                 email = 'some@mail.com',
+                 email = 'joerg.ehrichs@gmx.de',
                  isAvailable = isAvailable,
                  errorMsg = errorMsg)
 
@@ -61,7 +61,7 @@ def info():
 # If only episode number is missing return all episodes of the season + season entry
 # if only season number is missing return all episodes with correct number for any season + show object
 #
-# @todo add resourcetype 'series', 'season' to retrieve overview info not all episodes
+# @todo add resourcetype 'series', 'season' to retrieve overview info of all episodes
 #       good for bulk download/select a folder and then fetch all episode info
 #
 def searchItems( resourcetype, parameters ):
@@ -74,30 +74,38 @@ def searchItems( resourcetype, parameters ):
     searchResults = []
     t = tvdb_api.Tvdb()
 
-    if showtitle and season and episode:
-        episodeResult = t[showtitle][int(season)][int(episode)]
-        searchResults.append( getEpisodeDetails(episodeResult) )
-
-    elif showtitle and season:
-        seasonResult = t[showtitle][int(season)]
-
-        for episodeNumber in seasonResult:
-            episodeResult = seasonResult[episodeNumber]
+    try:
+        if showtitle and season and episode:
+            episodeResult = t[showtitle][int(season)][int(episode)]
             searchResults.append( getEpisodeDetails(episodeResult) )
 
-    elif showtitle:
-        showResult = t[showtitle]
-
-        for seasonNumber in showResult:
-            seasonResult = showResult[seasonNumber]
+        elif showtitle and season:
+            seasonResult = t[showtitle][int(season)]
 
             for episodeNumber in seasonResult:
                 episodeResult = seasonResult[episodeNumber]
                 searchResults.append( getEpisodeDetails(episodeResult) )
-    else:
-        WebExtractor.error('no useful search parameters defined')
 
-    WebExtractor.searchResults( searchResults )
+        elif showtitle:
+            showResult = t[showtitle]
+
+            for seasonNumber in showResult:
+                seasonResult = showResult[seasonNumber]
+
+                for episodeNumber in seasonResult:
+                    episodeResult = seasonResult[episodeNumber]
+                    searchResults.append( getEpisodeDetails(episodeResult) )
+        else:
+            WebExtractor.error('no useful search parameters defined')
+
+        WebExtractor.searchResults( searchResults )
+
+    except (tvdb_api.tvdb_shownotfound, tvdb_api.tvdb_seasonnotfound, tvdb_api.tvdb_episodenotfound) as err:
+        WebExtractor.log( str(err) )
+        WebExtractor.searchResults( searchResults )
+
+    except Exception as err:
+        WebExtractor.error("Script error: \n" + str(err))
 
 #------------------------------------------------------------------------------
 # helper function to fill the search result dictionary
@@ -117,17 +125,17 @@ def getEpisodeDetails(episode):
 # extracts all information from the given url
 #
 # What we need to return is a dictionary containing all necessary information.
-# TvShows are a bit different from other searches, as they are connected in show/season/episode
+# TvShows are a bit different from other searches, as they are connected in show/season/episode way
 # Thats why a more complicated result is necessary.
 #
 # Depending on the given url we either extract:
 # 1) only one episode
 # 2) all episodes in 1 season
-# 3) all seasons in teh show and all episodes in each season
+# 3) all seasons in the show and all episodes in each season
 #
 # In most cases only the first option is used, but when someone wants to "bulk-fetch" a complete show at once
-# This structure alows to do it in one go rather than quering the plugin over and over again for each episode.
-# How the results are processed is up to the ui using it. The structure of teh results is in each case the same
+# This structure allows one to do it in one go rather than quering the plugin over and over again for each episode.
+# How the results are processed is up to the ui using it. The structure of the results is in each case the same
 #
 # Look at the TvShow pipe from the metadata extarctor for more details
 #
@@ -138,7 +146,7 @@ def getEpisodeDetails(episode):
 #
 def extractItemFromUri( url, options ):
 
-    # @todo implement search option 2 and 3
+    # @todo implement search option 2 and 3 currently only 1 episode is returned
     exp = re.compile(r'seriesid=(\d+)&seasonid=(\d+)&id=(\d+)')
     match = exp.search(url)
 
@@ -159,11 +167,27 @@ def extractItemFromUri( url, options ):
     episodeItemList = showItem.search(episodeid, key = 'id')
     episodeItem = episodeItemList[0]
 
-    allActors = episodeItem['gueststars'] + showItem['actors']
+    if not episodeItem['gueststars']:
+        allActors = showItem['actors']
+    elif not showItem['actors']:
+        allActors = episodeItem['gueststars']
+    else:
+        allActors = episodeItem['gueststars'] + showItem['actors']
+
     actorList = allActors.replace('|',';').strip(';')
-    writerList = episodeItem['writer'].replace('|',';').strip(';')
-    directorList = episodeItem['director'].replace('|',';').strip(';')
-    genreList = showItem['genre'].replace('|',';').strip(';')
+
+    if episodeItem['writer']:
+        writerList = episodeItem['writer'].replace('|',';').strip(';')
+    else:
+        writerList= []
+    if episodeItem['director']:
+        directorList = episodeItem['director'].replace('|',';').strip(';')
+    else:
+        directorList= []
+    if showItem['genre']:
+        genreList = showItem['genre'].replace('|',';').strip(';')
+    else:
+        genreList= []
 
     episodeDict = dict (
                         title = episodeItem['episodename'],
@@ -202,4 +226,3 @@ if __name__=="__main__":
     pluginInfo = info()
     for key in pluginInfo:
         print "%15s: %s" % (key, pluginInfo[key])
-        
