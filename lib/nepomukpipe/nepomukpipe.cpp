@@ -40,7 +40,7 @@ NepomukMetaDataExtractor::Pipe::NepomukPipe::~NepomukPipe()
 
 }
 
-void NepomukMetaDataExtractor::Pipe::NepomukPipe::slotSaveToNepomukDone(KJob *job)
+void NepomukMetaDataExtractor::Pipe::NepomukPipe::slotSaveToNepomukDone(KJob *job) const
 {
     if(job->error()) {
         kDebug() << "Failed to store information in Nepomuk. " << job->errorString();
@@ -52,6 +52,7 @@ void NepomukMetaDataExtractor::Pipe::NepomukPipe::slotSaveToNepomukDone(KJob *jo
 
 KUrl NepomukMetaDataExtractor::Pipe::NepomukPipe::downloadBanner(const QUrl &bannerUrl, const QString& additionalLocationInfo ) const
 {
+    //TODO: make banner location configurable
     const KUrl localUrl = KGlobal::dirs()->locateLocal("appdata", QLatin1String("banners/") + additionalLocationInfo + QLatin1String("/") + KUrl(bannerUrl).fileName(), true);
     if(!QFile::exists(localUrl.toLocalFile())) {
         KIO::CopyJob* job = KIO::copy(bannerUrl, localUrl, KIO::HideProgressInfo);
@@ -165,25 +166,25 @@ NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name NepomukMetaDataEx
     int commaCount = 0;
     foreach(const QString &token, personTokens) {
 
-        /// Position where comma was found, or -1 if no comma in token
+        // Position where comma was found, or -1 if no comma in token
         int p = -1;
         if (commaCount < 2) {
-            /// Only check if token contains comma
-            /// if no comma was found before
+            // Only check if token contains comma
+            // if no comma was found before
             int bracketCounter = 0;
             for (int i = 0; i < token.length(); ++i) {
-                /// Consider opening curly brackets
+                // Consider opening curly brackets
                 if (token[i] == QChar('{')) ++bracketCounter;
-                /// Consider closing curly brackets
+                // Consider closing curly brackets
                 else if (token[i] == QChar('}')) --bracketCounter;
-                /// Only if outside any open curly bracket environments
-                /// consider comma characters
+                // Only if outside any open curly bracket environments
+                // consider comma characters
                 else if (bracketCounter == 0 && token[i] == QChar(',')) {
-                    /// Memorize comma's position and break from loop
+                    // Memorize comma's position and break from loop
                     p = i;
                     break;
                 } else if (bracketCounter < 0)
-                    /// Should never happen: more closing brackets than opening ones
+                    // Should never happen: more closing brackets than opening ones
                     kWarning() << "Opening and closing brackets do not match!";
             }
         }
@@ -236,7 +237,7 @@ NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name NepomukMetaDataEx
         }
     }
     if (!partB.isEmpty()) {
-        /// Name was actually given in PubMed format
+        // Name was actually given in PubMed format
         NepomukPipe::Name newName;
         newName.first = partB.join(QChar(' '));
         newName.last = partA.join(QChar(' '));
@@ -259,7 +260,7 @@ NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name NepomukMetaDataEx
     while (it != personTokens.constBegin()) {
         --it;
         if (partB.isEmpty() && (it->toLower().startsWith(QLatin1String("jr")) || it->toLower().startsWith(QLatin1String("sr")) || it->toLower().startsWith(QLatin1String("iii"))))
-            /// handle name suffices like "Jr" or "III."
+            // handle name suffices like "Jr" or "III."
             partC.prepend(*it);
         else if (partB.isEmpty() || it->at(0).isLower())
             partB.prepend(*it);
@@ -267,8 +268,8 @@ NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name NepomukMetaDataEx
             partA.prepend(*it);
     }
     if (!partB.isEmpty()) {
-        /// Name was actually like "Peter Ole van der Tuckwell",
-        /// split into "Peter Ole" and "van der Tuckwell"
+        // Name was actually like "Peter Ole van der Tuckwell",
+        // split into "Peter Ole" and "van der Tuckwell"
         NepomukPipe::Name newName;
         newName.first = partA.join(QChar(' '));
         newName.last = partB.join(QChar(' '));

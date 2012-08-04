@@ -364,7 +364,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addPublicationSubTypes(Ne
         // do nothing, stays Publication only
     }
 
-    // erro case
+    // error case
     else {
         kWarning() << "try to import unknown bibliographic resource type" << entryType;
     }
@@ -800,13 +800,13 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addContent(const QString 
     }
 }
 
-void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addNote(const QString &contentVale, const QString &noteType, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph)
+void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addNote(const QString &contentVale, const QString &noteTitle, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph)
 {
     Nepomuk2::PIMO::Note note;
     note.addType(NIE::InformationElement());
 
-    note.setProperty( NAO::prefLabel(), noteType );
-    note.setProperty( NIE::title(), noteType );
+    note.setProperty( NAO::prefLabel(), noteTitle );
+    note.setProperty( NIE::title(), noteTitle );
 
     QTextDocument content;
     content.setHtml( contentVale.simplified() );

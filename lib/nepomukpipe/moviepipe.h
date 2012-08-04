@@ -25,6 +25,8 @@ namespace Pipe {
 /**
   * @brief Pipes a QVariantMap with movie information into Nempomuk
   *
+  * Creates the correct Movie structure, splits director/writer/cast names correctly and adds the mas subresource to the movie
+  *
   * The following keys will be used in this trasition:
   * @li @c resourceuri - the file url or nepomuk uri of the resource this data should be added to
   * @li @c title
@@ -39,8 +41,11 @@ class MoviePipe : public NepomukPipe
 {
 
 public:
+    /**
+     * @brief Standard Constructor
+     * @param parent parent object
+     */
     MoviePipe(QObject *parent = 0);
-    virtual ~MoviePipe();
 
     void pipeImport(const QVariantMap &movieEntry);
 };

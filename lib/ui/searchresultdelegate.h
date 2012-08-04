@@ -25,7 +25,7 @@ namespace UI {
 /**
   * @brief Delegate to show the search result information in a nice way.
   *
-  * Displays the title in bold font and the details in a smaller italic font below it
+  * Displays the @c title in bold font and the @c details in a smaller italic font below it
   */
 class SearchResultDelegate : public QStyledItemDelegate
 {

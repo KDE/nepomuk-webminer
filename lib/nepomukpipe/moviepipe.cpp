@@ -23,7 +23,6 @@
 #include <Nepomuk2/StoreResourcesJob>
 
 #include "sro/nmm/movie.h"
-#include "sro/nmm/tvshow.h"
 #include "sro/nco/personcontact.h"
 #include <Soprano/Vocabulary/NAO>
 
@@ -38,17 +37,11 @@ NepomukMetaDataExtractor::Pipe::MoviePipe::MoviePipe(QObject *parent)
 {
 }
 
-NepomukMetaDataExtractor::Pipe::MoviePipe::~MoviePipe()
-{
-
-}
-
 void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &movieEntry)
 {
     Nepomuk2::SimpleResourceGraph graph;
 
-    //TODO: do not use local file url here, this will double type the resource
-    // for now this is the best way to deal with this
+    //TODO: do not use local file url here, this will double type the resource for now this is the best way to deal with this
     QString resourceUri = movieEntry.value(QLatin1String("resourceuri"), QString()).toString();
     QUrl existingUri(resourceUri);
     Nepomuk2::NMM::Movie movieResource(existingUri);

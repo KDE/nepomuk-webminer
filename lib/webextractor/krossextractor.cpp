@@ -71,7 +71,7 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::~KrossExtractor()
     delete d->scriptFile;
 }
 
-NepomukMetaDataExtractor::Extractor::WebExtractor::Info NepomukMetaDataExtractor::Extractor::KrossExtractor::info()
+NepomukMetaDataExtractor::Extractor::WebExtractor::Info NepomukMetaDataExtractor::Extractor::KrossExtractor::info() const
 {
     Q_D( KrossExtractor );
     return d->scriptInfo;

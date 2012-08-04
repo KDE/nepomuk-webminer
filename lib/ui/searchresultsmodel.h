@@ -26,6 +26,8 @@ namespace UI {
   * @brief ListModel to present the @c search @c result @c entries in a nice way
   *
   * Uses the @c title and @c details key of the @c QVariantMap from the python call
+  *
+  * @see SearchResultDelegate
   */
 class SearchResultsModel : public QAbstractListModel
 {
@@ -33,15 +35,41 @@ class SearchResultsModel : public QAbstractListModel
 public:
     explicit SearchResultsModel(QObject *parent = 0);
 
+    /**
+     * @brief Sets the list of search result as retrieved from the python plugin search
+     * @param searchResults List of search results
+     */
     void setSearchResults(const QVariantList & searchResults);
-    QVariantMap searchResultEntry( const QModelIndex & index );
-    void clear( );
 
-    int rowCount ( const QModelIndex & parent = QModelIndex() ) const ;
+    /**
+     * @brief Returns the result for the selected index
+     * @param index the selected index in the list
+     * @return the search result information
+     */
+    QVariantMap searchResultEntry( const QModelIndex & index ) const;
+
+    /**
+     * @brief Remove all search results from the model
+     */
+    void clear();
+
+    /**
+     * @brief Number of available search entries
+     * @param parent parent model index
+     * @return number of entries
+     */
+    int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
+
+    /**
+     * @brief Returns the single data for one search entry at the given @p index and @p role
+     * @param index whcoh searc hresult will be checked
+     * @param role what data will be used (DisplayRole = title, UserDataRole = details)
+     * @return the info as string
+     */
     QVariant data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;
 
 private:
-    QVariantList m_searchResults;
+    QVariantList m_searchResults; /**< Holds the list of all search results from the python plugin */
 };
 }
 }

@@ -43,43 +43,59 @@ class ExtractorFactoryPrivate;
   *
   * The WebExtarctor implementations take care of the actual extraction job.
   *
+  * @see KrossExtractor - for the python/ruby/javascript part
+  * @see WebExtractor - for the general case and if one wants to create a c++ based plugin
   */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT ExtractorFactory : public QObject
 {
     Q_OBJECT
 public:
+    /**
+     * @brief Standard Constructor
+     * @param parent some parent object
+     */
     explicit ExtractorFactory(QObject *parent = 0);
     ~ExtractorFactory();
 
     /**
-      * Creates a new WebExtractor based on the @c "identifier" name
+      * @brief Creates a new WebExtractor based on the @c "identifier" name
       *
       * Ownership of the created object is transfered to the caller.
       * The caller must delete it, if it is no longer used
+      *
+      * @p webEngine short identifier name of the plugin
+      *
+      * @return the created WebExtractor
       */
     NepomukMetaDataExtractor::Extractor::WebExtractor *createExtractor( const QString &webEngine );
 
     /**
-      * Creates a new WebExtractor based in the @c "url" it can fetch data from
+      * @brief Creates a new WebExtractor based in the @c "url" it can fetch data from
       *
       * Ownership of the created object is transfered to the caller.
       * The caller must delete it, if it is no longer used
+      *
+      * @p uri web url that should be parsed
+      *
+      * @return the created WebExtractor
       */
     NepomukMetaDataExtractor::Extractor::WebExtractor *createExtractor( const QUrl &uri );
 
     /**
-      * returns a list of all available webextractor plugins that fetches data for the resource @c type
+      * @brief Returns a list of all available webextractor plugins that fetches data for the resource @c type
       *
-      * type can be:
+      * @p type can be:
       * @li publication
       * @li tvshow
       * @li movie
+      *
+      * @return a list of all WebExtarctor info items
       */
     QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> listAvailablePlugins( const QString &type );
 
 private:
     /**
-      * Preloads information about all available plugins
+      * @brief Preloads information about all available plugins
       *
       * Plugins are scripts in the kde data folder under @c nepomukmetadataextractor/plugins/
       */

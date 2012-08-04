@@ -45,6 +45,7 @@ class KrossExtractorPrivate;
   * @li searchResults(QVariantList);
   * @li itemResults(QString, QVariantMap);
   *
+  * For more details see \ref webextractor Overview
   */
 class KrossExtractor : public WebExtractor
 {
@@ -53,7 +54,7 @@ public:
     explicit KrossExtractor(const QString &scriptFile, QObject *parent = 0);
     ~KrossExtractor();
 
-    WebExtractor::Info info();
+    WebExtractor::Info info() const;
 
     void search(const QString &resourceType, const QVariantMap &parameters);
     void extractItem(const QUrl &url, const QVariantMap &options);
@@ -65,6 +66,14 @@ signals:
     void itemResultsJSON(const QString &resourceType, const QString &jsonMap);
 
 private slots:
+    /**
+     * @brief Little helper function to workaround a small bug with multiple nested dictionaries
+     *
+     * Transforms the metadata from a JSON representation into QVariantMap and emits itemResults
+     *
+     * @param resourceType resource type of the result
+     * @param jsonMap json version of the meta data map
+     */
     void transformJSONResult(const QString &resourceType, const QString &jsonMap);
 
 private:

@@ -26,7 +26,7 @@
 namespace NepomukMetaDataExtractor {
 namespace Pipe {
 /**
-  * @brief Pipes a QVariantMap with Tv Shows information into Nempomuk
+  * @brief Pipes a @c QVariantMap with <i>TV Shows</i> information into @c Nempomuk
   *
   * The QVariantMap with the information contains several other QVariantMaps.
   * For the purpose of single episodes this seem overly complicated, but this helps to simply
@@ -36,16 +36,20 @@ namespace Pipe {
   * This takes care of the special case that tv shows always come in large series that are all connected
   * to each other.
   *
+  * This Pipe class generates the correct Nepomuk structure, splits person names and add them as subresource,
+  * defines the subresource relationship between Show/Series/Episode and downloads the posters/banners from
+  * the internet to a user defined folder.
+  *
   * The QVariantMap should have this keys:
   *
   * @li @c title
   * @li @c overview
-  * @li @c imdbid
+  * @li @c imdbid - optional imdb id
   * @li @c banner
   * @li @c poster
   * @li @c seasons - QVariantList containing more QVariantMaps with series info
   *
-  * The QVariantmap containing the season information looks like this:
+  * The QVariantMap containing the season information looks like this:
   *
   * @li @c number
   * @li @c banner
@@ -69,15 +73,17 @@ class TvShowPipe : public NepomukPipe
 {
 public:
     TvShowPipe(QObject *parent = 0);
-    virtual ~TvShowPipe();
 
     void pipeImport(const QVariantMap &tvshowEntry);
 
 private:
     /**
-      * helper function to generate the basic episode details
+      * @brief Helper function to generate the basic episode details
+      *
+      * @param episodeInfo the episode detals as retrieved from the internet
+      * @param season the created season SimpleResource
       */
-    Nepomuk2::NMM::TVShow createEpisode(QVariantMap episodeInfo, Nepomuk2::NMM::TVSeason season);
+    Nepomuk2::NMM::TVShow createEpisode(const QVariantMap &episodeInfo, const Nepomuk2::NMM::TVSeason &season);
 };
 }
 }

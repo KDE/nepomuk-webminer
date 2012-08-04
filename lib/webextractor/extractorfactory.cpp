@@ -120,7 +120,7 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
 
     Kross::Action action(this, "ExtractorFactory");
     QStringList pluginDirs;
-    // TODO: read this values from KConfig
+    // TODO: read these values from KConfig
     pluginDirs << KStandardDirs::locate("data", "nepomukmetadataextractor/plugins/");
     pluginDirs << QString("/home/joerg/Development/KDE/metadataextractor/lib/webextractor/plugins/");
 

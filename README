@@ -13,6 +13,12 @@ Idea:
 * mp3 support
 * a lot more python plugins
 
+For more information run:
+
+   make doc
+
+and check the doxygen documentation
+
 #################################################################
 # Dependencies:
 * Nepomuk
@@ -37,6 +43,8 @@ make install
 
 and start via metadatafetcher <url to file or folder>
 or via right click service menu in dolphin
+
+see metadatafetcher --help for more info
 
 #################################################################
 # install necessary ontology

@@ -55,6 +55,9 @@ public:
       * @brief If force update is @c true metadata is also fetched for files that already have data attached to them.
       *
       * Otherwise those files will be skipped
+      *
+      * @p update @arg true overwrite current meta data
+      *           @arg false skip file (default)
       */
     void setForceUpdate(bool update);
 
@@ -68,6 +71,7 @@ public:
 
     /**
      * @brief sets a hint for tvshow resources to check also folder names for title/season/episode
+     *
      * @param useFolderNames @arg true check fodler names
      *                       @arg false do not check fodler names (default)
      */
@@ -76,7 +80,7 @@ public:
     /**
      * @brief Sets a hint, that the given file is a movie
      *
-     * @param tvshowmode @arg true resource is a movie
+     * @param moviemode @arg true resource is a movie
      *                   @arg false resource is either a tvshow or movie (default)
      */
     void setMovieMode(bool moviemode);
@@ -138,6 +142,8 @@ private:
       * @brief Called by lookupFiles checks if the metadata matches and extarcts some info
       *
       * the results will be added to @c m_resourcesToLookup
+      *
+      * @p fileUrl file location that should be added
       */
     void addFilesToList(const KUrl &fileUrl);
 

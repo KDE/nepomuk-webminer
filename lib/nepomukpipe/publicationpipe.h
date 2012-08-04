@@ -24,7 +24,6 @@
 #include <Nepomuk2/SimpleResource>
 #include <Nepomuk2/SimpleResourceGraph>
 
-//#include "sro/nbib.h"
 #include "sro/nbib/publication.h"
 #include "sro/nbib/reference.h"
 #include "sro/nbib/journal.h"
@@ -42,11 +41,31 @@ class KJob;
 namespace NepomukMetaDataExtractor {
 namespace Pipe {
 /**
-  * @brief Pipes a QVariantMap with publication information into Nempomuk
+  * @brief Pipes a @c QVariantMap with @c publication @c information into @c Nempomuk
   *
-  * @todo TODO: needs a rewrite. This evolved from the "non-dms" appraoch. Could be simplified a lot now
+  * The given @c QVariantMap represents publication data as retrieved from BibTeX files and as such represent the @c key/values in the same way.
+  * In addition each entry has a type identifier <i>(article, book etc)</i> and citation id.
+  *
+  * Based on the given type identifier different Ontology classes are used and several keys have a different meaning depending on the used type identifier
+  * This class keeps care of this and creates the nepomuk data correctly.
+  *
+  * Each publication entry is transformed into:
+  * @li @c nbib:Reference - points to the publication with additonal info like @c chapter, @c page, @c citekey etc
+  * @li @c nbib:Publication - the main publication info like @c book, @c article, @c inproceedings etc
+  * @li several other classes for the @c authors, @c chapters, @c collections and so on
+  *
+  * The whole class works in the following way:
+  * @li @c importPublication() creates the Reference and Publication SimpleResource and does the cross linking
+  * @li @c addPublicationSubTypes() adds the correct subtypes to the publication
+  * @li @c handleSpecialCases() handles some special key/value combinations
+  * @li @c add*() handle all other key/value cases
+  *
+  * The @c pipeImport is the start point where each publication is created and later on all references are added to the main publication
   *
   * @see NBIB ontology
+  *
+  * @todo TODO: remove the graph from the function parameters and make class member from it?
+  * @todo TODO: check if it is necessary to save some stuff into nepomuk inetween to retrieve the real Nepomuk-Uri or I could work with temporary uri's
   */
 class PublicationPipe : public NepomukPipe
 {
@@ -56,33 +75,97 @@ public:
     explicit PublicationPipe(QObject *parent = 0);
     virtual ~PublicationPipe();
 
-    /**
-      * Does the piping action
-      */
     void pipeImport(const QVariantMap &bibEntry);
 
 private:
     /**
-      * @return QPair with first = publicationUr and second = referenceUri
-      */
+     * @brief Create the nbib:Publication and @c nbib:Reference objects and connect them
+     *
+     * Also adds all the refercen details in here, as all further chages will operate on the nbib:Publication
+     * @return QPair with first = publicationUr and second = referenceUri
+     */
     QPair<QUrl, QUrl> importPublication( QVariantMap &metaData );
+
+    /**
+     * @brief adds some subpublication types (like @c article, book etc) to teh created nbib:Publication
+     * @param publication the publication object
+     * @param metaData the publication meta data
+     */
     void addPublicationSubTypes(Nepomuk2::NBIB::Publication &publication, const QVariantMap &metaData);
+
+    /**
+     * @brief handles some special cases of key/value combination to filter out some situations where the combination is important
+     *
+     * @param metaData the complete publication meta data
+     * @param graph the grapgh where al ldata is added to
+     * @param publication the used publication
+     * @param reference the used reference
+     *
+     * @see addPublisher
+     * @see addJournal
+     * @see addSpecialArticle
+     */
     void handleSpecialCases(QVariantMap &metaData, Nepomuk2::SimpleResourceGraph &graph, Nepomuk2::NBIB::Publication &publication, Nepomuk2::NBIB::Reference &reference);
 
 
     /* Helping functions */
+    /**
+     * @brief Creates the publisher with the connected address
+     * @param publisherValue name of the publisher
+     * @param addressValue the address details
+     * @param publication the publication where the publsiher is added to
+     * @param graph the graph where the data is added to
+     */
     void addPublisher(const QString &publisherValue, const QString &addressValue, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
 
+    /**
+     * @brief Creates an Article in a collection which is added as Journal/Journal issue construct
+     * @param journal the journal name
+     * @param volume the journal volume
+     * @param number the journal isue number
+     * @param publication the publication (an @c article here)
+     * @param graph the graph where al lthe data is added to
+     * @param seriesUrl the type of Series
+     * @param issueUrl the type of the issue
+     */
     void addJournal(const QString &journal, const QString &volume, const QString &number, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph,
                     QUrl seriesUrl = Nepomuk2::NBIB::Journal().uri(),
                     QUrl issueUrl = Nepomuk2::NBIB::JournalIssue().uri());
+
+    /**
+     * @brief Creates Article with collection thats not published in a Journal
+     *
+     * @param titleValue article title
+     * @param article the publication (an @c article in this case)
+     * @param graph the graph where all data is added to
+     * @param collectionUrl the type of collection that will be created
+     */
     void addSpecialArticle(const QString &titleValue, Nepomuk2::NBIB::Publication &article, Nepomuk2::SimpleResourceGraph &graph, QUrl collectionUrl = Nepomuk2::NBIB::Encyclopedia().uri());
 
+    /**
+     * @brief handles a huge amout of keys where no special processing or Class creation is necessary
+     * @param key the bibtex key
+     * @param value the bibtey value
+     * @param publication the publication where the data is added to
+     * @param reference the reference where the data is added to
+     * @param graph the graph where all data will be added to
+     * @param originalEntryType the original bibtex publication type
+     * @param citeKey the used citykey for the reference
+     */
     void addContent(const QString &key, const QString &value, Nepomuk2::NBIB::Publication &publication,
                     Nepomuk2::NBIB::Reference &reference, Nepomuk2::SimpleResourceGraph &graph,
                     const QString & originalEntryType, const QString & citeKey);
 
-    void addNote(const QString &content, const QString &noteType, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
+    /**
+     * @brief Creates @c pimo:Note objects from the note/anote etc bibtex fields.
+     *
+     * The content will be added as plain text and html text
+     * @param content the note text
+     * @param noteTitle note title
+     * @param publication the publicatio nwhere the data is added to
+     * @param graph the graph where the data will be added to
+     */
+    void addNote(const QString &content, const QString &noteTitle, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph);
 
 
     void addAuthor(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::NBIB::Reference &reference, Nepomuk2::SimpleResourceGraph &graph, const QString & originalEntryType);
@@ -113,7 +196,7 @@ private:
     void addTopic(const QStringList &content, Nepomuk2::SimpleResource &resource, Nepomuk2::SimpleResourceGraph &graph);
 
     /**
-      * creates the contact resource and push it to nepomuk if necessary
+      * @brief creates the contact resource and push it to nepomuk if necessary
       */
     void addContact(const QString &contentValue, Nepomuk2::SimpleResource &resource, Nepomuk2::SimpleResourceGraph &graph, QUrl contactProperty, QUrl contactType );
 

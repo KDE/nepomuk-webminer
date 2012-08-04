@@ -31,7 +31,7 @@ void NepomukMetaDataExtractor::UI::SearchResultsModel::setSearchResults(const QV
     endInsertRows();
 }
 
-QVariantMap NepomukMetaDataExtractor::UI::SearchResultsModel::searchResultEntry( const QModelIndex & index )
+QVariantMap NepomukMetaDataExtractor::UI::SearchResultsModel::searchResultEntry( const QModelIndex & index ) const
 {
     if( index.row() >= 0 && index.row() < m_searchResults.size()) {
         return m_searchResults.at(index.row()).toMap();
@@ -59,7 +59,7 @@ QVariant NepomukMetaDataExtractor::UI::SearchResultsModel::data ( const QModelIn
 {
     if( role == Qt::DisplayRole) {
         QString title = m_searchResults.at(index.row()).toMap().value("title").toString();
-        title.remove(QRegExp("<[^>]*>"));
+        title.remove(QRegExp("<[^>]*>")); // sometimes titles from the search have html tags attached, which will be removed here
 
         return title;
     }

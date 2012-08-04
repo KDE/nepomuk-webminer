@@ -50,6 +50,7 @@ class NEPOMUKMETADATAEXTRACTOR_EXPORT AutomaticFetcher : public QObject
 public:
     /**
      * @brief Standard Constructor
+     *
      * @param parent some parent object
      */
     explicit AutomaticFetcher(QObject *parent = 0);

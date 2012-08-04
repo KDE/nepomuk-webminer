@@ -27,10 +27,10 @@
 
 
 namespace Nepomuk2 {
-namespace NCO {
-    class PersonContact;
-    class OrganizationContact;
-}
+    namespace NCO {
+        class PersonContact;
+        class OrganizationContact;
+    }
 }
 
 class KJob;
@@ -39,7 +39,7 @@ namespace NepomukMetaDataExtractor {
 namespace Pipe {
 
 /**
-  * @brief This part is used to import a plain QVariantMap into Nepomuk
+  * @brief This part is used to import a plain @c QVariantMap into @c Nepomuk
   *
   * The data received from the internet is nothing else than a list of @c key=value pairs.
   * To save one the trouble of writing the Nepomuk parts that does the semantic transition from such an key=value
@@ -57,13 +57,18 @@ public:
     virtual ~NepomukPipe();
 
     /**
-      * Must be implemented in subclasses. Does teh actual work
+      * @brief Must be implemented in subclasses. Does the actual work
+      *
+      * Transforms the @c entry map into Nepomuk SimpleResources and connects the created resoruce
+      * sets subresource connections, downloads additional banners/poster, splits person names etc.
+      *
+      * @p entry input variantmap with all the necessary data
       */
     virtual void pipeImport(const QVariantMap &entry) = 0;
 
 protected:
     /**
-      * helper function to download the @c banner or @c poster
+      * @brief Helper function to download the @c banner or @c poster
       *
       * @p bannerUrl web url where the image can be retrieved from
       * @p additionalLocationInfo additional information where to save the image
@@ -72,32 +77,40 @@ protected:
     KUrl downloadBanner(const QUrl &bannerUrl, const QString& additionalLocationInfo ) const;
 
     /**
-      * transforms some common variants of date formats into a QDateTime.
+      * @brief Transforms some common variants of date formats into a QDateTime.
+      *
+      * @p dateString string representing a date in different ways
       */
     QDateTime createDateTime(const QString &dateString) const;
 
     /**
-      * splits a list of person names and creates a list of @c nco:PersonContact from it.
+      * @brief Splits a list of person names and creates a list of @c nco:PersonContact from it.
       *
       * Takes care of Hans Wurst and Franz Ferdinant or Wurst, Hans; Ferdinant, Franz and so on.
-      * Also tries to determine family/given name and suffix values
+      * Also tries to determine family/given name and suffix values.
+      *
+      * @p listOfPersonNames person name list seperated by "and" or ";"
       */
     QList<Nepomuk2::NCO::PersonContact> createPersonContacts(const QString & listOfPersonNames) const;
 
     /**
-      * Splits a list of organization names and create the @c nco:OrganizationContact from them
+      * @brief Splits a list of organization names and create the @c nco:OrganizationContact from them
+      *
+      * @p listOfOrganizations organization name list seperated by "and" or ";"
       */
     QList<Nepomuk2::NCO::OrganizationContact> createOrganizationContacts(const QString & listOfOrganizations) const;
 
 private slots:
     /**
-      * will output the error message of the DMS call if it failed
+      * @brief Will output the error message of the DMS call if it failed
+      *
+      * @p job the executed DMS job
       */
-    void slotSaveToNepomukDone(KJob *job);
+    void slotSaveToNepomukDone(KJob *job) const;
 
 private:
     /**
-      * Struct to hold parsed name parts
+      * @brief Struct to hold parsed name parts
       */
     struct Name {
         QString first;
@@ -106,6 +119,12 @@ private:
         QString full;
     };
 
+    /**
+     * @brief Splits person list by "and" or ";"
+     *
+     * @param persons person list
+     * @return a list of @c Name structures
+     */
     QList<NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name> splitPersonList(const QString & persons) const;
 
     // taken from KBibtex, so

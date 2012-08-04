@@ -41,11 +41,6 @@ NepomukMetaDataExtractor::Pipe::TvShowPipe::TvShowPipe(QObject *parent)
 {
 }
 
-NepomukMetaDataExtractor::Pipe::TvShowPipe::~TvShowPipe()
-{
-
-}
-
 void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &tvshowEntry)
 {
     Nepomuk2::SimpleResourceGraph graph;
@@ -57,7 +52,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
     QString seriesOverview = tvshowEntry.value(QLatin1String("overview")).toString();
 
     seriesRes.setTitle( seriesTitle );
-    //FIXME: why nao description? seems addDescription for TVSeries is not available anymore
+    //FIXME: why nao description? seems addDescription for TVSeries is not available anymore?
     seriesRes.addNaoDescription( seriesOverview );
 
     QString seriesImdbId = tvshowEntry.value(QLatin1String("imdbid")).toString();
@@ -108,6 +103,8 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
         Nepomuk2::NMM::TVSeason seasonRes;
 
         QString seasonNumber = seasonInfo.value(QLatin1String("number")).toString();
+        // this is just for the internal usage in NepSak
+        seasonRes.setPrefLabel(i18n("Season %1",seasonNumber));
 
         seasonRes.setSeasonNumber( seasonNumber.toInt() );
         seasonRes.setSeasonOf(seriesRes.uri());
@@ -135,7 +132,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
 
         QVariantList episodeList = seasonInfo.value(QLatin1String("episodes")).toList();
 
-        kDebug() << "add" << episodeList.size() << "episodes";
+        kDebug() << "add" << episodeList.size() << "episodes to the show" << seriesTitle;
         foreach( const QVariant &episode, episodeList) {
             QVariantMap episodeInfo = episode.toMap();
 
@@ -169,7 +166,6 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
             episodeRes.addProperty(NAO::hasSubResource(), seasonRes.uri());
 
             // Now add all the actors and guest stars
-
             QList<Nepomuk2::NCO::PersonContact> actorList = createPersonContacts( episodeInfo.value(QLatin1String("actors")).toString() );
             foreach(const Nepomuk2::NCO::PersonContact &actor, actorList) {
                 graph << actor;
@@ -208,7 +204,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
     srj->exec();
 }
 
-Nepomuk2::NMM::TVShow NepomukMetaDataExtractor::Pipe::TvShowPipe::createEpisode(QVariantMap episodeInfo, Nepomuk2::NMM::TVSeason season )
+Nepomuk2::NMM::TVShow NepomukMetaDataExtractor::Pipe::TvShowPipe::createEpisode(const QVariantMap &episodeInfo, const Nepomuk2::NMM::TVSeason &season )
 {
     kDebug() << "create new episode with url" << episodeInfo.value(QLatin1String("resourceuri")).toString();
     KUrl localFile( episodeInfo.value(QLatin1String("resourceuri")).toString() );

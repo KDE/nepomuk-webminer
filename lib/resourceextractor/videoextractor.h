@@ -77,7 +77,7 @@ public:
     /**
      * @brief Sets a hint, that the given file is a movie
      *
-     * @param tvshowmode @arg true resource is a movie
+     * @param moviemode @arg true resource is a movie
      *                   @arg false resource is either a tvshow or movie (default)
      */
     void setMovieMode(bool moviemode);
