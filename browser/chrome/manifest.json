@@ -1,0 +1,22 @@
+{
+  "name": "MetaData fetcher",
+  "version": "0.1",
+  "description": "Extract meta data from the webpage and put it into nepomuk",
+  "plugins": [
+    { "path": "npMetaDataFetcherPlugin.so", "public": false }
+  ],
+  "background": { "page": "background.html" },
+  "page_action" :
+  {
+    "default_icon" : "icon-16.png",
+    "default_title" : "Click to fetch Meta Data"
+  },
+  "permissions" : [
+    "tabs"
+  ],
+  "icons" : {
+    "48" : "icon-48.png",
+    "128" : "icon-128.png"
+  },
+  "manifest_version": 2
+}

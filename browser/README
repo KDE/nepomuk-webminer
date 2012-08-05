@@ -1,0 +1,38 @@
+
+
+In here you'll find the browser plug-ins for the meta-data extractor
+
+While the LPart plugin for konqueror is build togethe rwith the main cmake setup, th NPAPI part will not be build.
+
+For the Chrome/Firefox etc plugins, you need to compile the NPAPI plugin first
+
+To to this you need firebreath.
+@see http://www.firebreath.org/
+@see http://colonelpanic.net/2010/11/firebreath-tips-working-with-source-control/
+
+git clone git://github.com/firebreath/FireBreath.git firebreath-dev
+git submodule update --recursive --init
+
+Than copy the NPAPI folder into the projects folder and run
+
+bash ./prepmake.sh
+make
+
+Now copy the created "npMetaDataFetcherPlugin.so" into the chrome folder.
+
+To get this into chorme
+* open it
+* select Tools->Extensions from the menu
+* Enable the Developer mode
+* Load the unpacked Plugin
+* select the "chrome folder with the npMetaDataFetcherPlugin.so" file
+
+Everything is working now.
+
+Navigate to:
+http://academic.research.microsoft.com/Publication/64764/toward-a-standard-process-the-use-of-uml-for-designing-simulation-models
+
+and you'll the the nepomuk icon in the adress bar, left click on it and the item will be fetched and added to nepomuk.
+
+The metadatafetcher has to be installed for this.
+The library to compile the NPAPI program and the commandline program to get the fetching and saving to work
