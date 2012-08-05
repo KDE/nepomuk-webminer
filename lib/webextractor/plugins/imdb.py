@@ -39,7 +39,8 @@ def info():
                  icon = 'imdb.png',
                  identifier = 'imdbmovies',
                  urlregex = ['http://www.imdb.com/title/tt'],
-                 resource = ['movie','tvshow', 'person'],
+                 resource = ['movie'],
+                 #resource = ['movie','tvshow', 'person'],
                  description = 'some description',
                  author = 'Joerg Ehrichs',
                  email = 'some@mail.com',
@@ -206,15 +207,40 @@ def extractItemFromUri( url, options ):
         WebExtractor.error("Script error: \n" + str(err))
         return
 
+    movieDirector = ""
+    movieWriter = ""
+    movieCast = ""
+    movieGenres = ""
+    moviePlot = ""
+    movieRuntime = ""
+    movieCountries = ""
+
+    # chek if all the values exist
+    if "director" in movie:
+        movieDirector = ";".join([item["name"] for item in movie['director']])
+    if "writer" in movie:
+        movieWriter = ";".join([item["name"] for item in movie['writer']])
+    if "cast" in movie:
+        movieWriter = ";".join([item["name"] for item in movie['cast']])
+    if "genres" in movie:
+        movieWriter = ';'.join(movie['genres'])
+    if "plot" in movie:
+        movieWriter = ';'.join(movie['plot'])
+    if "runtimes" in movie:
+        movieWriter = ';'.join(movie['runtimes'])
+    if "countries" in movie:
+        movieWriter = ';'.join(movie['countries'])
+
+
     result = dict(  title = movie['title'],
                     year = movie['year'],
-                    director = ";".join([item["name"] for item in movie['director']]),
-                    writer = ";".join([item["name"] for item in movie['writer']]),
-                    cast = ";".join([item["name"] for item in movie['cast']]),
-                    genres = ';'.join(movie['genres']),
-                    plot = ';'.join(movie['plot']),
-                    runtime = ';'.join(movie['runtimes']),
-                    countries = ';'.join(movie['countries'])
+                    director = movieDirector,
+                    writer = movieWriter,
+                    cast = movieCast,
+                    genres = movieGenres,
+                    plot = moviePlot,
+                    runtime = movieRuntime,
+                    countries = movieCountries
                   )
 
     # todo check how to do the results for tvshows

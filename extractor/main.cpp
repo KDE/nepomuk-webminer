@@ -80,7 +80,9 @@ int main( int argc, char *argv[] )
             af.startFetcher();
         }
 
-        return app.exec();
+        //QTimer::singleShot(1, &af, SLOT(start)); //stop after 5 seconds
+
+        //return app.exec();
     }
     else {
         NepomukMetaDataExtractor::UI::FetcherDialog fd;
