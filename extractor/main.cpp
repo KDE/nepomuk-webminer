@@ -19,6 +19,7 @@
 #include <KDE/KCmdLineArgs>
 #include <KDE/KAboutData>
 #include <KDE/KUrl>
+#include <QtCore/QString>
 
 #include "ui/fetcherdialog.h"
 #include "ui/automaticfetcher.h"
@@ -47,7 +48,9 @@ int main( int argc, char *argv[] )
 
     options.add("m").add("movie", ki18n("Helper parameter to find better searchparameter. Defines that the folder we are working on contains only one or more movies."));
 
-    options.add("+url", ki18n("The file or folder url used for the input"));
+    options.add("o").add("onlyurl", ki18n("Don't fetch based on file/resource. Input only based on the item url. The -url parameter contains a website. The data is added to nepomuk without file connection"));
+
+    options.add("+url", ki18n("The file or folder url used for the input."));
 
     KCmdLineArgs::addCmdLineOptions( options );
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
@@ -63,14 +66,20 @@ int main( int argc, char *argv[] )
 
     if(args->isSet("auto")) {
         NepomukMetaDataExtractor::UI::AutomaticFetcher af;
-        af.setForceUpdate( args->isSet("force") );
-        af.setTvShowMode( args->isSet("tvshow") );
-        af.setTvShowNamesInFolders( args->isSet("usefoldernames") );
-        af.setMovieMode( args->isSet("movie") );
 
-        af.setInitialPathOrFile( args->url( 0 ) );
+        if( args->isSet("o") ) {
+            af.startUrlFetcher( args->url( 0 ) );
+        }
+        else {
+            af.setForceUpdate( args->isSet("force") );
+            af.setTvShowMode( args->isSet("tvshow") );
+            af.setTvShowNamesInFolders( args->isSet("usefoldernames") );
+            af.setMovieMode( args->isSet("movie") );
 
-        af.startFetcher();
+            af.setInitialPathOrFile( args->url( 0 ) );
+            af.startFetcher();
+        }
+
         return app.exec();
     }
     else {

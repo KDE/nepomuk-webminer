@@ -103,7 +103,7 @@ public slots:
     /**
      * @brief Starts the meta data fetching
      *
-     * Iterates over searchNextItem() as long as unprocessed MetaDataParameter fiels are available
+     * Iterates over searchNextItem() as long as unprocessed MetaDataParameter fields are available
      * For each file:
      * @li search for a list of possible matches
      * @li select a good entry in selectSearchEntry
@@ -111,6 +111,8 @@ public slots:
      * @li pipe the returned QVariantMap to the NepomukPipe to create the correctresources in fetchedItemDetails() and
      */
     void startFetcher();
+
+    void startUrlFetcher(const QUrl &itemUrl);
 
 private slots:
     /**

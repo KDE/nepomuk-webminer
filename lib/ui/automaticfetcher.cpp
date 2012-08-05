@@ -80,6 +80,28 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::startFetcher()
     searchNextItem();
 }
 
+void NepomukMetaDataExtractor::UI::AutomaticFetcher::startUrlFetcher( const QUrl &itemUrl )
+{
+    if(m_webextractor) {
+        delete m_webextractor;
+        m_webextractor = 0;
+    }
+
+    m_webextractor = m_ef->createExtractor( itemUrl );
+
+    m_currentItemToupdate = new MetaDataParameters;
+
+    if(!m_webextractor) {
+        kWarning() << "could not find webextractor plugin for URL" << itemUrl;
+    }
+    else {
+        connect(m_webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
+        connect(m_webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
+
+        m_webextractor->extractItem( itemUrl, QVariantMap() );
+    }
+}
+
 void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
 {
     if( m_re->resourcesList().isEmpty() ) {
@@ -147,7 +169,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::selectSearchEntry( QVariant
         QVariantMap selectedSearchResult = searchResults.first().toMap();
 
         KUrl fetchUrl( selectedSearchResult.value(QLatin1String("url")).toString() );
-        m_webextractor->extractItem( fetchUrl, selectedSearchResult );// FIXME: do not put searchresults here but an option QVariantMap
+        m_webextractor->extractItem( fetchUrl, QVariantMap() );
     }
 }
 
@@ -155,6 +177,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::fetchedItemDetails(const QS
 {
     // copy the fetched meta data into the current item details
     m_currentItemToupdate->metaData = itemDetails;
+    m_currentItemToupdate->resourceType = resourceType;
 
     // TODO: support batch download of many episodes at once
     if( resourceType == QLatin1String("tvshow")) {
