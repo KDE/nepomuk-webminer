@@ -61,8 +61,18 @@ set( nepomukmetadataextractor_LIB_HDRS
   nepomukmetadataextractor_export.h
   metadataparameters.h
 
+  resourceextractor/resourceextractor.h
+  resourceextractor/videoextractor.h
+  resourceextractor/popplerextractor.h
+  resourceextractor/odfextractor.h
+
   webextractor/extractorfactory.h
   webextractor/webextractor.h
+
+  nepomukpipe/nepomukpipe.h
+  nepomukpipe/moviepipe.h
+  nepomukpipe/publicationpipe.h
+  nepomukpipe/tvshowpipe.h
 
   ui/automaticfetcher.h
   ui/fetcherdialog.h
