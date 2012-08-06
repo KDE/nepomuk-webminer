@@ -125,7 +125,7 @@ private slots:
      *
      * @param searchResults lis tof all matching items
      *
-     * @todo TODO: don'#'t just use first search result, add additional checks to avoid adding wrong data
+     * @todo TODO: don't just use first search result, add additional checks to avoid adding wrong data
      */
     void selectSearchEntry( QVariantList searchResults );
 

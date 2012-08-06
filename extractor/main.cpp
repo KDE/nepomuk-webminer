@@ -42,22 +42,29 @@ int main( int argc, char *argv[] )
     KCmdLineOptions options;
     options.add("f").add("force", ki18n("Force meta data fetching even for files that already have them"));
     options.add("a").add("auto", ki18n("Fetch data automatically without user interaction"));
+    options.add("u").add("url", ki18n("Fetch website and save meta data without file connection"));
+    options.add("r").add("resource", ki18n("Fetch data for a Nepomuk Resource information"));
 
-    options.add("t").add("tvshow", ki18n("Optional Helper parameter to find better searchparameter. Defines that the folder we are working on contains only one or more tvshow. Will fetch metadata for all episodes"));
-    options.add("u").add("usefoldernames", ki18n("Defines that for tvshows the folder names have necessary name info (like Series/Episode1.avi or Series/Season/Episode1.avi) otherwise only SeriesS01E01.avi etc will work."));
+    options.add("", ki18n("If no --url or --resource is used, the given url argument will be treated as local file/folder"));
 
-    options.add("m").add("movie", ki18n("Helper parameter to find better searchparameter. Defines that the folder we are working on contains only one or more movies."));
+    options.add(":", ki18n("Extra options to help filename parsing:"));
+    options.add("t").add("tvshow", ki18n("Defines that the folder we are working on contains only one or more tvshow."));
+    options.add("u").add("usefoldernames", ki18n("Defines that for tvshows the folder names have necessary name info."));
+    options.add("m").add("movie", ki18n("Defines that the folder we are working on contains only one or more movies."));
 
-    options.add("o").add("onlyurl", ki18n("Don't fetch based on file/resource. Input only based on the item url. The -url parameter contains a website. The data is added to nepomuk without file connection"));
+    options.add("+url", ki18n("The input url to the file/folder, website or nepomuk resource."));
 
-    options.add("+url", ki18n("The file or folder url used for the input."));
+    options.add("", ki18n("Some Examples:\n"
+                          "\tmetadataextractor ~/Documents\n"
+                          "\tmetadataextractor -a -u http://www.imdb.com/title/tt1254207/\n"
+                          "\tmetadataextractor -a -t ~/Videos\n\n"));
 
     KCmdLineArgs::addCmdLineOptions( options );
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     KApplication app;
 
     if ( !args->count() || !args->url(0).isValid() ) {
-        KCmdLineArgs::usageError(i18n("No file or folder specified.\nPlease start it with metadataextractor <url>.\n"
+        KCmdLineArgs::usageError(i18n("No url specified.\nPlease start it with metadataextractor <url>.\n"
                                       "For example: metadataextractor ~/Documents\n"
                                       "Or: metadataextractor -tvshow -auto ~/Videos\n"));
         return 0;
@@ -67,8 +74,11 @@ int main( int argc, char *argv[] )
     if(args->isSet("auto")) {
         NepomukMetaDataExtractor::UI::AutomaticFetcher af;
 
-        if( args->isSet("o") ) {
+        if( args->isSet("url") ) {
             af.startUrlFetcher( args->url( 0 ) );
+        }
+        else if( args->isSet("resource") ) {
+            //af.startResourceFetcher( args->url( 0 ) );
         }
         else {
             af.setForceUpdate( args->isSet("force") );
@@ -79,15 +89,13 @@ int main( int argc, char *argv[] )
             af.setInitialPathOrFile( args->url( 0 ) );
             af.startFetcher();
         }
-
-        //QTimer::singleShot(1, &af, SLOT(start)); //stop after 5 seconds
-
-        //return app.exec();
     }
     else {
         NepomukMetaDataExtractor::UI::FetcherDialog fd;
         fd.setForceUpdate( args->isSet("f") );
         fd.setTvShowMode( args->isSet("tvshow") );
+        fd.setTvShowNamesInFolders( args->isSet("usefoldernames") );
+        fd.setMovieMode( args->isSet("movie") );
 
         fd.setInitialPathOrFile( args->url( 0 ) );
         fd.show();

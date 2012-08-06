@@ -53,7 +53,7 @@ FB::variant MetaDataFetcherPluginAPI::fetchMetaData(const FB::variant& inputUrl)
 {
     std::string inputUrlString   = inputUrl.cast<std::string>();
 
-    std::string command = "metadataextractor -auto -o ";
+    std::string command = "metadataextractor -auto -url ";
     command.append( inputUrlString );
 
     // calls the commandline program to do the data fetching and nepomuk importing

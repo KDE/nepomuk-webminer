@@ -55,9 +55,48 @@ public:
     explicit FetcherDialog(QWidget *parent = 0);
     ~FetcherDialog();
 
+    /**
+     * @brief Sets the folder path or file name of the resources which will be processed
+     *
+     * @param url folder path or file name/path
+     */
     void setInitialPathOrFile( const KUrl &url );
+
+    /**
+     * @brief Forces the fetcher to include resources which already have meta data
+     *
+     * This is false by default and will skip any files that already have meta data attached
+     * Will just do a type check (if a video has NMM:TvShow or NMM:Movie it is assumed there is meta data available, as it would be
+     * NFO:Video otherwise
+     *
+     * @param update @arg true refetch metadata also for existing data
+     *               @arg false skip files with existing meta data
+     */
     void setForceUpdate(bool update);
-    void setTvShowMode(bool tvshowmode);
+
+    /**
+     * @brief Adds a hint to the VideoExtractor filename parser to improve name detection
+     *
+     * @param tvshowMode @arg true video files are all tvShows not movies
+     *                   @arg false video files are movies and/or tvshows (default)
+     */
+    void setTvShowMode(bool tvshowMode);
+
+    /**
+     * @brief Adds a hint to the VideoExtractor filename parser to improve name detection
+     *
+     * @param useFolderNames @arg true check folder names for tvshows too
+     *                   @arg false only check filename for tvshows (default)
+     */
+    void setTvShowNamesInFolders(bool useFolderNames);
+
+    /**
+     * @brief Adds a hint to the VideoExtractor filename parser to improve name detection
+     *
+     * @param tvshowMode @arg true video files are all movies not tvshows
+     *                   @arg false video files are movies and/or tvshows (default)
+     */
+    void setMovieMode(bool movieMode);
 
 private slots:
     void resourceFetchingDone();

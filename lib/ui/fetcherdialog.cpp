@@ -117,9 +117,19 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::setForceUpdate(bool update)
     m_re->setForceUpdate(update);
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::setTvShowMode(bool tvshowmode)
+void NepomukMetaDataExtractor::UI::FetcherDialog::setTvShowMode(bool tvshowMode)
 {
+    m_re->setTvShowMode( tvshowMode );
+}
 
+void NepomukMetaDataExtractor::UI::FetcherDialog::setTvShowNamesInFolders(bool useFolderNames)
+{
+    m_re->setTvShowNamesInFolders( useFolderNames );
+}
+
+void NepomukMetaDataExtractor::UI::FetcherDialog::setMovieMode(bool movieMode)
+{
+    m_re->setMovieMode( movieMode );
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::errorInScriptExecution(const QString &error)
