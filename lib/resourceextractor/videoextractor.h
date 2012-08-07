@@ -47,7 +47,7 @@ namespace Extractor {
   * @see setTvShowNamesInFolders
   * @see setMovieMode
   *
-  * @todo TODO: parse also meta data not only the filename
+  * @todo TODO: parse also file meta data not only the filename (does there exist something like ID3 tags?)
   * @todo TODO: the regexp mechanism is likely to fail, needs some better checks in here
   */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT VideoExtractor : public QObject

@@ -58,7 +58,8 @@ int main( int argc, char *argv[] )
     options.add("", ki18n("Some Examples:\n"
                           "\tmetadataextractor ~/Documents\n"
                           "\tmetadataextractor -a -u http://www.imdb.com/title/tt1254207/\n"
-                          "\tmetadataextractor -a -t ~/Videos\n\n"));
+                          "\tmetadataextractor -a -t ~/Videos\n"
+                          "\tmetadataextractor -r nepomuk:/res/eb9bc9e1-707d-47af-952c-d7381480fbcc"));
 
     KCmdLineArgs::addCmdLineOptions( options );
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
@@ -80,7 +81,7 @@ int main( int argc, char *argv[] )
             af.startUrlFetcher();
         }
         else if( args->isSet("resource") ) {
-            af.addFetcherResource( args->url( 0 ) );
+            af.addFetcherResource( Nepomuk2::Resource::fromResourceUri(args->url( 0 )) );
             af.startFetcher();
         }
         else {
@@ -100,7 +101,16 @@ int main( int argc, char *argv[] )
         fd.setTvShowNamesInFolders( args->isSet("usefoldernames") );
         fd.setMovieMode( args->isSet("movie") );
 
-        fd.addFetcherPath( args->url( 0 ) );
+        if( args->isSet("url") ) {
+            //fd.addFetcherUrl( args->url( 0 ) );
+        }
+        else if( args->isSet("resource") ) {
+            fd.addFetcherResource( Nepomuk2::Resource::fromResourceUri(args->url( 0 )) );
+        }
+        else {
+            fd.addFetcherPath( args->url( 0 ) );
+        }
+
         fd.show();
 
         return app.exec();

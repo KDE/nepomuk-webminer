@@ -24,9 +24,17 @@
 #include "videoextractor.h"
 
 #include <Nepomuk2/Resource>
+#include <Nepomuk2/Variant>
 #include <Nepomuk2/File>
 #include <Nepomuk2/Vocabulary/NMM>
+#include <Nepomuk2/Vocabulary/NCO>
+#include <Nepomuk2/Vocabulary/NIE>
 #include "sro/nbib.h"
+
+#include "sro/nbib/publication.h"
+#include "sro/nbib/article.h"
+#include "sro/nco/personcontact.h"
+#include "sro/nmm/movie.h"
 
 #include <KDE/KMimeType>
 #include <KDE/KDebug>
@@ -122,7 +130,38 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupFiles(const K
 
 void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(const Nepomuk2::Resource &resource)
 {
-    //TODO: use nepomuk resoruces to fetch the data
+    Q_D( ResourceExtractor );
+
+    // Step1 get the file resource of this nepomuk resource
+    Nepomuk2::File fileResource;
+
+    // BUG: the hasType() is bugged without the call to types() first
+    // seems the resources does not fetch all types just the main one
+    // For publication. we get nbib:Article but not the basetype nbib:Publication
+    resource.types();
+
+    if( resource.hasType(Nepomuk2::Vocabulary::NBIB::Publication()) ) {
+        // in this case the file is not double typed
+        fileResource = Nepomuk2::File(fileResource.property( Nepomuk2::Vocabulary::NBIB::isPublicationOf() ).toResource());
+    }
+    else {
+        // otherwise assume the resource is double typed
+        fileResource = Nepomuk2::File(resource);
+    }
+
+    Extractor::MetaDataParameters *metaDataParameters = new Extractor::MetaDataParameters;
+    metaDataParameters->resourceType = QLatin1String("publication"); // default to publication just in case we can't find anything else
+    metaDataParameters->metaDataSaved = false;
+
+    if( fileResource.url().isLocalFile() ) {
+        fileChecker(metaDataParameters, fileResource.url());
+    }
+
+    resourceChecker(metaDataParameters, resource);
+
+    d->resourcesToLookup.append( metaDataParameters );
+
+    emit resourceExtarctionDone();
 }
 
 void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(const QList<Nepomuk2::Resource> &resources)
@@ -161,29 +200,142 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(cons
         return;
     }
 
-    KSharedPtr<KMimeType> kmt = KMimeType::findByUrl( fileUrl );
-
-    MetaDataParameters *metaDataParameters = new MetaDataParameters;
+    Extractor::MetaDataParameters *metaDataParameters = new Extractor::MetaDataParameters;
     metaDataParameters->metaDataSaved = false;
 
-    if(kmt.data()->name().contains(QLatin1String("application/vnd.oasis.opendocument.text"))) {
-        OdfExtractor odfExtractor;
-        odfExtractor.parseUrl( metaDataParameters, fileUrl );
-    }
-    else if(kmt.data()->name().contains(QLatin1String("application/pdf"))) {
-        PopplerExtractor pdfExtractor;
-        pdfExtractor.parseUrl( metaDataParameters, fileUrl );
-    }
+    bool fileSupported = fileChecker(metaDataParameters, fileUrl);
 
-    else if(kmt.data()->name().contains(QLatin1String("video/"))) {
-        VideoExtractor videoExtractor;
-        videoExtractor.parseUrl( metaDataParameters, fileUrl, d->baseCallUrl );
-    }
-    else {
-        kDebug() << "unsupportet mimetype" << kmt.data()->name();
+    //TODO: add music support
+    // we skip files that are not supported (not pdf, opendocument or video files)
+    if( !fileSupported) {
         delete metaDataParameters;
         return;
     }
 
+    resourceChecker(metaDataParameters, fileResource);
+
     d->resourcesToLookup.append( metaDataParameters );
+}
+
+bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::fileChecker(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl)
+{
+    Q_D( ResourceExtractor );
+    KSharedPtr<KMimeType> kmt = KMimeType::findByUrl( fileUrl );
+
+    //TODO: add music support
+    if(kmt.data()->name().contains(QLatin1String("application/vnd.oasis.opendocument.text"))) {
+        Extractor::OdfExtractor odfExtractor;
+        odfExtractor.parseUrl( mdp, fileUrl );
+    }
+    else if(kmt.data()->name().contains(QLatin1String("application/pdf"))) {
+        Extractor::PopplerExtractor pdfExtractor;
+        pdfExtractor.parseUrl( mdp, fileUrl );
+    }
+
+    else if(kmt.data()->name().contains(QLatin1String("video/"))) {
+        Extractor::VideoExtractor videoExtractor;
+        videoExtractor.parseUrl( mdp, fileUrl, d->baseCallUrl );
+    }
+    else {
+        kDebug() << "unsupportet mimetype" << kmt.data()->name();
+        return false;
+    }
+
+    return true;
+}
+
+bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourceChecker(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const Nepomuk2::Resource &fileResource)
+{
+    Nepomuk2::Resource queryResource;
+
+    // first check if the real nepomuk resource can be reached via "publishedAs"
+    queryResource = fileResource.property( Nepomuk2::Vocabulary::NBIB::publishedAs() ).toResource();
+
+    if( !queryResource.exists() ) {
+        // if this is not the case we do not have such a Publication resource. All other resources (TvShow/Movie etc are double typed with the file resource)
+        queryResource = fileResource;
+    }
+
+    // BUG: the hasType() is bugged without the call to types() first
+    // seems the resources does not fetch all types just the main one
+    // For publication. we get nbib:Article but not the basetype nbib:Publication
+    queryResource.types();
+
+    // Now get some values from the resource for the search parameters
+
+    if( queryResource.hasType(Nepomuk2::Vocabulary::NBIB::Publication()) ) {
+        kDebug() << "Publication Resource";
+        mdp->resourceType = QLatin1String("publication");
+        //Nepomuk2::NBIB::Publication publication( fileResource.uri() ); seems this only works for new resources
+
+        QString title = queryResource.property( Nepomuk2::Vocabulary::NIE::title()).toString();
+        if( !title.isEmpty()) {
+            mdp->searchTitle = title;
+        }
+        if( !queryResource.property( Nepomuk2::Vocabulary::NCO::creator() ).toResourceList().isEmpty()) {
+            Nepomuk2::Resource author = queryResource.property( Nepomuk2::Vocabulary::NCO::creator() ).toResourceList().first();
+            mdp->searchAuthor = author.genericLabel();
+        }
+
+        QString releaseDateString = queryResource.property( Nepomuk2::Vocabulary::NBIB::publicationDate()).toString();
+        QDateTime releaseDate = QDateTime::fromString(releaseDateString);
+        if( releaseDate.isValid() ) {
+            mdp->searchYearMax = releaseDate.toString(QLatin1String("yyyy"));
+            mdp->searchYearMin = releaseDate.toString(QLatin1String("yyyy"));
+        }
+    }
+    else if( fileResource.hasType(Nepomuk2::Vocabulary::NMM::TVShow()) ) {
+        kDebug() << "TVShow Resource";
+        mdp->resourceType = QLatin1String("tvshow");
+
+        QString title = queryResource.property( Nepomuk2::Vocabulary::NIE::title()).toString();
+        if(!title.isEmpty()) {
+            mdp->searchTitle =title;
+        }
+
+        QString episodeNumber = queryResource.property( Nepomuk2::Vocabulary::NMM::episodeNumber()).toString();
+        if(!episodeNumber.isEmpty()) {
+            mdp->searchEpisode = episodeNumber;
+        }
+
+        Nepomuk2::Resource seasonResource = queryResource.property( Nepomuk2::Vocabulary::NMM::isPartOfSeason()).toResource();
+        QString seasonNumber = seasonResource.property( Nepomuk2::Vocabulary::NMM::seasonNumber()).toString();
+        if(!seasonNumber.isEmpty()) {
+            mdp->searchSeason = seasonNumber;
+        }
+
+        Nepomuk2::Resource seriesResource = queryResource.property( Nepomuk2::Vocabulary::NMM::series()).toResource();
+        QString seriesTitle = seriesResource.property( Nepomuk2::Vocabulary::NIE::title()).toString();
+        if(!seriesTitle.isEmpty()) {
+            mdp->searchShowTitle =seriesTitle;
+        }
+
+    }
+    else if( fileResource.hasType(Nepomuk2::Vocabulary::NMM::Movie()) ) {
+        kDebug() << "Movie Resource";
+        mdp->resourceType = QLatin1String("movie");
+        //Nepomuk2::NMM::Movie movie(queryResource.uri()); seems this only works for new resources
+
+        kDebug() << "title" << queryResource.property( Nepomuk2::Vocabulary::NIE::title());
+        QString title = queryResource.property( Nepomuk2::Vocabulary::NIE::title()).toString();
+        if(!title.isEmpty()) {
+            mdp->searchTitle =title;
+        }
+
+        QString releaseDateString = queryResource.property( Nepomuk2::Vocabulary::NMM::releaseDate()).toString();
+        QDateTime releaseDate = QDateTime::fromString(releaseDateString);
+        if( releaseDate.isValid() ) {
+            mdp->searchYearMax = releaseDate.toString(QLatin1String("yyyy"));
+            mdp->searchYearMin = releaseDate.toString(QLatin1String("yyyy"));
+        }
+    }
+    else {
+        kDebug() << "Other Resource";
+        // try to get some general info
+        if( !queryResource.genericLabel().isEmpty()) {
+            mdp->searchTitle = queryResource.genericLabel();
+        }
+    }
+
+    return true;
 }

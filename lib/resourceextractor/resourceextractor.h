@@ -106,7 +106,6 @@ public:
       *
       * Gets some important search parameters from it
       *
-      * @todo TODO: implement data extracting from existing resources
       */
     void lookupResource(const Nepomuk2::Resource &resource);
     void lookupResource(const QList<Nepomuk2::Resource> &resources);
@@ -148,6 +147,9 @@ private:
       * @p fileUrl file location that should be added
       */
     void addFilesToList(const KUrl &fileUrl);
+
+    bool fileChecker(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl);
+    bool resourceChecker(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const Nepomuk2::Resource &fileResource);
 
     Q_DECLARE_PRIVATE(ResourceExtractor)
     ResourceExtractorPrivate *const d_ptr; /**< d-pointer for this class */

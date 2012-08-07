@@ -138,7 +138,7 @@ void NepomukMetaDataExtractor::UI::Fetcher::addResourceUriToMetaData( NepomukMet
         }
     }
     else {
-        // For al lother cases put the resource uri in the top part of the MetaData
+        // For all other cases put the resource uri in the top part of the MetaData
         mdp->metaData.insert(QLatin1String("resourceuri"), mdp->resourceUri.url());
     }
 }
