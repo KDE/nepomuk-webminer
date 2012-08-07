@@ -22,141 +22,134 @@
 #include "webextractor/extractorfactory.h"
 #include "webextractor/webextractor.h"
 
-#include "nepomukpipe/nepomukpipe.h"
-#include "nepomukpipe/moviepipe.h"
-#include "nepomukpipe/publicationpipe.h"
-#include "nepomukpipe/tvshowpipe.h"
-
-#include <KDE/KApplication>
 #include <KDE/KDebug>
+
+namespace NepomukMetaDataExtractor {
+namespace UI {
+    class AutomaticFetcherPrivate {
+    public:
+        NepomukMetaDataExtractor::Extractor::WebExtractor *webextractor;
+        NepomukMetaDataExtractor::Extractor::MetaDataParameters *currentItemToupdate;
+        QList<KUrl> urlList;
+    };
+}
+}
 
 using namespace NepomukMetaDataExtractor;
 using namespace Extractor;
 
 NepomukMetaDataExtractor::UI::AutomaticFetcher::AutomaticFetcher(QObject *parent)
-    : QObject(parent),
-      m_webextractor(0),
-      m_currentItemToupdate(0)
+    : QObject(parent)
+    , d_ptr( new NepomukMetaDataExtractor::UI::AutomaticFetcherPrivate )
 {
-    m_re = new ResourceExtractor;
-    m_ef = new ExtractorFactory;
+    Q_D( AutomaticFetcher );
+    d->webextractor = 0;
+    d->currentItemToupdate = 0;
 }
 
 NepomukMetaDataExtractor::UI::AutomaticFetcher::~AutomaticFetcher()
 {
-    delete m_re;
-    delete m_ef;
+    Q_D( AutomaticFetcher );
+    delete d->webextractor;
+    delete d->currentItemToupdate;
 }
 
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::setInitialPathOrFile( const KUrl &url )
+void NepomukMetaDataExtractor::UI::AutomaticFetcher::addFetcherUrl(const KUrl& url)
 {
-    m_re->lookupFiles(url);
-}
-
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::setForceUpdate(bool update)
-{
-    m_re->setForceUpdate(update);
-}
-
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::setTvShowMode(bool tvshowMode)
-{
-    m_re->setTvShowMode( tvshowMode );
-}
-
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::setTvShowNamesInFolders(bool useFolderNames)
-{
-    m_re->setTvShowNamesInFolders( useFolderNames );
-}
-
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::setMovieMode(bool movieMode)
-{
-    m_re->setMovieMode( movieMode );
+    Q_D( AutomaticFetcher );
+    d->urlList.append( url );
 }
 
 void NepomukMetaDataExtractor::UI::AutomaticFetcher::startFetcher()
 {
-    kDebug() << "Start fetching meta data for" << m_re->resourcesList().size() << "items";
+    kDebug() << "Start fetching meta data for" << resourceExtractor()->resourcesList().size() << "items";
 
     searchNextItem();
 }
 
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::startUrlFetcher( const QUrl &itemUrl )
+void NepomukMetaDataExtractor::UI::AutomaticFetcher::startUrlFetcher()
 {
-    if(m_webextractor) {
-        delete m_webextractor;
-        m_webextractor = 0;
+    Q_D( AutomaticFetcher );
+    if(d->urlList.isEmpty()) {
+        kWarning() << "started url fetcher without any urls";
+        return;
     }
 
-    m_webextractor = m_ef->createExtractor( itemUrl );
+    //TODO: implement downloading of more than one url, loop trough all urls in d->urllist
 
-    m_currentItemToupdate = new MetaDataParameters;
+    // create a webextractor
+    d->webextractor = extractorFactory()->createExtractor( d->urlList.first() );
 
-    if(!m_webextractor) {
-        kWarning() << "could not find webextractor plugin for URL" << itemUrl;
+    if(!d->webextractor) {
+        kWarning() << "could not find webextractor plugin for URL" << d->urlList.first();
     }
     else {
-        connect(m_webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
-        connect(m_webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
+        d->currentItemToupdate = new MetaDataParameters;
+        connect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
+        connect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
 
-        m_webextractor->extractItem( itemUrl, QVariantMap() );
+        // TODO: specify some search options, read them form a config file (like no reference or no banner download)
+        d->webextractor->extractItem( d->urlList.first(), QVariantMap() );
     }
 }
 
 void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
 {
-    if( m_re->resourcesList().isEmpty() ) {
+    Q_D( AutomaticFetcher );
+    if( resourceExtractor()->resourcesList().isEmpty() ) {
         kDebug() << "Finished fetching all items";
-        kapp->quit();
         return;
     }
 
-    m_currentItemToupdate = m_re->takeNext();
+    d->currentItemToupdate = resourceExtractor()->takeNext();
 
     //TODO: select correct search engine select one from a KConfig where the user specifies his favorite
-    //TODO: if the search returns no results, check anothe rsearch engine and try again
+    //TODO: if the search returns no results, check another search engine and try again
 
-    if( m_ef->listAvailablePlugins(m_currentItemToupdate->resourceType).isEmpty()) {
-        kWarning() << "Could not get any plugins for the resourcetype :: " << m_currentItemToupdate->resourceType;
+    if( extractorFactory()->listAvailablePlugins(d->currentItemToupdate->resourceType).isEmpty()) {
+        kWarning() << "Could not get any plugins for the resourcetype :: " << d->currentItemToupdate->resourceType;
         return;
     }
 
-    Extractor::WebExtractor::Info selectedEngine = m_ef->listAvailablePlugins(m_currentItemToupdate->resourceType).last();
+    Extractor::WebExtractor::Info selectedEngine = extractorFactory()->listAvailablePlugins(d->currentItemToupdate->resourceType).last();
 
-    if(!m_webextractor || m_webextractor->info().identifier != selectedEngine.identifier) {
-        delete m_webextractor;
-        m_webextractor = m_ef->createExtractor( selectedEngine.identifier );
+    if(!d->webextractor || d->webextractor->info().identifier != selectedEngine.identifier) {
+        delete d->webextractor;
+        d->webextractor = extractorFactory()->createExtractor( selectedEngine.identifier );
 
-        connect(m_webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
-        connect(m_webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
-        //connect(m_webextractor, SIGNAL(log(QString)), this, SLOT(addToProgressLog(QString)));
-        connect(m_webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
+        connect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
+        connect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
+        //connect(d->webextractor, SIGNAL(log(QString)), this, SLOT(addToProgressLog(QString)));
+        connect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
     }
 
     QVariantMap searchParameters;
-    searchParameters.insert("title", m_currentItemToupdate->searchTitle);
-    searchParameters.insert("alttitle", m_currentItemToupdate->searchAltTitle);
-    searchParameters.insert("author", m_currentItemToupdate->searchAuthor);
-    searchParameters.insert("season", m_currentItemToupdate->searchSeason);
-    searchParameters.insert("episode", m_currentItemToupdate->searchEpisode);
-    searchParameters.insert("yearMin", m_currentItemToupdate->searchYearMin);
-    searchParameters.insert("yearMax", m_currentItemToupdate->searchYearMax);
-    searchParameters.insert("journal", m_currentItemToupdate->searchJournal);
-    searchParameters.insert("showtitle", m_currentItemToupdate->searchShowTitle);
+    searchParameters.insert("title", d->currentItemToupdate->searchTitle);
+    searchParameters.insert("alttitle", d->currentItemToupdate->searchAltTitle);
+    searchParameters.insert("author", d->currentItemToupdate->searchAuthor);
+    searchParameters.insert("season", d->currentItemToupdate->searchSeason);
+    searchParameters.insert("episode", d->currentItemToupdate->searchEpisode);
+    searchParameters.insert("yearMin", d->currentItemToupdate->searchYearMin);
+    searchParameters.insert("yearMax", d->currentItemToupdate->searchYearMax);
+    searchParameters.insert("journal", d->currentItemToupdate->searchJournal);
+    searchParameters.insert("showtitle", d->currentItemToupdate->searchShowTitle);
 
-    kDebug() << "Start searching " << m_webextractor->info().name << "for items with these parameters ::";
+    kDebug() << "Start searching " << d->webextractor->info().name << "for items with these parameters ::";
     kDebug() << searchParameters;
 
-    m_webextractor->search( m_currentItemToupdate->resourceType, searchParameters );
+    d->webextractor->search( d->currentItemToupdate->resourceType, searchParameters );
 }
 
 void NepomukMetaDataExtractor::UI::AutomaticFetcher::selectSearchEntry( QVariantList searchResults)
 {
+    Q_D( AutomaticFetcher );
+
     if( searchResults.isEmpty() ) {
-        kDebug() << "Could not find any search results for the item" << m_currentItemToupdate->resourceUri;
+        kDebug() << "Could not find any search results for the item" << d->currentItemToupdate->resourceUri;
 
         // delete the current item, we do not need it anymore
-        delete m_currentItemToupdate;
-        m_currentItemToupdate = 0;
+        delete d->currentItemToupdate;
+        d->currentItemToupdate = 0;
 
         // and start the next round
         searchNextItem();
@@ -169,67 +162,26 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::selectSearchEntry( QVariant
         QVariantMap selectedSearchResult = searchResults.first().toMap();
 
         KUrl fetchUrl( selectedSearchResult.value(QLatin1String("url")).toString() );
-        m_webextractor->extractItem( fetchUrl, QVariantMap() );
+        // TODO: specify some search options, read them form a config file (like no reference or no banner download)
+        d->webextractor->extractItem( fetchUrl, QVariantMap() );
     }
 }
 
 void NepomukMetaDataExtractor::UI::AutomaticFetcher::fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails)
 {
+    Q_D( AutomaticFetcher );
+
     // copy the fetched meta data into the current item details
-    m_currentItemToupdate->metaData = itemDetails;
-    m_currentItemToupdate->resourceType = resourceType;
+    d->currentItemToupdate->metaData = itemDetails;
+    d->currentItemToupdate->resourceType = resourceType;
 
-    // TODO: support batch download of many episodes at once
-    if( resourceType == QLatin1String("tvshow")) {
-        QVariantList seasons = m_currentItemToupdate->metaData.value(QLatin1String("seasons")).toList();
-        if(!seasons.isEmpty()) {
-            QVariantMap season = seasons.takeFirst().toMap();
-            QVariantList episodes = season.value(QLatin1String("episodes")).toList();
+    addResourceUriToMetaData( d->currentItemToupdate );
 
-            if(!episodes.isEmpty()) {
-                QVariantMap episodesMap = episodes.takeFirst().toMap();
-                kDebug() << "add to episode" << episodesMap.value(QLatin1String("title")).toString() << "url" << m_currentItemToupdate->resourceUri.url();
-                episodesMap.insert(QLatin1String("resourceuri"), m_currentItemToupdate->resourceUri.url());
-
-                episodes << episodesMap;
-                season.insert( QLatin1String("episodes"), episodes);
-                seasons << season;
-                m_currentItemToupdate->metaData.insert( QLatin1String("seasons"), seasons);
-            }
-        }
-    }
-    else {
-        m_currentItemToupdate->metaData.insert(QLatin1String("resourceuri"), m_currentItemToupdate->resourceUri.url());
-    }
-
-    saveMetaData();
-}
-
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::saveMetaData()
-{
-    QString type = m_currentItemToupdate->resourceType;
-
-    Pipe::NepomukPipe *nepomukPipe = 0;
-    if(type == QLatin1String("publication")) {
-        nepomukPipe = new Pipe::PublicationPipe;
-    }
-    else if(type == QLatin1String("tvshow")) {
-        nepomukPipe = new Pipe::TvShowPipe;
-    }
-    else if(type == QLatin1String("movie")) {
-        nepomukPipe = new Pipe::MoviePipe;
-    }
-
-    if(nepomukPipe) {
-        nepomukPipe->pipeImport( m_currentItemToupdate->metaData );
-    }
-    else {
-        kDebug() << "No nepomuk pipe available for the resoure type" << type;
-    }
+    saveMetaData( d->currentItemToupdate );
 
     // delete the current item, we do not need it anymore
-    delete m_currentItemToupdate;
-    m_currentItemToupdate = 0;
+    delete d->currentItemToupdate;
+    d->currentItemToupdate = 0;
 
     // and start the next round
     searchNextItem();

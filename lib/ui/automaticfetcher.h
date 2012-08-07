@@ -19,6 +19,7 @@
 #define AUTOMATICFETCHER_H
 
 #include <QObject>
+#include "fetcher.h"
 #include <KDE/KUrl>
 
 #include "nepomukmetadataextractor_export.h"
@@ -32,6 +33,7 @@ namespace Extractor {
 }
 
 namespace UI {
+    class AutomaticFetcherPrivate;
 
 /**
  * @brief Automatic background fetcher for the meta data
@@ -44,7 +46,7 @@ namespace UI {
  * @todo TODO: implement KConfig to specify the the preferred search engine for a resourcetype rather than useing the first one
  * @todo TODO: implement multiple searches, if the first fails, try a different engine instead of failing
  */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT AutomaticFetcher : public QObject
+class NEPOMUKMETADATAEXTRACTOR_EXPORT AutomaticFetcher : public QObject, public Fetcher
 {
     Q_OBJECT
 public:
@@ -56,48 +58,7 @@ public:
     explicit AutomaticFetcher(QObject *parent = 0);
     ~AutomaticFetcher();
 
-    /**
-     * @brief Sets the folder path or file name of the resources which will be processed
-     *
-     * @param url folder path or file name/path
-     */
-    void setInitialPathOrFile( const KUrl &url );
-
-    /**
-     * @brief Forces the fetcher to include resources which already have meta data
-     *
-     * This is false by default and will skip any files that already have meta data attached
-     * Will just do a type check (if a video has NMM:TvShow or NMM:Movie it is assumed there is meta data available, as it would be
-     * NFO:Video otherwise
-     *
-     * @param update @arg true refetch metadata also for existing data
-     *               @arg false skip files with existing meta data
-     */
-    void setForceUpdate(bool update);
-
-    /**
-     * @brief Adds a hint to the VideoExtractor filename parser to improve name detection
-     *
-     * @param tvshowMode @arg true video files are all tvShows not movies
-     *                   @arg false video files are movies and/or tvshows (default)
-     */
-    void setTvShowMode(bool tvshowMode);
-
-    /**
-     * @brief Adds a hint to the VideoExtractor filename parser to improve name detection
-     *
-     * @param useFolderNames @arg true check folder names for tvshows too
-     *                   @arg false only check filename for tvshows (default)
-     */
-    void setTvShowNamesInFolders(bool useFolderNames);
-
-    /**
-     * @brief Adds a hint to the VideoExtractor filename parser to improve name detection
-     *
-     * @param tvshowMode @arg true video files are all movies not tvshows
-     *                   @arg false video files are movies and/or tvshows (default)
-     */
-    void setMovieMode(bool movieMode);
+    void addFetcherUrl(const KUrl& url);
 
 public slots:
     /**
@@ -112,7 +73,7 @@ public slots:
      */
     void startFetcher();
 
-    void startUrlFetcher(const QUrl &itemUrl);
+    void startUrlFetcher();
 
 private slots:
     /**
@@ -143,21 +104,15 @@ private slots:
     void fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails);
 
     /**
-     * @brief calles the correct NepomukPipe for the current resourceType to import the data into Nepomuk
-     */
-    void saveMetaData();
-
-    /**
      * @brief prints out kDebug messages for any error in the Python file
+     *
      * @param error python error
      */
     void errorInScriptExecution(const QString &error);
 
 private:
-    NepomukMetaDataExtractor::Extractor::ResourceExtractor *m_re;
-    NepomukMetaDataExtractor::Extractor::ExtractorFactory *m_ef;
-    NepomukMetaDataExtractor::Extractor::WebExtractor *m_webextractor;
-    NepomukMetaDataExtractor::Extractor::MetaDataParameters *m_currentItemToupdate;
+    Q_DECLARE_PRIVATE(AutomaticFetcher)
+    AutomaticFetcherPrivate *const d_ptr; /**< d-pointer for this class */
 };
 }
 }
