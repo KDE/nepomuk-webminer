@@ -34,7 +34,7 @@ class MetaDataParameters;
 class ResourceExtractorPrivate;
 
 /**
-  * @brief The resource extarctor is used to retrieve some basic information from files and resources
+  * @brief The resource extractor is used to retrieve some basic information from files and resources
   *
   * Here we check the file or the Nepomuk resource and extract values from it that can be used for the @c WebExtractor search.
   * Usually it would be enough to check only Nepomuk for this info and when some files are given as input the right nepomuk

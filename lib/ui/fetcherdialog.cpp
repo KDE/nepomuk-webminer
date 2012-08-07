@@ -33,7 +33,7 @@
 
 #include <KDE/KStandardDirs>
 #include <KDE/KDialog>
-#include <KDE/KMimeType>
+//#include <KDE/KMimeType>
 #include <KDE/KRun>
 #include <KDE/KDebug>
 
@@ -45,29 +45,41 @@
 #include <QtGui/QTextEdit>
 #include <QtGui/QMessageBox>
 
+namespace NepomukMetaDataExtractor {
+namespace UI {
+    class FetcherDialogPrivate {
+    public:
+        NepomukMetaDataExtractor::Extractor::WebExtractor *webextractor;
+        NepomukMetaDataExtractor::Extractor::MetaDataParameters *currentItemToupdate;
+        int currentItemNumber;
+        SearchResultsModel *resultModel;
+        QTextDocument *progressLog;
+    };
+}
+}
+
 using namespace NepomukMetaDataExtractor::Pipe;
 using namespace NepomukMetaDataExtractor::Extractor;
 using namespace NepomukMetaDataExtractor::UI;
 
 NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
     : QDialog(parent)
-    , m_webextractor(0)
-    , m_currentItemToupdate(0)
+    , d_ptr( new NepomukMetaDataExtractor::UI::FetcherDialogPrivate )
 {
     setupUi(this);
 
-    m_progressLog = new QTextDocument;
-
-    m_re = new ResourceExtractor;
-    m_ef = new ExtractorFactory;
-
-    m_resultModel = new SearchResultsModel(this);
-    searchResults->setModel( m_resultModel );
+    Q_D( FetcherDialog );
+    d->webextractor = 0;
+    d->currentItemToupdate = 0;
+    d->currentItemNumber = 0;
+    d->resultModel = new SearchResultsModel(this);
+    searchResults->setModel( d->resultModel );
+    d->progressLog = new QTextDocument(this);
 
     searchResults->setSelectionMode(QAbstractItemView::SingleSelection);
     searchResults->setItemDelegate(new SearchResultDelegate);
 
-    connect(m_re, SIGNAL(resourceExtarctionDone()), this, SLOT(resourceFetchingDone()));
+    connect(resourceExtractor(), SIGNAL(resourceExtarctionDone()), this, SLOT(resourceFetchingDone()));
 
     connect(buttonNext, SIGNAL(clicked()), this, SLOT(selectNextResourceToLookUp()));
     connect(buttonPrevious, SIGNAL(clicked()), this, SLOT(selectPreviousResourceToLookUp()));
@@ -81,7 +93,7 @@ NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
 
     connect(buttonCancel, SIGNAL(clicked()), this, SLOT(cancelClose()));
 
-    connect(m_re, SIGNAL(progressStatus(QString)), this, SLOT(addToProgressLog(QString)));
+    connect(resourceExtractor(), SIGNAL(progressStatus(QString)), this, SLOT(addToProgressLog(QString)));
     connect(buttonLog, SIGNAL(clicked()), this, SLOT(showProgressLog()));
     connect(detailsUrl, SIGNAL(leftClickedUrl(QString)), this, SLOT(openDetailsLink(QString)));
     connect(cbSelectType, SIGNAL(currentIndexChanged(int)), this, SLOT(resourceTypeSelectionChanged(int)));
@@ -104,32 +116,11 @@ NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
 
 NepomukMetaDataExtractor::UI::FetcherDialog::~FetcherDialog()
 {
-    delete m_re;
-}
-
-void NepomukMetaDataExtractor::UI::FetcherDialog::setInitialPathOrFile( const KUrl &url )
-{
-    m_re->lookupFiles(url);
-}
-
-void NepomukMetaDataExtractor::UI::FetcherDialog::setForceUpdate(bool update)
-{
-    m_re->setForceUpdate(update);
-}
-
-void NepomukMetaDataExtractor::UI::FetcherDialog::setTvShowMode(bool tvshowMode)
-{
-    m_re->setTvShowMode( tvshowMode );
-}
-
-void NepomukMetaDataExtractor::UI::FetcherDialog::setTvShowNamesInFolders(bool useFolderNames)
-{
-    m_re->setTvShowNamesInFolders( useFolderNames );
-}
-
-void NepomukMetaDataExtractor::UI::FetcherDialog::setMovieMode(bool movieMode)
-{
-    m_re->setMovieMode( movieMode );
+    Q_D( FetcherDialog );
+    delete d->webextractor;
+    delete d->currentItemToupdate;
+    delete d->resultModel;
+    delete d->progressLog;
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::errorInScriptExecution(const QString &error)
@@ -150,19 +141,23 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::errorInScriptExecution(const Q
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::addToProgressLog(const QString &status)
 {
-    QTextCursor qtc(m_progressLog);
+    Q_D( FetcherDialog );
+
+    QTextCursor qtc(d->progressLog);
     qtc.movePosition( QTextCursor::End );
     qtc.insertText(status + QLatin1String("\n"));
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::showProgressLog()
 {
+    Q_D( FetcherDialog );
+
     QPointer<KDialog> log = new KDialog;
     log->setInitialSize(QSize(600,300));
     log->setButtons( KDialog::Ok );
 
     QTextEdit *logView = new QTextEdit(log);
-    logView->setDocument(m_progressLog);
+    logView->setDocument(d->progressLog);
     logView->setReadOnly(true);
     log->setMainWidget(logView);
 
@@ -173,40 +168,48 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showProgressLog()
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::resourceFetchingDone()
 {
-    m_currentResource = -1;
+    Q_D( FetcherDialog );
 
-    if( !m_re->resourcesList().isEmpty() ) {
+    d->currentItemNumber = -1;
+
+    if( !resourceExtractor()->resourcesList().isEmpty() ) {
         selectNextResourceToLookUp();
     }
     else {
-        addToProgressLog(i18n("now files for the metadata fetching found"));
+        addToProgressLog(i18n("all files for the metadata fetching found"));
     }
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::selectNextResourceToLookUp()
 {
-    m_currentResource++;
+    Q_D( FetcherDialog );
+
+    d->currentItemNumber++;
 
     setupCurrentResourceToLookup();
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::selectPreviousResourceToLookUp()
 {
-    m_currentResource--;
+    Q_D( FetcherDialog );
+
+    d->currentItemNumber--;
 
     setupCurrentResourceToLookup();
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::setupCurrentResourceToLookup()
 {
-    int resourceCount = m_re->resourcesList().size();
+    Q_D( FetcherDialog );
+
+    int resourceCount = resourceExtractor()->resourcesList().size();
 
     // get next resourceInformation
-    MetaDataParameters *mdp = m_re->resourcesList().at( m_currentResource );
+    MetaDataParameters *mdp = resourceExtractor()->resourcesList().at( d->currentItemNumber );
 
     fillEngineList( mdp->resourceType );
 
-    labelResourceCount->setText(i18n("Resource %1 of %2", m_currentResource + 1, resourceCount));
+    labelResourceCount->setText(i18n("Resource %1 of %2", d->currentItemNumber + 1, resourceCount));
 
     labelDescription->setText( i18n("Fetch metadata for the resource: <b>%1</b>", mdp->resourceUri.fileName()));
     lineEditTitle->setText( mdp->searchTitle );
@@ -228,8 +231,8 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::setupCurrentResourceToLookup()
         lineEditShow->setVisible(false);
     }
 
-    lineEditSeason->setText(  mdp->searchSeason );
-    lineEditEpisode->setText(  mdp->searchEpisode );
+    lineEditSeason->setText( mdp->searchSeason );
+    lineEditEpisode->setText( mdp->searchEpisode );
     lineEditShow->setText(  mdp->searchShowTitle );
 
     if( mdp->resourceType == QLatin1String("tvshow")) {
@@ -247,7 +250,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::setupCurrentResourceToLookup()
     buttonFetchMore->setEnabled(false);
 
     // don't show next button if there is no next item
-    if(m_currentResource == resourceCount-1) {
+    if(d->currentItemNumber == resourceCount-1) {
         buttonNext->setEnabled(false);
     }
     else {
@@ -255,21 +258,22 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::setupCurrentResourceToLookup()
     }
 
     // don't enable previous button, if there is no previous item
-    if(m_currentResource == 0) {
+    if(d->currentItemNumber == 0) {
         buttonPrevious->setEnabled(false);
     }
     else {
         buttonPrevious->setEnabled(true);
     }
 
-    m_resultModel->clear();
+    d->resultModel->clear();
 
     showItemDetails();
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::resourceTypeSelectionChanged(int selection)
 {
-    MetaDataParameters *mdp = m_re->resourcesList().at( m_currentResource );
+    Q_D( FetcherDialog );
+    MetaDataParameters *mdp = resourceExtractor()->resourcesList().at( d->currentItemNumber );
 
     if (selection == 0) { // movies
         labelSeason->setVisible(false);
@@ -295,9 +299,10 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::resourceTypeSelectionChanged(i
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::startSearch()
 {
+    Q_D( FetcherDialog );
     busyFetching();
 
-    MetaDataParameters *mdp = m_re->resourcesList().at( m_currentResource );
+    MetaDataParameters *mdp = resourceExtractor()->resourcesList().at( d->currentItemNumber );
     mdp->searchTitle = lineEditTitle->text();
     mdp->searchSeason = lineEditSeason->text();
     mdp->searchEpisode = lineEditEpisode->text();
@@ -312,18 +317,19 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::startSearch()
     buttonNext->setEnabled(false);
     buttonPrevious->setEnabled(false);
 
-    if(!m_webextractor || m_webextractor->info().identifier != engineId) {
-        delete m_webextractor;
-        m_webextractor = m_ef->createExtractor( engineId );
+    if(!d->webextractor || d->webextractor->info().identifier != engineId) {
+        delete d->webextractor;
+        d->webextractor = extractorFactory()->createExtractor( engineId );
 
-        if(!m_webextractor) {
+        if(!d->webextractor) {
             kDebug() << "search engine with identifier" << engineId << "does not exist";
             return;
         }
-        connect(m_webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
-        connect(m_webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
-        connect(m_webextractor, SIGNAL(log(QString)), this, SLOT(addToProgressLog(QString)));
-        connect(m_webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
+        connect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
+        connect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
+        connect(d->webextractor, SIGNAL(log(QString)), this, SLOT(addToProgressLog(QString)));
+        connect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
+        connect(d->webextractor, SIGNAL(error(QString)), this, SLOT(addToProgressLog(QString)));
     }
 
     QVariantMap searchParameters;
@@ -337,14 +343,15 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::startSearch()
     searchParameters.insert("journal", mdp->searchJournal);
     searchParameters.insert("showtitle", mdp->searchShowTitle);
 
-    m_webextractor->search( mdp->resourceType, searchParameters );
+    d->webextractor->search( mdp->resourceType, searchParameters );
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::selectSearchEntry( QVariantList searchResults)
 {
+    Q_D( FetcherDialog );
     finishedFetching();
 
-    m_resultModel->setSearchResults( searchResults );
+    d->resultModel->setSearchResults( searchResults );
 
     QString searchEngineName = comboBoxSearchEngine->currentText();
     labelSearchResults->setText( i18n("Found <b>%1</b> results via <b>%2</b>", searchResults.size(), searchEngineName));
@@ -353,8 +360,9 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::selectSearchEntry( QVariantLis
 void NepomukMetaDataExtractor::UI::FetcherDialog::searchEntrySelected(const QModelIndex &current, const QModelIndex &previous)
 {
     Q_UNUSED(previous)
+    Q_D( FetcherDialog );
 
-    QVariantMap entry = m_resultModel->searchResultEntry(current);
+    QVariantMap entry = d->resultModel->searchResultEntry(current);
 
     detailsTitle->setText( entry.value(QLatin1String("title")).toString() );
     detailsText->setText( entry.value(QLatin1String("details")).toString() );
@@ -374,6 +382,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::searchEntrySelected(const QMod
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::showSearchParameters()
 {
+    Q_D( FetcherDialog );
     QPointer<KDialog> spd = new KDialog;
     spd->setInitialSize(QSize(600,300));
 
@@ -386,7 +395,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showSearchParameters()
     vbl->addStretch(0);
     w->setLayout(vbl);
 
-    MetaDataParameters *mdp = m_re->resourcesList().at( m_currentResource );
+    MetaDataParameters *mdp = resourceExtractor()->resourcesList().at( d->currentItemNumber );
     QLabel *labelTitle = new QLabel(i18n("Title:"),w);
     QLineEdit *editTitle = new QLineEdit(mdp->searchTitle,w);
     gl->addWidget(labelTitle, 0,0);
@@ -489,59 +498,38 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::openDetailsLink(const QString 
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::fetchMoreDetails()
 {
+    Q_D( FetcherDialog );
     busyFetching();
 
     // get the current item to fetch
     QModelIndex currentEntry = searchResults->currentIndex();
-    QVariantMap entry = m_resultModel->searchResultEntry(currentEntry);
+    QVariantMap entry = d->resultModel->searchResultEntry(currentEntry);
 
-    m_currentItemToupdate = m_re->resourcesList().at( m_currentResource );
+    d->currentItemToupdate = resourceExtractor()->resourcesList().at( d->currentItemNumber );
     KUrl fetchUrl( entry.value(QLatin1String("url")).toString() );
 
-    //QVariantMap options;
-    m_webextractor->extractItem( fetchUrl, entry );
+    d->webextractor->extractItem( fetchUrl, entry );
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails)
 {
-    m_currentItemToupdate->metaData.insert(QLatin1String("resourceuri"), m_currentItemToupdate->resourceUri.url());
-    m_currentItemToupdate->metaData = itemDetails;
+    Q_D( FetcherDialog );
+    d->currentItemToupdate->metaData.insert(QLatin1String("resourceuri"), d->currentItemToupdate->resourceUri.url());
+    d->currentItemToupdate->metaData = itemDetails;
+    d->currentItemToupdate->resourceType = resourceType;
 
-//    QMapIterator<QString, QVariant> i(itemDetails);
-//    while (i.hasNext()) {
-//        i.next();
-//        m_currentItemToupdate->metaData.insert(i.key(), i.value());
-//    }
-
-    // TODO: support batch download of many episodes at once
-    if( resourceType == QLatin1String("tvshow")) {
-        QVariantList seasons = m_currentItemToupdate->metaData.value(QLatin1String("seasons")).toList();
-        if(!seasons.isEmpty()) {
-            QVariantMap season = seasons.takeFirst().toMap();
-            QVariantList episodes = season.value(QLatin1String("episodes")).toList();
-
-            if(!episodes.isEmpty()) {
-                QVariantMap episodesMap = episodes.takeFirst().toMap();
-                kDebug() << "add to episode" << episodesMap.value(QLatin1String("title")).toString() << "url" << m_currentItemToupdate->resourceUri.url();
-                episodesMap.insert(QLatin1String("resourceuri"), m_currentItemToupdate->resourceUri.url());
-
-                episodes << episodesMap;
-                season.insert( QLatin1String("episodes"), episodes);
-                seasons << season;
-                m_currentItemToupdate->metaData.insert( QLatin1String("seasons"), seasons);
-            }
-        }
-    }
-    m_currentItemToupdate = 0;
+    addResourceUriToMetaData( d->currentItemToupdate );
 
     showItemDetails();
-
     finishedFetching();
+
+    d->currentItemToupdate = 0;
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::saveMetaData()
 {
-    MetaDataParameters *mdp = m_re->resourcesList().at( m_currentResource );
+    Q_D( FetcherDialog );
+    MetaDataParameters *mdp = resourceExtractor()->resourcesList().at( d->currentItemNumber );
 
     busyFetching();
 
@@ -583,7 +571,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fillEngineList(const QString &
     comboBoxSearchEngine->setProperty("currentListCategory", category);
     comboBoxSearchEngine->clear();
 
-    QList<WebExtractor::Info> engines = m_ef->listAvailablePlugins( category );
+    QList<WebExtractor::Info> engines = extractorFactory()->listAvailablePlugins( category );
 
     foreach(const WebExtractor::Info &engine, engines) {
 
@@ -602,6 +590,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fillEngineList(const QString &
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::showItemDetails()
 {
+    Q_D( FetcherDialog );
     QLayout *mdlayout = metaDataList->layout();
 
     QLayoutItem *child;
@@ -614,7 +603,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showItemDetails()
     QGridLayout * gridLayout = qobject_cast<QGridLayout *>(mdlayout);
 
     // current Item metadata
-    MetaDataParameters *mdp = m_re->resourcesList().at( m_currentResource );
+    MetaDataParameters *mdp = resourceExtractor()->resourcesList().at( d->currentItemNumber );
 
     QMapIterator<QString, QVariant> i(mdp->metaData);
     int line = 0;
@@ -653,22 +642,23 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::busyFetching()
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::finishedFetching()
 {
+    Q_D( FetcherDialog );
     QWidget::setCursor( Qt::ArrowCursor );
 
-    MetaDataParameters *mdp = m_re->resourcesList().at( m_currentResource );
+    MetaDataParameters *mdp = resourceExtractor()->resourcesList().at( d->currentItemNumber );
     buttonSave->setEnabled( !mdp->metaDataSaved );
 
     buttonSearch->setEnabled( true );
 
     QModelIndex currentEntry = searchResults->currentIndex();
-    QVariantMap entry = m_resultModel->searchResultEntry(currentEntry);
+    QVariantMap entry = d->resultModel->searchResultEntry(currentEntry);
 
     if( entry.contains(QLatin1String("url")) ) {
         buttonFetchMore->setEnabled(true);
     }
 
-    int resourceCount = m_re->resourcesList().size();
-    if(m_currentResource == resourceCount-1) {
+    int resourceCount = resourceExtractor()->resourcesList().size();
+    if(d->currentItemNumber == resourceCount-1) {
         buttonNext->setEnabled(false);
     }
     else {
@@ -676,7 +666,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::finishedFetching()
     }
 
     // don't enable previous button, if there is no previous item
-    if(m_currentResource == 0) {
+    if(d->currentItemNumber == 0) {
         buttonPrevious->setEnabled(false);
     }
     else {

@@ -18,6 +18,7 @@ set( nepomukextractor_LIB_SRCS
   nepomukpipe/moviepipe.cpp
   nepomukpipe/tvshowpipe.cpp
 
+  ui/fetcher.cpp
   ui/fetcherdialog.cpp
   ui/searchresultsmodel.cpp
   ui/searchresultdelegate.cpp

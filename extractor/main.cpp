@@ -21,6 +21,7 @@
 #include <KDE/KUrl>
 #include <QtCore/QString>
 
+#include "ui/fetcher.h"
 #include "ui/fetcherdialog.h"
 #include "ui/automaticfetcher.h"
 
@@ -75,10 +76,12 @@ int main( int argc, char *argv[] )
         NepomukMetaDataExtractor::UI::AutomaticFetcher af;
 
         if( args->isSet("url") ) {
-            af.startUrlFetcher( args->url( 0 ) );
+            af.addFetcherUrl( args->url( 0 ) );
+            af.startUrlFetcher();
         }
         else if( args->isSet("resource") ) {
-            //af.startResourceFetcher( args->url( 0 ) );
+            af.addFetcherResource( args->url( 0 ) );
+            af.startFetcher();
         }
         else {
             af.setForceUpdate( args->isSet("force") );
@@ -86,7 +89,7 @@ int main( int argc, char *argv[] )
             af.setTvShowNamesInFolders( args->isSet("usefoldernames") );
             af.setMovieMode( args->isSet("movie") );
 
-            af.setInitialPathOrFile( args->url( 0 ) );
+            af.addFetcherPath( args->url( 0 ) );
             af.startFetcher();
         }
     }
@@ -97,7 +100,7 @@ int main( int argc, char *argv[] )
         fd.setTvShowNamesInFolders( args->isSet("usefoldernames") );
         fd.setMovieMode( args->isSet("movie") );
 
-        fd.setInitialPathOrFile( args->url( 0 ) );
+        fd.addFetcherPath( args->url( 0 ) );
         fd.show();
 
         return app.exec();

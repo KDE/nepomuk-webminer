@@ -18,85 +18,36 @@
 #ifndef FETCHERDIALOG_H
 #define FETCHERDIALOG_H
 
+#include "fetcher.h"
+
 #include <QtGui/QDialog>
-#include <KDE/KUrl>
-
-#include "nepomukmetadataextractor_export.h"
-#include "ui_fetcherdialog.h"
-
 #include <QtCore/QModelIndex>
 
+#include <KDE/KUrl>
+#include "nepomukmetadataextractor_export.h"
+
+
+// for the fetcherdialog.ui file
+#include "ui_fetcherdialog.h"
 namespace Ui {
     class FetcherDialog;
 }
 
-class QTextDocument;
-
 namespace NepomukMetaDataExtractor {
-namespace Extractor {
-    class ExtractorFactory;
-    class WebExtractor;
-    class ResourceExtractor;
-    class MetaDataParameters;
-}
-
 namespace UI {
-    class SearchResultsModel;
+    class FetcherDialogPrivate;
 
 /**
   * @brief Main dialog to show the current progress and some buttons to interact with
   *
   */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT FetcherDialog : public QDialog, private Ui::FetcherDialog
+class NEPOMUKMETADATAEXTRACTOR_EXPORT FetcherDialog : public QDialog, public Fetcher, private Ui::FetcherDialog
 {
     Q_OBJECT
 
 public:
     explicit FetcherDialog(QWidget *parent = 0);
     ~FetcherDialog();
-
-    /**
-     * @brief Sets the folder path or file name of the resources which will be processed
-     *
-     * @param url folder path or file name/path
-     */
-    void setInitialPathOrFile( const KUrl &url );
-
-    /**
-     * @brief Forces the fetcher to include resources which already have meta data
-     *
-     * This is false by default and will skip any files that already have meta data attached
-     * Will just do a type check (if a video has NMM:TvShow or NMM:Movie it is assumed there is meta data available, as it would be
-     * NFO:Video otherwise
-     *
-     * @param update @arg true refetch metadata also for existing data
-     *               @arg false skip files with existing meta data
-     */
-    void setForceUpdate(bool update);
-
-    /**
-     * @brief Adds a hint to the VideoExtractor filename parser to improve name detection
-     *
-     * @param tvshowMode @arg true video files are all tvShows not movies
-     *                   @arg false video files are movies and/or tvshows (default)
-     */
-    void setTvShowMode(bool tvshowMode);
-
-    /**
-     * @brief Adds a hint to the VideoExtractor filename parser to improve name detection
-     *
-     * @param useFolderNames @arg true check folder names for tvshows too
-     *                   @arg false only check filename for tvshows (default)
-     */
-    void setTvShowNamesInFolders(bool useFolderNames);
-
-    /**
-     * @brief Adds a hint to the VideoExtractor filename parser to improve name detection
-     *
-     * @param tvshowMode @arg true video files are all movies not tvshows
-     *                   @arg false video files are movies and/or tvshows (default)
-     */
-    void setMovieMode(bool movieMode);
 
 private slots:
     void resourceFetchingDone();
@@ -131,17 +82,8 @@ private:
     void finishedFetching();
 
 private:
-    NepomukMetaDataExtractor::Extractor::ResourceExtractor *m_re;
-    NepomukMetaDataExtractor::Extractor::ExtractorFactory *m_ef;
-    NepomukMetaDataExtractor::Extractor::WebExtractor *m_webextractor;
-    NepomukMetaDataExtractor::Extractor::MetaDataParameters *m_currentItemToupdate;
-
-    int m_currentResource;
-    bool tvshowmode;
-
-    SearchResultsModel *m_resultModel;
-
-    QTextDocument *m_progressLog;
+    Q_DECLARE_PRIVATE(FetcherDialog)
+    FetcherDialogPrivate *const d_ptr; /**< d-pointer for this class */
 };
 }
 }
