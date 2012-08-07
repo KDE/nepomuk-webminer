@@ -42,6 +42,13 @@ Exec=metadataextractor %f
 
 [Desktop Action mdfetcher2]
 Name=Fetch MetaData for this file or folder (automatically)
+Name[hu]=Metaadat lekérése ehhez a fájlhoz vagy mappához (automatikusan)
+Name[nl]=Metagegevens voor dit bestand of map ophalen (automatisch)
+Name[pt]=Obter os meta-dados desta pasta ou ficheiro (automaticamente)
+Name[pt_BR]=Obter metadados para este arquivo ou pasta (automaticamente)
+Name[sv]=Hämta metadata för den här filen eller katalogen (automatiskt)
+Name[uk]=Отримати метадані з цього файла або теки (автоматично)
+Name[x-test]=xxFetch MetaData for this file or folder (automatically)xx
 Icon=nepomuk
 Exec=metadataextractor -a %f
 
@@ -65,5 +72,12 @@ Exec=metadataextractor -f %f
 
 [Desktop Action mdfetcher4]
 Name=Fetch MetaData for this file or folder (automatically, force download)
+Name[hu]=Metaadat lekérése ehhez a fájlhoz vagy mappához (automatikusan, letöltés kényszerítése)
+Name[nl]=Metagegevens voor dit bestand of map ophalen (automatisch, downloaden forceren)
+Name[pt]=Obter os meta-dados desta pasta ou ficheiro (automaticamente, forçar a transferência)
+Name[pt_BR]=Obter metadados para este arquivo ou pasta (automaticamente, forçar download)
+Name[sv]=Hämta metadata för den här filen eller katalogen (automatiskt, tvinga nerladdning)
+Name[uk]=Отримати метадані з цього файла або теки (автоматично, примусове звантаження)
+Name[x-test]=xxFetch MetaData for this file or folder (automatically, force download)xx
 Icon=nepomuk
 Exec=metadataextractor -a -f %f
