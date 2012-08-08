@@ -23,6 +23,8 @@
 #include <Nepomuk2/ResourceWatcher>
 #include <Nepomuk2/Vocabulary/NFO>
 #include <Nepomuk2/File>
+#include <Nepomuk2/Vocabulary/NMM>
+#include "sro/nbib.h"
 
 #include <QtCore/QProcess>
 #include <QtCore/QFile>
@@ -63,26 +65,48 @@ MetaDataExtractorService::~MetaDataExtractorService()
 
 void MetaDataExtractorService::slotVideoResourceCreated(const Nepomuk2::Resource &res, const QList<QUrl> &types)
 {
-    // all we need to do is call the nepomuktvnamer executable on the newly created file
+    // here we check if the resource we added is actually a file
+    // and that it does not already have tvshow / movie information
+    // if it already has such information, it is very likely, that the resource was created via
+    // the metadata extractor or other program with full information
+    // no need to fetch more than necessary to reduce the work load
+
     if(res.isFile()) {
+
+        if(res.hasType(Nepomuk2::Vocabulary::NMM::Movie()) || res.hasType(Nepomuk2::Vocabulary::NMM::TVShow())) {
+            return;
+        }
+
         const QString path = res.toFile().url().toLocalFile();
         if(QFile::exists(path)) {
             kDebug() << "Calling" << KStandardDirs::findExe(QLatin1String("metadataextractor")) << path;
-            //FIXME: call metadataextractor without gui
-            QProcess::startDetached(KStandardDirs::findExe(QLatin1String("metadataextractor")), QStringList() << QLatin1String("--quiet") << path);
+
+            QProcess::startDetached(KStandardDirs::findExe(QLatin1String("metadataextractor")),
+                                    QStringList() << QLatin1String("--auto --force") << path);
         }
     }
 }
 
 void MetaDataExtractorService::slotDocumentResourceCreated(const Nepomuk2::Resource &res, const QList<QUrl> &types)
 {
-    // all we need to do is call the nepomuktvnamer executable on the newly created file
+    // here we check if the resource we added is actually a file
+    // and that it does not already have publication information
+    // if it already has such information, it is very likely, that the resource was created via
+    // the metadata extractor or other program with full information
+    // no need to fetch more than necessary to reduce the work load
+
     if(res.isFile()) {
+
+        if(res.hasProperty(Nepomuk2::Vocabulary::NBIB::publishedAs())) {
+            return;
+        }
+
         const QString path = res.toFile().url().toLocalFile();
         if(QFile::exists(path)) {
             kDebug() << "Calling" << KStandardDirs::findExe(QLatin1String("metadataextractor")) << path;
-            //FIXME: call metadataextractor without gui
-            QProcess::startDetached(KStandardDirs::findExe(QLatin1String("metadataextractor")), QStringList() << QLatin1String("--quiet") << path);
+
+            QProcess::startDetached(KStandardDirs::findExe(QLatin1String("metadataextractor")),
+                                    QStringList() << QLatin1String("--auto --force") << path);
         }
     }
 }
