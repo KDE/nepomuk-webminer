@@ -1,0 +1,164 @@
+/** \namespace NepomukMetaDataExtractor::Extractor
+
+\brief The Extractor namespace contains all classes relevant to meta data fetching
+
+<p><b>
+Overview |
+\ref resourceextractor "ResourceExtractor" |
+\ref webextractor "WebExtractor" |
+</b></p>
+
+There extist two different types of extractor the \ref resourceextractor "ResourceExtractor" is used to retrieve some basic informations from @c files and already existing @c resources.
+They are used to get some initial search parameters for the @link NepomukMetaDataExtractor::Extractor::WebExtractor WebExtractor @endlink.
+
+These information are retrieved by parsing the filename / RDF and filecontent or reuse the data that already esit in the Nepomuk database.
+
+The second set of extractors are the \ref webextractor "WebExtractor" they offer a way to fetch metadata from certain webpages based on some search parameters or urls given.
+
+@see \ref resourceextractor
+@see \ref webextractor
+*/
+
+/** \page resourceextractor ResourceExtractor
+
+<p><b>
+\ref NepomukMetaDataExtractor::Extractor "Overview" |
+ResourceExtractor |
+\ref webextractor "WebExtractor" |
+</b></p>
+
+The @link NepomukMetaDataExtractor::Extractor::ResourceExtractor ResourceExtractor @endlink is used to extract possible search parameters for the @link NepomukMetaDataExtractor::Extractor::WebExtractor WebExtractor @endlink.
+
+They way it works is by passing the @c url of a @c folder or @c file to it and it tries to identify possible search parameters via the @c filename or
+by @c parsing @c the @c document directly. As the file parsing is also done by the @c libstreamanalyzer also the @c nepomuk @c resource is checked for more details.
+
+The main reason to do filename and file parsing here again is the lack of the @c libstreamanalyzer too detect all files <i>(especially .pdf files)</i> correctly.
+This extarctor works around the current issue. Also for videos additinal parsing of the filename will add additinal information which won#t be added by the @c libstreamanalyzer and allows to search for correct names / series information etc.
+
+@see @link NepomukMetaDataExtractor::Extractor::ResourceExtractor ResourceExtractor @endlink for more details
+*/
+
+/** \page webextractor WebExtractor
+
+<p><b>
+\ref NepomukMetaDataExtractor::Extractor "Overview" |
+\ref resourceextractor "ResourceExtractor" |
+WebExtractor |
+</b></p>
+
+Additional metadata can be found on various webpages. How the data is presented to the user depends on the website.
+The classes in this namespace deal with a plugin based system to help processing these data and transform it into a unified form
+that can be used by the Pipe classes.
+
+The plugin system is realized by the @link NepomukMetaDataExtractor::Extractor::ExtractorFactory ExtractorFactory @endlink that will create the right plugin for the extraction.
+In most cases the plugins will be realized by the <a href="http://api.kde.org/4.x-api/kdelibs-apidocs/kross/html/index.html">Kross framework</a> as @c Python, @c Ruby or @c JavaScript. In the case one wants to add a @c c++ @c based @c plugin it simply has to subclass the @link NepomukMetaDataExtractor::Extractor::WebExtractor WebExtractor @endlink interface.
+
+The plugins that will be used are determined by either the @c url that will be fetched or a @c unique @c identifier for the plugin.
+
+\section nepomuk_example Python plugin usage
+
+This shows a very basic example how the movie data would be created and processed.
+
+Important functions are:
+
+@li info()
+@li searchItems(QString, QVariantMap)
+@li extractItemFromUri(QUrl)
+
+To interact with the calling c++ part you can use the following methods of the object @c WebExtractor
+
+@li searchResults(QVariantList)
+@li itemResults(QString, QVariantMap)
+@li log(QString)
+@li error(QString)
+
+\code
+# Python example for imdb fetcher
+def info():
+    return dict( name = 'The Internet Movie Database',
+                 icon = 'imdb.png',
+                 identifier = 'imdbmovies',
+                 urlregex = 'http://www.imdb.com/title/tt',
+                 resource = 'movie',
+                 description = 'some description',
+                 author = 'Some Developer',
+                 email = 'some@mail.com')
+
+def searchItems( resourceType, parameters ):
+	# get the right search parameters
+	title = parameters['title']
+
+	# start search
+	ia = IMDb()
+	results = ia.search_movie(title)
+	
+	searchResults = []
+	for item in results :
+                detailString = str(item['kind']) + ', ' + str(item['year'])
+                fullUrl = 'http://www.imdb.com/title/tt' + item.movieID
+                entryDict = dict(
+                                 title = item['title'],
+                                 details = detailString,
+                                 url = fullUrl
+                                 )
+
+                        searchResults.append(entryDict)
+	
+	# return the result dictionary
+	WebExtractor.searchResults( searchResults )
+	
+def extractItemFromUri( url ):
+	#load webpage and extract results
+        "..."
+
+	result = dict(  title = movie['title'],
+			year = movie['year'],
+			director = directorString,
+			writer = writerString,
+			cast = castString,
+			genres = ';'.join(movie['genres']),
+			plot = ';'.join(movie['plot']),
+			runtime = ';'.join(movie['runtimes']),
+			countries = ';'.join(movie['countries'])
+			)
+
+	# return the dictionary containing the meta data
+	WebExtractor.itemResults( 'movie', result )
+\endcode
+
+You can also write plugins via @c Ruby or @c JavaScript or any other scriptlanguage where interpreters for <a href="http://api.kde.org/4.x-api/kdelibs-apidocs/kross/html/index.html">Kross</a> exist
+
+@see http://api.kde.org/4.x-api/kdelibs-apidocs/kross/html/index.html
+@see http://techbase.kde.org/Development/Tutorials/Kross-Tutorial
+
+
+\section nepomuk_example WebExtractor usage sample
+
+\code
+ExtractorFactory *ef = new ExtractorFactory;
+
+WebExtractor *we = ef->createExtractor("imdb");
+connect(we, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
+connect(we, SIGNAL(itemResults(QString, QVariantMap)), this, SLOT(fetchedItemDetails(QString, QVariantMap)));
+connect(we, SIGNAL(log(QString)), this, SLOT(addProgressInfo(QString)));
+
+QVariantMap searchParameters;
+searchparameters.insert("title", "Some Fancy Movie");
+
+we->search( searchParameters );
+\endcode
+
+In the corresponding slots you can process search search results any further or display them to the user for selection.
+
+To extract data for a specific search result url you can do the following
+
+\code
+QUrl url(searchresultUrl)
+we->extractItem( url );
+\endcode
+
+When the extraction if finsihed the @c itemResults() signal will be emitted that contains the metadata.
+
+See the @link NepomukMetaDataExtractor::Pipe NepomukPipe @endlink classes to see how the result scan be imported into nepomuk.
+
+*/ 
