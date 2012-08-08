@@ -75,6 +75,7 @@ set( nepomukmetadataextractor_LIB_HDRS
   nepomukpipe/publicationpipe.h
   nepomukpipe/tvshowpipe.h
 
+  ui/fetcher.h
   ui/automaticfetcher.h
   ui/fetcherdialog.h
   ${CMAKE_CURRENT_BINARY_DIR}/ui_fetcherdialog.h
