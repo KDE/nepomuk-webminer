@@ -90,14 +90,14 @@ protected:
       * Takes care of Hans Wurst and Franz Ferdinant or Wurst, Hans; Ferdinant, Franz and so on.
       * Also tries to determine family/given name and suffix values.
       *
-      * @p listOfPersonNames person name list seperated by "and" or ";"
+      * @p listOfPersonNames person name list separated by "and" or ";"
       */
     QList<Nepomuk2::NCO::PersonContact> createPersonContacts(const QString & listOfPersonNames) const;
 
     /**
       * @brief Splits a list of organization names and create the @c nco:OrganizationContact from them
       *
-      * @p listOfOrganizations organization name list seperated by "and" or ";"
+      * @p listOfOrganizations organization name list separated by "and" or ";"
       */
     QList<Nepomuk2::NCO::OrganizationContact> createOrganizationContacts(const QString & listOfOrganizations) const;
 

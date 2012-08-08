@@ -1,4 +1,5 @@
 [Desktop Entry]
+Type=KPart
 Icon=metadataextractorplugin
 X-KDE-Library=metadataextractorplugin
 X-KDE-PluginInfo-Author=Jörg Ehrichs
@@ -12,7 +13,6 @@ X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=true
 X-KDE-ParentApp=konqueror
 X-DocPath=metadataextractorplugin/index.html
-Encoding=UTF-8
 
 Comment=Extract meta data from websites and add them to Nepomuk
 Comment[hu]=Metaadat kinyerése weboldalakról és azok hozzáadása a Nepomukhoz

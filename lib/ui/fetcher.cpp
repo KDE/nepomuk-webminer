@@ -166,6 +166,6 @@ void NepomukMetaDataExtractor::UI::Fetcher::saveMetaData(const NepomukMetaDataEx
         nepomukPipe->pipeImport( mdp->metaData );
     }
     else {
-        kWarning() << "No nepomuk pipe available for the resoure type" << type;
+        kWarning() << "No nepomuk pipe available for the resource type" << type;
     }
 }

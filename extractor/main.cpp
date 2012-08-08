@@ -66,7 +66,7 @@ int main( int argc, char *argv[] )
     KApplication app;
 
     if ( !args->count() || !args->url(0).isValid() ) {
-        KCmdLineArgs::usageError(i18n("No url specified.\nPlease start it with metadataextractor <url>.\n"
+        KCmdLineArgs::usageError(i18n("No url specified.\nPlease start it with metadataextractor &lt;url&gt;.\n"
                                       "For example: metadataextractor ~/Documents\n"
                                       "Or: metadataextractor -tvshow -auto ~/Videos\n"));
         return 0;

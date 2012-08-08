@@ -1304,7 +1304,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addWebsite(const QString 
         url.setScheme(QLatin1String("http"));
     }
 
-    if( url.scheme().startsWith("http") && url.isValid()) {
+    if( url.scheme().startsWith(QLatin1String("http")) && url.isValid()) {
         Nepomuk2::NFO::Website website ( url );
 
         publication.addLinks( website.uri() );
@@ -1312,7 +1312,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addWebsite(const QString 
         graph << website;
 
     }
-    else if( url.scheme().startsWith("file") || url.scheme().startsWith("/home")  || url.scheme().startsWith('~')) {
+    else if( url.scheme().startsWith(QLatin1String("file")) || url.scheme().startsWith(QLatin1String("/home"))  || url.scheme().startsWith('~')) {
         addFileUrl(content, publication, graph);
     }
 }

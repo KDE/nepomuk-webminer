@@ -123,9 +123,9 @@ protected:
     NepomukMetaDataExtractor::Extractor::ExtractorFactory  *extractorFactory();
 
     /**
-     * @brief Little helper function for the correct resourceuri handeling of tvshows
+     * @brief Little helper function for the correct resourceuri handling of tvshows
      *
-     * This is neccessary for the TvShow pipe, because the resourceuri of the connected file is extected to be in the episode
+     * This is necessary for the TvShow pipe, because the resourceuri of the connected file is extected to be in the episode
      * layer of the nested QVariantMap rather than the toplevel.
      *
      * This allows to use the tvshow pipe with a QVariantMap that adds many episodes conected to many different files at once

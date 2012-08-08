@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PUBLICATIONENTRY_H
-#define PUBLICATIONENTRY_H
+#ifndef METADATAPARAMETERS_H
+#define METADATAPARAMETERS_H
 
 #include <KDE/KUrl>
 
@@ -51,4 +51,4 @@ namespace NepomukMetaDataExtractor {
     }
 }
 
-#endif // PUBLICATIONENTRY_H
+#endif // METADATAPARAMETERS_H

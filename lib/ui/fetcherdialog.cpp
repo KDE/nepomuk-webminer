@@ -396,7 +396,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showSearchParameters()
     w->setLayout(vbl);
 
     MetaDataParameters *mdp = resourceExtractor()->resourcesList().at( d->currentItemNumber );
-    QLabel *labelTitle = new QLabel(i18n("Title:"),w);
+    QLabel *labelTitle = new QLabel(i18nc("@item:the title of a publication/movie/show", "Title:"),w);
     QLineEdit *editTitle = new QLineEdit(mdp->searchTitle,w);
     gl->addWidget(labelTitle, 0,0);
     gl->addWidget(editTitle, 0,1);
@@ -551,7 +551,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::saveMetaData()
         mdp->metaDataSaved = true;
     }
     else {
-        addToProgressLog(i18n("No nepomuk pipe available for the resoure type %1", type));
+        addToProgressLog(i18n("No nepomuk pipe available for the resource type %1", type));
     }
 
     finishedFetching();

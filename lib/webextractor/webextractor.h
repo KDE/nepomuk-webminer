@@ -51,7 +51,7 @@ public:
         QString identifier;     /**< Short unique identifier of the plugin */
         QString description;    /**< Longer description of the plugin */
         QStringList resource;   /**< List of resources that can be used (@c tvshow , @c movie @c publication ) */
-        QStringList urlregex;   /**< Regexp that fits the url sheme to detect the correct plugin based on the input website for a single item */
+        QStringList urlregex;   /**< Regexp that fits the url scheme to detect the correct plugin based on the input website for a single item */
         QString author;         /**< Plugin author */
         QString email;          /**< Plugin author email */
         QString file;           /**< File path and name of the plugin */

@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BIBTEXTONEPOMUKPIPE_H
-#define BIBTEXTONEPOMUKPIPE_H
+#ifndef PUBLICATIONPIPE_H
+#define PUBLICATIONPIPE_H
 
 #include "nepomukpipe.h"
 
@@ -31,8 +31,6 @@
 #include "sro/nbib/encyclopedia.h"
 
 #include "nepomukmetadataextractor_export.h"
-
-#include <Nepomuk2/Resource>
 
 #include <QtCore/QUrl>
 #include <QtCore/QList>
@@ -52,7 +50,7 @@ namespace Pipe {
   * This class keeps care of this and creates the nepomuk data correctly.
   *
   * Each publication entry is transformed into:
-  * @li @c nbib:Reference - points to the publication with additonal info like @c chapter, @c page, @c citekey etc
+  * @li @c nbib:Reference - points to the publication with additional info like @c chapter, @c page, @c citekey etc
   * @li @c nbib:Publication - the main publication info like @c book, @c article, @c inproceedings etc
   * @li several other classes for the @c authors, @c chapters, @c collections and so on
   *
@@ -206,5 +204,5 @@ private:
 }
 }
 
-#endif // BIBTEXTONEPOMUKPIPE_H
+#endif // PUBLICATIONPIPE_H
 

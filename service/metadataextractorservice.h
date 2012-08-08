@@ -32,7 +32,7 @@ namespace Nepomuk2 {
 }
 
 /**
- * @brief This service calls the metadata extarctor everytime a new @c nfo:Video or @c nfo::PaginatedTextDocument resource was created
+ * @brief This service calls the metadata extarctor every time a new @c nfo:Video or @c nfo::PaginatedTextDocument resource was created
  *
  * Extracts the metadata from the web based on the AutomaticFetcher.
  */
@@ -41,7 +41,7 @@ class MetaDataExtractorService : public Nepomuk2::Service
     Q_OBJECT
 
 public:
-    MetaDataExtractorService(QObject *parent = 0, const QVariantList& args = QVariantList());
+    explicit MetaDataExtractorService(QObject *parent = 0, const QVariantList& args = QVariantList());
     ~MetaDataExtractorService();
 
 private Q_SLOTS:

@@ -60,7 +60,7 @@ public:
     /**
       * @brief Creates a new WebExtractor based on the @c "identifier" name
       *
-      * Ownership of the created object is transfered to the caller.
+      * Ownership of the created object is transferred to the caller.
       * The caller must delete it, if it is no longer used
       *
       * @p webEngine short identifier name of the plugin
@@ -72,7 +72,7 @@ public:
     /**
       * @brief Creates a new WebExtractor based in the @c "url" it can fetch data from
       *
-      * Ownership of the created object is transfered to the caller.
+      * Ownership of the created object is transferred to the caller.
       * The caller must delete it, if it is no longer used
       *
       * @p uri web url that should be parsed
