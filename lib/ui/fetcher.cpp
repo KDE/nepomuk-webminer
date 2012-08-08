@@ -64,7 +64,10 @@ void NepomukMetaDataExtractor::UI::Fetcher::addFetcherPath( const KUrl &url )
 void NepomukMetaDataExtractor::UI::Fetcher::addFetcherResource( const KUrl &url )
 {
     Nepomuk2::Resource r = Nepomuk2::Resource::fromResourceUri( url );
-    addFetcherResource(r);
+
+    if(r.exists()) {
+        addFetcherResource(r);
+    }
 }
 
 void NepomukMetaDataExtractor::UI::Fetcher::addFetcherResource(const Nepomuk2::Resource &resource)

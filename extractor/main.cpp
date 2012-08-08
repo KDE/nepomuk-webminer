@@ -81,7 +81,7 @@ int main( int argc, char *argv[] )
             af.startUrlFetcher();
         }
         else if( args->isSet("resource") ) {
-            af.addFetcherResource( Nepomuk2::Resource::fromResourceUri(args->url( 0 )) );
+            af.addFetcherResource( args->url( 0 ) );
             af.startFetcher();
         }
         else {
