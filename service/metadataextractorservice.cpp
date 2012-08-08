@@ -82,7 +82,7 @@ void MetaDataExtractorService::slotVideoResourceCreated(const Nepomuk2::Resource
             kDebug() << "Calling" << KStandardDirs::findExe(QLatin1String("metadataextractor")) << path;
 
             QProcess::startDetached(KStandardDirs::findExe(QLatin1String("metadataextractor")),
-                                    QStringList() << QLatin1String("--auto --force") << path);
+                                    QStringList() << QLatin1String("-auto") << QLatin1String("-force") << path);
         }
     }
 }
@@ -106,7 +106,7 @@ void MetaDataExtractorService::slotDocumentResourceCreated(const Nepomuk2::Resou
             kDebug() << "Calling" << KStandardDirs::findExe(QLatin1String("metadataextractor")) << path;
 
             QProcess::startDetached(KStandardDirs::findExe(QLatin1String("metadataextractor")),
-                                    QStringList() << QLatin1String("--auto --force") << path);
+                                    QStringList() << QLatin1String("-auto") << QLatin1String("-force") << path);
         }
     }
 }
