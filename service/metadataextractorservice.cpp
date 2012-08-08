@@ -65,6 +65,8 @@ MetaDataExtractorService::~MetaDataExtractorService()
 
 void MetaDataExtractorService::slotVideoResourceCreated(const Nepomuk2::Resource &res, const QList<QUrl> &types)
 {
+    Q_UNUSED(types);
+
     // here we check if the resource we added is actually a file
     // and that it does not already have tvshow / movie information
     // if it already has such information, it is very likely, that the resource was created via
@@ -89,6 +91,8 @@ void MetaDataExtractorService::slotVideoResourceCreated(const Nepomuk2::Resource
 
 void MetaDataExtractorService::slotDocumentResourceCreated(const Nepomuk2::Resource &res, const QList<QUrl> &types)
 {
+    Q_UNUSED(types);
+
     // here we check if the resource we added is actually a file
     // and that it does not already have publication information
     // if it already has such information, it is very likely, that the resource was created via
