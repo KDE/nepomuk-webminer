@@ -42,7 +42,6 @@ namespace UI {
  *
  * It always takes the first found search result and the first available search engine as the meta data for the resource
  *
- * @todo TODO: implement some logic to select the best possible search result not just the first found
  * @todo TODO: implement KConfig to specify the the preferred search engine for a resourcetype rather than useing the first one
  * @todo TODO: implement multiple searches, if the first fails, try a different engine instead of failing
  */
@@ -58,6 +57,12 @@ public:
     explicit AutomaticFetcher(QObject *parent = 0);
     ~AutomaticFetcher();
 
+    /**
+     * @brief adds th eurl where the item data can be found
+     *
+     * This will fetch and add meta data to the nepomuk storage without connecting it to a file
+     * @param url the url that can be parsed by one of the plugins
+     */
     void addFetcherUrl(const KUrl& url);
 
 public slots:
@@ -73,6 +78,12 @@ public slots:
      */
     void startFetcher();
 
+    /**
+     * @brief Starts the fetcher in url fetch only mode
+     *
+     * This calls extractItem() directly and does not use the search function first, as the url
+     * given is already the correct item to fetch.
+     */
     void startUrlFetcher();
 
 private slots:
@@ -99,7 +110,6 @@ private slots:
      *
      * @param resourceType what kind of resource type was returned
      * @param itemDetails a QVariantmap with all important meta data
-     *
      */
     void fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails);
 

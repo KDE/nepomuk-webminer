@@ -32,7 +32,13 @@ namespace Extractor {
 namespace UI {
     class FetcherPrivate;
 
-
+/**
+ * @brief Base class for all fetcher inplementations.
+ *
+ * Define some useful functions every fetcher needs.
+ * Calls the resource extarctor to get additional information.
+ * Keeps a list of all items that have to be checked.
+ */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT Fetcher
 {
 public:
@@ -45,8 +51,26 @@ public:
      * @param url folder path or file name/path
      */
     void addFetcherPath( const KUrl &url );
+
+    /**
+     * @brief Adds a Nepomuk Resource to the list of items that will be checked
+     *
+     * @param url nepomuk resource uri
+     */
     void addFetcherResource( const KUrl &url );
+
+    /**
+     * @brief Adds a Nepomuk Resource to the list of items that will be checked
+     *
+     * @param resource nepomuk resource
+     */
     void addFetcherResource(const Nepomuk2::Resource &resource);
+
+    /**
+     * @brief Adds a list Nepomuk Resources to the list of items that will be checked
+     *
+     * @param resources nepomuk resource list
+     */
     void addFetcherResource(const QList<Nepomuk2::Resource> &resources);
 
     /**
@@ -73,7 +97,7 @@ public:
      * @brief Adds a hint to the VideoExtractor filename parser to improve name detection
      *
      * @param useFolderNames @arg true check folder names for tvshows too
-     *                   @arg false only check filename for tvshows (default)
+     *                       @arg false only check filename for tvshows (default)
      */
     void setTvShowNamesInFolders(bool useFolderNames);
 
@@ -86,10 +110,33 @@ public:
     void setMovieMode(bool movieMode);
 
 protected:
+    /**
+     * @brief Returns the ResourceExtractor that keeps a list of all resource which need to be checked
+     * @return the ResourceExtractor
+     */
     NepomukMetaDataExtractor::Extractor::ResourceExtractor *resourceExtractor();
+
+    /**
+     * @brief Returns the ExtractorFactory that handles all available plugins which can be used to fetch metadata from the web
+     * @return the ExtractorFactory
+     */
     NepomukMetaDataExtractor::Extractor::ExtractorFactory  *extractorFactory();
 
+    /**
+     * @brief Little helper function for the correct resourceuri handeling of tvshows
+     *
+     * This is neccessary for the TvShow pipe, because the resourceuri of the connected file is extected to be in the episode
+     * layer of the nested QVariantMap rather than the toplevel.
+     *
+     * This allows to use the tvshow pipe with a QVariantMap that adds many episodes conected to many different files at once
+     * @param mdp the MetaDataParameters which should be updated
+     */
     void addResourceUriToMetaData( NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp );
+
+    /**
+     * @brief Calls the correct NepomukPipe to save the QVariantMap into nepomuk
+     * @param mdp the MetaDataParameters which should be saved
+     */
     void saveMetaData(const NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp) const;
 
 private:
