@@ -26,8 +26,9 @@ and check the doxygen documentation
 ** SDO 0.10.0
 
 * poppler (for pdf parsing)
+* TagLib (for music/video parsing)
 * Kross framework with working python interpreters
-* For python: imdbpy 4.9, tvdb_api module current master
+* For python: imdbpy 4.9, Musicbrainz NGS (master), tvdb_api module (master)
 
 OpenSuse user need to install the python Kross intepreters from source. see:
 https://projects.kde.org/projects/kde/kdebindings/kross-interpreters/repository

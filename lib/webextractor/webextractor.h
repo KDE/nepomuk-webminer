@@ -78,7 +78,7 @@ public slots:
      *
      * The Plugins search for a list of possible matches and emits the results via @c searchResults
      *
-     * @param resourceType @c tvshow , @c movie @c or publication
+     * @param resourceType @c tvshow , @c movie  @c music or  @cpublication
      * @param parameters Additinal parameters defining the search
      *                   @li @c title - the title name
      *                   @li @c alttitle - alternative title name
@@ -101,12 +101,13 @@ public slots:
      * @param url the weburl where the ite mdata can be found
      * @param options additional options
      *
-     * @todo TODO: add some options, like no referece downlaod for publications etc
+     * @todo TODO: add some options, like no referece download for publications etc
      *
      * @see @c NepomukPipe
      * @see @c MoviePipe
      * @see @c TvShowPipe
      * @see @c PublicationPipe
+     * @see @c MusicPipe
      */
     virtual void extractItem(const QUrl &url, const QVariantMap &options) = 0;
 
@@ -142,6 +143,7 @@ signals:
      * @see @c MoviePipe
      * @see @c TvShowPipe
      * @see @c PublicationPipe
+     * @see @c MusicPipe
      */
     void itemResults(const QString &resourceType, const QVariantMap &entry);
 };

@@ -38,6 +38,7 @@ class ExtractorFactoryPrivate;
   * @li publication
   * @li tvshow
   * @li movie
+  * @li music
   *
   * Or return the correct search engine based on its unique identifier or the webpage url where the item can be extarcted from
   *
@@ -88,6 +89,7 @@ public:
       * @li publication
       * @li tvshow
       * @li movie
+      * @li music
       *
       * @return a list of all WebExtarctor info items
       */

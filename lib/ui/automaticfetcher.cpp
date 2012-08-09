@@ -126,13 +126,15 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
     QVariantMap searchParameters;
     searchParameters.insert("title", d->currentItemToupdate->searchTitle);
     searchParameters.insert("alttitle", d->currentItemToupdate->searchAltTitle);
-    searchParameters.insert("author", d->currentItemToupdate->searchAuthor);
+    searchParameters.insert("author", d->currentItemToupdate->searchPerson);
     searchParameters.insert("season", d->currentItemToupdate->searchSeason);
     searchParameters.insert("episode", d->currentItemToupdate->searchEpisode);
     searchParameters.insert("yearMin", d->currentItemToupdate->searchYearMin);
     searchParameters.insert("yearMax", d->currentItemToupdate->searchYearMax);
     searchParameters.insert("journal", d->currentItemToupdate->searchJournal);
     searchParameters.insert("showtitle", d->currentItemToupdate->searchShowTitle);
+    searchParameters.insert("album", d->currentItemToupdate->searchAlbum);
+    searchParameters.insert("track", d->currentItemToupdate->searchTrack);
 
     kDebug() << "Start searching " << d->webextractor->info().name << "for items with these parameters ::";
     kDebug() << searchParameters;

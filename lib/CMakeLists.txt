@@ -12,11 +12,13 @@ set( nepomukextractor_LIB_SRCS
   resourceextractor/popplerextractor.cpp
   resourceextractor/odfextractor.cpp
   resourceextractor/videoextractor.cpp
+  resourceextractor/audioextractor.cpp
 
   nepomukpipe/nepomukpipe.cpp
   nepomukpipe/publicationpipe.cpp
   nepomukpipe/moviepipe.cpp
   nepomukpipe/tvshowpipe.cpp
+  nepomukpipe/musicpipe.cpp
 
   ui/fetcher.cpp
   ui/fetcherdialog.cpp
@@ -47,6 +49,7 @@ target_link_libraries( nepomukmetadataextractor
 
 # other parts
   ${POPPLER_LIBRARY}
+  ${TAGLIB_LIBRARIES}
 
   ${QJSON_LIBRARIES} # added because the macro seems to exist with upper and lowercase depending on the distribution
   ${qjson_LIBRARIES}
@@ -64,6 +67,7 @@ set( nepomukmetadataextractor_LIB_HDRS
 
   resourceextractor/resourceextractor.h
   resourceextractor/videoextractor.h
+  resourceextractor/audioextractor.h
   resourceextractor/popplerextractor.h
   resourceextractor/odfextractor.h
 
@@ -74,6 +78,7 @@ set( nepomukmetadataextractor_LIB_HDRS
   nepomukpipe/moviepipe.h
   nepomukpipe/publicationpipe.h
   nepomukpipe/tvshowpipe.h
+  nepomukpipe/musicpipe.cpp
 
   ui/fetcher.h
   ui/automaticfetcher.h

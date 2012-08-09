@@ -1,6 +1,8 @@
 project(metadataextractor)
 
-##################  nepomukbulkextractor version  ################################
+#--------------------------------------------------------------------------
+#  nepomuk metadata extractor version
+#--------------------------------------------------------------------------
 set(CMAKE_METDADATAEXTRACTOR_VERSION_MAJOR 0)
 set(CMAKE_METDADATAEXTRACTOR_VERSION_MINOR 2)
 set(CMAKE_METDADATAEXTRACTOR_VERSION_RELEASE 0)
@@ -8,6 +10,10 @@ set(CMAKE_METDADATAEXTRACTOR_VERSION "${CMAKE_METDADATAEXTRACTOR_VERSION_MAJOR}.
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules)
 
+
+#--------------------------------------------------------------------------
+# find required dependencies
+#--------------------------------------------------------------------------
 set(KDE_MIN_VERSION "4.7.00")
 find_package(KDE4 4.7.0 REQUIRED)
 include(KDE4Defaults)
@@ -20,11 +26,16 @@ include(MacroLibrary)
 include(MacroOptionalAddSubdirectory)
 
 find_package(QJSON REQUIRED)
-
 find_package(Poppler REQUIRED)
+find_package(Taglib REQUIRED)
+
 macro_log_feature(HAVE_POPPLER_0_12_1 "Poppler-Qt4" "A PDF rendering library" "http://poppler.freedesktop.org" TRUE "0.12.1" "Poppler necessary to extract data from pdf files")
 macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" TRUE ${SDO_MIN_VERSION} "Ontologies necessary for the Nepomuk semantic desktop.")
+macro_log_feature(TAGLIB_FOUND "TagLib" "library for reading and editing audio meta data" "http://taglib.github.com/" TRUE "1.4" "TagLib necessary to find music meta data")
 
+#--------------------------------------------------------------------------
+# global include diretories for all subdirectories
+#--------------------------------------------------------------------------
 include_directories(
   ${QT_INCLUDES}
   ${KDE4_INCLUDES}
@@ -45,7 +56,9 @@ add_subdirectory( browser/konqueror )
 
 macro_display_feature_log()
 
+#--------------------------------------------------------------------------
 # add a target to generate API documentation with Doxygen
+#--------------------------------------------------------------------------
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
 

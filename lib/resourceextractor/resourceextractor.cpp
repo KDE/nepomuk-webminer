@@ -22,6 +22,7 @@
 #include "popplerextractor.h"
 #include "odfextractor.h"
 #include "videoextractor.h"
+#include "audioextractor.h"
 
 #include <Nepomuk2/Resource>
 #include <Nepomuk2/Variant>
@@ -195,7 +196,8 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(cons
     if( !d->forceUpdate && (
         fileResource.hasProperty(Nepomuk2::Vocabulary::NBIB::publishedAs()) ||
         fileResource.hasType(Nepomuk2::Vocabulary::NMM::TVShow()) ||
-        fileResource.hasType(Nepomuk2::Vocabulary::NMM::Movie()))) {
+        fileResource.hasType(Nepomuk2::Vocabulary::NMM::Movie()) ||
+        fileResource.hasType(Nepomuk2::Vocabulary::NMM::MusicPiece()) )) {
         kDebug() << "skip file " << fileUrl << "because it already has some meta data that would be overwritten use force update to fetch meta data anyway";
         return;
     }
@@ -205,7 +207,6 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(cons
 
     bool fileSupported = fileChecker(metaDataParameters, fileUrl);
 
-    //TODO: add music support
     // we skip files that are not supported (not pdf, opendocument or video files)
     if( !fileSupported) {
         delete metaDataParameters;
@@ -222,7 +223,6 @@ bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::fileChecker(Nepomuk
     Q_D( ResourceExtractor );
     KSharedPtr<KMimeType> kmt = KMimeType::findByUrl( fileUrl );
 
-    //TODO: add music support
     if(kmt.data()->name().contains(QLatin1String("application/vnd.oasis.opendocument.text"))) {
         Extractor::OdfExtractor odfExtractor;
         odfExtractor.parseUrl( mdp, fileUrl );
@@ -231,10 +231,13 @@ bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::fileChecker(Nepomuk
         Extractor::PopplerExtractor pdfExtractor;
         pdfExtractor.parseUrl( mdp, fileUrl );
     }
-
     else if(kmt.data()->name().contains(QLatin1String("video/"))) {
         Extractor::VideoExtractor videoExtractor;
         videoExtractor.parseUrl( mdp, fileUrl, d->baseCallUrl );
+    }
+    else if(kmt.data()->name().contains(QLatin1String("audio/"))) {
+        Extractor::AudioExtractor audioExtractor;
+        audioExtractor.parseUrl( mdp, fileUrl );
     }
     else {
         kDebug() << "unsupportet mimetype" << kmt.data()->name();
@@ -274,7 +277,7 @@ bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourceChecker(Nep
         }
         if( !queryResource.property( Nepomuk2::Vocabulary::NCO::creator() ).toResourceList().isEmpty()) {
             Nepomuk2::Resource author = queryResource.property( Nepomuk2::Vocabulary::NCO::creator() ).toResourceList().first();
-            mdp->searchAuthor = author.genericLabel();
+            mdp->searchPerson = author.genericLabel();
         }
 
         QString releaseDateString = queryResource.property( Nepomuk2::Vocabulary::NBIB::publicationDate()).toString();
@@ -329,10 +332,38 @@ bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourceChecker(Nep
             mdp->searchYearMin = releaseDate.toString(QLatin1String("yyyy"));
         }
     }
+    else if( fileResource.hasType(Nepomuk2::Vocabulary::NMM::MusicPiece()) ) {
+        kDebug() << "Music Resource";
+        mdp->resourceType = QLatin1String("music");
+
+        QString title = queryResource.property( Nepomuk2::Vocabulary::NIE::title()).toString();
+        if(!title.isEmpty()) {
+            mdp->searchTitle =title;
+        }
+
+        QString track = queryResource.property( Nepomuk2::Vocabulary::NMM::trackNumber()).toString();
+        if(!track.isEmpty()) {
+            mdp->searchTrack =track;
+        }
+
+        QString performer = queryResource.property( Nepomuk2::Vocabulary::NMM::performer()).toResource().genericLabel();
+        if(!performer.isEmpty()) {
+            mdp->searchPerson =performer;
+        }
+
+        Nepomuk2::Resource album = queryResource.property( Nepomuk2::Vocabulary::NMM::musicAlbum()).toResource();
+        QString albumName = album.property( Nepomuk2::Vocabulary::NIE::title()).toString();
+        if(!albumName.isEmpty()) {
+            mdp->searchAlbum =albumName;
+        }
+
+        //TODO: release date? related to musicPiece or muscAlbum?
+
+    }
     else {
         kDebug() << "Other Resource";
         // try to get some general info
-        if( !queryResource.genericLabel().isEmpty()) {
+        if( mdp->searchTitle.isEmpty() && !queryResource.genericLabel().isEmpty()) {
             mdp->searchTitle = queryResource.genericLabel();
         }
     }

@@ -26,6 +26,7 @@
 #include "nepomukpipe/moviepipe.h"
 #include "nepomukpipe/publicationpipe.h"
 #include "nepomukpipe/tvshowpipe.h"
+#include "nepomukpipe/musicpipe.h"
 
 #include <KDE/KDebug>
 
@@ -122,6 +123,7 @@ void NepomukMetaDataExtractor::UI::Fetcher::addResourceUriToMetaData( NepomukMet
 {
     // For tv shows put the resource uri inti the Episode part of the MetaData
     // this way around it is possible to use the TvShowPipe with more episode/files at once
+    //TODO: do not just use first entry, in case we connect more than 1 file here
     if( mdp->resourceType == QLatin1String("tvshow")) {
         QVariantList seasons = mdp->metaData.value(QLatin1String("seasons")).toList();
         if(!seasons.isEmpty()) {
@@ -138,6 +140,20 @@ void NepomukMetaDataExtractor::UI::Fetcher::addResourceUriToMetaData( NepomukMet
                 seasons << season;
                 mdp->metaData.insert( QLatin1String("seasons"), seasons);
             }
+        }
+    }
+    // music piece / album works the same as tvshows, we add the fileurl to the track not the toplevel album
+    //TODO: do not just use first entry, in case we connect more than 1 file here
+    else if( mdp->resourceType == QLatin1String("music")) {
+        QVariantList trackList = mdp->metaData.value(QLatin1String("tracks")).toList();
+
+        if(!trackList.isEmpty()) {
+            QVariantMap trackMap = trackList.takeFirst().toMap();
+            kDebug() << "add to track" << trackMap.value(QLatin1String("title")).toString() << "url" << mdp->resourceUri.url();
+            trackMap.insert(QLatin1String("resourceuri"), mdp->resourceUri.url());
+
+            trackList << trackMap;
+            mdp->metaData.insert( QLatin1String("tracks"), trackList);
         }
     }
     else {
@@ -160,6 +176,9 @@ void NepomukMetaDataExtractor::UI::Fetcher::saveMetaData(const NepomukMetaDataEx
     }
     else if(type == QLatin1String("movie")) {
         nepomukPipe = new Pipe::MoviePipe;
+    }
+    else if(type == QLatin1String("music")) {
+        nepomukPipe = new Pipe::MusicPipe;
     }
 
     if(nepomukPipe) {

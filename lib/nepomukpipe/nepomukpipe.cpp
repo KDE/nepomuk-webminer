@@ -53,6 +53,7 @@ void NepomukMetaDataExtractor::Pipe::NepomukPipe::slotSaveToNepomukDone(KJob *jo
 KUrl NepomukMetaDataExtractor::Pipe::NepomukPipe::downloadBanner(const QUrl &bannerUrl, const QString& additionalLocationInfo ) const
 {
     //TODO: make banner location configurable
+    //TODO: if banner exist, change name and save it
     const KUrl localUrl = KGlobal::dirs()->locateLocal("appdata", QLatin1String("banners/") + additionalLocationInfo + QLatin1String("/") + KUrl(bannerUrl).fileName(), true);
     if(!QFile::exists(localUrl.toLocalFile())) {
         KIO::CopyJob* job = KIO::copy(bannerUrl, localUrl, KIO::HideProgressInfo);

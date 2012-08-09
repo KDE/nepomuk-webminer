@@ -33,7 +33,7 @@
 
 #include <KDE/KStandardDirs>
 #include <KDE/KDialog>
-//#include <KDE/KMimeType>
+
 #include <KDE/KRun>
 #include <KDE/KDebug>
 
@@ -221,19 +221,45 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::setupCurrentResourceToLookup()
         lineEditEpisode->setVisible(true);
         labelShow->setVisible(true);
         lineEditShow->setVisible(true);
+
+        labelArtist->setVisible(false);
+        lineEditArtist->setVisible(false);
+        labelAlbum->setVisible(false);
+        lineEditAlbum->setVisible(false);
+
+        lineEditSeason->setText( mdp->searchSeason );
+        lineEditEpisode->setText( mdp->searchEpisode );
+        lineEditShow->setText(  mdp->searchShowTitle );
     }
-    else {
+    else if(mdp->resourceType == QLatin1String("publication")) {
         labelSeason->setVisible(false);
         lineEditSeason->setVisible(false);
         labelEpisode->setVisible(false);
         lineEditEpisode->setVisible(false);
         labelShow->setVisible(false);
         lineEditShow->setVisible(false);
-    }
 
-    lineEditSeason->setText( mdp->searchSeason );
-    lineEditEpisode->setText( mdp->searchEpisode );
-    lineEditShow->setText(  mdp->searchShowTitle );
+        labelArtist->setVisible(false);
+        lineEditArtist->setVisible(false);
+        labelAlbum->setVisible(false);
+        lineEditAlbum->setVisible(false);
+    }
+    else if(mdp->resourceType == QLatin1String("music")) {
+        labelSeason->setVisible(false);
+        lineEditSeason->setVisible(false);
+        labelEpisode->setVisible(false);
+        lineEditEpisode->setVisible(false);
+        labelShow->setVisible(false);
+        lineEditShow->setVisible(false);
+
+        labelArtist->setVisible(true);
+        lineEditArtist->setVisible(true);
+        labelAlbum->setVisible(true);
+        lineEditAlbum->setVisible(true);
+
+        lineEditArtist->setText( mdp->searchPerson );
+        lineEditAlbum->setText( mdp->searchAlbum );
+    }
 
     if( mdp->resourceType == QLatin1String("tvshow")) {
         cbSelectType->setVisible(true);
@@ -335,13 +361,17 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::startSearch()
     QVariantMap searchParameters;
     searchParameters.insert("title", mdp->searchTitle);
     searchParameters.insert("alttitle", mdp->searchAltTitle);
-    searchParameters.insert("author", mdp->searchAuthor);
+    searchParameters.insert("author", mdp->searchPerson);
     searchParameters.insert("season", mdp->searchSeason);
     searchParameters.insert("episode", mdp->searchEpisode);
     searchParameters.insert("yearMin", mdp->searchYearMin);
     searchParameters.insert("yearMax", mdp->searchYearMax);
     searchParameters.insert("journal", mdp->searchJournal);
     searchParameters.insert("showtitle", mdp->searchShowTitle);
+    searchParameters.insert("album", mdp->searchAlbum);
+    searchParameters.insert("track", mdp->searchTrack);
+
+    kDebug() << "webextractor->search :: " << searchParameters;
 
     d->webextractor->search( mdp->resourceType, searchParameters );
 }
@@ -430,9 +460,15 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showSearchParameters()
     QLabel *labelShow = 0;
     QLineEdit *editShow = 0;
 
+    QLabel *labelTrack = 0;
+    QLineEdit *editTrack = 0;
+
+    QLabel *labelAlbum = 0;
+    QLineEdit *editAlbum = 0;
+
     if(mdp->resourceType == QLatin1String("publication")) {
         labelAuthor = new QLabel(i18n("Author:"),w);
-        editAuthor = new QLineEdit(mdp->searchAuthor,w);
+        editAuthor = new QLineEdit(mdp->searchPerson,w);
         gl->addWidget(labelAuthor, 4,0);
         gl->addWidget(editAuthor, 4,1);
 
@@ -458,6 +494,23 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showSearchParameters()
         gl->addWidget(editShow, 6,1);
     }
 
+    if(mdp->resourceType == QLatin1String("music")) {
+        labelAuthor = new QLabel(i18n("Artist:"),w);
+        editAuthor = new QLineEdit(mdp->searchPerson,w);
+        gl->addWidget(labelAuthor, 4,0);
+        gl->addWidget(editAuthor, 4,1);
+
+        labelTrack = new QLabel(i18n("Track:"),w);
+        editTrack = new QLineEdit(mdp->searchTrack,w);
+        gl->addWidget(labelTrack, 5,0);
+        gl->addWidget(editTrack, 5,1);
+
+        labelAlbum = new QLabel(i18n("Album:"),w);
+        editAlbum = new QLineEdit(mdp->searchAlbum,w);
+        gl->addWidget(labelAlbum, 6,0);
+        gl->addWidget(editAlbum, 6,1);
+    }
+
     spd->setMainWidget(w);
 
     int ret = spd->exec();
@@ -469,7 +522,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showSearchParameters()
         mdp->searchYearMax = editYearMax->text();
 
         if(mdp->resourceType == QLatin1String("publication")) {
-            mdp->searchAuthor = editAuthor->text();
+            mdp->searchPerson = editAuthor->text();
             mdp->searchJournal = editJournal->text();
         }
         else if(mdp->resourceType == QLatin1String("tvshow")) {
@@ -504,6 +557,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fetchMoreDetails()
     // get the current item to fetch
     QModelIndex currentEntry = searchResults->currentIndex();
     QVariantMap entry = d->resultModel->searchResultEntry(currentEntry);
+    kDebug() << "fetch details" << entry;
 
     d->currentItemToupdate = resourceExtractor()->resourcesList().at( d->currentItemNumber );
     KUrl fetchUrl( entry.value(QLatin1String("url")).toString() );

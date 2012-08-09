@@ -32,15 +32,24 @@ namespace NepomukMetaDataExtractor {
          * The results of this websearch (all item details) are saved as @p metaData @c QVariantMap and precessed by the @c NepomukPipe
          */
         struct MetaDataParameters {
-            //NOTE: replace single QString parameters with a search QMap i ncase we need to add many other parameters in the future?
+            //NOTE: replace single QString parameters with a search QMap in case we need to add many other parameters in the future?
             QString searchTitle;          /**< title of the entry to search for */
             QString searchAltTitle;       /**< alternative title of the entry to search for in case the first one does not return anything */
+            QString searchYearMin;
+            QString searchYearMax;
+
+            QString searchPerson; /**< Publication author, movie director, album preformer */
+
+            // tv show related
             QString searchShowTitle;
             QString searchEpisode;
             QString searchSeason;
-            QString searchYearMin;
-            QString searchYearMax;
-            QString searchAuthor;
+
+            // music related
+            QString searchAlbum;
+            QString searchTrack;
+
+            // publication related
             QString searchJournal;
 
             QString resourceType;         /**< used to select the right set of python modules that allow retrieving data for this resoruce */
