@@ -26,7 +26,7 @@ namespace Pipe {
 /**
   * @brief Pipes a QVariantMap with movie information into Nempomuk
   *
-  * Creates the correct Movie structure, splits director/writer/cast names correctly and adds the mas subresource to the movie
+  * Creates the correct Movie structure, splits director/writer/cast names correctly and adds them as subresource to the movie
   *
   * The following keys will be used in this trasition:
   * @li @c resourceuri - the file url or nepomuk uri of the resource this data should be added to
