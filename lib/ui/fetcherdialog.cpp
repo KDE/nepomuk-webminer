@@ -89,7 +89,7 @@ NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
     connect(buttonSearchDetails, SIGNAL(clicked()), this, SLOT(showSearchParameters()));
 
     connect(buttonFetchMore, SIGNAL(clicked()), this, SLOT(fetchMoreDetails()));
-    connect(buttonSave, SIGNAL(clicked()), this, SLOT(saveMetaData()));
+    connect(buttonSave, SIGNAL(clicked()), this, SLOT(saveMetaDataSlot()));
 
     connect(buttonCancel, SIGNAL(clicked()), this, SLOT(cancelClose()));
 
@@ -333,6 +333,8 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::startSearch()
     mdp->searchSeason = lineEditSeason->text();
     mdp->searchEpisode = lineEditEpisode->text();
     mdp->searchShowTitle = lineEditShow->text();
+    mdp->searchAlbum = lineEditAlbum->text();
+    mdp->searchPerson = lineEditArtist->text();
 
     int currentEngine = comboBoxSearchEngine->currentIndex();
     QString engineId = comboBoxSearchEngine->itemData( currentEngine ).toString();
@@ -371,7 +373,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::startSearch()
     searchParameters.insert("album", mdp->searchAlbum);
     searchParameters.insert("track", mdp->searchTrack);
 
-    kDebug() << "webextractor->search :: " << searchParameters;
+    //kDebug() << "webextractor->search :: " << searchParameters;
 
     d->webextractor->search( mdp->resourceType, searchParameters );
 }
@@ -535,8 +537,18 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showSearchParameters()
             mdp->searchShowTitle = editShow->text();
             lineEditShow->setText( mdp->searchShowTitle );
         }
+        else if(mdp->resourceType == QLatin1String("music")) {
+            mdp->searchPerson = editAuthor->text();
+            mdp->searchAlbum = editAlbum->text();
+            mdp->searchTrack = editTrack->text();
+        }
 
         lineEditTitle->setText( mdp->searchTitle );
+        lineEditArtist->setText( mdp->searchPerson );
+        lineEditAlbum->setText( mdp->searchAlbum );
+        lineEditSeason->setText( mdp->searchSeason );
+        lineEditShow->setText( mdp->searchShowTitle );
+        lineEditEpisode->setText( mdp->searchEpisode );
     }
 
     delete spd;
@@ -578,35 +590,18 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fetchedItemDetails(const QStri
     finishedFetching();
 
     d->currentItemToupdate = 0;
+
+    kDebug() << itemDetails;
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::saveMetaData()
+void NepomukMetaDataExtractor::UI::FetcherDialog::saveMetaDataSlot()
 {
     Q_D( FetcherDialog );
     MetaDataParameters *mdp = resourceExtractor()->resourcesList().at( d->currentItemNumber );
 
     busyFetching();
 
-    QString type = mdp->resourceType;
-
-    NepomukPipe *nepomukPipe = 0;
-    if(type == QLatin1String("publication")) {
-        nepomukPipe = new PublicationPipe;
-    }
-    else if(type == QLatin1String("tvshow")) {
-        nepomukPipe = new TvShowPipe;
-    }
-    else if(type == QLatin1String("movie")) {
-        nepomukPipe = new MoviePipe;
-    }
-
-    if(nepomukPipe) {
-        nepomukPipe->pipeImport( mdp->metaData );
-        mdp->metaDataSaved = true;
-    }
-    else {
-        addToProgressLog(i18n("No nepomuk pipe available for the resource type %1", type));
-    }
+    saveMetaData( mdp );
 
     finishedFetching();
 }

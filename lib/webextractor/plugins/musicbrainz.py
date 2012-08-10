@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 
 #------------------------------------------------------------------------------
-# @see http://musicbrainz.org/doc/python-musicbrainz2 need 1.7.4
+# @see https://github.com/alastair/python-musicbrainz-ngs/ need current master (0.3dev)
 #------------------------------------------------------------------------------
 
-#TODO: Seems outdated and the replacement has only an announcement from 2010 also python-musicbrainz-ngs gives a lot of errors
 import re
 import json
 
@@ -13,14 +12,20 @@ import json
 isAvailable = True
 errorMsg = ""
 try:
-    from musicbrainz2.webservice import Query, TrackFilter, WebServiceError
-    import musicbrainz2.utils as u
-    import musicbrainz2.webservice as mbws
+    import musicbrainzngs
+    from musicbrainzngs import mbxml
 
 except:
     isAvailable = False
-    errorMsg = "The musicbrainz2 python module 1.7.4 needs to be installed. See http://musicbrainz.org/doc/python-musicbrainz2"
+    errorMsg = "The python-musicbrainz-ngs python module git master needs to be installed. See https://github.com/alastair/python-musicbrainz-ngs/"
 
+# general script settings
+musicbrainzngs.set_rate_limit(False) # set on again to reduce server load?
+musicbrainzngs.set_useragent(
+    "python-musicbrainz-ngs-example",
+    "0.1",
+    "https://github.com/alastair/python-musicbrainz-ngs/",
+)
 
 #------------------------------------------------------------------------------
 # Module options
@@ -52,6 +57,7 @@ def info():
                  isAvailable = isAvailable,
                  errorMsg = errorMsg)
 
+
 #------------------------------------------------------------------------------
 # starts a search query
 #
@@ -64,40 +70,58 @@ def info():
 #
 def searchItems( resourcetype, parameters ):
 
+    luceneQuery = ""
     title = parameters['title']
+    if title is not None and title != "":
+        luceneQuery = 'recording:"' + title + '" '
+
     track = parameters['track']
+    if track is not None and track != "":
+        luceneQuery = 'tnum:' + track + ' '
+
     artist = parameters['author']
+    if artist is not None and artist != "":
+        luceneQuery = 'artistname:"' + artist + '" '
+
     album = parameters['album']
+    if album is not None and album != "":
+        luceneQuery = 'release:"' + album + '" '
 
     searchResults = []
-    q = Query()
 
     try:
-        f = TrackFilter(title=title, artistName=artist)
-        results = q.getTracks(f)
+        result = musicbrainzngs.search_recordings(luceneQuery, strict=True)
+
+        if not result['recording-list']:
+            WebExtractor.log( 'No results found for: ' + luceneQuery )
+            WebExtractor.searchResults( searchResults )
+
 
         # iterate over all available results
-        for result in results:
-            track = result.track
+        for recording in result['recording-list']:
 
-            #TODO check esult.score? return nothing below 50 ?
+            if int(recording['ext:score']) < 50:
+                continue
 
-            # create the search result dictionary
-            types = ''.join(track.releases[0].types)
+            detailString =""
+            albumRelese = recording['release-list'][0]
+            if albumRelese is not None:
+                detailString = albumRelese['title']
 
-            entryDict = dict(
-                            title = str(track.artist.name) + ' - ' + str(track.title),
-                            # in MusicBrainz every track is only related to 1 release at the moment, so we can safely take the first one always
-                            details = track.releases[0].title + ' (' + u.getReleaseTypeName(types) + ')',
-                            url = track.id
-                            )
+            if 'date' in albumRelese:
+                detailString = detailString + ' (' + albumRelese['date'] + ')'
+
+            if 'type' in albumRelese['release-group']:
+                detailString = detailString + ' - ' + albumRelese['release-group']['type']
+
+            entryDict = dict (
+                              title = recording["artist-credit-phrase"] + ' - ' + recording["title"],
+                              details = detailString,
+                              url = 'http://musicbrainz.org/recording/' + recording['id']
+                             )
 
             searchResults.append(entryDict)
 
-        WebExtractor.searchResults( searchResults )
-
-    except WebServiceError as err:
-        WebExtractor.log( str(err) )
         WebExtractor.searchResults( searchResults )
 
     except Exception as err:
@@ -121,40 +145,75 @@ def extractItemFromUri( url, options ):
         return
 
     extractType = match.group(1)
-    mbid = match.group(2)
+    puid = match.group(2)
 
-    WebExtractor.log('fetch :' + extractType + ' with id :' + mbid)
+    WebExtractor.log('fetch :' + extractType + ' with id :' + puid)
 
     if extractType == 'release':
         #TODO extract all tracks from this relese
         WebExtractor.error('Full Album extraction not implemented: ')
         return
+
+        try:
+            musicbrainzngs.get_release_by_id
+
+        except Exception as err:
+            WebExtractor.error("Script error: \n" + str(err))
+
     else:
         # extract just the single track
-        q = Query()
+
         try:
-            inc = mbws.TrackIncludes(artist=True, releases=True, artistRelations=False, tags=True)
-            track = q.getTrackById(mbid, inc)
+            # get_recording_by_id need authorization :/
+            result = musicbrainzngs.get_recording_by_id(puid, includes=["artists", "artist-credits", "releases", "media", "tags"])
+
+            recording = result['recording']
+
+            trackNumber = ""
+            releaseType = ""
+            date = ""
+            albumName = ""
+            albumArtist = ""
+            albumId = ""
+            genre = ""
+
+            if 'tag-list' in recording:
+                genre = ';'.join(tag['name'] for tag in recording['tag-list'])
+
+            if 'release-list' in recording:
+                albumRelese = recording['release-list'][0]
+                if albumRelese is not None:
+                    albumName = albumRelese['title']
+                    albumId = albumRelese['id']
+                    albumArtist = albumRelese['artist-credit-phrase']
+
+                if 'date' in albumRelese:
+                    date = albumRelese['date']
+
+                #if 'type' in albumRelese['release-group']:
+                #    releaseType = albumRelese['release-group']['type']
+
+                if albumRelese['medium-list'][0] is not None:
+                    if 'track-list' in albumRelese['medium-list'][0]:
+                        trackNumber = albumRelese['medium-list'][0]['track-list'][0]['number']
 
             trackDict = dict (
-                                title = track.title,
-                                performer = track.artist.name,
-                                number = track.releases[0].getTracksOffset(),
-                                genre = ';'.join(tag.value for tag in track.tags),
-                                musicbrainz = track.id
+                                title = recording['title'],
+                                performer = recording['artist-credit-phrase'],
+                                number = trackNumber,
+                                releasedate = date,
+                                genre = genre,
+                                musicbrainz = recording['id']
                             )
 
-            albumArtist = ""
-            if track.releases[0].artist is not None:
-                albumArtist = track.releases[0].artist.name
-
             albumDict  = dict (
-                                title = track.releases[0].title,
-                                trackCount = track.releases[0].getTracksCount(), #returns always nothing?
+                                title = albumName,
+                                #trackCount = track.releases[0].getTracksCount(),
                                 performer = albumArtist,
-                                genre = ';'.join(tag.value for tag in track.tags),
-                                tracks = [trackDict],
-                                musicbrainz = track.releases[0].id
+                                #genre = ';'.join(tag.value for tag in track.tags),
+                                musicbrainz = albumId,
+                                #releasetype = releaseType,
+                                tracks = [trackDict]
                             )
             # this is a workaround, because multiple nested dictionaries cause some problems with the names of the keys
             #WebExtractor.itemResults( 'music', trackDict )

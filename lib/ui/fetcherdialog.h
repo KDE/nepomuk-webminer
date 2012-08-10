@@ -65,7 +65,7 @@ private slots:
     void fetchMoreDetails();
     void fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails);
 
-    void saveMetaData();
+    void saveMetaDataSlot();
 
     void cancelClose();
 
