@@ -61,6 +61,9 @@ bool NepomukMetaDataExtractor::Extractor::AudioExtractor::findByTag( MetaDataPar
 
     uint track = f.tag()->track();
     mdp->searchTrack = QString("%1").arg(track);
+    if(mdp->searchTrack == QString("0")) {
+        mdp->searchTrack.clear();
+    }
 
     if( mdp->searchTitle.isEmpty() && mdp->searchPerson.isEmpty() && mdp->searchAlbum.isEmpty() && mdp->searchTrack.isEmpty()) {
         kDebug() << "TagLib couldn't find any information on" << mdp->resourceUri.toLocalFile();

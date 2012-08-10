@@ -140,6 +140,10 @@ QList<NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name> NepomukMet
         // just in case: Hans Wurst; Jochen Junker
         personStringList = cleanedPersonString.split(QLatin1String(";"));
     }
+    if(personStringList.size() == 1) {
+        // just in case: Hans Wurst & Jochen Junker
+        personStringList = cleanedPersonString.split(QLatin1String("&"));
+    }
 
     // ok now we have 1 to several names, they can be specified in different versions
     // Hans Wurst or Wurst, Hans or H. Wurst or Hans W. and so on.
