@@ -263,7 +263,7 @@ NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name NepomukMetaDataEx
         if (partB.isEmpty() && (it->toLower().startsWith(QLatin1String("jr")) || it->toLower().startsWith(QLatin1String("sr")) || it->toLower().startsWith(QLatin1String("iii"))))
             // handle name suffices like "Jr" or "III."
             partC.prepend(*it);
-        else if (partB.isEmpty() || it->at(0).isLower())
+        else if (partB.isEmpty() || (it->size() > 1 && it->at(0).isLower() ))
             partB.prepend(*it);
         else
             partA.prepend(*it);

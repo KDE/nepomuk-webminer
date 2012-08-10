@@ -176,6 +176,14 @@ def extractItemFromUri( url, options ):
             albumArtist = ""
             albumId = ""
             genre = ""
+            trackPerformer = ""
+
+            for person in recording['artist-credit']:
+                if 'artist' in person:
+                    if trackPerformer != "":
+                        trackPerformer = trackPerformer + '; '
+
+                    trackPerformer = trackPerformer + person['artist']['name']
 
             if 'tag-list' in recording:
                 genre = ';'.join(tag['name'] for tag in recording['tag-list'])
@@ -185,7 +193,12 @@ def extractItemFromUri( url, options ):
                 if albumRelese is not None:
                     albumName = albumRelese['title']
                     albumId = albumRelese['id']
-                    albumArtist = albumRelese['artist-credit-phrase']
+                    #albumArtist = albumRelese['artist-credit-phrase']
+                    for person in albumRelese['artist-credit']:
+                        if 'artist' in person:
+                            if albumArtist != "":
+                                albumArtist = albumArtist + '; '
+                            albumArtist = albumArtist + person['artist']['name']
 
                 if 'date' in albumRelese:
                     date = albumRelese['date']
@@ -199,7 +212,7 @@ def extractItemFromUri( url, options ):
 
             trackDict = dict (
                                 title = recording['title'],
-                                performer = recording['artist-credit-phrase'],
+                                performer = trackPerformer,#recording['artist-credit-phrase'],
                                 number = trackNumber,
                                 releasedate = date,
                                 genre = genre,

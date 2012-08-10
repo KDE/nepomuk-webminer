@@ -32,19 +32,23 @@ namespace Pipe {
  * @li @c title - Album title
  * @li @c musicbrainz - MusicBrainz id
  * @li @c trackcount - number of tracks on the album
+ * @li @c performer - performer of the track split by ;
  * @li @c cover - url for the cover image
  * @li @c genre - list of genres for the album split by ;
+ *
  * @li @c tracks - QVariantList containing more QVariantMaps with the track infos
  *
- * The QVariantMap containing the track information looks like this:
+ * The QVariantMap containing the @c track information looks like this:
  *
  * @li @c title - name of the track (music piece)
- * @li @c tracknumber - number of the track in the album
- * @li @c performer - performer of the track
+ * @li @c number - number of the track in the album
+ * @li @c releasedate - release date
+ * @li @c performer - performer of the track split by ;
  * @li @c genre - list of genres for the track split by ;
  * @li @c musicbrainz - MusicBrainz id
  *
  * @todo TODO: incomplete, needs lyrics and other stuff
+ *
  */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT MusicPipe : public NepomukPipe
 {
