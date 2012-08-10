@@ -53,8 +53,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
     QString seriesOverview = tvshowEntry.value(QLatin1String("overview")).toString();
 
     seriesRes.setTitle( seriesTitle );
-    //FIXME: why nao description? seems addDescription for TVSeries is not available anymore?
-    seriesRes.addNaoDescription( seriesOverview );
+    seriesRes.addNieDescription( seriesOverview );
 
     QString seriesImdbId = tvshowEntry.value(QLatin1String("imdbid")).toString();
     if( !seriesImdbId.isEmpty() ) {
