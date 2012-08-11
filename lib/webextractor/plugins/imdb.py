@@ -221,15 +221,15 @@ def extractItemFromUri( url, options ):
     if "writer" in movie:
         movieWriter = ";".join([item["name"] for item in movie['writer']])
     if "cast" in movie:
-        movieWriter = ";".join([item["name"] for item in movie['cast']])
+        movieCast = ";".join([item["name"] for item in movie['cast']])
     if "genres" in movie:
-        movieWriter = ';'.join(movie['genres'])
+        movieGenres = ';'.join(movie['genres'])
     if "plot" in movie:
-        movieWriter = ';'.join(movie['plot'])
+        moviePlot = ';'.join(movie['plot'])
     if "runtimes" in movie:
-        movieWriter = ';'.join(movie['runtimes'])
+        movieRuntime = ';'.join(movie['runtimes'])
     if "countries" in movie:
-        movieWriter = ';'.join(movie['countries'])
+        movieCountries = ';'.join(movie['countries'])
 
 
     result = dict(  title = movie['title'],
@@ -237,7 +237,7 @@ def extractItemFromUri( url, options ):
                     director = movieDirector,
                     writer = movieWriter,
                     cast = movieCast,
-                    genres = movieGenres,
+                    genre = movieGenres,
                     plot = moviePlot,
                     runtime = movieRuntime,
                     countries = movieCountries

@@ -20,6 +20,7 @@
 
 #include "searchresultsmodel.h"
 #include "searchresultdelegate.h"
+#include "metadatawidget.h"
 
 #include "metadataparameters.h"
 #include "resourceextractor/resourceextractor.h"
@@ -54,6 +55,7 @@ namespace UI {
         int currentItemNumber;
         SearchResultsModel *resultModel;
         QTextDocument *progressLog;
+//        MetaDataWidget* metaDataWidget;
     };
 }
 }
@@ -97,10 +99,6 @@ NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
     connect(buttonLog, SIGNAL(clicked()), this, SLOT(showProgressLog()));
     connect(detailsUrl, SIGNAL(leftClickedUrl(QString)), this, SLOT(openDetailsLink(QString)));
     connect(cbSelectType, SIGNAL(currentIndexChanged(int)), this, SLOT(resourceTypeSelectionChanged(int)));
-
-    QGridLayout * gridLayout = new QGridLayout;
-    metaDataList->setLayout( gridLayout );
-    gridLayout->setColumnStretch(1,10);
 
     buttonEngineSettings->setIcon(KIcon("configure"));
     buttonEngineSettings->setEnabled(false);
@@ -585,6 +583,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fetchedItemDetails(const QStri
     d->currentItemToupdate->resourceType = resourceType;
 
     addResourceUriToMetaData( d->currentItemToupdate );
+    d->currentItemToupdate->metaDataSaved = false;
 
     showItemDetails();
     finishedFetching();
@@ -602,6 +601,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::saveMetaDataSlot()
     busyFetching();
 
     saveMetaData( mdp );
+    buttonSave->setEnabled(false);
 
     finishedFetching();
 }
@@ -640,37 +640,13 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fillEngineList(const QString &
 void NepomukMetaDataExtractor::UI::FetcherDialog::showItemDetails()
 {
     Q_D( FetcherDialog );
-    QLayout *mdlayout = metaDataList->layout();
-
-    QLayoutItem *child;
-    while ((child = mdlayout->takeAt(0)) != 0) {
-        QWidget *w = child->widget();
-        delete w;
-        delete child;
-    }
-
-    QGridLayout * gridLayout = qobject_cast<QGridLayout *>(mdlayout);
-
     // current Item metadata
     MetaDataParameters *mdp = resourceExtractor()->resourcesList().at( d->currentItemNumber );
 
-    QMapIterator<QString, QVariant> i(mdp->metaData);
-    int line = 0;
-    while (i.hasNext()) {
-        i.next();
+    metaDataList->setMetaDataParameter(mdp);
 
-        QString keyString = QLatin1String("<b>") + i.key() + QLatin1String(":</b>");
-        QLabel *key = new QLabel(keyString);
-        key->setWordWrap(true);
-        QLabel *value = new QLabel(i.value().toString());
-        value->setWordWrap(true);
-
-        gridLayout->addWidget(key, line, 0, Qt::AlignTop);
-        gridLayout->addWidget(value, line, 1, Qt::AlignTop);
-        line++;
-    }
-
-    if(line == 0 || mdp->metaDataSaved == true) {
+    kDebug() << mdp->metaDataSaved;
+    if( mdp->metaDataSaved == true) {
         buttonSave->setEnabled(false);
     }
     else {

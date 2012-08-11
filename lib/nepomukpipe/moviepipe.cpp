@@ -54,7 +54,7 @@ void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &mo
     QString plot = movieEntry.value(QLatin1String("plot")).toString();
     movieResource.setSynopsis(plot);
 
-    QString genreList = movieEntry.value(QLatin1String("genres")).toString();
+    QString genreList = movieEntry.value(QLatin1String("genre")).toString();
     QStringList genres = genreList.split(';');
     QStringList genres2;
 

@@ -152,7 +152,7 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(cons
 
     Extractor::MetaDataParameters *metaDataParameters = new Extractor::MetaDataParameters;
     metaDataParameters->resourceType = QLatin1String("publication"); // default to publication just in case we can't find anything else
-    metaDataParameters->metaDataSaved = false;
+    metaDataParameters->metaDataSaved = true;
 
     if( fileResource.url().isLocalFile() ) {
         fileChecker(metaDataParameters, fileResource.url());
@@ -203,7 +203,7 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(cons
     }
 
     Extractor::MetaDataParameters *metaDataParameters = new Extractor::MetaDataParameters;
-    metaDataParameters->metaDataSaved = false;
+    metaDataParameters->metaDataSaved = true;
 
     bool fileSupported = fileChecker(metaDataParameters, fileUrl);
 

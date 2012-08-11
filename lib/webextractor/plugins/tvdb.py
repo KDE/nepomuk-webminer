@@ -189,25 +189,32 @@ def extractItemFromUri( url, options ):
         genreList = showItem['genre'].replace('|',';').strip(';')
     else:
         genreList= []
-        
+
     #------
     # season posters
-    
-    seasonPosterList = showItem['_banners']['season']['season']
     seasonPoster = ""
-    seasonBannerList = showItem['_banners']['season']['seasonwide']
     seasonBanner = ""
+    seasonPosterList = {}
+    seasonBannerList = {}
 
-    #TODO: don't assume engilish language, take system locale?
-    for key in seasonPosterList.iterkeys():
-        if (seasonPosterList[key]['language'] == "en") and (seasonPosterList[key]['season'] == str(episodeItem['seasonnumber'])):
-            seasonPoster = seasonPosterList[key]['_bannerpath']
-            break
+    if 'season' in showItem['_banners']:
+        if 'season' in showItem['_banners']['season']:
+            seasonPosterList = showItem['_banners']['season']['season']
+        if 'seasonwide' in showItem['_banners']['season']:
+            seasonBannerList = showItem['_banners']['season']['seasonwide']
 
-    for key in seasonBannerList.iterkeys():
-        if (seasonBannerList[key]['language'] == "en") and (seasonBannerList[key]['season'] == str(episodeItem['seasonnumber'])):
-            seasonBanner = seasonBannerList[key]['_bannerpath']
-            break
+    #TODO: don't assume english language, take system locale?
+    if seasonPosterList is not None:
+        for key in seasonPosterList.iterkeys():
+            if (seasonPosterList[key]['language'] == "en") and (seasonPosterList[key]['season'] == str(episodeItem['seasonnumber'])):
+                seasonPoster = seasonPosterList[key]['_bannerpath']
+                break
+
+    if seasonBannerList is not None:
+        for key in seasonBannerList.iterkeys():
+            if (seasonBannerList[key]['language'] == "en") and (seasonBannerList[key]['season'] == str(episodeItem['seasonnumber'])):
+                seasonBanner = seasonBannerList[key]['_bannerpath']
+                break
 
     episodeDict = dict (
                         title = episodeItem['episodename'],

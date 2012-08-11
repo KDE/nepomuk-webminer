@@ -32,7 +32,7 @@ namespace Pipe {
   * @li @c resourceuri - the file url or nepomuk uri of the resource this data should be added to
   * @li @c title
   * @li @c plot
-  * @li @c genres - split by ;
+  * @li @c genre - split by ;
   * @li @c year
   * @li @c director - split by ;
   * @li @c writer - split by ;

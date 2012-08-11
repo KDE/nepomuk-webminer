@@ -25,6 +25,7 @@ set( nepomukextractor_LIB_SRCS
   ui/searchresultsmodel.cpp
   ui/searchresultdelegate.cpp
   ui/automaticfetcher.cpp
+  ui/metadatawidget.cpp
 
   sro/nbib.cpp
 )
