@@ -189,6 +189,25 @@ def extractItemFromUri( url, options ):
         genreList = showItem['genre'].replace('|',';').strip(';')
     else:
         genreList= []
+        
+    #------
+    # season posters
+    
+    seasonPosterList = showItem['_banners']['season']['season']
+    seasonPoster = ""
+    seasonBannerList = showItem['_banners']['season']['seasonwide']
+    seasonBanner = ""
+
+    #TODO: don't assume engilish language, take system locale?
+    for key in seasonPosterList.iterkeys():
+        if (seasonPosterList[key]['language'] == "en") and (seasonPosterList[key]['season'] == str(episodeItem['seasonnumber'])):
+            seasonPoster = seasonPosterList[key]['_bannerpath']
+            break
+
+    for key in seasonBannerList.iterkeys():
+        if (seasonBannerList[key]['language'] == "en") and (seasonBannerList[key]['season'] == str(episodeItem['seasonnumber'])):
+            seasonBanner = seasonBannerList[key]['_bannerpath']
+            break
 
     episodeDict = dict (
                         title = episodeItem['episodename'],
@@ -205,7 +224,9 @@ def extractItemFromUri( url, options ):
     seasonDict = dict (
                        episodes = [episodeDict],
                        number = episodeItem['seasonnumber'],
-                       genre = genreList
+                       genre = genreList,
+                       banner = seasonBanner,
+                       poster = seasonPoster
                        )
 
     seriesDict = dict (
