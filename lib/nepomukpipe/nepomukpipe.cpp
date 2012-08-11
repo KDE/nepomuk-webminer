@@ -92,6 +92,9 @@ QList<Nepomuk2::NCO::PersonContact> NepomukMetaDataExtractor::Pipe::NepomukPipe:
     QList<Name> personList = splitPersonList( listOfPersonNames );
 
     foreach(const Name &person, personList) {
+        if(person.full.isEmpty()) {
+            continue;
+        }
         // create new contact resource, duplicates will be merged by the DMS later on
         Nepomuk2::NCO::PersonContact personResource;
         personResource.setFullname( person.full );

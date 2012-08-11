@@ -37,6 +37,7 @@ namespace Pipe {
   * @li @c director - split by ;
   * @li @c writer - split by ;
   * @li @c cast - split by ;
+  * @li @c poster
   */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT MoviePipe : public NepomukPipe
 {

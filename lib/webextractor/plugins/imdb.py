@@ -214,22 +214,25 @@ def extractItemFromUri( url, options ):
     moviePlot = ""
     movieRuntime = ""
     movieCountries = ""
+    movieCover = ""
 
     # chek if all the values exist
-    if "director" in movie:
-        movieDirector = ";".join([item["name"] for item in movie['director']])
-    if "writer" in movie:
-        movieWriter = ";".join([item["name"] for item in movie['writer']])
-    if "cast" in movie:
-        movieCast = ";".join([item["name"] for item in movie['cast']])
-    if "genres" in movie:
-        movieGenres = ';'.join(movie['genres'])
-    if "plot" in movie:
-        moviePlot = ';'.join(movie['plot'])
-    if "runtimes" in movie:
-        movieRuntime = ';'.join(movie['runtimes'])
-    if "countries" in movie:
-        movieCountries = ';'.join(movie['countries'])
+    #if 'director' in movie:
+    movieDirector = ";".join([item["name"] for item in movie['director']])
+    #if 'writer' in movie:
+    movieWriter = ";".join([item["name"] for item in movie['writer']])
+    #if 'cast' in movie:
+    movieCast = ";".join([item["name"] for item in movie['cast']])
+    #if 'genres' in movie:
+    movieGenres = ';'.join(movie['genres'])
+    #if 'plot' in movie:
+    moviePlot = ';'.join(movie['plot'])
+    #if 'runtimes' in movie:
+    movieRuntime = ';'.join(movie['runtimes'])
+    #if 'countries' in movie:
+    movieCountries = ';'.join(movie['countries'])
+    #if 'cover url' in movie:
+    movieCover = movie['cover url']
 
 
     result = dict(  title = movie['title'],
@@ -240,7 +243,8 @@ def extractItemFromUri( url, options ):
                     genre = movieGenres,
                     plot = moviePlot,
                     runtime = movieRuntime,
-                    countries = movieCountries
+                    countries = movieCountries,
+                    poster = movieCover
                   )
 
     # todo check how to do the results for tvshows

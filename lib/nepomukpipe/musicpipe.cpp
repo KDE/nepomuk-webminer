@@ -47,10 +47,14 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
     Nepomuk2::NMM::MusicAlbum albumResource;
 
     QString albumTitle = musicEntry.value(QLatin1String("title")).toString();
-    albumResource.setTitle( albumTitle );
+    if(!albumTitle.isEmpty()) {
+        albumResource.setTitle( albumTitle );
+    }
 
     QString musicBrainz = musicEntry.value(QLatin1String("musicbrainz")).toString();
-    albumResource.setMusicBrainzAlbumID( musicBrainz );
+    if(!musicBrainz.isEmpty()) {
+        albumResource.setMusicBrainzAlbumID( musicBrainz );
+    }
 
     /*
     //FIXME: NMM:MusicAlbum is missing the genre parameter for Music albums
@@ -69,10 +73,14 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
 
     //FIXME: NMM:MusicAlbum is missing the artist parameter for Music albums
     QString albumArtist = musicEntry.value(QLatin1String("performer")).toString();
-    //albumResource.setArtist( albumArtist.);
+//    if(!albumArtist.isEmpty()) {
+//        albumResource.setArtist( albumArtist.);
+//    }
 
-    int trackCount = musicEntry.value(QLatin1String("trackcount")).toInt();
-    albumResource.setAlbumTrackCount( trackCount );
+    if( !musicEntry.value(QLatin1String("trackcount")).isNull()) {
+        int trackCount = musicEntry.value(QLatin1String("trackcount")).toInt();
+        albumResource.setAlbumTrackCount( trackCount );
+    }
 
     // download cover
     QString albumCoverUrl = musicEntry.value(QLatin1String("cover")).toString();
@@ -98,10 +106,14 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
         Nepomuk2::NMM::MusicPiece trackResource(localFile);
 
         QString title = trackInfo.value(QLatin1String("title")).toString();
-        trackResource.setTitle( title );
+        if(!title.isEmpty()) {
+            trackResource.setTitle( title );
+        }
 
-        int trackNumber = trackInfo.value(QLatin1String("number")).toInt();
-        trackResource.setTrackNumber( trackNumber );
+        if(trackInfo.value(QLatin1String("number")).isValid()) {
+            int trackNumber = trackInfo.value(QLatin1String("number")).toInt();
+            trackResource.setTrackNumber( trackNumber );
+        }
 
         //BUG: NMM:MusicBrainzTrackID must be string not integer
         //QString musicBrainz = trackInfo.value(QLatin1String("musicbrainz")).toString();
@@ -127,7 +139,9 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
                 genres2 << gen;
         }
 
-        trackResource.setGenres( genres2 );
+        if(!genres2.isEmpty()) {
+            trackResource.setGenres( genres2 );
+        }
 
         // release date
         QDateTime releaseDate = createDateTime( trackInfo.value(QLatin1String("releasedate")).toString() );

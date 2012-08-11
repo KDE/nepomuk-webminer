@@ -52,8 +52,12 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
     QString seriesTitle = tvshowEntry.value(QLatin1String("title")).toString();
     QString seriesOverview = tvshowEntry.value(QLatin1String("overview")).toString();
 
-    seriesRes.setTitle( seriesTitle );
-    seriesRes.addNieDescription( seriesOverview );
+    if( !seriesTitle.isEmpty()) {
+        seriesRes.setTitle( seriesTitle );
+    }
+    if( !seriesOverview.isEmpty()) {
+        seriesRes.addNieDescription( seriesOverview );
+    }
 
     QString seriesImdbId = tvshowEntry.value(QLatin1String("imdbid")).toString();
     if( !seriesImdbId.isEmpty() ) {
@@ -136,7 +140,9 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
             QVariantMap episodeInfo = episode.toMap();
 
             Nepomuk2::NMM::TVShow episodeRes = createEpisode(episodeInfo, seasonRes );
-            episodeRes.setGenres( genres );
+            if( !genres.isEmpty() ) {
+                episodeRes.setGenres( genres );
+            }
 
             QString episodeBannerUrl = episodeInfo.value(QLatin1String("banner")).toString();
             if( !episodeBannerUrl.isEmpty() ) {
@@ -210,12 +216,16 @@ Nepomuk2::NMM::TVShow NepomukMetaDataExtractor::Pipe::TvShowPipe::createEpisode(
     Nepomuk2::NMM::TVShow episodeRes(localFile);
 
     QString episodeNumber = episodeInfo.value(QLatin1String("number")).toString();
-    episodeRes.setEpisodeNumber(episodeNumber.toInt());
+    if( !episodeNumber.isEmpty()) {
+        episodeRes.setEpisodeNumber(episodeNumber.toInt());
+    }
 
     episodeRes.setSeason( season.seasonNumber() );
 
     QString episodeTitle = episodeInfo.value(QLatin1String("title")).toString();
-    episodeRes.setTitle( episodeTitle );
+    if( !episodeTitle.isEmpty()) {
+        episodeRes.setTitle( episodeTitle );
+    }
 
     QString episodeOverview = episodeInfo.value(QLatin1String("overview")).toString();
     if(!episodeOverview.isEmpty()) {
@@ -223,8 +233,9 @@ Nepomuk2::NMM::TVShow NepomukMetaDataExtractor::Pipe::TvShowPipe::createEpisode(
     }
 
     QDateTime firstAired = createDateTime( episodeInfo.value(QLatin1String("firstaired")).toString() );
-    if(firstAired.isValid())
+    if(firstAired.isValid()) {
         episodeRes.setReleaseDate( firstAired );
+    }
 
     QString genres = episodeInfo.value(QLatin1String("genres")).toString();
     QStringList genreList = genres.split(';');
@@ -232,7 +243,10 @@ Nepomuk2::NMM::TVShow NepomukMetaDataExtractor::Pipe::TvShowPipe::createEpisode(
     foreach(const QString & genre, genreList) {
         genreList2 << genre.trimmed();
     }
-    episodeRes.setGenres( genreList2 );
+
+    if( !genreList2.isEmpty()) {
+        episodeRes.setGenres( genreList2 );
+    }
 
     return episodeRes;
 }

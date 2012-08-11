@@ -24,6 +24,7 @@
 
 #include "sro/nmm/movie.h"
 #include "sro/nco/personcontact.h"
+#include "sro/nfo/image.h"
 #include <Soprano/Vocabulary/NAO>
 
 #include <KDE/KJob>
@@ -52,7 +53,9 @@ void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &mo
     kDebug() << "Import movie from url" << resourceUri << "with name " << title;
 
     QString plot = movieEntry.value(QLatin1String("plot")).toString();
-    movieResource.setSynopsis(plot);
+    if(!plot.isEmpty()) {
+        movieResource.setSynopsis(plot);
+    }
 
     QString genreList = movieEntry.value(QLatin1String("genre")).toString();
     QStringList genres = genreList.split(';');
@@ -63,7 +66,19 @@ void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &mo
         if(!gen.isEmpty())
             genres2 << gen;
     }
-    movieResource.setGenres( genres2 );
+    if(!genres2.isEmpty()) {
+        movieResource.setGenres( genres2 );
+    }
+
+    QString moviePosterUrl = movieEntry.value(QLatin1String("poster")).toString();
+    if( !moviePosterUrl.isEmpty() ) {
+        const KUrl localUrl = downloadBanner( moviePosterUrl, title );
+        if(!localUrl.isEmpty()) {
+            Nepomuk2::NFO::Image banner(localUrl);
+            movieResource.addDepiction(banner.uri());
+            graph << banner;
+        }
+    }
 
     QDateTime releaseDate = createDateTime( movieEntry.value(QLatin1String("year")).toString() );
     if(releaseDate.isValid())
