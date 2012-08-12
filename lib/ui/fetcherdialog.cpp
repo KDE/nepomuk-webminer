@@ -23,7 +23,9 @@
 #include "metadatawidget.h"
 
 #include <mdesettings.h>
-#include "configfetcherdialog.h"
+#include "configfetcher.h"
+#include "configresourceextractor.h"
+#include "confignepomukpipe.h"
 
 #include "metadataparameters.h"
 #include "resourceextractor/resourceextractor.h"
@@ -170,11 +172,16 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showProgressLog()
 void NepomukMetaDataExtractor::UI::FetcherDialog::openSettings()
 {
     KConfigDialog* dialog = new KConfigDialog( this, "settings", MDESettings::self() );
-    ConfigFetcherDialog *cfd = new ConfigFetcherDialog(0);
 
+    ConfigFetcher *cfd = new ConfigFetcher();
     cfd->setExtractorFactory(extractorFactory());
     dialog->addPage( cfd, i18n("Fetcher"));
 
+    ConfigResourceExtractor *cre = new ConfigResourceExtractor();
+    dialog->addPage( cre, i18n("Resource Extractor"));
+
+    ConfigNepomukPipe *cnp = new ConfigNepomukPipe();
+    dialog->addPage( cnp, i18n("Nepomuk Pipe"));
 
     dialog->exec();
 }
@@ -587,7 +594,12 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fetchMoreDetails()
     d->currentItemToupdate = resourceExtractor()->resourcesList().at( d->currentItemNumber );
     KUrl fetchUrl( entry.value(QLatin1String("url")).toString() );
 
-    d->webextractor->extractItem( fetchUrl, entry );
+
+    QVariantMap options;
+    options.insert(QString("references"), MDESettings::downloadReferences());
+    options.insert(QString("banner"), MDESettings::downloadBanner());
+
+    d->webextractor->extractItem( fetchUrl, options );
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails)
@@ -605,7 +617,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fetchedItemDetails(const QStri
 
     d->currentItemToupdate = 0;
 
-    kDebug() << itemDetails;
+    //kDebug() << itemDetails;
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::saveMetaDataSlot()
@@ -648,8 +660,19 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fillEngineList(const QString &
                                           engine.identifier);
     }
 
-    //TODO: select the default engine from some config file
-    comboBoxSearchEngine->setCurrentIndex( 0 );
+    if( category == QString("movie")) {
+        comboBoxSearchEngine->setCurrentIndex(comboBoxSearchEngine->findData(MDESettings::favoriteMoviePlugin()));
+    }
+    else if( category == QString("tvshow")) {
+        comboBoxSearchEngine->setCurrentIndex(comboBoxSearchEngine->findData(MDESettings::favoriteTvShowPlugin()));
+    }
+    else if( category == QString("music")) {
+        comboBoxSearchEngine->setCurrentIndex(comboBoxSearchEngine->findData(MDESettings::favoriteMusicPlugin()));
+    }
+    else if( category == QString("publication")) {
+        comboBoxSearchEngine->setCurrentIndex(comboBoxSearchEngine->findData(MDESettings::favoritePublicationPlugin()));
+    }
+
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::showItemDetails()

@@ -213,11 +213,14 @@ def extractSearchResults(documentElement, citation=False):
 # bibtexentrytype =...          like book, article, inproceedings // necessary for the PublicationPipe to work properly
 # references = ...              list of dicts, where each dict is another publication dict
 #
-# @todo implement option to allow / disallow reference fetching in handleMainItemExtraction, refernce fetching takes a lot of time
+# TODO: implement option to allow / disallow reference fetching in handleMainItemExtraction, refernce fetching takes a lot of time
 def extractItemFromUri( url, options ):
 
     logMsg = 'start item extraction via: ' + url 
     WebExtractor.log( logMsg )
+
+    global fetchCitations
+    fetchCitations = options['references']
 
     # KIO part to fetch asyncron 
     data_url = kdecore.KUrl( url )
@@ -248,15 +251,18 @@ def handleMainItemExtraction(job):
     global finalEntry
     finalEntry = extractItem( documentElement )
 
-    # check if we can fetch references
-    url = 'http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=' + masid + '&start=1&end=100'
-    logMsg = 'fetch references via ' + url 
-    WebExtractor.log( logMsg )
-
-    # KIO part to fetch asyncron 
-    data_url = kdecore.KUrl( url )
-    retrieve_job = KIO.storedGet(data_url, KIO.NoReload, KIO.HideProgressInfo)
-    retrieve_job.result.connect(handleCitationSearch)
+    if fetchCitations:
+        # check if we can fetch references
+        url = 'http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=' + masid + '&start=1&end=100'
+        logMsg = 'fetch references via ' + url 
+        WebExtractor.log( logMsg )
+        # KIO part to fetch asyncron 
+        data_url = kdecore.KUrl( url )
+        retrieve_job = KIO.storedGet(data_url, KIO.NoReload, KIO.HideProgressInfo)
+        retrieve_job.result.connect(handleCitationSearch)
+    else:
+        data_string = json.dumps(finalEntry)
+        WebExtractor.itemResultsJSON( 'publication', data_string )
 
 #------------------------------------------------------------------------------
 # does the dirty work of extracting the html data
@@ -285,7 +291,7 @@ def extractItem( documentElement ):
 
     # 2. we get propper publication data, this is available as bibtex file download
     # http://academic.research.microsoft.com/64764.bib?type=2&format=0&download=1
-    # @todo replace urllib by async appraoch
+    # TODO:replace urllib by async appraoch
     WebExtractor.log( 'download bibtex file' )
     filehandle = urllib.urlopen('http://academic.research.microsoft.com/' + masid + '.bib?type=2&format=0&download=1')
 
@@ -313,7 +319,7 @@ def extractItem( documentElement ):
     if abstract is not None:
         entry.update(dict(abstract = abstract.text))
 
-    # todo parse downloadable files ... so we get informations on where to get the pdf file and so on
+    # TODO: parse downloadable files ... so we get informations on where to get the pdf file and so on
 
     return entry
 

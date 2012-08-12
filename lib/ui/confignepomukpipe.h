@@ -15,41 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CONFIGFETCHERDIALOG_H
-#define CONFIGFETCHERDIALOG_H
+#ifndef CONFIGNEPOMUKPIPE_H
+#define CONFIGNEPOMUKPIPE_H
 
 #include <QWidget>
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
-    class ExtractorFactory;
-}
-}
-
 namespace Ui {
-class ConfigFetcherDialog;
+class ConfigNepomukPipe;
 }
 
-class ConfigFetcherDialog : public QWidget
+class ConfigNepomukPipe : public QWidget
 {
     Q_OBJECT
     
 public:
-    explicit ConfigFetcherDialog(QWidget *parent = 0);
-    ~ConfigFetcherDialog();
-
-    void setExtractorFactory(NepomukMetaDataExtractor::Extractor::ExtractorFactory  *ef);
-
-signals:
-    void selectionChanged();
-
-public slots:
-    void updateConfiguration();
-
+    explicit ConfigNepomukPipe(QWidget *parent = 0);
+    ~ConfigNepomukPipe();
+    
 private:
-    void setupUi();
-    Ui::ConfigFetcherDialog *ui;
-    NepomukMetaDataExtractor::Extractor::ExtractorFactory  *extractorFactory;
+    Ui::ConfigNepomukPipe *ui;
 };
 
-#endif // CONFIGFETCHERDIALOG_H
+#endif // CONFIGNEPOMUKPIPE_H

@@ -42,7 +42,6 @@ namespace UI {
  *
  * It always takes the first found search result and the first available search engine as the meta data for the resource
  *
- * @todo TODO: implement KConfig to specify the the preferred search engine for a resourcetype rather than useing the first one
  * @todo TODO: implement multiple searches, if the first fails, try a different engine instead of failing
  */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT AutomaticFetcher : public QObject, public Fetcher

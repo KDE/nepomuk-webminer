@@ -26,16 +26,19 @@ set( nepomukextractor_LIB_SRCS
   ui/searchresultdelegate.cpp
   ui/automaticfetcher.cpp
   ui/metadatawidget.cpp
-  ui/configfetcherdialog.cpp
+  ui/configfetcher.cpp
+  ui/configresourceextractor.cpp
+  ui/confignepomukpipe.cpp
 
   sro/nbib.cpp
 )
 
 kde4_add_ui_files( nepomukextractor_LIB_SRCS
                    ui/fetcherdialog.ui
-                   ui/configfetcherdialog.ui
+                   ui/configfetcher.ui
+                   ui/configresourceextractor.ui
+                   ui/confignepomukpipe.ui
 )
-
 
 kde4_add_kcfg_files(nepomukextractor_LIB_SRCS mdesettings.kcfgc)
 install(FILES nepomukmetadataextractor.kcfg DESTINATION ${KCFG_INSTALL_DIR})

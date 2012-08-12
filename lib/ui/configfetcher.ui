@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ConfigFetcherDialog</class>
- <widget class="QWidget" name="ConfigFetcherDialog">
+ <class>ConfigFetcher</class>
+ <widget class="QWidget" name="ConfigFetcher">
   <property name="geometry">
    <rect>
     <x>0</x>

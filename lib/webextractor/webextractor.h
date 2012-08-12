@@ -101,8 +101,6 @@ public slots:
      * @param url the weburl where the ite mdata can be found
      * @param options additional options
      *
-     * @todo TODO: add some options, like no referece download for publications etc
-     *
      * @see @c NepomukPipe
      * @see @c MoviePipe
      * @see @c TvShowPipe
@@ -114,6 +112,7 @@ public slots:
 signals:
     /**
      * @brief Emits some log message
+     *
      * @param logMessage log message
      */
     void log(const QString &logMessage);

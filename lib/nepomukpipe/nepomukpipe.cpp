@@ -29,6 +29,8 @@
 #include "nco/personcontact.h"
 #include "nco/organizationcontact.h"
 
+#include <mdesettings.h>
+
 NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe(QObject *parent)
     : QObject(parent)
 {
@@ -50,11 +52,20 @@ void NepomukMetaDataExtractor::Pipe::NepomukPipe::slotSaveToNepomukDone(KJob *jo
     }
 }
 
-KUrl NepomukMetaDataExtractor::Pipe::NepomukPipe::downloadBanner(const QUrl &bannerUrl, const QString& additionalLocationInfo ) const
+KUrl NepomukMetaDataExtractor::Pipe::NepomukPipe::downloadBanner(const QUrl &bannerUrl, const QString &filename, const QString& subFolder, const QString &resourceFolder ) const
 {
-    //TODO: make banner location configurable
-    //TODO: if banner exist, change name and save it
-    const KUrl localUrl = KGlobal::dirs()->locateLocal("appdata", QLatin1String("banners/") + additionalLocationInfo + QLatin1String("/") + KUrl(bannerUrl).fileName(), true);
+    if (!MDESettings::downloadBanner() ) {
+        return KUrl();
+    }
+
+    KUrl localUrl;
+    if( MDESettings::saveBannerInResourceFolder() ) {
+        localUrl = resourceFolder + QLatin1String("/") + filename + QLatin1String(".") + bannerUrl.toString().split('.').last();
+    }
+    else {
+        localUrl = KGlobal::dirs()->locateLocal("appdata", QLatin1String("banners/") + subFolder + QLatin1String("/") + filename +  QLatin1String(".") + bannerUrl.toString().split('.').last(), true);
+    }
+
     if(!QFile::exists(localUrl.toLocalFile())) {
         KIO::CopyJob* job = KIO::copy(bannerUrl, localUrl, KIO::HideProgressInfo);
         if(!job->exec()) {

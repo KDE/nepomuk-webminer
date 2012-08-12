@@ -156,10 +156,10 @@ void NepomukMetaDataExtractor::UI::Fetcher::addResourceUriToMetaData( NepomukMet
             mdp->metaData.insert( QLatin1String("tracks"), trackList);
         }
     }
-    else {
-        // For all other cases put the resource uri in the top part of the MetaData
-        mdp->metaData.insert(QLatin1String("resourceuri"), mdp->resourceUri.url());
-    }
+
+    // For all other cases put the resource uri in the top part of the MetaData
+    // add this for all cases, helps to find the folder for the poster/cover download easier for music/tvshows)
+    mdp->metaData.insert(QLatin1String("resourceuri"), mdp->resourceUri.url());
 }
 
 void NepomukMetaDataExtractor::UI::Fetcher::saveMetaData(const NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp) const

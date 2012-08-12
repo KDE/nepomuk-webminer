@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "configfetcherdialog.h"
-#include "ui_configfetcherdialog.h"
+#include "configfetcher.h"
+#include "ui_configfetcher.h"
 
 #include <mdesettings.h>
 
@@ -30,25 +30,25 @@
 using namespace NepomukMetaDataExtractor;
 using namespace Extractor;
 
-ConfigFetcherDialog::ConfigFetcherDialog(QWidget *parent) :
+ConfigFetcher::ConfigFetcher(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ConfigFetcherDialog)
+    ui(new Ui::ConfigFetcher)
 {
     ui->setupUi(this);
 }
 
-ConfigFetcherDialog::~ConfigFetcherDialog()
+ConfigFetcher::~ConfigFetcher()
 {
     delete ui;
 }
 
-void ConfigFetcherDialog::setExtractorFactory(NepomukMetaDataExtractor::Extractor::ExtractorFactory  *ef)
+void ConfigFetcher::setExtractorFactory(NepomukMetaDataExtractor::Extractor::ExtractorFactory  *ef)
 {
     extractorFactory = ef;
     setupUi();
 }
 
-void ConfigFetcherDialog::updateConfiguration()
+void ConfigFetcher::updateConfiguration()
 {
     kDebug() << "updateConfiguration";
     int curIndex = ui->musicPlugin->currentIndex();
@@ -64,7 +64,7 @@ void ConfigFetcherDialog::updateConfiguration()
     MDESettings::setFavoriteTvShowPlugin( ui->tvshowPlugin->itemData(curIndex).toString() );
 }
 
-void ConfigFetcherDialog::setupUi()
+void ConfigFetcher::setupUi()
 {
     // music list
     QList<WebExtractor::Info> engines = extractorFactory->listAvailablePlugins( "music" );

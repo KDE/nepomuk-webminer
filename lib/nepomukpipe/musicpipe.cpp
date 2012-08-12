@@ -85,7 +85,13 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
     // download cover
     QString albumCoverUrl = musicEntry.value(QLatin1String("cover")).toString();
     if( !albumCoverUrl.isEmpty() ) {
-        const KUrl localUrl = downloadBanner( albumCoverUrl, QString("%1 - %2").arg(albumArtist).arg(albumTitle) );
+        KUrl resourceFolder(musicEntry.value(QLatin1String("resourceuri")).toString() );
+        const KUrl localUrl = downloadBanner( albumCoverUrl,
+                                              QString("%1 - %2").arg(albumArtist).arg(albumTitle),
+                                              albumArtist,
+                                              resourceFolder.directory()
+                                              );
+
         if(!localUrl.isEmpty()) {
             Nepomuk2::NFO::Image banner(localUrl);
             albumResource.addDepiction(banner.uri());

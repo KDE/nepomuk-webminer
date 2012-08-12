@@ -79,7 +79,14 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
 
     QString showBannerUrl = tvshowEntry.value(QLatin1String("banner")).toString();
     if( !showBannerUrl.isEmpty() ) {
-        const KUrl localUrl = downloadBanner( showBannerUrl, seriesTitle );
+
+        KUrl resourceFolder( tvshowEntry.value(QLatin1String("resourceuri")).toString() );
+        const KUrl localUrl = downloadBanner( showBannerUrl,
+                                              QString("%1 (banner)").arg(seriesTitle),
+                                              seriesTitle,
+                                              resourceFolder.directory()
+                                              );
+
         if(!localUrl.isEmpty()) {
             Nepomuk2::NFO::Image banner(localUrl);
             seriesRes.addDepiction(banner.uri());
@@ -89,7 +96,13 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
 
     QString showPosterUrl = tvshowEntry.value(QLatin1String("poster")).toString();
     if( !showPosterUrl.isEmpty() ) {
-        const KUrl localUrl = downloadBanner( showPosterUrl, seriesTitle );
+
+        KUrl resourceFolder( tvshowEntry.value(QLatin1String("resourceuri")).toString() );
+        const KUrl localUrl = downloadBanner( showPosterUrl,
+                                              QString("%1 (poster)").arg(seriesTitle),
+                                              seriesTitle,
+                                              resourceFolder.directory()
+                                              );
         if(!localUrl.isEmpty()) {
             Nepomuk2::NFO::Image banner(localUrl);
             seriesRes.addDepiction(banner.uri());
@@ -115,7 +128,12 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
 
         QString seriesBannerUrl = seasonInfo.value(QLatin1String("banner")).toString();
         if( !seriesBannerUrl.isEmpty() ) {
-            const KUrl localUrl = downloadBanner( seriesBannerUrl, seriesTitle );
+            KUrl resourceFolder( tvshowEntry.value(QLatin1String("resourceuri")).toString() );
+            const KUrl localUrl = downloadBanner( seriesBannerUrl,
+                                                  QString("%1 S%2 (banner)").arg(seriesTitle).arg(seasonNumber),
+                                                  seriesTitle,
+                                                  resourceFolder.directory()
+                                                  );
             if(!localUrl.isEmpty()) {
                 Nepomuk2::NFO::Image banner(localUrl);
                 seasonRes.addDepiction(banner.uri());
@@ -125,7 +143,12 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
 
         QString seriesPosterUrl = seasonInfo.value(QLatin1String("poster")).toString();
         if( !seriesPosterUrl.isEmpty() ) {
-            const KUrl localUrl = downloadBanner( seriesPosterUrl, seriesTitle );
+            KUrl resourceFolder( tvshowEntry.value(QLatin1String("resourceuri")).toString() );
+            const KUrl localUrl = downloadBanner( seriesPosterUrl,
+                                                  QString("%1 S%2 (poster)").arg(seriesTitle).arg(seasonNumber),
+                                                  seriesTitle,
+                                                  resourceFolder.directory()
+                                                  );
             if(!localUrl.isEmpty()) {
                 Nepomuk2::NFO::Image banner(localUrl);
                 seasonRes.addDepiction(banner.uri());
@@ -146,7 +169,14 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
 
             QString episodeBannerUrl = episodeInfo.value(QLatin1String("banner")).toString();
             if( !episodeBannerUrl.isEmpty() ) {
-                const KUrl localUrl = downloadBanner( episodeBannerUrl, seriesTitle );
+
+                KUrl resourceFolder( tvshowEntry.value(QLatin1String("resourceuri")).toString() );
+                const KUrl localUrl = downloadBanner( episodeBannerUrl,
+                                                      QString("%1 S%2E%3 (banner)").arg(seriesTitle).arg(seasonNumber).arg(episodeInfo.value(QLatin1String("number")).toString() ),
+                                                      seriesTitle,
+                                                      resourceFolder.directory()
+                                                      );
+
                 if(!localUrl.isEmpty()) {
                     Nepomuk2::NFO::Image banner(localUrl);
                     episodeRes.addDepiction(banner.uri());
@@ -156,7 +186,13 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
 
             QString episodePosterUrl = episodeInfo.value(QLatin1String("poster")).toString();
             if( !episodePosterUrl.isEmpty() ) {
-                const KUrl localUrl = downloadBanner( episodePosterUrl, seriesTitle );
+
+                KUrl resourceFolder( tvshowEntry.value(QLatin1String("resourceuri")).toString() );
+                const KUrl localUrl = downloadBanner( episodePosterUrl,
+                                                      QString("%1 S%2E%3 (poster)").arg(seriesTitle).arg(seasonNumber).arg(episodeInfo.value(QLatin1String("number")).toString() ),
+                                                      seriesTitle,
+                                                      resourceFolder.directory()
+                                                      );
                 if(!localUrl.isEmpty()) {
                     Nepomuk2::NFO::Image banner(localUrl);
                     episodeRes.addDepiction(banner.uri());

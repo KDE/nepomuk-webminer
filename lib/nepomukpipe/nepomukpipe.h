@@ -72,10 +72,12 @@ protected:
       * @brief Helper function to download the @c banner or @c poster
       *
       * @p bannerUrl web url where the image can be retrieved from
-      * @p additionalLocationInfo additional information where to save the image
+      * @p subFolder defines the folder in which the file will be saved if not saved next to resource
+      * @p resourceFolder used if banners will be saved in the folder where the resource can be found.
+      * @p filename how the file should be named on the local harddrive
       * @return a KUrl with the local file url of the new image
       */
-    KUrl downloadBanner(const QUrl &bannerUrl, const QString& additionalLocationInfo ) const;
+    KUrl downloadBanner(const QUrl &bannerUrl, const QString &filename, const QString& subFolder, const QString &resourceFolder ) const;
 
     /**
       * @brief Transforms some common variants of date formats into a QDateTime.

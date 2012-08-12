@@ -1,7 +1,7 @@
 #!/usr/bin/env kross
 
 #------------------------------------------------------------------------------
-# @todo replace IMDb python by a different script with better search capabilities
+# TODO: replace IMDb python by a different script with better search capabilities
 #------------------------------------------------------------------------------
 
 import re
@@ -59,7 +59,7 @@ def info():
 # When all search results are processed, the list of entries must be returned via:
 # WebExtractor.searchResultsInfo( dict() )
 #
-# @todo implement person search
+# TODO: implement person search
 #
 def searchItems( resourcetype, parameters ):
 

@@ -72,7 +72,11 @@ void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &mo
 
     QString moviePosterUrl = movieEntry.value(QLatin1String("poster")).toString();
     if( !moviePosterUrl.isEmpty() ) {
-        const KUrl localUrl = downloadBanner( moviePosterUrl, title );
+        KUrl resourceFolder(existingUri);
+        const KUrl localUrl = downloadBanner( moviePosterUrl,
+                                              QString("%1-poster").arg(title),
+                                              title,
+                                              resourceFolder.directory());
         if(!localUrl.isEmpty()) {
             Nepomuk2::NFO::Image banner(localUrl);
             movieResource.addDepiction(banner.uri());

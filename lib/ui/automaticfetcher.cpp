@@ -17,6 +17,7 @@
 
 #include "automaticfetcher.h"
 
+#include <mdesettings.h>
 #include "metadataparameters.h"
 #include "resourceextractor/resourceextractor.h"
 #include "webextractor/extractorfactory.h"
@@ -88,8 +89,11 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::startUrlFetcher()
         connect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
         connect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
 
-        // TODO: specify some search options, read them form a config file (like no reference or no banner download)
-        d->webextractor->extractItem( d->urlList.first(), QVariantMap() );
+        QVariantMap options;
+        options.insert(QString("references"), MDESettings::downloadReferences());
+        options.insert(QString("banner"), MDESettings::downloadBanner());
+
+        d->webextractor->extractItem( d->urlList.first(), options );
     }
 }
 
@@ -103,15 +107,33 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
 
     d->currentItemToupdate = resourceExtractor()->takeNext();
 
-    //TODO: select correct search engine select one from a KConfig where the user specifies his favorite
     //TODO: if the search returns no results, check another search engine and try again
 
     if( extractorFactory()->listAvailablePlugins(d->currentItemToupdate->resourceType).isEmpty()) {
         kWarning() << "Could not get any plugins for the resourcetype :: " << d->currentItemToupdate->resourceType;
         return;
     }
+    QString favPlugin;
+    if( d->currentItemToupdate->resourceType == QString("movie")) {
+        favPlugin = MDESettings::favoriteMoviePlugin();
+    }
+    if( d->currentItemToupdate->resourceType == QString("tvshow")) {
+        favPlugin = MDESettings::favoriteTvShowPlugin();
+    }
+    if( d->currentItemToupdate->resourceType == QString("publication")) {
+        favPlugin = MDESettings::favoritePublicationPlugin();
+    }
+    if( d->currentItemToupdate->resourceType == QString("music")) {
+        favPlugin = MDESettings::favoriteMusicPlugin();
+    }
 
-    Extractor::WebExtractor::Info selectedEngine = extractorFactory()->listAvailablePlugins(d->currentItemToupdate->resourceType).last();
+    Extractor::WebExtractor::Info selectedEngine;
+    if(favPlugin.isEmpty()) {
+        selectedEngine = extractorFactory()->listAvailablePlugins(d->currentItemToupdate->resourceType).first();
+    }
+    else {
+        selectedEngine = extractorFactory()->createExtractor( favPlugin )->info();
+    }
 
     if(!d->webextractor || d->webextractor->info().identifier != selectedEngine.identifier) {
         delete d->webextractor;
@@ -164,7 +186,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::selectSearchEntry( QVariant
         QVariantMap selectedSearchResult = searchResults.first().toMap();
 
         KUrl fetchUrl( selectedSearchResult.value(QLatin1String("url")).toString() );
-        // TODO: specify some search options, read them form a config file (like no reference or no banner download)
+        // TODO: specify some search options, read them form a config file (options per plugin maybe?)
         d->webextractor->extractItem( fetchUrl, QVariantMap() );
     }
 }

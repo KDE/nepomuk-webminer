@@ -65,7 +65,7 @@ namespace Pipe {
   * @see NBIB ontology
   *
   * @todo TODO: remove the graph from the function parameters and make class member from it?
-  * @todo TODO: check if it is necessary to save some stuff into nepomuk inetween to retrieve the real Nepomuk-Uri or I could work with temporary uri's
+  * @todo TODO: check if it is necessary to save some stuff into nepomuk inbetween to retrieve the real Nepomuk-Uri or I could work with temporary uri's
   */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT PublicationPipe : public NepomukPipe
 {
