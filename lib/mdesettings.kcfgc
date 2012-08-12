@@ -1,0 +1,4 @@
+File=nepomukmetadataextractor.kcfg
+ClassName=MDESettings 
+Singleton=true 
+Mutators=true 

@@ -502,5 +502,25 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonEngineSettings</sender>
+   <signal>clicked()</signal>
+   <receiver>FetcherDialog</receiver>
+   <slot>openSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>781</x>
+     <y>37</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>778</x>
+     <y>-9</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>openSettings()</slot>
+ </slots>
 </ui>

@@ -45,9 +45,9 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/lib
   ${CMAKE_SOURCE_DIR}/lib/sro
   ${CMAKE_CURRENT_BUILD_DIR}/lib
+  ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/lib
 )
-
 
 add_subdirectory( lib )
 add_subdirectory( extractor )

@@ -73,6 +73,8 @@ private slots:
     void addToProgressLog(const QString &status);
     void showProgressLog();
 
+    void openSettings();
+
 private:
     void setupCurrentResourceToLookup();
     void fillEngineList(const QString &category);

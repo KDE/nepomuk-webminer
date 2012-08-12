@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <include>kglobalsettings.h</include>
+  <kcfgfile name="nepomukmetadataextractorrc"/>
+
+  <group name="Fetcher">
+    <entry name="DownloadBanner" type="Bool">
+      <label>Download Banner/Poster/Cover for the resource if available</label>
+      <default>true</default>
+    </entry>
+    <entry name="SaveBannerInResourceFolder" type="Bool">
+      <label>Save the Banner/Poster/Cover in the same folder as the resource.</label>
+      <default>false</default>
+    </entry>
+    <entry name="DownloadReferences" type="Bool">
+      <label>Download publication references (might take a while for some publications).</label>
+      <default>true</default>
+    </entry>
+    <entry name="FavoriteMusicPlugin" type="String">
+      <label>Favorite plugin to for the music download.</label>
+      <default>musicbrainz</default>
+    </entry>
+    <entry name="FavoriteMoviePlugin" type="String">
+      <label>Favorite plugin for the movie download.</label>
+      <default>imdbmovies</default>
+    </entry>
+    <entry name="FavoriteTvShowPlugin" type="String">
+      <label>Favorite plugin for the tv show download.</label>
+      <default>tvdb</default>
+    </entry>
+    <entry name="FavoritePublicationPlugin" type="String">
+      <label>Favorite plugin for the tv show download.</label>
+      <default>mas</default>
+    </entry>
+  </group>
+
+  <group name="ResourceExtractor">
+    <entry name="TvShowRegExp" type="StringList">
+      <label>Regular expressions that will detect and extract a tv show. Valid placeholders are %n (show name), %t (episode title), %s (season), %e (episode) </label>
+    </entry>
+    <entry name="MovieRegExp" type="StringList">
+      <label>Regular expressions that will detect and extract a movie. Valid placeholders are %n (movie name), %y (year) </label>
+    </entry>
+    <entry name="MusicRegExp" type="StringList">
+      <label>Regular expressions that will detect and extract a music file. Valid placeholders are ??? </label>
+    </entry>
+  </group>
+
+  <group name="NepomukPipe">
+    <entry name="RemoveOldData" type="Bool">
+      <label>Remove old data before adding the new one. Otherwise the new and old data will be merged.</label>
+      <default>false</default>
+    </entry>
+  </group>
+
+</kcfg>

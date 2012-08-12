@@ -22,6 +22,9 @@
 #include "searchresultdelegate.h"
 #include "metadatawidget.h"
 
+#include <mdesettings.h>
+#include "configfetcherdialog.h"
+
 #include "metadataparameters.h"
 #include "resourceextractor/resourceextractor.h"
 #include "webextractor/extractorfactory.h"
@@ -37,6 +40,7 @@
 
 #include <KDE/KRun>
 #include <KDE/KDebug>
+#include <KDE/KConfigDialog>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QPointer>
@@ -101,7 +105,6 @@ NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
     connect(cbSelectType, SIGNAL(currentIndexChanged(int)), this, SLOT(resourceTypeSelectionChanged(int)));
 
     buttonEngineSettings->setIcon(KIcon("configure"));
-    buttonEngineSettings->setEnabled(false);
     buttonSearchDetails->setIcon(KIcon("system-search"));
     buttonSearch->setIcon(KIcon("edit-find"));
     buttonSave->setIcon(KIcon("document-save"));
@@ -162,6 +165,18 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showProgressLog()
     log->exec();
 
     delete log;
+}
+
+void NepomukMetaDataExtractor::UI::FetcherDialog::openSettings()
+{
+    KConfigDialog* dialog = new KConfigDialog( this, "settings", MDESettings::self() );
+    ConfigFetcherDialog *cfd = new ConfigFetcherDialog(0);
+
+    cfd->setExtractorFactory(extractorFactory());
+    dialog->addPage( cfd, i18n("Fetcher"));
+
+
+    dialog->exec();
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::resourceFetchingDone()

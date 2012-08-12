@@ -26,13 +26,19 @@ set( nepomukextractor_LIB_SRCS
   ui/searchresultdelegate.cpp
   ui/automaticfetcher.cpp
   ui/metadatawidget.cpp
+  ui/configfetcherdialog.cpp
 
   sro/nbib.cpp
 )
 
 kde4_add_ui_files( nepomukextractor_LIB_SRCS
                    ui/fetcherdialog.ui
+                   ui/configfetcherdialog.ui
 )
+
+
+kde4_add_kcfg_files(nepomukextractor_LIB_SRCS mdesettings.kcfgc)
+install(FILES nepomukmetadataextractor.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 
 kde4_add_library( nepomukmetadataextractor SHARED ${nepomukextractor_LIB_SRCS} )
 
