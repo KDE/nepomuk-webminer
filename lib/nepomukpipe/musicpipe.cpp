@@ -84,16 +84,17 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
 
     // download cover
     QString albumCoverUrl = musicEntry.value(QLatin1String("cover")).toString();
+    KUrl localCoverUrl;
     if( !albumCoverUrl.isEmpty() ) {
         KUrl resourceFolder(musicEntry.value(QLatin1String("resourceuri")).toString() );
-        const KUrl localUrl = downloadBanner( albumCoverUrl,
+        localCoverUrl = downloadBanner( albumCoverUrl,
                                               QString("%1 - %2").arg(albumArtist).arg(albumTitle),
                                               albumArtist,
                                               resourceFolder.directory()
                                               );
 
-        if(!localUrl.isEmpty()) {
-            Nepomuk2::NFO::Image banner(localUrl);
+        if(!localCoverUrl.isEmpty()) {
+            Nepomuk2::NFO::Image banner(localCoverUrl);
             albumResource.addDepiction(banner.uri());
             graph << banner;
         }
@@ -110,6 +111,13 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
         kDebug() << "create new music track from url" << trackInfo.value(QLatin1String("resourceuri")).toString();
         KUrl localFile( trackInfo.value(QLatin1String("resourceuri")).toString() );
         Nepomuk2::NMM::MusicPiece trackResource(localFile);
+
+        // Note: Why album cover as artwork of the track? not of the music album?
+        // thats how Nepoogle expect it to be
+        if(!localCoverUrl.isEmpty()) {
+            Nepomuk2::NFO::Image banner(localCoverUrl);
+            trackResource.addArtwork( banner.uri() );
+        }
 
         QString title = trackInfo.value(QLatin1String("title")).toString();
         if(!title.isEmpty()) {
