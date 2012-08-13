@@ -114,6 +114,7 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
 
         // Note: Why album cover as artwork of the track? not of the music album?
         // thats how Nepoogle expect it to be
+
         if(!localCoverUrl.isEmpty()) {
             Nepomuk2::NFO::Image banner(localCoverUrl);
             trackResource.addArtwork( banner.uri() );
