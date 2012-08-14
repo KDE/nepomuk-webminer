@@ -18,6 +18,7 @@
 #include "extractorfactory.h"
 
 #include "krossextractor.h"
+#include <mdesettings.h>
 
 #include <KDE/Kross/Action>
 #include <KDE/Kross/Manager>
@@ -120,22 +121,25 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
 
     Kross::Action action(this, "ExtractorFactory");
     QStringList pluginDirs;
-    // TODO: read these values from KConfig
+
     pluginDirs << KStandardDirs::locate("data", "nepomukmetadataextractor/plugins/");
-    pluginDirs << QString("/home/joerg/Development/KDE/metadataextractor/lib/webextractor/plugins/");
+    pluginDirs << MDESettings::additionalPluginFolder();;
 
     QFileInfoList pluginList;
     foreach(const QString &folder, pluginDirs) {
 
-        kDebug() << "look for plugins in the folder: " << folder;
         QDir dir( folder );
-        pluginList.append( dir.entryInfoList() );
+        if( dir.exists() ) {
+            kDebug() << "look for plugins in the folder: " << folder;
+            pluginList.append( dir.entryInfoList() );
+        }
     }
 
     foreach( const QFileInfo &fileInfo, pluginList) {
 
-        if( !acceptedFileTypes.contains(fileInfo.completeSuffix()))
+        if( !acceptedFileTypes.contains(fileInfo.completeSuffix())) {
             continue;
+        }
 
         action.setFile( fileInfo.absoluteFilePath() );
 
