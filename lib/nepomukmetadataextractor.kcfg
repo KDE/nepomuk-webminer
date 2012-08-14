@@ -35,6 +35,9 @@
       <label>Favorite plugin for the tv show download.</label>
       <default>mas</default>
     </entry>
+    <entry name="AdditionalPluginFolder" type="String">
+      <label>A folder where plugins can be found, aside the installed folder.</label>
+    </entry>
   </group>
 
   <group name="ResourceExtractor">
