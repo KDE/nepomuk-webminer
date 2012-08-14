@@ -186,7 +186,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::selectSearchEntry( QVariant
         QVariantMap selectedSearchResult = searchResults.first().toMap();
 
         KUrl fetchUrl( selectedSearchResult.value(QLatin1String("url")).toString() );
-        // TODO: specify some search options, read them form a config file (options per plugin maybe?)
+
         d->webextractor->extractItem( fetchUrl, QVariantMap() );
     }
 }
