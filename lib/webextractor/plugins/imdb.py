@@ -105,10 +105,16 @@ def searchItems( resourcetype, parameters ):
 def searchMovieResults(results):
     searchResults = []
     for item in results :
+        if not item.has_key('kind'):
+            raise Exception("There is no \"kind\" key in \"results\" parameter.")
+        
         itemKind = str(item['kind'])
-
         if itemKind == 'movie':
-            detailString = str(item['kind']) + ', ' + str(item['year'])
+            detailString = itemKind
+            
+            if item.has_key('year'):
+                detailString += ', ' + str(item['year'])
+              
             fullUrl = 'http://www.imdb.com/title/tt' + item.movieID
             entryDict = dict(
                             title = item['title'],
@@ -123,8 +129,10 @@ def searchMovieResults(results):
 def searchTvEpisodeResults(ia, results, season, episode):
     searchResults = []
     for item in results :
+        if not item.has_key('kind'):
+            raise Exception("There is no \"kind\" key in \"results\" parameter.")
+        
         itemKind = str(item['kind'])
-
         if itemKind == 'episode':
             detailString = str(item['series title']) + ' (S' + item['season'] + 'E' + item['episode'] + ') : ' + item['plot']
             fullUrl = 'http://www.imdb.com/title/tt' + item.movieID
