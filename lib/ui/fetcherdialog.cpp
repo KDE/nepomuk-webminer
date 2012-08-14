@@ -61,7 +61,6 @@ namespace UI {
         int currentItemNumber;
         SearchResultsModel *resultModel;
         QTextDocument *progressLog;
-//        MetaDataWidget* metaDataWidget;
     };
 }
 }
@@ -629,6 +628,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::saveMetaDataSlot()
 
     saveMetaData( mdp );
     buttonSave->setEnabled(false);
+    mdp->metaDataSaved = true;
 
     finishedFetching();
 }
