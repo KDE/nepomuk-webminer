@@ -131,6 +131,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariant
         graph << localFile;
 
         Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph,Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties);
+        connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
         srj->exec();
 
         QUrl fileResourceUri = srj->mappings().value( localFile.uri() );
