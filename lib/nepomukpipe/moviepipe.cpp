@@ -44,7 +44,8 @@ void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &mo
 
     //TODO: do not use local file url here, this will double type the resource for now this is the best way to deal with this
     QString resourceUri = movieEntry.value(QLatin1String("resourceuri"), QString()).toString();
-    QUrl existingUri(resourceUri);
+    QUrl existingUri;
+    existingUri.setEncodedUrl(resourceUri.toLatin1());
     Nepomuk2::NMM::Movie movieResource(existingUri);
 
     QString title = movieEntry.value(QLatin1String("title")).toString();
