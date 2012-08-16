@@ -215,33 +215,32 @@ def extractItemFromUri( url, options ):
         WebExtractor.error("Script error: \n" + str(err))
         return
 
-    movieDirector = ""
-    movieWriter = ""
-    movieCast = ""
-    movieGenres = ""
-    moviePlot = ""
-    movieRuntime = ""
-    movieCountries = ""
-    movieCover = ""
+    movieDirector = movieWriter = movieCast = movieGenres = moviePlot = movieRuntime = movieCountries = movieCover = ""
 
-    # chek if all the values exist
-    #if 'director' in movie:
-    movieDirector = ";".join([item["name"] for item in movie['director']])
-    #if 'writer' in movie:
-    movieWriter = ";".join([item["name"] for item in movie['writer']])
-    #if 'cast' in movie:
-    movieCast = ";".join([item["name"] for item in movie['cast']])
-    #if 'genres' in movie:
-    movieGenres = ';'.join(movie['genres'])
-    #if 'plot' in movie:
-    moviePlot = ';'.join(movie['plot'])
-    #if 'runtimes' in movie:
-    movieRuntime = ';'.join(movie['runtimes'])
-    #if 'countries' in movie:
-    movieCountries = ';'.join(movie['countries'])
-    #if 'cover url' in movie:
-    movieCover = movie['cover url']
+    # Read existing values.
+    if movie.has_key('director'):
+        movieDirector = ";".join([item["name"] for item in movie['director']])
 
+    if movie.has_key('writer'):
+        movieWriter = ";".join([item["name"] for item in movie['writer']])
+
+    if movie.has_key('cast'):
+        movieCast = ";".join([item["name"] for item in movie['cast']])
+
+    if movie.has_key('genres'):
+        movieGenres = ';'.join(movie['genres'])
+
+    if movie.has_key('plot'):
+        moviePlot = ';'.join(movie['plot'])
+
+    if movie.has_key('runtimes'):
+        movieRuntime = ';'.join(movie['runtimes'])
+
+    if movie.has_key('countries'):
+        movieCountries = ';'.join(movie['countries'])
+
+    if movie.has_key('cover url'):
+        movieCover = movie['cover url']
 
     result = dict(  title = movie['title'],
                     year = movie['year'],
