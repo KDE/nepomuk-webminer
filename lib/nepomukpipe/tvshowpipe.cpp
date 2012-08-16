@@ -248,8 +248,10 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
 Nepomuk2::NMM::TVShow NepomukMetaDataExtractor::Pipe::TvShowPipe::createEpisode(const QVariantMap &episodeInfo, const Nepomuk2::NMM::TVSeason &season )
 {
     kDebug() << "create new episode with url" << episodeInfo.value(QLatin1String("resourceuri")).toString();
-    KUrl localFile( episodeInfo.value(QLatin1String("resourceuri")).toString() );
-    Nepomuk2::NMM::TVShow episodeRes(localFile);
+    QString resourceUri = episodeInfo.value(QLatin1String("resourceuri")).toString();
+    QUrl existingUri;
+    existingUri.setEncodedUrl(resourceUri.toLatin1());
+    Nepomuk2::NMM::TVShow episodeRes(existingUri);
 
     QString episodeNumber = episodeInfo.value(QLatin1String("number")).toString();
     if( !episodeNumber.isEmpty()) {

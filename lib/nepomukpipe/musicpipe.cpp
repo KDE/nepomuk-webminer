@@ -109,8 +109,10 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
         QVariantMap trackInfo = track.toMap();
 
         kDebug() << "create new music track from url" << trackInfo.value(QLatin1String("resourceuri")).toString();
-        KUrl localFile( trackInfo.value(QLatin1String("resourceuri")).toString() );
-        Nepomuk2::NMM::MusicPiece trackResource(localFile);
+        QString resourceUri = trackInfo.value(QLatin1String("resourceuri")).toString();
+        QUrl existingUri;
+        existingUri.setEncodedUrl(resourceUri.toLatin1());
+        Nepomuk2::NMM::MusicPiece trackResource(existingUri);
 
         // Note: Why album cover as artwork of the track? not of the music album?
         // thats how Nepoogle expect it to be

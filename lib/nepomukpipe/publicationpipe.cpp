@@ -111,7 +111,10 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariant
 
     // 4. if the main resource has a file attachment, we add the publishedAs crossrefs to it
     QString file = bibEntryNonConst.value(QLatin1String("resourceuri")).toString();
-    KUrl fileurl(file);
+
+    KUrl fileurl;
+    fileurl.setEncodedUrl(file.toLatin1());
+
     if( fileurl.isLocalFile()) {
         kDebug() << "add localfile crosref" << file;
         Nepomuk2::File localFileRes(fileurl);
