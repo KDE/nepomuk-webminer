@@ -207,22 +207,22 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
             episodeRes.addProperty(NAO::hasSubResource(), seasonRes.uri());
 
             // Now add all the actors and guest stars
-            QList<Nepomuk2::NCO::PersonContact> actorList = createPersonContacts( episodeInfo.value(QLatin1String("actors")).toString() );
-            foreach(const Nepomuk2::NCO::PersonContact &actor, actorList) {
+            QList<Nepomuk2::NCO::Contact> actorList = createPersonContacts( episodeInfo.value(QLatin1String("actors")).toString() );
+            foreach(const Nepomuk2::NCO::Contact &actor, actorList) {
                 graph << actor;
                 episodeRes.addActor( actor.uri() );
                 episodeRes.addProperty(NAO::hasSubResource(), actor.uri());
             }
 
-            QList<Nepomuk2::NCO::PersonContact> writerList = createPersonContacts( episodeInfo.value(QLatin1String("writer")).toString() );
-            foreach(const Nepomuk2::NCO::PersonContact &writer, writerList) {
+            QList<Nepomuk2::NCO::Contact> writerList = createPersonContacts( episodeInfo.value(QLatin1String("writer")).toString() );
+            foreach(const Nepomuk2::NCO::Contact &writer, writerList) {
                 graph << writer;
                 episodeRes.addWriter( writer.uri() );
                 episodeRes.addProperty(NAO::hasSubResource(), writer.uri());
             }
 
-            QList<Nepomuk2::NCO::PersonContact> directorList = createPersonContacts( episodeInfo.value(QLatin1String("director")).toString() );
-            foreach(const Nepomuk2::NCO::PersonContact &director, directorList) {
+            QList<Nepomuk2::NCO::Contact> directorList = createPersonContacts( episodeInfo.value(QLatin1String("director")).toString() );
+            foreach(const Nepomuk2::NCO::Contact &director, directorList) {
                 graph << director;
                 episodeRes.addDirector( director.uri() );
                 episodeRes.addProperty(NAO::hasSubResource(), director.uri());

@@ -29,7 +29,7 @@
 
 namespace Nepomuk2 {
     namespace NCO {
-        class PersonContact;
+        class Contact;
         class OrganizationContact;
     }
 }
@@ -87,14 +87,16 @@ protected:
     QDateTime createDateTime(const QString &dateString) const;
 
     /**
-      * @brief Splits a list of person names and creates a list of @c nco:PersonContact from it.
+      * @brief Splits a list of person names and creates a list of @c nco:Contact from it.
       *
       * Takes care of Hans Wurst and Franz Ferdinant or Wurst, Hans; Ferdinant, Franz and so on.
       * Also tries to determine family/given name and suffix values.
       *
       * @p listOfPersonNames person name list separated by "and" or ";"
+      *
+      * @note NOTE: all persons will be imported as generic nco:Contact rather than nco:PersonContact. This seems to be the better solution to avoid cluttering the database
       */
-    QList<Nepomuk2::NCO::PersonContact> createPersonContacts(const QString & listOfPersonNames) const;
+    QList<Nepomuk2::NCO::Contact> createPersonContacts(const QString & listOfPersonNames) const;
 
     /**
       * @brief Splits a list of organization names and create the @c nco:OrganizationContact from them

@@ -1474,9 +1474,9 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addTopic(const QStringLis
 
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addContact(const QString &contentValue, Nepomuk2::SimpleResource &resource, Nepomuk2::SimpleResourceGraph &graph, QUrl contactProperty, QUrl contactType )
 {
-    QList<Nepomuk2::NCO::PersonContact> personsList = createPersonContacts( contentValue );
+    QList<Nepomuk2::NCO::Contact> personsList = createPersonContacts( contentValue );
 
-    foreach(const Nepomuk2::NCO::PersonContact &person, personsList) {
+    foreach(const Nepomuk2::NCO::Contact &person, personsList) {
         resource.addProperty(contactProperty, person);
         graph << person;
     }

@@ -97,9 +97,9 @@ QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QStr
     return dateTime;
 }
 
-QList<Nepomuk2::NCO::PersonContact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createPersonContacts(const QString & listOfPersonNames) const
+QList<Nepomuk2::NCO::Contact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createPersonContacts(const QString & listOfPersonNames) const
 {
-    QList<Nepomuk2::NCO::PersonContact> resultList;
+    QList<Nepomuk2::NCO::Contact> resultList;
     QList<Name> personList = splitPersonList( listOfPersonNames );
 
     foreach(const Name &person, personList) {
@@ -107,13 +107,14 @@ QList<Nepomuk2::NCO::PersonContact> NepomukMetaDataExtractor::Pipe::NepomukPipe:
             continue;
         }
         // create new contact resource, duplicates will be merged by the DMS later on
-        Nepomuk2::NCO::PersonContact personResource;
+        Nepomuk2::NCO::Contact personResource;
         personResource.setFullname( person.full );
-        personResource.setNameGiven( person.first );
-        personResource.setNameFamily( person.last );
-        QStringList suffixes;
-        suffixes << person.suffix;
-        personResource.setNameHonorificSuffixs( suffixes );
+        //TODO: reintroduce nco:PersonContact for publication authors? Or change ontology to allow NameGiven/NameFamily etc in the generic nco:Contact
+        //personResource.setNameGiven( person.first );
+        //personResource.setNameFamily( person.last );
+        //QStringList suffixes;
+        //suffixes << person.suffix;
+        //personResource.setNameHonorificSuffixs( suffixes );
 
         resultList << personResource;
     }

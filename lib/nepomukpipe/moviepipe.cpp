@@ -89,22 +89,22 @@ void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &mo
     if(releaseDate.isValid())
         movieResource.setReleaseDate( releaseDate );
 
-    QList<Nepomuk2::NCO::PersonContact> directorList = createPersonContacts( movieEntry.value(QLatin1String("director")).toString() );
-    foreach(const Nepomuk2::NCO::PersonContact &director, directorList) {
+    QList<Nepomuk2::NCO::Contact> directorList = createPersonContacts( movieEntry.value(QLatin1String("director")).toString() );
+    foreach(const Nepomuk2::NCO::Contact &director, directorList) {
         graph << director;
         movieResource.addDirector( director.uri() );
         movieResource.addProperty(NAO::hasSubResource(), director.uri());
     }
 
-    QList<Nepomuk2::NCO::PersonContact> writerList = createPersonContacts( movieEntry.value(QLatin1String("writer")).toString() );
-    foreach(const Nepomuk2::NCO::PersonContact &writer, writerList) {
+    QList<Nepomuk2::NCO::Contact> writerList = createPersonContacts( movieEntry.value(QLatin1String("writer")).toString() );
+    foreach(const Nepomuk2::NCO::Contact &writer, writerList) {
         graph << writer;
         movieResource.addWriter( writer.uri() );
         movieResource.addProperty(NAO::hasSubResource(), writer.uri());
     }
 
-    QList<Nepomuk2::NCO::PersonContact> actorList = createPersonContacts( movieEntry.value(QLatin1String("cast")).toString() );
-    foreach(const Nepomuk2::NCO::PersonContact &actor, actorList) {
+    QList<Nepomuk2::NCO::Contact> actorList = createPersonContacts( movieEntry.value(QLatin1String("cast")).toString() );
+    foreach(const Nepomuk2::NCO::Contact &actor, actorList) {
         graph << actor;
         movieResource.addActor( actor.uri() );
         movieResource.addProperty(NAO::hasSubResource(), actor.uri());

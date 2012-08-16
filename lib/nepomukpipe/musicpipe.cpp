@@ -138,8 +138,8 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
 
         // all performer of the track
         // TODO: guest artist, lyricswriter and so on?
-        QList<Nepomuk2::NCO::PersonContact> artistList = createPersonContacts( trackInfo.value(QLatin1String("performer")).toString() );
-        foreach(const Nepomuk2::NCO::PersonContact &artist, artistList) {
+        QList<Nepomuk2::NCO::Contact> artistList = createPersonContacts( trackInfo.value(QLatin1String("performer")).toString() );
+        foreach(const Nepomuk2::NCO::Contact &artist, artistList) {
             graph << artist;
             trackResource.addPerformer( artist.uri() );
             trackResource.addProperty(NAO::hasSubResource(), artist.uri());
