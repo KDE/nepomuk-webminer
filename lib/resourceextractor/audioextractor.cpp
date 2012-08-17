@@ -38,12 +38,20 @@ void NepomukMetaDataExtractor::Extractor::AudioExtractor::parseUrl(MetaDataParam
     mdp->resourceUri = fileUrl;
     mdp->resourceType = QLatin1String("music");
 
-    findByTag(mdp);
+    if (!findByTag(mdp) ) {
+        findByFileName( mdp );
+    }
 }
 
 bool NepomukMetaDataExtractor::Extractor::AudioExtractor::findByTag( MetaDataParameters *mdp )
 {
-    TagLib::FileRef f( mdp->resourceUri.toLocalFile().toUtf8().data() );
+    TagLib::FileRef f( mdp->resourceUri.toLocalFile().toUtf8().data(), false );
+
+    if(f.isNull()) {
+        kDebug() << "TagLib couldn't create FileRef resource for" << mdp->resourceUri.toLocalFile();
+        return false;
+    }
+
     // fill the search parameters with the found data
     TagLib::String title = f.tag()->title();
     mdp->searchTitle = QString::fromUtf8(title.toCString(true));
