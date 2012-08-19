@@ -32,7 +32,7 @@ except:
 #
 def info():
     return dict( name = 'Springer Link',
-                 icon = 'microsoft-academic-search.png',
+                 icon = 'springer.png',
                  identifier = 'springer',
                  resource = ['publication'],
                  urlregex = ['http://www.springerlink.com/content/[0-9A-Za-z]/'],
@@ -80,20 +80,14 @@ def searchItems( resourcetype, parameters ):
     searchResults = []
 
     for i in items:
-        searchResults = i.findAll('li', "primitive")
+        searchResultsList = i.findAll('li', "primitive")
 
-        for sr in searchResults:
+        for sr in searchResultsList:
 
             itemType = sr.find('p', "itemTag").string
 
             href = sr.find('a')
-            hrefTitle = href.string
-            itemTitle = ''
-
-            if hrefTitle is None:
-                itemTitle = ''.join([e for e in href.recursiveChildGenerator() if isinstance(e,unicode)])
-            else:
-                itemTitle =  itemTitle
+            itemTitle = ''.join([e for e in href.recursiveChildGenerator() if isinstance(e,unicode)])
 
             itemLink = href['href']
             authorsType = sr.find('p', "authors")
@@ -123,48 +117,85 @@ def extractItemFromUri( url, options ):
     logMsg = 'start item extraction via: ' + url 
     WebExtractor.log( logMsg )
 
-    # taken from tuuka 
-    div = de.find('div', {'class':'primary'})
-    journal = div.a.text
+    h = httplib2.Http(".cache")
 
-    div = div.nextSibling
-    volume_number = div.a.text
-    exp = re.compile(r'Volume (\d+), Number (\d+)')
-    match = exp.search(volume_number)
-    if not match:
-        WebExtractor.error('Error parsing volume and number: ' + volume_number )
-        return None
-    volume, number = match.groups()
+    #--------------------------------------------------------
+    # fetch the abstract page first
+    resp, content = h.request( url + '/abstract' )
 
-    pages = div.find('span', {'class':'pagination'}).text
-    firstPage, lastPage = pages.split('-')
-    
-    doi = div.find('span', {'class':'doi'}).find('span', {'class':'value'}).text
+    documentElement = BeautifulSoup( content )
 
-    div = de.find('div', {'class':'text'})  
-    title = div.h1.text
-    authors = [a.text for a in div.p.findAll('a')]
+    abstract = ""
+    abstractElements = documentElement.find('div', class_="Abstract")
+    if abstractElements is not None:
+        abstract = abstractElements.string
+        if abstract is None:
+            abstract = ''.join([e for e in abstractElements.recursiveChildGenerator() if isinstance(e,unicode)])
 
-    pdf = de.find('div', {'class':'heading'}).ul.li.a.get('href')
 
-    dateContent = de.find('li', {'class':'rightslink'}).a.get('href')
-    exp = re.compile(r'publicationDate=(.+?)&')
-    match = exp.search(dateContent)
-    if not match:
-        WebExtractor.error('Error parsing date: ' + dateContent )
-        return None
-    date = match.group(1).replace('%2f', '-')
+    #--------------------------------------------------------
+    # instead of parsing the table part of the about page we parse the information from
+    # the encoded details on the top of the page
+    journal = ""
+    volume = ""
+    issue = ""
+    pages = ""
+    doi = ""
+    title = ""
+    authors = ""
+    itemType = ""
+
+    journalNameEle = documentElement.find("a", title="Link to the Journal of this Article")
+    if journalNameEle is not None:
+        journal = journalNameEle.string
+
+    issueNameEle = documentElement.find("a", title="Link to the Issue of this Article")
+    if issueNameEle is not None:
+        exp = re.compile(r'Volume (\d+), Number (\d+)')
+        match = exp.search(issueNameEle.string)
+        if match:
+            volume, number = match.groups()
+
+    pagesEle = documentElement.find("span", class_="pagination")
+    if pagesEle is not None:
+        pages = pagesEle.string
+
+    doiEle = documentElement.find("span", class_="value")
+    if doiEle is not None:
+        doi = doiEle.string
+
+    titleEle = documentElement.find("a", title="Link to Article")
+    if titleEle is not None:
+        itemType = "article"
+        title = ''.join([e for e in titleEle.recursiveChildGenerator() if isinstance(e,unicode)])
+
+    titleEle = documentElement.find("a", title="Link to Book")
+    if titleEle is not None:
+        itemType = "book"
+        title = ''.join([e for e in titleEle.recursiveChildGenerator() if isinstance(e,unicode)])
+
+    authorsEle = documentElement.find("p", class_="authors")
+    if authorsEle is not None:
+        title = ';'.join([e for e in authorsEle.recursiveChildGenerator() if isinstance(e,unicode)])
+
+
+
+    #--------------------------------------------------------
+    #Now fetch the item publication details
+    resp, content = h.request( url + '/about' )
+
+    documentElement = BeautifulSoup( content )
 
     finalEntry = dict(
         title = title,
         authors = authors,
         journal = journal,
         volume = volume,
-        issue = number,
-        pages = firstPage + '-' + lastPage,
-        date = date,
-        doi = doi,
-        fulltextPdf = pdf) 
+        issue = issue,
+        pages = pages,
+        abstract = abstract,
+        #date = date,
+        doi = doi) 
 
     data_string = json.dumps(finalEntry)
     WebExtractor.itemResultsJSON( 'publication', data_string )
