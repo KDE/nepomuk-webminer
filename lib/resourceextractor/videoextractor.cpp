@@ -21,6 +21,7 @@
 
 #include <QtCore/QStringList>
 #include <QtCore/QDir>
+#include <KDebug>
 
 namespace NepomukMetaDataExtractor {
 namespace Extractor {
@@ -75,8 +76,9 @@ NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *par
                          Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
     // foo.1x09*
+    // we match it such that season number is at most 2 digits to avoid conflicting with resolution tags, eg "[640x360]"
     d->tvshowFilenameRegExps.append(
-                QRegExp( QLatin1String( "(.+)[ \\._\\-]\\[?([0-9]+)x([0-9]+)[^\\d]?[^\\\\/]*" ),
+                QRegExp( QLatin1String( "(.+)[ \\._\\-]\\[?([0-9]{1,2})x([0-9]+)[^\\d]?[^\\\\/]*" ),
                          Qt::CaseInsensitive, QRegExp::RegExp2 ) );
 
     // foo.s01.e01, foo.s01_e01
@@ -91,6 +93,18 @@ NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *par
 
     // would also match movies like Matrix.1999
     //if(d->tvshowOnly) {
+        // this should match most (hopefully all) anime fansub file formats
+        d->tvshowFilenameRegExps.append(
+                    QRegExp( QLatin1String( "(.+)[ \\._\\-]s([0-9]{1,2})[ \\._\\-]+([0-9]+)[^\\\\/]*" ),
+                            Qt::CaseInsensitive, QRegExp::RegExp2 ) );
+
+        // this would match fansub files where season numbers are ommitted, which is common when it's season 1
+        // we assume episode numbers don't go into the hundreds: else it'll overlap with the next regex,
+        // and we have no way of deciding which regex is right..
+        d->tvshowFilenameRegExps.append(
+                    QRegExp( QLatin1String( "(.+)[ \\._\\-]([0-9]{2})(?:[^\\d][^\\\\/]*)?" ),
+                            Qt::CaseInsensitive, QRegExp::RegExp2 ) );
+
         // foo.103* (the strange part at the end is used to 1. prevent another digit and 2. allow the name to end)
         d->tvshowFilenameRegExps.append(
                     QRegExp( QLatin1String( "(.+)[ \\._\\-]([0-9]{1})([0-9]{2})(?:[^\\d][^\\\\/]*)?" ),
@@ -239,25 +253,37 @@ bool NepomukMetaDataExtractor::Extractor::VideoExtractor::parseTvShowFileName(Ne
     Q_D( VideoExtractor );
     foreach(const QRegExp &re, d->tvshowFilenameRegExps) {
         if ( re.exactMatch( fileName ) ) {
+            kDebug() << "Regexp matched" << re;
+            for (int ii=0; ii<=re.captureCount(); ii++) {
+                kDebug() << ii << " : " << re.cap( ii );
+            }
             if(re.captureCount() > 2) {
                 mdp->searchShowTitle = re.cap( 1 ).simplified();
                 mdp->searchSeason = re.cap( 2 );
                 mdp->searchEpisode = re.cap( 3 );
 
-                // 3. clean up tv show name
-                mdp->searchShowTitle.replace( '.', ' ' );
-                mdp->searchShowTitle.replace( '_', ' ' );
-                if ( mdp->searchShowTitle.endsWith( '-' ) )
-                    mdp->searchShowTitle.truncate( mdp->searchShowTitle.length()-1 );
-                mdp->searchShowTitle = mdp->searchShowTitle.simplified();
             }
             else if(re.captureCount() == 2) {
                 mdp->searchShowTitle = re.cap( 1 );
                 mdp->searchEpisode = re.cap( 2 );
+                // should be no harm presetting this, some filenames omit the season assuming it's 1
+                // presetting lets anime fansub files be automatically fetchable
+                mdp->searchSeason = "1";
             }
             else {
                 mdp->searchEpisode = re.cap( 1 );
             }
+            // 3. clean up tv show name
+            // remove subber tag from the show name if it exists
+            QRegExp subberCheck("\\[(.+)\\](.+)");
+            if (subberCheck.exactMatch(mdp->searchShowTitle)) {
+                mdp->searchShowTitle = subberCheck.cap(2).simplified();
+            }
+            mdp->searchShowTitle.replace( '.', ' ' );
+            mdp->searchShowTitle.replace( '_', ' ' );
+            if ( mdp->searchShowTitle.endsWith( '-' ) )
+                mdp->searchShowTitle.truncate( mdp->searchShowTitle.length()-1 );
+            mdp->searchShowTitle = mdp->searchShowTitle.simplified();
 
             return true;
         }
