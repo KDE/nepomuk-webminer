@@ -113,6 +113,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
         kWarning() << "Could not get any plugins for the resourcetype :: " << d->currentItemToupdate->resourceType;
         return;
     }
+
     QString favPlugin;
     if( d->currentItemToupdate->resourceType == QString("movie")) {
         favPlugin = MDESettings::favoriteMoviePlugin();
@@ -127,17 +128,17 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
         favPlugin = MDESettings::favoriteMusicPlugin();
     }
 
-    Extractor::WebExtractor::Info selectedEngine;
+    QString selectedEngineIdentifier;
     if(favPlugin.isEmpty()) {
-        selectedEngine = extractorFactory()->listAvailablePlugins(d->currentItemToupdate->resourceType).first();
+        selectedEngineIdentifier = extractorFactory()->listAvailablePlugins(d->currentItemToupdate->resourceType).first().identifier;
     }
     else {
-        selectedEngine = extractorFactory()->createExtractor( favPlugin )->info();
+        selectedEngineIdentifier = favPlugin;
     }
 
-    if(!d->webextractor || d->webextractor->info().identifier != selectedEngine.identifier) {
+    if(!d->webextractor || d->webextractor->info().identifier != selectedEngineIdentifier) {
         delete d->webextractor;
-        d->webextractor = extractorFactory()->createExtractor( selectedEngine.identifier );
+        d->webextractor = extractorFactory()->createExtractor( selectedEngineIdentifier );
 
         connect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
         connect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
@@ -158,8 +159,8 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
     searchParameters.insert("album", d->currentItemToupdate->searchAlbum);
     searchParameters.insert("track", d->currentItemToupdate->searchTrack);
 
-    kDebug() << "Start searching " << d->webextractor->info().name << "for items with these parameters ::";
-    kDebug() << searchParameters;
+    kDebug() << "Start searching with " << d->webextractor->info().name;
+    //kDebug() << searchParameters;
 
     d->webextractor->search( d->currentItemToupdate->resourceType, searchParameters );
 }
