@@ -25,8 +25,10 @@
 #include "sro/nmm/musicpiece.h"
 #include "sro/nmm/musicalbum.h"
 #include "sro/nfo/image.h"
+#include "sro/nfo/webdataobject.h"
 #include "sro/nco/personcontact.h"
 #include <Soprano/Vocabulary/NAO>
+#include <Soprano/Vocabulary/RDFS>
 
 #include <KDE/KJob>
 
@@ -164,6 +166,15 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
         QDateTime releaseDate = createDateTime( trackInfo.value(QLatin1String("releasedate")).toString() );
         if(releaseDate.isValid()) {
             trackResource.setReleaseDate( releaseDate );
+        }
+
+        //Add the url where we fetched the data from as SeeAlso
+        QString seeAlso = trackInfo.value(QLatin1String("seealso")).toString();
+        if ( !seeAlso.isEmpty() ) {
+            QUrl saUrl = QUrl(seeAlso);
+            Nepomuk2::NFO::WebDataObject seeAlsoRes( saUrl );
+            trackResource.addProperty(RDFS::seeAlso(), seeAlsoRes.uri());
+            graph << seeAlsoRes;
         }
 
         // now connect music album and track

@@ -38,6 +38,7 @@ namespace Pipe {
   * @li @c writer - split by ;
   * @li @c cast - split by ;
   * @li @c poster
+  * @li @c seealso - url where we got the metadata from
   */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT MoviePipe : public NepomukPipe
 {

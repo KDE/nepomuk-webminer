@@ -46,6 +46,7 @@ namespace Pipe {
  * @li @c performer - performer of the track split by ;
  * @li @c genre - list of genres for the track split by ;
  * @li @c musicbrainz - MusicBrainz id
+ * @li @c seealso - url where we got the metadata from
  *
  * @todo TODO: incomplete, needs lyrics and other stuff
  *

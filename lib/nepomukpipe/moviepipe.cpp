@@ -25,7 +25,9 @@
 #include "sro/nmm/movie.h"
 #include "sro/nco/personcontact.h"
 #include "sro/nfo/image.h"
+#include "sro/nfo/webdataobject.h"
 #include <Soprano/Vocabulary/NAO>
+#include <Soprano/Vocabulary/RDFS>
 
 #include <KDE/KJob>
 
@@ -108,6 +110,15 @@ void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &mo
         graph << actor;
         movieResource.addActor( actor.uri() );
         movieResource.addProperty(NAO::hasSubResource(), actor.uri());
+    }
+
+    //Add the url where we fetched the data from as SeeAlso
+    QString seeAlso = movieEntry.value(QLatin1String("seealso")).toString();
+    if ( !seeAlso.isEmpty() ) {
+        QUrl saUrl = QUrl(seeAlso);
+        Nepomuk2::NFO::WebDataObject seeAlsoRes( saUrl );
+        movieResource.addProperty(RDFS::seeAlso(), seeAlsoRes.uri());
+        graph << seeAlsoRes;
     }
 
     graph << movieResource;

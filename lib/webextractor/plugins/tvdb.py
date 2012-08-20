@@ -279,7 +279,8 @@ def extractItemFromUri( url, options ):
                         writer = writerList,
                         actors = actorList,
                         genre = genreList,
-                        banner = episodeItem['filename']
+                        banner = episodeItem['filename'],
+                        seealso = url
                         )
 
     seasonDict = dict (

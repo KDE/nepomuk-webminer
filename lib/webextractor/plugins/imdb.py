@@ -251,7 +251,8 @@ def extractItemFromUri( url, options ):
                     plot = moviePlot,
                     runtime = movieRuntime,
                     countries = movieCountries,
-                    poster = movieCover
+                    poster = movieCover,
+                    seealso = url
                   )
 
     # todo check how to do the results for tvshows

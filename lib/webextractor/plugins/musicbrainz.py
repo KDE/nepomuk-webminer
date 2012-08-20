@@ -216,7 +216,8 @@ def extractItemFromUri( url, options ):
                                 number = trackNumber,
                                 releasedate = date,
                                 genre = genre,
-                                musicbrainz = recording['id']
+                                musicbrainz = recording['id'],
+                                seealso = url
                             )
 
             albumDict  = dict (

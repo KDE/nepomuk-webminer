@@ -70,6 +70,7 @@ namespace Pipe {
   * @li @c director - split by ;
   * @li @c writer - split by ;
   * @li @c actors - split by ;
+  * @li @c seealso - url where we got the metadata from
   */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT TvShowPipe : public NepomukPipe
 {

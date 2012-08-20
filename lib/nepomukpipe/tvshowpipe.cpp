@@ -228,6 +228,15 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
                 episodeRes.addProperty(NAO::hasSubResource(), director.uri());
             }
 
+            //Add the url where we fetched the data from as SeeAlso
+            QString seeAlso = episodeInfo.value(QLatin1String("seealso")).toString();
+            if ( !seeAlso.isEmpty() ) {
+                QUrl saUrl = QUrl(seeAlso);
+                Nepomuk2::NFO::WebDataObject seeAlsoRes( saUrl );
+                episodeRes.addProperty(RDFS::seeAlso(), seeAlsoRes.uri());
+                graph << seeAlsoRes;
+            }
+
             seriesRes.addEpisode(episodeRes.uri());
             episodeRes.setSeries(seriesRes.uri());
             graph << episodeRes;
