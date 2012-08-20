@@ -4,6 +4,7 @@ X-KDE-ServiceTypes=NepomukService
 X-KDE-Library=metadataextractorservice
 X-KDE-Nepomuk-autostart=true
 Name=Nepomuk Meta Data Extractor Service
+Name[fr]=Service d'extraction de métadonnées pour Nepomuk
 Name[hu]=Nepomuk metaadat kinyerő szolgáltatás
 Name[nl]=Service van Nepomuk voor Extraheren van metagegevens
 Name[pt]=Serviço de Extracção de Meta-Dados do Nepomuk
