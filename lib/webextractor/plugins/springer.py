@@ -64,9 +64,9 @@ def searchItems( resourcetype, parameters ):
 
     # TODO: implement volume/issue/year may and year min
     if title and title != "":
-        searchQuery = u'ti:(' + title + ')'
+        searchQuery = 'ti:(' + title + ')'
     if author and author != "":
-        searchQuery = searchQuery + u'+au:(' + author + ')'
+        searchQuery = searchQuery + '+au:(' + author + ')'
 
     WebExtractor.log( 'Start query via: ' + searchQuery )
 
