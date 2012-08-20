@@ -42,6 +42,7 @@
 #include "nfo/filedataobject.h"
 #include "nfo/paginatedtextdocument.h"
 #include "nfo/website.h"
+#include "nfo/webdataobject.h"
 #include "nfo/document.h"
 #include "nco/postaladdress.h"
 #include "nco/personcontact.h"
@@ -1297,8 +1298,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addTitle(const QString &c
 
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addWebsite(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph)
 {
-    //TODO: differentiate between webpage and webseite
-    //TODO: split webpages if necessary
+    //TODO: split webpages if necessary ( if we get them as list )
     KUrl url( QString(content.toUtf8()) );
 
     QString protocol = url.scheme();
@@ -1309,7 +1309,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addWebsite(const QString 
     }
 
     if( url.scheme().startsWith(QLatin1String("http")) && url.isValid()) {
-        Nepomuk2::NFO::Website website ( url );
+        Nepomuk2::NFO::WebDataObject website ( url );
 
         publication.addLinks( website.uri() );
 
