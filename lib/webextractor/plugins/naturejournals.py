@@ -172,29 +172,29 @@ def extractItemFromUri( url, options ):
 
     finalEntry = dict(
         bibtexentrytype = 'article',
-        abstract = metaData.get('description')[0],
+        abstract = metaData.get('description')[0] if metaData.get('description') else "",
         #archive = ,
-        copyright = metaData.get('prism.copyright')[0],
-        doi = metaData.get('citation_doi')[0],
+        copyright = metaData.get('prism.copyright')[0] if metaData.get('prism.copyright') else "",
+        doi = metaData.get('citation_doi')[0] if metaData.get('citation_doi') else "",
         #edition = ,
         #isbn = ,
-        issn = metaData.get('prism.issn')[0],
-        language = metaData.get('DC.language')[0],
-        number = metaData.get('citation_issue')[0],
-        pages = metaData.get('prism.startingPage')[0] + '--' + metaData.get('prism.endingPage')[0],
-        volume = metaData.get('citation_volume')[0],
-        date = metaData.get('citation_date')[0],
-        author = metaData.get('citation_authors')[0],
-        journal = metaData.get('citation_journal_title')[0],
-        publisher = metaData.get('citation_publisher')[0],
+        issn = metaData.get('prism.issn')[0] if metaData.get('prism.issn') else "",
+        language = metaData.get('DC.language')[0] if metaData.get('DC.language') else "",
+        number = metaData.get('citation_issue')[0] if metaData.get('citation_issue') else "",
+        pages = metaData.get('prism.startingPage')[0] if metaData.get('prism.startingPage') else "" + '--' + metaData.get('prism.endingPage')[0] if metaData.get('prism.endingPage') else "" ,
+        volume = metaData.get('citation_volume')[0] if metaData.get('citation_volume') else "",
+        date = metaData.get('citation_date')[0] if metaData.get('citation_date') else "",
+        author = metaData.get('citation_authors')[0] if metaData.get('citation_authors') else "",
+        journal = metaData.get('citation_journal_title')[0] if metaData.get('citation_journal_title') else "",
+        publisher = metaData.get('citation_publisher')[0] if metaData.get('citation_publisher') else "",
         #school = ,
         #series = ,
         #event = ,
-        title = metaData.get('citation_title')[0],
+        title = metaData.get('citation_title')[0] if metaData.get('citation_title') else "",
         url = url,
         biburl = publicationPDF,
         #references = ,
-        keywords = metaData.get('keywords')[0]) 
+        keywords = metaData.get('keywords')[0] if metaData.get('keywords') else "") 
 
     data_string = json.dumps(finalEntry)
     WebExtractor.itemResultsJSON( 'publication', data_string )
