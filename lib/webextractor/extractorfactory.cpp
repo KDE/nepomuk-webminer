@@ -62,13 +62,15 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
     Q_D( ExtractorFactory );
 
     foreach(const WebExtractor::Info i, d->availableScripts) {
-        if( i.identifier.contains(webEngine) ) {
+        if( i.identifier == webEngine ) {
 
             kDebug() << "create KROSS web extractor for:" << i.name;
             KrossExtractor *ke = new KrossExtractor(i.file);
             return ke;
         }
     }
+
+    kWarning() << "Could not find the rigth KrossExtractor with identifier :: " << webEngine;
 
     return 0;
 }
