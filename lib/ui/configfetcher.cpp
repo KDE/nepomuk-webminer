@@ -50,7 +50,11 @@ void ConfigFetcher::setExtractorFactory(NepomukMetaDataExtractor::Extractor::Ext
 
 void ConfigFetcher::updateConfiguration()
 {
-    kDebug() << "updateConfiguration";
+    emit configChanged(true);
+}
+
+void ConfigFetcher::saveConfig()
+{
     int curIndex = ui->musicPlugin->currentIndex();
     MDESettings::setFavoriteMusicPlugin( ui->musicPlugin->itemData(curIndex).toString() );
 
@@ -109,12 +113,6 @@ void ConfigFetcher::setupUi()
     ui->publicationPlugin->setCurrentIndex(ui->publicationPlugin->findData(MDESettings::favoritePublicationPlugin()));
     ui->moviePlugin->setCurrentIndex(ui->moviePlugin->findData(MDESettings::favoriteMoviePlugin()));
     ui->tvshowPlugin->setCurrentIndex(ui->tvshowPlugin->findData(MDESettings::favoriteTvShowPlugin()));
-
-    //FIXME: where to connect this to make the apply button appear?
-//    connect(ui->musicPlugin, SIGNAL(currentIndexChanged(int)), this, SIGNAL(selectionChanged()) );
-//    connect(ui->publicationPlugin, SIGNAL(currentIndexChanged(int)), this, SIGNAL(selectionChanged()) );
-//    connect(ui->moviePlugin, SIGNAL(currentIndexChanged(int)), this, SIGNAL(selectionChanged()) );
-//    connect(ui->tvshowPlugin, SIGNAL(currentIndexChanged(int)), this, SIGNAL(selectionChanged()) );
 
     connect(ui->musicPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()) );
     connect(ui->publicationPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()) );

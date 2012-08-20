@@ -41,10 +41,11 @@ public:
     void setExtractorFactory(NepomukMetaDataExtractor::Extractor::ExtractorFactory  *ef);
 
 signals:
-    void selectionChanged();
+    void configChanged(bool changed);
 
 public slots:
     void updateConfiguration();
+    void saveConfig();
 
 private:
     void setupUi();
