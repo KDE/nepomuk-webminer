@@ -136,12 +136,12 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
     }
 
     if(!d->webextractor || d->webextractor->info().identifier != selectedEngineIdentifier) {
-        delete d->webextractor;
+
         d->webextractor = extractorFactory()->createExtractor( selectedEngineIdentifier );
 
         connect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
         connect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
-        //connect(d->webextractor, SIGNAL(log(QString)), this, SLOT(addToProgressLog(QString)));
+        connect(d->webextractor, SIGNAL(log(QString)), this, SLOT(log(QString)));
         connect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
     }
 
@@ -214,4 +214,9 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::fetchedItemDetails(const QS
 void NepomukMetaDataExtractor::UI::AutomaticFetcher::errorInScriptExecution(const QString &error)
 {
     kDebug() << error;
+}
+
+void NepomukMetaDataExtractor::UI::AutomaticFetcher::log(const QString &msg)
+{
+    kDebug() << msg;
 }

@@ -119,6 +119,12 @@ private slots:
      */
     void errorInScriptExecution(const QString &error);
 
+    /**
+     * @brief Outputs some logging information from the scripts int othe console
+     * @param msg the logging text
+     */
+    void log(const QString &msg);
+
 private:
     Q_DECLARE_PRIVATE(AutomaticFetcher)
     AutomaticFetcherPrivate *const d_ptr; /**< d-pointer for this class */
