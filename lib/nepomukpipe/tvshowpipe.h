@@ -50,6 +50,7 @@ namespace Pipe {
   * @li @c banner
   * @li @c poster
   * @li @c seasons - QVariantList containing more QVariantMaps with series info
+  * @li @c seealso - url where we got the metadata from
   *
   * The QVariantMap containing the season information looks like this:
   *

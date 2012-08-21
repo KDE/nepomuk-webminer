@@ -85,6 +85,7 @@ QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QStr
     if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "MM-yyyy"); }
     if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy.MM.dd"); }
     if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "dd.MM.yyyy"); }
+    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "dd MMMM yyyy"); }
     if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "MM.yyyy"); }
     if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy.MM"); }
     if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy"); }
