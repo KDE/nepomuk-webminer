@@ -217,8 +217,8 @@ void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(NepomukMetaDa
     }
 
     // still no luck? :(
-    mdp->resourceType = QLatin1String("tvshow");
-    mdp->searchTitle = fileUrl.fileName();
+    mdp->resourceType = QLatin1String("movie");
+    mdp->searchTitle = fileUrl.fileName().split('.').first();
 }
 
 bool NepomukMetaDataExtractor::Extractor::VideoExtractor::parseTvShowFolder(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl)
