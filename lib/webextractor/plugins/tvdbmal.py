@@ -7,6 +7,9 @@
 
 import re
 import json
+import urllib2
+import PyKDE4.kdecore as kdecore
+import PyQt4.QtCore as QtCore
 
 # Prerrequisites.
 isAvailable = True
@@ -18,6 +21,13 @@ except:
     isAvailable = False
     errorMsg = "The tvdb python module 1.6.2 needs to be installed. See https://github.com/dbr/tvdb_api"
 
+try:
+    import requests
+except:
+    isAvailable = False
+    errorMsg = "The python 'requests' module is a requirement. See http://docs.python-requests.org/en/latest/user/install/"
+
+confFileName = "tvdbrc"
 
 #------------------------------------------------------------------------------
 # Module options
@@ -37,9 +47,9 @@ except:
 # email         = plugin author email
 #
 def info():
-    return dict( name = 'The TVDb',
+    return dict( name = 'The TVDb (Augmented with MyAnimeList)',
                  icon = 'tvdb.png',
-                 identifier = 'tvdb',
+                 identifier = 'tvdbmal',
 #                 urlregex = ['http://thetvdb.com/\\?tab=episode&seriesid=(\\d+)&seasonid=(\\d+)&id=(\\d+).*', 'http://thetvdb.com/\\?tab=season&seriesid=(\\d+)&seasonid=(\\d+).*', 'http://thetvdb.com/\\?tab=series&id=(\\d+).*'],
                  urlregex = ['http://thetvdb.com/\\?tab=episode&seriesid=(\\d+)&seasonid=(\\d+)&id=(\\d+).*'],
                  resource = ['tvshow'],
@@ -67,14 +77,24 @@ def info():
 #
 def searchItems( resourcetype, parameters ):
 
-    title = parameters['title']
-    season = parameters['season']
-    episode = parameters['episode']
-    showtitle = parameters['showtitle']
-
-    searchResults = []
     t = tvdb_api.Tvdb()
 
+    searchResults = trySearch(parameters, t)
+    WebExtractor.searchResults( searchResults )
+
+#------------------------------------------------------------------------------
+# put the logic code here into a helper so we can retry recursively (for cases where we have aliases)
+
+def trySearch(parameters, t, recurse = True):
+    title = parameters['title']
+    episode = parameters['episode']
+    WebExtractor.log("looking for configured aliases")
+    parameters['showtitle'], parameters['season'] = getConfiguredAlias(parameters['showtitle'], parameters['season'])
+    showtitle = parameters['showtitle']
+    season = parameters['season']
+    WebExtractor.log("Showtitle is " + showtitle + " and season is " + season)
+
+    searchResults = []
     try:
         if showtitle and season and episode:
             episodeResult = t[showtitle.decode('utf')][int(season)][int(episode)] # the utf part is to prevent flipping out when filename has unicode
@@ -99,14 +119,30 @@ def searchItems( resourcetype, parameters ):
         else:
             WebExtractor.error('no useful search parameters defined')
 
-        WebExtractor.searchResults( searchResults )
-
     except (tvdb_api.tvdb_shownotfound, tvdb_api.tvdb_seasonnotfound, tvdb_api.tvdb_episodenotfound) as err:
-        WebExtractor.log( str(err) )
-        WebExtractor.searchResults( searchResults )
+        if recurse:
+            # we try to find aliases
+            WebExtractor.log("finding aliases")
+            aliases = get_other_titles(showtitle)
+            if aliases:
+                for alias in aliases:
+                    if alias == parameters['showtitle']:
+                        continue # we tried this before
+                    WebExtractor.log("trying " + alias)
+                    newparameters = parameters
+                    newparameters['showtitle'] = alias
+                    searchResults = trySearch(newparameters, t, False) # try the alias
+                    if searchResults:
+                        return searchResults
+            WebExtractor.log( str(err) )
+            return searchResults # we genuinely cannot find nuts :C
+        else:
+            return searchResults
 
     except Exception as err:
         WebExtractor.error("Script error: \n" + str(err))
+
+    return searchResults
 
 #------------------------------------------------------------------------------
 # helper function to fill the search result dictionary
@@ -123,6 +159,22 @@ def getEpisodeDetails(episode):
                 details = detailString,
                 url = fullUrl
                 )
+
+#------------------------------------------------------------------------------
+# helper function that checks a config file for configured alias overrides
+#
+def getConfiguredAlias(showtitle, showseason):
+    conf = kdecore.KConfig(confFileName)
+    confgroup = kdecore.KConfigGroup(conf, "aliases")
+    rawdata = confgroup.readEntry(showtitle, QtCore.QStringList()).toStringList()
+    if len(rawdata) > 1:
+        if rawdata[1] == "-":
+            return str(rawdata[0]), showseason
+        else:
+            return str(rawdata[0]), str(rawdata[1])
+    return showtitle, showseason
+
+
 
 #------------------------------------------------------------------------------
 # extracts all information from the given url
@@ -251,6 +303,43 @@ def extractItemFromUri( url, options ):
     #WebExtractor.itemResults( 'tvshow', seriesDict )
     data_string = json.dumps(seriesDict)
     WebExtractor.itemResultsJSON( 'tvshow', data_string )
+
+#------------------------------------------------------------------------------
+# These are helper functions that attempt to find anime showtitle aliases using MyAnimeList
+# get_other_titles is the main function of interest here, and simply returns an array of aliases
+# for the supplied query, if found.
+# Much of this code is adapted from malconstrict, a MAL api python wrapper
+
+malapiurl = 'http://mal-api.com'
+
+def raw_search_anime(query):
+    response = requests.get(malapiurl + '/anime/search?q=' + urllib2.quote(query))
+    if response.status_code != 200:
+        return None
+    return response.content
+
+def raw_get_anime_details(anime_id):
+    response = requests.get(
+        malapiurl + '/anime/' + str(anime_id) + '?mine=0')
+
+    if response.status_code == 404:
+        return None
+    return response.content
+
+# TODO: search results aren't sorted by relevance, need to workaround that
+def get_other_titles(query):
+    entries = json.loads(raw_search_anime(query))
+    if len(entries) < 1:
+        return None
+    details = json.loads(raw_get_anime_details(entries[0]['id']))
+    result = [details['title']]
+    if 'english' in details['other_titles']:
+        for title in details['other_titles']['english']:
+            result.append(title)
+    if 'synonyms' in details['other_titles']:
+        for title in details['other_titles']['synonyms']:
+            result.append(title)
+    return result
 
 if __name__=="__main__":
     print "Plugin information:"
