@@ -56,6 +56,9 @@ public:
         QString email;          /**< Plugin author email */
         QString file;           /**< File path and name of the plugin */
         QString icon;           /**< An icon */
+        bool operator==(const Info& other) {
+            return  identifier == other.identifier; // should be sufficient i think?
+        }
     };
 
     /**
