@@ -404,7 +404,6 @@ def extractItemFromUri( url, options ):
     #------------------------------------------
     # Now create the right dictinaries depending on the movie type
     if movie['kind'] == 'movie':
-        print 'parse movie'
 
         result = dict(  title = movie['title'],
                         year = movie['year'],
