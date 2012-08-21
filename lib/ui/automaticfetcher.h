@@ -85,6 +85,9 @@ public slots:
      */
     void startUrlFetcher();
 
+signals:
+    void finished();
+
 private slots:
     /**
      * @brief Take the next available resoruce and start the meta data search or stop the fetcher here

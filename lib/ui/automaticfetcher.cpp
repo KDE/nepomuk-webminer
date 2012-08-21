@@ -72,6 +72,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::startUrlFetcher()
     Q_D( AutomaticFetcher );
     if(d->urlList.isEmpty()) {
         kWarning() << "started url fetcher without any urls";
+        emit finished();
         return;
     }
 
@@ -101,6 +102,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
     Q_D( AutomaticFetcher );
     if( resourceExtractor()->resourcesList().isEmpty() ) {
         kDebug() << "Finished fetching all items";
+        emit finished();
         return;
     }
 
@@ -136,6 +138,11 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
     }
 
     if(!d->webextractor || d->webextractor->info().identifier != selectedEngineIdentifier) {
+
+        disconnect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
+        disconnect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
+        disconnect(d->webextractor, SIGNAL(log(QString)), this, SLOT(log(QString)));
+        disconnect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
 
         d->webextractor = extractorFactory()->createExtractor( selectedEngineIdentifier );
 
@@ -194,6 +201,11 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::selectSearchEntry( QVariant
 void NepomukMetaDataExtractor::UI::AutomaticFetcher::fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails)
 {
     Q_D( AutomaticFetcher );
+
+    if(!d->currentItemToupdate) {
+        kWarning() << "tried to add fetched item data to non existing item";
+        return;
+    }
 
     // copy the fetched meta data into the current item details
     d->currentItemToupdate->metaData = itemDetails;

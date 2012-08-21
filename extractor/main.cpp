@@ -20,6 +20,7 @@
 #include <KDE/KAboutData>
 #include <KDE/KUrl>
 #include <QtCore/QString>
+#include <QtCore/QTimer>
 
 #include "ui/fetcher.h"
 #include "ui/fetcherdialog.h"
@@ -76,13 +77,17 @@ int main( int argc, char *argv[] )
     if(args->isSet("auto")) {
         NepomukMetaDataExtractor::UI::AutomaticFetcher af;
 
+        QObject::connect(&af, SIGNAL(finished()), &app, SLOT(quit()));
+
         if( args->isSet("url") ) {
             af.addFetcherUrl( args->url( 0 ) );
-            af.startUrlFetcher();
+            //af.startUrlFetcher();
+            QTimer::singleShot(0, &af, SLOT(startUrlFetcher()));
         }
         else if( args->isSet("resource") ) {
             af.addFetcherResource( args->url( 0 ) );
-            af.startFetcher();
+            //af.startFetcher();
+            QTimer::singleShot(0, &af, SLOT(startFetcher()));
         }
         else {
             af.setForceUpdate( args->isSet("force") );
@@ -91,8 +96,11 @@ int main( int argc, char *argv[] )
             af.setMovieMode( args->isSet("movie") );
 
             af.addFetcherPath( args->url( 0 ) );
-            af.startFetcher();
+            //af.startFetcher();
+            QTimer::singleShot(0, &af, SLOT(startFetcher()));
         }
+
+        return app.exec();
     }
     else {
         NepomukMetaDataExtractor::UI::FetcherDialog fd;
