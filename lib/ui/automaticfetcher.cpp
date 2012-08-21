@@ -209,7 +209,11 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::selectSearchEntry( QVariant
 
         KUrl fetchUrl( selectedSearchResult.value(QLatin1String("url")).toString() );
 
-        d->webextractor->extractItem( fetchUrl, QVariantMap() );
+        QVariantMap options;
+        options.insert(QString("references"), MDESettings::downloadReferences());
+        options.insert(QString("banner"), MDESettings::downloadBanner());
+
+        d->webextractor->extractItem( fetchUrl, options );
     }
 }
 
