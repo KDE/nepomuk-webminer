@@ -39,7 +39,7 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
 
     connect(this, SIGNAL(itemResultsJSON(QString,QString)), this, SLOT(transformJSONResult(QString,QString)) );
 
-    d->scriptFile = new Kross::Action(this, "WebExtractor");
+    d->scriptFile = new Kross::Action(this, QString("WebExtractor-%1").arg(scriptFile));
 
     d->scriptFile->addObject(this, "WebExtractor", Kross::ChildrenInterface::AutoConnectSignals);
 
