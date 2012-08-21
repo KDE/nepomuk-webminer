@@ -65,6 +65,20 @@ def searchItems( resourcetype, parameters ):
     episode = parameters['episode']
     showtitle = parameters['showtitle']
 
+    if season is None:
+        season = ""
+    if episode is None:
+        episode = ""
+    if showtitle is None:
+        showtitle = ""
+    if yearMax is None:
+        yearMax = ""
+    if yearMin is None:
+        yearMin = ""
+    if title is None:
+        title = ""
+
+    WebExtractor.log( 'search ' + resourcetype +' with title: ' + title )
     try:
         ia = IMDb()
         if resourcetype == 'movie':
@@ -107,7 +121,7 @@ def searchMovieResults(results):
             if item.has_key('year'):
                 detailString += ', ' + str(item['year'])
 
-            fullUrl = 'http://www.imdb.com/title/tt' + item.movieID
+            fullUrl = 'http://www.imdb.com/title/tt' + str(item.movieID)
             entryDict = dict(
                             title = item['title'],
                             details = detailString,
@@ -145,7 +159,8 @@ def searchTvShowResults( ia, results, showtitle, title, selectedSeason, selected
         showKind = str(show['kind'])
 
         if showKind == 'tv series' or showKind == 'tv mini series':
-            WebExtractor.log( 'show found:' + showKind + show['title'].encode('utf-8') )
+            WebExtractor.log( 'show found: ' + showKind + show['title'].encode('utf-8') )
+            WebExtractor.log( 'search Episode: S' + selectedSeason + ' E' + selectedEpisode )
 
             # first fetch episode details
             ia.update(show, info=('episodes cast', 'akas', 'main', 'episodes')) #BUG: fetching 'episodes' instead of 'episodes cast' will not work. imdbPy is broken here
@@ -162,13 +177,21 @@ def searchTvShowResults( ia, results, showtitle, title, selectedSeason, selected
             # if we have an episode and no season, list all episodes with the number from each season
 
             if selectedSeason and selectedEpisode:
-                #FIXME: check if season/episode is not out of range
+
+                if len(show['episodes']) < int(selectedSeason):
+                    continue
+                if len(show['episodes'][int(selectedSeason)]) < int(selectedEpisode):
+                    continue
+
                 episode = show['episodes'][int(selectedSeason)][int(selectedEpisode)]
                 ia.update(episode)
 
                 searchResults.append( getEpisodeInfo(show, episode) )
 
             elif selectedSeason and selectedEpisode == "":
+                if len(show['episodes']) < int(selectedSeason):
+                    continue
+
                 episodeNumber = 1
                 while episodeNumber <= len(show['episodes'][int(selectedSeason)]):
                     episode = show['episodes'][int(selectedSeason)][episodeNumber]
@@ -311,9 +334,12 @@ def akaTitleSelect(show):
                 continue
             
             if language == 'English':
-                return re.sub(r'"', '', aka[0].decode('utf8'))
+                WebExtractor.log( 'found aka: ' + aka[0].decode('utf8') )
+                fixedTitle = re.sub(r'"', '', aka[0])
+                return fixedTitle
 
     # if we have no akas or no english aka return normal title
+    WebExtractor.log( 'did not find aka: ' + show['title'].decode('utf8') )
     return show['title'].decode('utf8')
 
 '''
@@ -459,10 +485,10 @@ def extractItemFromUri( url, options ):
                             seealso = 'http://www.imdb.com/title/tt' + str(selectedShow.movieID)
                         )
 
-    # this is a workaround, because multiple nested dictionaries cause some problems with the names of the keys
-    #WebExtractor.itemResults( 'tvshow', seriesDict )
-    data_string = json.dumps(seriesDict)
-    WebExtractor.itemResultsJSON( 'tvshow', data_string )
+        # this is a workaround, because multiple nested dictionaries cause some problems with the names of the keys
+        #WebExtractor.itemResults( 'tvshow', seriesDict )
+        data_string = json.dumps(seriesDict)
+        WebExtractor.itemResultsJSON( 'tvshow', data_string )
 
 if __name__=="__main__":
     print "Plugin information:"

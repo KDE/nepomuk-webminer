@@ -64,7 +64,7 @@ def searchItems( resourcetype, parameters ):
 
     # TODO: implement volume/issue/year may and year min
     if title and title != "":
-        searchQuery = 'ti:(' + title + ')'
+        searchQuery = 'ti:(' + title.decode("utf8") + ')'
     if author and author != "":
         searchQuery = searchQuery + '+au:(' + author + ')'
 

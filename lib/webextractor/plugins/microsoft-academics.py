@@ -10,7 +10,7 @@ import urllib
 import re
 
 # Prerrequisites.
-isAvailable = True
+isAvailable = False
 errorMsg = ""
 try:
     from BeautifulSoup import BeautifulSoup # note switch to lxml
