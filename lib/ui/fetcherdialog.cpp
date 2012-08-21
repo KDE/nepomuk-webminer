@@ -119,7 +119,6 @@ NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
 NepomukMetaDataExtractor::UI::FetcherDialog::~FetcherDialog()
 {
     Q_D( FetcherDialog );
-    delete d->webextractor;
     delete d->currentItemToupdate;
     delete d->resultModel;
     delete d->progressLog;
@@ -367,7 +366,12 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::startSearch()
     buttonPrevious->setEnabled(false);
 
     if(!d->webextractor || d->webextractor->info().identifier != engineId) {
-        delete d->webextractor;
+        disconnect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
+        disconnect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
+        disconnect(d->webextractor, SIGNAL(log(QString)), this, SLOT(addToProgressLog(QString)));
+        disconnect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
+        disconnect(d->webextractor, SIGNAL(error(QString)), this, SLOT(addToProgressLog(QString)));
+
         d->webextractor = extractorFactory()->createExtractor( engineId );
 
         if(!d->webextractor) {
@@ -594,7 +598,6 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fetchMoreDetails()
 
     d->currentItemToupdate = resourceExtractor()->resourcesList().at( d->currentItemNumber );
     KUrl fetchUrl( entry.value(QLatin1String("url")).toString() );
-
 
     QVariantMap options;
     options.insert(QString("references"), MDESettings::downloadReferences());
