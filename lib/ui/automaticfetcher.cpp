@@ -51,7 +51,6 @@ NepomukMetaDataExtractor::UI::AutomaticFetcher::AutomaticFetcher(QObject *parent
 NepomukMetaDataExtractor::UI::AutomaticFetcher::~AutomaticFetcher()
 {
     Q_D( AutomaticFetcher );
-    delete d->webextractor;
     delete d->currentItemToupdate;
 }
 

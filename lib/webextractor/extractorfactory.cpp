@@ -40,6 +40,7 @@ namespace Extractor {
 class ExtractorFactoryPrivate {
 public:
     QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> availableScripts;
+    QList<NepomukMetaDataExtractor::Extractor::WebExtractor*> existingExtractors;
 };
 }
 }
@@ -54,18 +55,31 @@ NepomukMetaDataExtractor::Extractor::ExtractorFactory::ExtractorFactory(QObject 
 
 NepomukMetaDataExtractor::Extractor::ExtractorFactory::~ExtractorFactory()
 {
-
+    Q_D( ExtractorFactory );
+    while( !d->existingExtractors.isEmpty() ) {
+        WebExtractor *we = d->existingExtractors.takeFirst();
+        we->deleteLater();
+    }
 }
 
 NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::createExtractor( const QString &webEngine )
 {
     Q_D( ExtractorFactory );
 
+    // first check if we already created the extractor and reuse it in this case
+    foreach(WebExtractor *we, d->existingExtractors) {
+        if(we->info().identifier == webEngine) {
+            return we;
+        }
+    }
+
+    // other wise create a new one
     foreach(const WebExtractor::Info i, d->availableScripts) {
         if( i.identifier == webEngine ) {
 
             kDebug() << "create KROSS web extractor for:" << i.name;
             KrossExtractor *ke = new KrossExtractor(i.file);
+            d->existingExtractors.append(ke);
             return ke;
         }
     }
