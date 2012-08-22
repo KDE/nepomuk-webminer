@@ -48,6 +48,11 @@ class MetaDataWidget : public QWidget
 public:
     explicit MetaDataWidget(QWidget *parent = 0);
     
+    /**
+     * @brief Tell the Widget which metadata will be shown
+     *
+     * @param mdp the object that will be shown
+     */
     void setMetaDataParameter(const NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp);
 
 private:
@@ -58,6 +63,7 @@ private:
 
     /**
      * @brief Little helper function to display a translated string instead of the QMap key values used internally
+     *
      * @param key the key that will be translated
      * @return the translated key
      */

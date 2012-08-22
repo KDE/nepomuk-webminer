@@ -39,6 +39,7 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
 
     connect(this, SIGNAL(itemResultsJSON(QString,QString)), this, SLOT(transformJSONResult(QString,QString)) );
 
+    // each cross action has its own unique identifier
     d->scriptFile = new Kross::Action(this, QString("WebExtractor-%1").arg(scriptFile));
 
     d->scriptFile->addObject(this, "WebExtractor", Kross::ChildrenInterface::AutoConnectSignals);
@@ -57,12 +58,14 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
     d->scriptInfo.file = d->scriptFile->file();
 
     QVariantList resList = result.value("resource").toList();
-    foreach(const QVariant &res, resList)
+    foreach(const QVariant &res, resList) {
         d->scriptInfo.resource << res.toString();
+    }
 
     resList = result.value("urlregex").toList();
-    foreach(const QVariant &res, resList)
+    foreach(const QVariant &res, resList) {
         d->scriptInfo.urlregex << res.toString();
+    }
 }
 
 NepomukMetaDataExtractor::Extractor::KrossExtractor::~KrossExtractor()
@@ -89,7 +92,6 @@ void NepomukMetaDataExtractor::Extractor::KrossExtractor::extractItem(const QUrl
 
 void NepomukMetaDataExtractor::Extractor::KrossExtractor::transformJSONResult(const QString &resourceType, const QString &jsonMap)
 {
-
     QJson::Parser parser;
     bool ok;
 

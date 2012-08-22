@@ -125,12 +125,9 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
         }
 
         // now create the graph and fill it with all the new metadata
-
         Nepomuk2::NMM::MusicPiece trackResource(existingUri);
 
         // Note: Why album cover as artwork of the track? not of the music album?
-        // thats how Nepoogle expect it to be
-
         if(!localCoverUrl.isEmpty()) {
             Nepomuk2::NFO::Image banner(localCoverUrl);
             trackResource.addArtwork( banner.uri() );
@@ -178,6 +175,12 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
         QDateTime releaseDate = createDateTime( trackInfo.value(QLatin1String("releasedate")).toString() );
         if(releaseDate.isValid()) {
             trackResource.setReleaseDate( releaseDate );
+        }
+
+        // FIXME: Add lyrics not as nie:PlainTextContent
+        QString lyrics = trackInfo.value(QLatin1String("lyrics")).toString();
+        if(!lyrics.isEmpty()) {
+            trackResource.setPlainTextContent( lyrics );
         }
 
         //Add the url where we fetched the data from as SeeAlso

@@ -23,22 +23,26 @@
 
 namespace NepomukMetaDataExtractor {
 namespace Pipe {
+
 /**
-  * @brief Pipes a QVariantMap with movie information into Nempomuk
+  * @brief Pipes a @c QVariantMap with movie information into @c Nempomuk
   *
   * Creates the correct Movie structure, splits director/writer/cast names correctly and adds them as subresource to the movie
   *
-  * The following keys will be used in this trasition:
+  * The following keys will be used in this transition:
   * @li @c resourceuri - the file url or nepomuk uri of the resource this data should be added to
-  * @li @c title
-  * @li @c plot
+  * @li @c title - name of the movie
+  * @li @c plot - some longer description
+  * @li @c year - release year
   * @li @c genre - split by ;
-  * @li @c year
   * @li @c director - split by ;
   * @li @c writer - split by ;
   * @li @c cast - split by ;
-  * @li @c poster
+  * @li @c poster - url where the poster can be found
   * @li @c seealso - url where we got the metadata from
+  *
+ * The @c poster won't be downloaded and added if it disabeld in the metadata KConfig.
+ * The location of the poster can be configured as well, either next to the movie file or in the data fodler of the library
   */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT MoviePipe : public NepomukPipe
 {
@@ -46,6 +50,7 @@ class NEPOMUKMETADATAEXTRACTOR_EXPORT MoviePipe : public NepomukPipe
 public:
     /**
      * @brief Standard Constructor
+     *
      * @param parent parent object
      */
     MoviePipe(QObject *parent = 0);

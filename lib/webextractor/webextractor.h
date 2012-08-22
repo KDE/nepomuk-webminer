@@ -36,7 +36,7 @@ namespace Extractor {
  * This is the main interface that all Webextractors have to implement.
  * This is mainly used for the @c KrossExtractor that implements the webextractors as plugins written in @c Python , @c Ruby or @c JavaScript
  *
- * If one wants to create a c++ based extarctor it mus tbe derived from this class <i>(not recommended, better write them as KROSS script)</i>
+ * If one wants to create a c++ based extractor it must be derived from this class <i>(not recommended, better write them as KROSS script)</i>
  */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT WebExtractor : public QObject
 {
@@ -56,16 +56,27 @@ public:
         QString email;          /**< Plugin author email */
         QString file;           /**< File path and name of the plugin */
         QString icon;           /**< An icon */
+
+        /**
+         * @brief operator ==
+         * @param other
+         * @return @arg true if 2 Info items are the same @arg false if they are different
+         */
         bool operator==(const Info& other) {
-            return  identifier == other.identifier; // should be sufficient i think?
+            return  identifier == other.identifier;
         }
     };
 
     /**
      * @brief Standard Constructor
+     *
      * @param parent some parent object
      */
     explicit WebExtractor(QObject *parent = 0);
+
+    /**
+     * @brief default destructor
+     */
     ~WebExtractor();
 
     /**
@@ -77,7 +88,7 @@ public:
 
 public slots:
     /**
-     * @brief Starts a websearch for al possible items that fir the search parameters
+     * @brief Starts a websearch for all possible items that fit the search parameters
      *
      * The Plugins search for a list of possible matches and emits the results via @c searchResults
      *
@@ -121,7 +132,7 @@ signals:
     void log(const QString &logMessage);
 
     /**
-     * @brief Emits an error message thrown eiteh controleld from teh plugin or whe nwe catch an exception
+     * @brief Emits an error message thrown either controlled from the plugin or when we catch an exception
      *
      * @param errorMessage the error reason
      */
@@ -139,6 +150,7 @@ signals:
 
     /**
      * @brief Complete item meta data as retrieved from the url
+     *
      * @param resourceType type of resoruce that was looked up
      * @param entry map with all ite mdetails
      *

@@ -37,12 +37,14 @@ public:
 
     /**
      * @brief Sets the list of search result as retrieved from the python plugin search
+     *
      * @param searchResults List of search results
      */
     void setSearchResults(const QVariantList & searchResults);
 
     /**
      * @brief Returns the result for the selected index
+     *
      * @param index the selected index in the list
      * @return the search result information
      */
@@ -55,6 +57,7 @@ public:
 
     /**
      * @brief Number of available search entries
+     *
      * @param parent parent model index
      * @return number of entries
      */
@@ -62,7 +65,8 @@ public:
 
     /**
      * @brief Returns the single data for one search entry at the given @p index and @p role
-     * @param index whcoh searc hresult will be checked
+     *
+     * @param index which search result will be checked
      * @param role what data will be used (DisplayRole = title, UserDataRole = details)
      * @return the info as string
      */

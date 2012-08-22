@@ -31,6 +31,7 @@
 #include "nepomukpipe/moviepipe.h"
 #include "nepomukpipe/publicationpipe.h"
 #include "nepomukpipe/tvshowpipe.h"
+#include "nepomukpipe/musicpipe.h"
 
 #include <KDE/KDebug>
 
@@ -66,7 +67,6 @@ Q_UNUSED(args);
 
 MetaDataExtractorPlugin::~MetaDataExtractorPlugin()
 {
-    kDebug() << "destroy plugin again oO";
     delete m_ef;
 }
 
@@ -94,7 +94,7 @@ void MetaDataExtractorPlugin::urlSwitched()
 {
     // check if current url is supported by one of the plugins
     QUrl url = m_Part->url();
-    WebExtractor *we = m_ef->createExtractor( url );
+    WebExtractor *we = m_ef->getExtractor( url );
 
     if(we) {
         kDebug() << "website" << url << "supported";
@@ -118,7 +118,7 @@ void MetaDataExtractorPlugin::extract()
     // extract item data
     QUrl url = m_Part->url();
 
-    WebExtractor *we = m_ef->createExtractor( url );
+    WebExtractor *we = m_ef->getExtractor( url );
     connect(we, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(pushDataToNepomuk(QString,QVariantMap)));
 
     if(we) {
@@ -141,6 +141,9 @@ void MetaDataExtractorPlugin::pushDataToNepomuk(const QString &resourceType, con
     }
     else if(resourceType == QLatin1String("movie")) {
         nepomukPipe = new Pipe::MoviePipe;
+    }
+    else if(resourceType == QLatin1String("music")) {
+        nepomukPipe = new Pipe::MusicPipe;
     }
 
     if(nepomukPipe) {

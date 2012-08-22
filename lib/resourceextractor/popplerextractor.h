@@ -50,13 +50,18 @@ class NEPOMUKMETADATAEXTRACTOR_EXPORT PopplerExtractor : public QObject
 public:
     /**
      * @brief Standard constructor
-     * @param parent
+     *
+     * @param parent the paretn object
      */
     explicit PopplerExtractor(QObject *parent = 0);
+
+    /**
+     * @brief Clean up and delete poppler object
+     */
     ~PopplerExtractor();
 
     /**
-      * Fills the MetaDataParameters with some more values from the RDF and first page
+      * @brief Fills the MetaDataParameters with some more values from the RDF and first page
       *
      * @param mdp the MetaDataParameters where the parsed data will be saved to
      * @param fileUrl the url of the file on the harddrive
@@ -66,6 +71,7 @@ public:
 private:
     /**
      * @brief creates the TOC from the given pdf data
+     *
      * @param toc the doc xml document of the pdf file
      * @param node the current node
      */

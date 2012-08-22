@@ -92,7 +92,7 @@ protected:
       * Takes care of Hans Wurst and Franz Ferdinant or Wurst, Hans; Ferdinant, Franz and so on.
       * Also tries to determine family/given name and suffix values.
       *
-      * @p listOfPersonNames person name list separated by "and" or ";"
+      * @p listOfPersonNames person name list separated by "and", "&" or ";"
       *
       * @note NOTE: all persons will be imported as generic nco:Contact rather than nco:PersonContact. This seems to be the better solution to avoid cluttering the database
       */

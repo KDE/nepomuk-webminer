@@ -42,7 +42,22 @@ namespace UI {
  *
  * It always takes the first found search result and the first available search engine as the meta data for the resource
  *
- * @todo TODO: implement multiple searches, if the first fails, try a different engine instead of failing
+ * Some examples how to use this class:
+@code
+QUrl someFolder = ...
+NepomukMetaDataExtractor::UI::AutomaticFetcher af;
+
+af.addFetcherPath( someFolder );
+af.startUrlFetcher();
+@endcode
+
+@code
+QList<Nepomuk2::Resource> resources = ...
+NepomukMetaDataExtractor::UI::AutomaticFetcher af;
+
+af.addFetcherResource( someFolder );
+af.startUrlFetcher();
+@endcode
  */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT AutomaticFetcher : public QObject, public Fetcher
 {
@@ -57,7 +72,7 @@ public:
     ~AutomaticFetcher();
 
     /**
-     * @brief adds th eurl where the item data can be found
+     * @brief adds the url where the item data can be found
      *
      * This will fetch and add meta data to the nepomuk storage without connecting it to a file
      * @param url the url that can be parsed by one of the plugins
@@ -86,6 +101,9 @@ public slots:
     void startUrlFetcher();
 
 signals:
+    /**
+     * @brief Emitted when all files are handled, no matter if metadata could be found or not
+     */
     void finished();
 
 private slots:
@@ -124,6 +142,7 @@ private slots:
 
     /**
      * @brief Outputs some logging information from the scripts int othe console
+     *
      * @param msg the logging text
      */
     void log(const QString &msg);

@@ -280,6 +280,7 @@ Nepomuk2::NMM::TVShow NepomukMetaDataExtractor::Pipe::TvShowPipe::createEpisode(
         episodeRes.setEpisodeNumber(episodeNumber.toInt());
     }
 
+    // Deprecated but keep for backwards compatibility
     episodeRes.setSeason( season.seasonNumber() );
 
     QString episodeTitle = episodeInfo.value(QLatin1String("title")).toString();

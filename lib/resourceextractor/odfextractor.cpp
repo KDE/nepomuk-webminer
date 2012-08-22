@@ -36,7 +36,6 @@ namespace Extractor{
 }
 }
 
-
 NepomukMetaDataExtractor::Extractor::OdfExtractor::OdfExtractor(QObject *parent)
     : QObject(parent)
 {

@@ -377,19 +377,19 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::startSearch()
     buttonPrevious->setEnabled(false);
 
     if(!d->webextractor || d->webextractor->info().identifier != engineId) {
-        disconnect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
+        disconnect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(searchResultList(QVariantList)));
         disconnect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
         disconnect(d->webextractor, SIGNAL(log(QString)), this, SLOT(addToProgressLog(QString)));
         disconnect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
         disconnect(d->webextractor, SIGNAL(error(QString)), this, SLOT(addToProgressLog(QString)));
 
-        d->webextractor = extractorFactory()->createExtractor( engineId );
+        d->webextractor = extractorFactory()->getExtractor( engineId );
 
         if(!d->webextractor) {
             kDebug() << "search engine with identifier" << engineId << "does not exist";
             return;
         }
-        connect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
+        connect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(searchResultList(QVariantList)));
         connect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
         connect(d->webextractor, SIGNAL(log(QString)), this, SLOT(addToProgressLog(QString)));
         connect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
@@ -414,7 +414,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::startSearch()
     d->webextractor->search( mdp->resourceType, searchParameters );
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::selectSearchEntry( QVariantList searchResults)
+void NepomukMetaDataExtractor::UI::FetcherDialog::searchResultList( QVariantList searchResults)
 {
     Q_D( FetcherDialog );
     finishedFetching();

@@ -21,7 +21,7 @@
 
 #include <QtCore/QStringList>
 #include <QtCore/QDir>
-#include <KDebug>
+#include <KDE/KDebug>
 
 namespace NepomukMetaDataExtractor {
 namespace Extractor {
@@ -180,12 +180,12 @@ void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(NepomukMetaDa
     if( d->tvshowOnly ) {
         mdp->resourceType = QLatin1String("tvshow");
 
-        // firs tcheck the folder name scheme
+        // first check the folder name scheme
         if(d->useFolderNames) {
             if(!parseTvShowFolder(mdp, fileUrl, baseUrl)) {
                 // should this fail we fall back to normal file name detection
                 if(!parseTvShowFileName(mdp, fileUrl.fileName()) ) {
-                    // falback to filename if even this fails
+                    // fallback to filename if even this fails
                     mdp->searchTitle = fileUrl.fileName();
                 }
             }

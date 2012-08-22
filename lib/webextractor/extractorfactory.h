@@ -40,9 +40,9 @@ class ExtractorFactoryPrivate;
   * @li movie
   * @li music
   *
-  * Or return the correct search engine based on its unique identifier or the webpage url where the item can be extarcted from
+  * Or return the correct search engine based on its <i>unique identifier</i> or the <i>webpage url</i> where the item can be extracted from
   *
-  * The WebExtarctor implementations take care of the actual extraction job.
+  * The WebExtarctor implementations take care of the actual item search and metadata extraction from the web resource.
   *
   * @see KrossExtractor - for the python/ruby/javascript part
   * @see WebExtractor - for the general case and if one wants to create a c++ based plugin
@@ -53,34 +53,39 @@ class NEPOMUKMETADATAEXTRACTOR_EXPORT ExtractorFactory : public QObject
 public:
     /**
      * @brief Standard Constructor
+     *
      * @param parent some parent object
      */
     explicit ExtractorFactory(QObject *parent = 0);
+
+    /**
+     * @brief Destructor
+     *
+     * Cleans up all existing WebExtractor resources
+     */
     ~ExtractorFactory();
 
     /**
       * @brief Creates a new WebExtractor based on the @c "identifier" name
       *
-      * Ownership of the created object is transferred to the caller.
-      * The caller must delete it, if it is no longer used
+      * The Factory manag the extractor resources and deletes them once the factory gets deleted
       *
       * @p webEngine short identifier name of the plugin
       *
-      * @return the created WebExtractor
+      * @return the WebExtractor for the identifier
       */
-    NepomukMetaDataExtractor::Extractor::WebExtractor *createExtractor( const QString &webEngine );
+    NepomukMetaDataExtractor::Extractor::WebExtractor *getExtractor( const QString &webEngine );
 
     /**
       * @brief Creates a new WebExtractor based in the @c "url" it can fetch data from
       *
-      * Ownership of the created object is transferred to the caller.
-      * The caller must delete it, if it is no longer used
+      * The Factory manag the extractor resources and deletes them once the factory gets deleted
       *
       * @p uri web url that should be parsed
       *
-      * @return the created WebExtractor
+      * @return the WebExtractor that can handle the uri
       */
-    NepomukMetaDataExtractor::Extractor::WebExtractor *createExtractor( const QUrl &uri );
+    NepomukMetaDataExtractor::Extractor::WebExtractor *getExtractor( const QUrl &uri );
 
     /**
       * @brief Returns a list of all available webextractor plugins that fetches data for the resource @c type

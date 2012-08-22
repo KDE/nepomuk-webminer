@@ -39,9 +39,12 @@ class ResourceExtractorPrivate;
   * Here we check the file or the Nepomuk resource and extract values from it that can be used for the @c WebExtractor search.
   * Usually it would be enough to check only Nepomuk for this info and when some files are given as input the right nepomuk
   * resource can be looked up and used for the retrival. As the @c libstreamanalyzer might fail on several pdf files this class
-  * uses its own pdf parsing to get the right details.
+  * uses its own pdf parsing to get the right details. Also the filename will be analyzed to get some additional informations
   *
   * Each file/resource is represented by its @c MetaDataParameters that is used for the actual search
+  *
+  * This Extractor keeps a list of all files that must be processed.
+  * You can get the list via resourcesList() and pop the next entry from takeNext()
   */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT ResourceExtractor : public QObject
 {
@@ -49,6 +52,7 @@ class NEPOMUKMETADATAEXTRACTOR_EXPORT ResourceExtractor : public QObject
 public:
     /**
      * @brief standard constructor
+     *
      * @param parent some parten object
      */
     explicit ResourceExtractor(QObject *parent = 0);
@@ -106,8 +110,15 @@ public:
       *
       * Gets some important search parameters from it
       *
+      * @p resource the resource where the data should be added to
       */
     void lookupResource(const Nepomuk2::Resource &resource);
+
+    /**
+     * @brief Prepare a list nepomuk resources for the lookup.
+     *
+     * @param resources list of nepomuk resources where the data should be added to
+     */
     void lookupResource(const QList<Nepomuk2::Resource> &resources);
 
     /**
@@ -140,16 +151,32 @@ signals:
 
 private:
     /**
-      * @brief Called by lookupFiles checks if the metadata matches and extarcts some info
+      * @brief Called by lookupFiles checks if the metadata matches and extracts some info
       *
-      * the results will be added to @c m_resourcesToLookup
+      * The results will be added to @c m_resourcesToLookup
       *
       * @p fileUrl file location that should be added
       */
     void addFilesToList(const KUrl &fileUrl);
 
+    /**
+     * @brief Checks the mimetype of the file and calls the correct extractor for further processing
+     *
+     * @param mdp the MetaDataParameters object where the data will added to
+     * @param fileUrl the url of the file on the disk
+     * @return @arg true if the file mimetype is supported
+     *         @arg false if the mimetype is not supported
+     */
     bool fileChecker(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl);
-    bool resourceChecker(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const Nepomuk2::Resource &fileResource);
+
+    /**
+     * @brief Checks the Ontology Type <i>(Movie/Publication etc)</i> and calls the correct extractor for further processing
+     * @param mdp the MetaDataParameters object where the data will added to
+     * @param resource the resource that will be checked
+     * @return @arg true if the file mimetype is supported
+     *         @arg false if the mimetype is not supported
+     */
+    bool resourceChecker(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const Nepomuk2::Resource &resource);
 
     Q_DECLARE_PRIVATE(ResourceExtractor)
     ResourceExtractorPrivate *const d_ptr; /**< d-pointer for this class */

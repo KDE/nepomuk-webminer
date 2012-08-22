@@ -62,7 +62,7 @@ NepomukMetaDataExtractor::Extractor::ExtractorFactory::~ExtractorFactory()
     }
 }
 
-NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::createExtractor( const QString &webEngine )
+NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::getExtractor( const QString &webEngine )
 {
     Q_D( ExtractorFactory );
 
@@ -89,7 +89,7 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
     return 0;
 }
 
-NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::createExtractor( const QUrl &uri )
+NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::getExtractor( const QUrl &uri )
 {
     Q_D( ExtractorFactory );
 

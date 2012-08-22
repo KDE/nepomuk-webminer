@@ -80,7 +80,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::startUrlFetcher()
     //TODO: implement downloading of more than one url, loop trough all urls in d->urllist
 
     // create a webextractor
-    d->webextractor = extractorFactory()->createExtractor( d->urlList.first() );
+    d->webextractor = extractorFactory()->getExtractor( d->urlList.first() );
 
     if(!d->webextractor) {
         kWarning() << "could not find webextractor plugin for URL" << d->urlList.first();
@@ -154,7 +154,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
         disconnect(d->webextractor, SIGNAL(log(QString)), this, SLOT(log(QString)));
         disconnect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
 
-        d->webextractor = extractorFactory()->createExtractor( selectedEngine.identifier );
+        d->webextractor = extractorFactory()->getExtractor( selectedEngine.identifier );
 
         connect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
         connect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));

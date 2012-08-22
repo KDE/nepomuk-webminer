@@ -33,10 +33,10 @@ namespace UI {
     class FetcherPrivate;
 
 /**
- * @brief Base class for all fetcher inplementations.
+ * @brief Base class for all fetcher implementations.
  *
- * Define some useful functions every fetcher needs.
- * Calls the resource extarctor to get additional information.
+ * Defines some useful functions every fetcher needs.
+ * Calls the resource extractor to get additional information.
  * Keeps a list of all items that have to be checked.
  */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT Fetcher
@@ -77,8 +77,8 @@ public:
      * @brief Forces the fetcher to include resources which already have meta data
      *
      * This is false by default and will skip any files that already have meta data attached
-     * Will just do a type check (if a video has NMM:TvShow or NMM:Movie it is assumed there is meta data available, as it would be
-     * NFO:Video otherwise
+     * Will just do a type check (if a video has @c NMM:TvShow or @c NMM:Movie it is assumed there is meta data available, as it would be
+     * @c NFO:Video otherwise
      *
      * @param update @arg true refetch metadata also for existing data
      *               @arg false skip files with existing meta data
@@ -112,12 +112,14 @@ public:
 protected:
     /**
      * @brief Returns the ResourceExtractor that keeps a list of all resource which need to be checked
+     *
      * @return the ResourceExtractor
      */
     NepomukMetaDataExtractor::Extractor::ResourceExtractor *resourceExtractor();
 
     /**
      * @brief Returns the ExtractorFactory that handles all available plugins which can be used to fetch metadata from the web
+     *
      * @return the ExtractorFactory
      */
     NepomukMetaDataExtractor::Extractor::ExtractorFactory  *extractorFactory();
@@ -135,6 +137,7 @@ protected:
 
     /**
      * @brief Calls the correct NepomukPipe to save the QVariantMap into nepomuk
+     *
      * @param mdp the MetaDataParameters which should be saved
      */
     void saveMetaData(const NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp) const;

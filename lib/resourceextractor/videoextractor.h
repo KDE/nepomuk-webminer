@@ -35,7 +35,7 @@ namespace Extractor {
 /**
   * @brief Extracts some useful search parameters from the video filename or nepomuk resource
   *
-  * partly copied from Sebastian Trüg's tvshowfilenameanalyzer
+  * Partly copied from Sebastian Trüg's tvshowfilenameanalyzer
   *
   * The file/resource will be analized by its filename or if available some data from the nepomuk resource.
   * Based on this data (title, series, episode numer, season, year etc) a webbased search can be used to find the
@@ -71,6 +71,7 @@ public:
 
     /**
      * @brief sets a hint for tvshow resources to check also folder names for title/season/episode
+     *
      * @param useFolderNames @arg true check fodler names
      *                       @arg false do not check fodler names (default)
      */
@@ -80,7 +81,7 @@ public:
      * @brief Sets a hint, that the given file is a movie
      *
      * @param moviemode @arg true resource is a movie
-     *                   @arg false resource is either a tvshow or movie (default)
+     *                  @arg false resource is either a tvshow or movie (default)
      */
     void setMovieMode(bool moviemode);
 
@@ -88,6 +89,7 @@ public:
      * @brief Parse the video filename at the given url
      *
      * @param mdp the MetaDataParameters where the parsed data will be saved to
+     * @param baseUrl the base folder url. Helps to identify tvshow names of upper level folders
      * @param fileUrl the url of the file on the harddrive
      */
     void parseUrl(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl = KUrl());
@@ -109,7 +111,6 @@ private:
      *
      * @param mdp the MetaDataParameters where the parsed data will be saved to
      * @param fileName filename that will be parsed
-     * @param baseUrl the base folder url
      * @return @arg true if regexp matched some case
      *         @arg false if nothing matched
      */
@@ -120,7 +121,6 @@ private:
      *
      * @param mdp the MetaDataParameters where the parsed data will be saved to
      * @param fileName filename that will be parsed
-     * @param baseUrl the base folder url
      * @return @arg true if regexp matched some case
      *         @arg false if nothing matched
      */

@@ -22,6 +22,7 @@
 
 namespace NepomukMetaDataExtractor {
 namespace UI {
+
 /**
   * @brief Delegate to show the search result information in a nice way.
   *

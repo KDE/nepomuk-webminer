@@ -136,9 +136,7 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(cons
     // Step1 get the file resource of this nepomuk resource
     Nepomuk2::File fileResource;
 
-    // BUG: the hasType() is bugged without the call to types() first
-    // seems the resources does not fetch all types just the main one
-    // For publication. we get nbib:Article but not the basetype nbib:Publication
+    // BUG: the hasType() is bugged without the call to types() first. Fixed in 4.9.1
     resource.types();
 
     if( resource.hasType(Nepomuk2::Vocabulary::NBIB::Publication()) ) {
@@ -207,7 +205,7 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(cons
 
     bool fileSupported = fileChecker(metaDataParameters, fileUrl);
 
-    // we skip files that are not supported (not pdf, opendocument or video files)
+    // we skip files that are not supported (not pdf, opendocument, music or video files)
     if( !fileSupported) {
         delete metaDataParameters;
         return;
@@ -247,27 +245,24 @@ bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::fileChecker(Nepomuk
     return true;
 }
 
-bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourceChecker(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const Nepomuk2::Resource &fileResource)
+bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourceChecker(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const Nepomuk2::Resource &resource)
 {
     Nepomuk2::Resource queryResource;
 
     // first check if the real nepomuk resource can be reached via "publishedAs"
-    queryResource = fileResource.property( Nepomuk2::Vocabulary::NBIB::publishedAs() ).toResource();
+    queryResource = resource.property( Nepomuk2::Vocabulary::NBIB::publishedAs() ).toResource();
 
     if( !queryResource.exists() ) {
         // if this is not the case we do not have such a Publication resource. All other resources (TvShow/Movie etc are double typed with the file resource)
-        queryResource = fileResource;
+        queryResource = resource;
     }
 
-    // BUG: the hasType() is bugged without the call to types() first
-    // seems the resources does not fetch all types just the main one
-    // For publication. we get nbib:Article but not the basetype nbib:Publication
+    // BUG: the hasType() is bugged without the call to types() first. Fixed in 4.9.1
     queryResource.types();
 
     // Now get some values from the resource for the search parameters
 
     if( queryResource.hasType(Nepomuk2::Vocabulary::NBIB::Publication()) ) {
-        kDebug() << "Publication Resource";
         mdp->resourceType = QLatin1String("publication");
         //Nepomuk2::NBIB::Publication publication( fileResource.uri() ); seems this only works for new resources
 
@@ -287,8 +282,7 @@ bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourceChecker(Nep
             mdp->searchYearMin = releaseDate.toString(QLatin1String("yyyy"));
         }
     }
-    else if( fileResource.hasType(Nepomuk2::Vocabulary::NMM::TVShow()) ) {
-        kDebug() << "TVShow Resource";
+    else if( resource.hasType(Nepomuk2::Vocabulary::NMM::TVShow()) ) {
         mdp->resourceType = QLatin1String("tvshow");
 
         QString title = queryResource.property( Nepomuk2::Vocabulary::NIE::title()).toString();
@@ -314,8 +308,7 @@ bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourceChecker(Nep
         }
 
     }
-    else if( fileResource.hasType(Nepomuk2::Vocabulary::NMM::Movie()) ) {
-        kDebug() << "Movie Resource";
+    else if( resource.hasType(Nepomuk2::Vocabulary::NMM::Movie()) ) {
         mdp->resourceType = QLatin1String("movie");
         //Nepomuk2::NMM::Movie movie(queryResource.uri()); seems this only works for new resources
 
@@ -332,8 +325,7 @@ bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourceChecker(Nep
             mdp->searchYearMin = releaseDate.toString(QLatin1String("yyyy"));
         }
     }
-    else if( fileResource.hasType(Nepomuk2::Vocabulary::NMM::MusicPiece()) ) {
-        kDebug() << "Music Resource";
+    else if( resource.hasType(Nepomuk2::Vocabulary::NMM::MusicPiece()) ) {
         mdp->resourceType = QLatin1String("music");
 
         QString title = queryResource.property( Nepomuk2::Vocabulary::NIE::title()).toString();
@@ -356,12 +348,8 @@ bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourceChecker(Nep
         if(!albumName.isEmpty()) {
             mdp->searchAlbum =albumName;
         }
-
-        //TODO: release date? related to musicPiece or muscAlbum?
-
     }
     else {
-        kDebug() << "Other Resource";
         // try to get some general info
         if( mdp->searchTitle.isEmpty() && !queryResource.genericLabel().isEmpty()) {
             mdp->searchTitle = queryResource.genericLabel();

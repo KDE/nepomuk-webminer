@@ -111,6 +111,7 @@ private:
     /* Helping functions */
     /**
      * @brief Creates the publisher with the connected address
+     *
      * @param publisherValue name of the publisher
      * @param addressValue the address details
      * @param publication the publication where the publsiher is added to
@@ -120,6 +121,7 @@ private:
 
     /**
      * @brief Creates an Article in a collection which is added as Journal/Journal issue construct
+     *
      * @param journal the journal name
      * @param volume the journal volume
      * @param number the journal isue number
@@ -144,6 +146,7 @@ private:
 
     /**
      * @brief handles a huge amout of keys where no special processing or Class creation is necessary
+     *
      * @param key the bibtex key
      * @param value the bibtey value
      * @param publication the publication where the data is added to

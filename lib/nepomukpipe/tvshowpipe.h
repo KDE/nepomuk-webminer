@@ -44,40 +44,54 @@ namespace Pipe {
   *
   * The QVariantMap should have this keys:
   *
-  * @li @c title
-  * @li @c overview
+  * @li @c title - the name of the show
+  * @li @c overview - longer description about the show
   * @li @c imdbid - optional imdb id
-  * @li @c banner
-  * @li @c poster
-  * @li @c seasons - QVariantList containing more QVariantMaps with series info
+  * @li @c banner - url of the banner location
+  * @li @c poster - url of the poster location
+  * @li @c seasons - QVariantList containing more QVariantMaps with the @c season info
   * @li @c seealso - url where we got the metadata from
   *
   * The QVariantMap containing the season information looks like this:
   *
-  * @li @c number
-  * @li @c banner
-  * @li @c poster
-  * @li @c episodes - QVariantList containing more QVariantMaps with episodes info
+  * @li @c number - the season number
+  * @li @c banner - url of the banner location
+  * @li @c poster - url of the poster location
+  * @li @c episodes - QVariantList containing more QVariantMaps with @c episodes info
   *
   * The QVariantmap containing the episode information looks like this:
   * @li @c resourceuri - the file url or nepomuk uri of the resource this data should be added to
-  * @li @c title
-  * @li @c overview
-  * @li @c number
-  * @li @c banner
-  * @li @c poster
+  * @li @c title - the title of this episode
+  * @li @c overview - longer description of the episode
+  * @li @c number - the episode number
+  * @li @c banner - url of the banner location
+  * @li @c poster - url of the poster location
   * @li @c firstaired - use yyyy or yyy-mm-dd
   * @li @c genres - split by ;
   * @li @c director - split by ;
   * @li @c writer - split by ;
   * @li @c actors - split by ;
   * @li @c seealso - url where we got the metadata from
+  *
+  *
+ * The @c poster and @c banner won't be downloaded and added if it disabeld in the metadata KConfig.
+ * The location of the @c poster or @c banner can be configured as well, either next to the video file or in the data fodler of the library
   */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT TvShowPipe : public NepomukPipe
 {
 public:
+    /**
+     * @brief default constructor
+     *
+     * @param parent some parent object
+     */
     TvShowPipe(QObject *parent = 0);
 
+    /**
+     * @brief Starts the pipe importer for the tvshow metadata
+     *
+     * @param tvshowEntry metadata map
+     */
     void pipeImport(const QVariantMap &tvshowEntry);
 
 private:
@@ -85,7 +99,7 @@ private:
       * @brief Helper function to generate the basic episode details
       *
       * @param episodeInfo the episode detals as retrieved from the internet
-      * @param season the created season SimpleResource
+      * @param season the created season SimpleResource where the episode is added to
       */
     Nepomuk2::NMM::TVShow createEpisode(const QVariantMap &episodeInfo, const Nepomuk2::NMM::TVSeason &season);
 };

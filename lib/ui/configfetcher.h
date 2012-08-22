@@ -30,6 +30,12 @@ namespace Ui {
 class ConfigFetcher;
 }
 
+/**
+ * @brief Simple Widget to control the KConfig parameters for the fetcher
+ *
+ * Shows the list of available completers and lets the user select its favorite.
+ * Allows to set some other options to alter the fetching of citations, poster/banners.
+ */
 class ConfigFetcher : public QWidget
 {
     Q_OBJECT

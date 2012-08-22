@@ -28,6 +28,13 @@ namespace Extractor {
 
 class MetaDataParameters;
 
+/**
+ * @brief Extarctor to analyze audio files
+ *
+ * This class uses @c TagLib to read the ID3 tags of any music file and retrieve basic information from it for the search.
+ *
+ * @todo TODO: Add regular expressions to analyze the filename and get informations from there if TagLib didn't find anything
+ */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT AudioExtractor : public QObject
 {
     Q_OBJECT
@@ -39,6 +46,12 @@ public:
      */
     explicit AudioExtractor(QObject *parent = 0);
 
+    /**
+     * @brief starts the parsing of the file
+     *
+     * @param mdp the MetaDataParameters where all data will be added to
+     * @param fileUrl the url of the file
+     */
     void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
     
 private:
@@ -53,6 +66,7 @@ private:
 
     /**
      * @brief Analyze the filename to find artist/title information
+     *
      * @param mdp the resource where the data is added to
      * @return @arg true if something could be found
      *         @arg false otherwise

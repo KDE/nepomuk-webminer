@@ -28,7 +28,7 @@ namespace Extractor {
 class KrossExtractorPrivate;
 
 /**
-  * @brief Wrapper around the Kross framework to implement plugins in python, ruby or javascript
+  * @brief Wrapper around the Kross framework to implement plugins in @c Python, @c Ruby or @c JavaScript
   *
   * The plugin itself is implemented in the scriptfile that will be passed via its constructor.
   * Afterwards the signals/slots are passed directly to the script.
@@ -63,6 +63,13 @@ signals:
     void searchItems(const QString &resourceType, const QVariantMap &parameters);
     void extractItemFromUri(const QUrl &url, const QVariantMap &options);
 
+    /**
+     * @brief Internally used to overcome a problem with multiple nested dictionaries as return value in itemResults()
+     *
+     * Calls transformJSONResult and emits itemResults() with the transformed data
+     * @param resourceType the resource type
+     * @param jsonMap return values in json format
+     */
     void itemResultsJSON(const QString &resourceType, const QString &jsonMap);
 
 private slots:

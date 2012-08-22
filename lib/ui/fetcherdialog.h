@@ -38,8 +38,27 @@ namespace UI {
     class FetcherDialogPrivate;
 
 /**
-  * @brief Main dialog to show the current progress and some buttons to interact with
+  * @brief Dialog to interactively @c search / @c fetch and @c save metadata for a list of resources
   *
+ * Some examples how to use this class:
+@code
+QUrl someFolder = ...
+NepomukMetaDataExtractor::UI::FetcherDialog fd;
+
+fd.setTvShowMode( true );
+fd.setTvShowNamesInFolders( true );
+fd.addFetcherPath( someFolder );
+fd.exec();
+@endcode
+
+@code
+QList<Nepomuk2::Resource> resources = ...
+NepomukMetaDataExtractor::UI::FetcherDialog fd;
+
+fd.setForceUpdate( true );
+fd.addFetcherResource( someFolder );
+fd.exec();
+@endcode
   */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT FetcherDialog : public QDialog, public Fetcher, private Ui::FetcherDialog
 {
@@ -50,34 +69,133 @@ public:
     ~FetcherDialog();
 
 private slots:
+    /**
+     * @brief Called from the ResourceExtractor when all files/resources are parsed and the fetching can begin
+     */
     void resourceFetchingDone();
+
+    /**
+     * @brief Takes the next MetaDataParameters in the list after the user clicked on the next button
+     *
+     * @see setupCurrentResourceToLookup
+     */
     void selectNextResourceToLookUp();
+
+    /**
+     * @brief Takes the previous MetaDataParameters in the list after the user clicked on the previous button
+     *
+     * @see setupCurrentResourceToLookup
+     */
     void selectPreviousResourceToLookUp();
+
+    /**
+     * @brief When the tvshow/movie combobox changes its selection
+     * @param selection new selection
+     */
     void resourceTypeSelectionChanged(int selection);
 
+    /**
+     * @brief takes the current search parameter and the currently selected WebExtractor plugin and search for items that fit
+     */
     void startSearch();
-    void selectSearchEntry( QVariantList searchResults );
+
+    /**
+     * @brief Called from the plugins with the list of all found search results
+     *
+     * @param searchResults list of entries that fit the search parameters
+     */
+    void searchResultList( QVariantList searchResults );
+
+    /**
+     * @brief Called when the user clicks on a search entry in the list and display its details
+     *
+     * @param current current selected entry
+     * @param previous last selected entry
+     */
     void searchEntrySelected(const QModelIndex &current, const QModelIndex &previous);
 
+    /**
+     * @brief Open a dialog to change the search parameters in more detail
+     *
+     * Not all search parameters are shown in the main ui, here it is possible to add/change more parameters
+     * to ge tbetter results
+     */
     void showSearchParameters();
+
+    /**
+     * @brief Opens the url with additional details of the item in the default webbrowser
+     *
+     * @param url web url with more details
+     */
     void openDetailsLink(const QString &url);
 
+    /**
+     * @brief Starts the metadata fetching of the current selected WebExtractor
+     *
+     * @see fetchedItemDetails
+     */
     void fetchMoreDetails();
+
+    /**
+     * @brief Called by the WebExtractor to add the fetched @c metadata to the current file
+     *
+     * @param resourceType the resourcetype as retrieved from the plugin
+     * @param itemDetails the map with all metadata
+     */
     void fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails);
 
+    /**
+     * @brief Saves the current fetched metadata for the current shown item
+     */
     void saveMetaDataSlot();
 
+    /**
+     * @brief Close the dialog and cancel the metadata fetching
+     */
     void cancelClose();
 
+    /**
+     * @brief Opens a Dialog to show a critical erro in one of the plugins
+     *
+     * @param error the error message
+     */
     void errorInScriptExecution(const QString &error);
+
+    /**
+     * @brief Adds the <i>status message</i> to the progress log
+     *
+     * @param status the message that will be added
+     */
     void addToProgressLog(const QString &status);
+
+    /**
+     * @brief Opens a dialog to show some additional information about the fetcher progress
+     */
     void showProgressLog();
 
+    /**
+     * @brief Opens the Settings dialog to change the KConfig values for the extractor
+     */
     void openSettings();
 
 private:
+    /**
+     * @brief Takes the current selected MetaDataParameters object and enables/disables some gui parts depending on the resourcetype
+     *
+     * The list of available search plugins weill also be changed accordingly
+     * Calls showItemDetails afterwards
+     */
     void setupCurrentResourceToLookup();
+
+    /**
+     * @brief Fills the KComboBox with the list of available WebExtractors for the given category
+     * @param category selected category @c publication, @c movie, @c tvshow, @c music
+     */
     void fillEngineList(const QString &category);
+
+    /**
+     * @brief Displays some item details in the MetaDataWidget
+     */
     void showItemDetails();
 
     void busyFetching();

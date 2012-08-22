@@ -31,7 +31,7 @@
 #include <QtCore/QVariantMap>
 #include <QtGui/QHeaderView>
 
-#include <KDebug>
+#include <KDE/KDebug>
 
 namespace NepomukMetaDataExtractor {
 namespace UI {

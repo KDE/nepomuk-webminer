@@ -25,7 +25,7 @@ namespace NepomukMetaDataExtractor {
 namespace Pipe {
 
 /**
- * @brief Pipes a @c QVariantMap with <i>Music</i> information about a @c album and its @c tracks into nepomuk
+ * @brief Pipes a @c QVariantMap with @c Music information about a @c album and its @c tracks into nepomuk
  *
  * The QVariantMap should have this keys:
  *
@@ -47,15 +47,17 @@ namespace Pipe {
  * @li @c genre - list of genres for the track split by ;
  * @li @c musicbrainz - MusicBrainz id
  * @li @c seealso - url where we got the metadata from
+ * @li @c lyrics - lyrics for track
  *
- * @todo TODO: incomplete, needs lyrics and other stuff
- *
+ * The @c cover won't be downloaded and added if it disabeld in the metadata KConfig.
+ * The location of the cover can be configured as well, either next to the music file or in the data fodler of the library
  */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT MusicPipe : public NepomukPipe
 {
 public:
     /**
      * @brief Standard Constructor
+     *
      * @param parent parent object
      */
     explicit MusicPipe(QObject *parent = 0);

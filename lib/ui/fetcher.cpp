@@ -121,9 +121,8 @@ NepomukMetaDataExtractor::Extractor::ExtractorFactory* NepomukMetaDataExtractor:
 
 void NepomukMetaDataExtractor::UI::Fetcher::addResourceUriToMetaData( NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp )
 {
-    // For tv shows put the resource uri inti the Episode part of the MetaData
+    // For tv shows put the resource uri into the Episode part of the MetaData
     // this way around it is possible to use the TvShowPipe with more episode/files at once
-    //TODO: do not just use first entry, in case we connect more than 1 file here
     if( mdp->resourceType == QLatin1String("tvshow")) {
         QVariantList seasons = mdp->metaData.value(QLatin1String("seasons")).toList();
         if(!seasons.isEmpty()) {
@@ -143,7 +142,6 @@ void NepomukMetaDataExtractor::UI::Fetcher::addResourceUriToMetaData( NepomukMet
         }
     }
     // music piece / album works the same as tvshows, we add the fileurl to the track not the toplevel album
-    //TODO: do not just use first entry, in case we connect more than 1 file here
     else if( mdp->resourceType == QLatin1String("music")) {
         QVariantList trackList = mdp->metaData.value(QLatin1String("tracks")).toList();
 
