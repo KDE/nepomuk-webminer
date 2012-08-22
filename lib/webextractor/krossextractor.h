@@ -60,6 +60,7 @@ public:
 
     void search(const QString &resourceType, const QVariantMap &parameters);
     void extractItem(const QUrl &url, const QVariantMap &options);
+    void showConfigDialog();
 
 signals:
     void searchItems(const QString &resourceType, const QVariantMap &parameters);

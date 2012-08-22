@@ -58,7 +58,6 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
     KConfig config("nepomukmetadataextractorrc");
     if( config.hasGroup( scriptFile ) ) {
         KConfigGroup pluginGroup( &config, scriptFile );
-
         d->scriptInfo.name = pluginGroup.readEntry("name", QString());
         d->scriptInfo.homepage = pluginGroup.readEntry("homepage", QString());
         d->scriptInfo.identifier = pluginGroup.readEntry("identifier", QString());
@@ -67,6 +66,7 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
         d->scriptInfo.author = pluginGroup.readEntry("author", QString());
         d->scriptInfo.email = pluginGroup.readEntry("email", QString());
         d->scriptInfo.file = pluginGroup.readEntry("file", QString());
+        d->scriptInfo.hasConfig = pluginGroup.readEntry("hasConfig", QVariant(false)).toBool();
         d->scriptInfo.resource = pluginGroup.readEntry("resource", QStringList());
         d->scriptInfo.urlregex = pluginGroup.readEntry("urlregex", QStringList());
     }
@@ -76,7 +76,12 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
         d->scriptInfo.name = result.value("name").toString();
         d->scriptInfo.homepage = result.value("homepage").toString();
         d->scriptInfo.identifier = result.value("identifier").toString();
-        d->scriptInfo.description = result.value("desscription").toString();
+        d->scriptInfo.description = result.value("description").toString();
+        if (result.contains("hasConfig")) {
+            d->scriptInfo.hasConfig = result.value("hasConfig").toBool();
+        } else {
+            d->scriptInfo.hasConfig = false;
+        }
         d->scriptInfo.author = result.value("author").toString();
         d->scriptInfo.email = result.value("email").toString();
 
@@ -149,6 +154,14 @@ void NepomukMetaDataExtractor::Extractor::KrossExtractor::extractItem(const QUrl
         d->futureWatcher = new QFutureWatcher<QVariant>();
 
         d->futureWatcher->setFuture(future);
+    }
+}
+
+void NepomukMetaDataExtractor::Extractor::KrossExtractor::showConfigDialog()
+{
+    Q_D( KrossExtractor );
+    if (d->scriptInfo.hasConfig) {
+        d->scriptFile->callFunction("showConfigDialog");
     }
 }
 

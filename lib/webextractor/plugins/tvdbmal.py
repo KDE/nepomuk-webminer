@@ -8,8 +8,6 @@
 import re
 import json
 import urllib2
-import PyKDE4.kdecore as kdecore
-import PyQt4.QtCore as QtCore
 
 # Prerrequisites.
 isAvailable = True
@@ -27,7 +25,25 @@ except:
     isAvailable = False
     errorMsg = "The python 'requests' module is a requirement. See http://docs.python-requests.org/en/latest/user/install/"
 
+try:
+    import PyQt4.QtGui as QtGui
+    import PyQt4.QtCore as QtCore
+    from PyQt4 import uic
+except:
+    isAvailable = False
+    errorMsg = "PyQt is a requirement. See http://www.riverbankcomputing.co.uk/software/pyqt/intro"
+
+try:
+    import PyKDE4.kdecore as kdecore
+    import PyKDE4.kdeui as kdeui
+except:
+    isAvailable = False
+    errorMsg = "PyKDE is a requirement. Please install Python KDE bindings."
+
+
 confFileName = "tvdbrc"
+# possible FIXME:is there a better way than this hardcoding?
+uifileFolder = kdecore.KStandardDirs.locate("data", "nepomukmetadataextractor/plugins/") + "/uifiles";
 
 #------------------------------------------------------------------------------
 # Module options
@@ -45,6 +61,7 @@ confFileName = "tvdbrc"
 # description   = Description to add some more information about the service
 # author        = plugin author
 # email         = plugin author email
+# hasConfig     = set to true if plugin has its own config dialog. Should show it using showConfigDialog()
 #
 def info():
     return dict( name = 'The TVDb (Augmented with MyAnimeList)',
@@ -54,11 +71,13 @@ def info():
 #                 urlregex = ['http://thetvdb.com/\\?tab=episode&seriesid=(\\d+)&seasonid=(\\d+)&id=(\\d+).*', 'http://thetvdb.com/\\?tab=season&seriesid=(\\d+)&seasonid=(\\d+).*', 'http://thetvdb.com/\\?tab=series&id=(\\d+).*'],
                  urlregex = ['http://thetvdb.com/\\?tab=episode&seriesid=(\\d+)&seasonid=(\\d+)&id=(\\d+).*'],
                  resource = ['tvshow'],
-                 description = 'An open database for television fans',
-                 author = 'Joerg Ehrichs',
-                 email = 'joerg.ehrichs@gmx.de',
+                 description = 'An open database for television fans. This plugin will also attempt to find show aliases using the MyAnimeList API',
+                 author = 'Lim Yuen Hoe, Joerg Ehrichs',
+                 email = 'yuenhoe@hotmail.com',
                  isAvailable = isAvailable,
+                 hasConfig = True,
                  errorMsg = errorMsg)
+
 
 #------------------------------------------------------------------------------
 # starts a search query
@@ -168,6 +187,13 @@ def getConfiguredAlias(showtitle, showseason):
     conf = kdecore.KConfig(confFileName)
     confgroup = kdecore.KConfigGroup(conf, "aliases")
     rawdata = confgroup.readEntry(showtitle, QtCore.QStringList()).toStringList()
+    if len(rawdata) > 1:
+        if rawdata[1] == "-":
+            return str(rawdata[0]), showseason
+        else:
+            return str(rawdata[0]), str(rawdata[1])
+    # in case there's unicode involved
+    rawdata = confgroup.readEntry(showtitle.decode('utf'), QtCore.QStringList()).toStringList()
     if len(rawdata) > 1:
         if rawdata[1] == "-":
             return str(rawdata[0]), showseason
@@ -341,6 +367,61 @@ def get_other_titles(query):
         for title in details['other_titles']['synonyms']:
             result.append(title)
     return result
+
+#------------------------------------------------------------------------------
+# Code for plugin-specific config dialog.
+# Just a simple interface to add and delete custom aliases.
+# Dealing with uic from python is pretty ill-documented, so not sure
+# how good the methods here are, but they work well enough.
+class ConfDialogController:
+    def __init__(self):
+        self.ui = uic.loadUi(uifileFolder + "/tvdbmalconfig.ui", QtGui.QDialog())
+        self.conf = kdecore.KConfig(confFileName)
+        self.confgroup = kdecore.KConfigGroup(self.conf, "aliases")
+        self.refresh_widgets()
+
+    def execdialog(self):
+        self.ui.exec_()
+
+    def refresh_widgets(self):
+        self.ui.overrideList.clear()
+        for key in self.confgroup.keyList():
+            i = QtGui.QListWidgetItem(key + " -> " + self.confgroup.readEntry(key))
+            i.setData(4, key)
+            i.setData(5, self.confgroup.readEntry(key))
+            self.ui.overrideList.addItem(i)
+        self.ui.addButton.clicked.connect(self.add_item)
+        self.ui.deleteButton.clicked.connect(self.remove_item)
+        self.ui.customSeasonCheckbox.stateChanged.connect(self.update_seasonfield)
+        self.update_seasonfield()
+
+    def update_seasonfield(self):
+        if self.ui.customSeasonCheckbox.isChecked():
+            self.ui.customSeasonText.setDisabled(False)
+        else:
+            self.ui.customSeasonText.setDisabled(True)
+
+    def remove_item(self):
+        i = self.ui.overrideList.currentItem()
+        if i:
+            self.confgroup.deleteEntry(i.data(4).toString())
+            self.conf.sync()
+            self.refresh_widgets()
+
+    def add_item(self):
+        if self.ui.beforeText.text().trimmed() != "" and self.ui.afterText.text().trimmed() != "":
+            if self.ui.customSeasonCheckbox.isChecked() and self.ui.customSeasonText.text().trimmed() != "":
+                self.confgroup.writeEntry(self.ui.beforeText.text(), [self.ui.afterText.text(), self.ui.customSeasonText.text()])
+                self.conf.sync()
+                self.refresh_widgets()
+            elif not self.ui.customSeasonCheckbox.isChecked():
+                self.confgroup.writeEntry(self.ui.beforeText.text(), [self.ui.afterText.text(), "-"])
+                self.conf.sync()
+                self.refresh_widgets()
+
+def showConfigDialog():
+    test = ConfDialogController()
+    test.execdialog()
 
 if __name__=="__main__":
     print "Plugin information:"

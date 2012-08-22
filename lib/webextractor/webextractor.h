@@ -57,6 +57,7 @@ public:
         QString email;          /**< Plugin author email */
         QString file;           /**< File path and name of the plugin */
         QString icon;           /**< An icon */
+        bool hasConfig;         /**< true if plugin can show a gui config dialog */
 
         /**
          * @brief operator ==
@@ -123,6 +124,14 @@ public slots:
      * @see @c MusicPipe
      */
     virtual void extractItem(const QUrl &url, const QVariantMap &options) = 0;
+
+    /**
+     * @brief Shows plugin-specific config dialog
+     *
+     * Should simply show the config dialog for the plugin.
+     *
+     */
+    virtual void showConfigDialog() = 0;
 
 signals:
     /**

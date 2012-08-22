@@ -185,6 +185,7 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
                 scriptInfo.identifier = pluginGroup.readEntry("identifier", QString());
                 scriptInfo.icon = pluginGroup.readEntry("icon", QString());
                 scriptInfo.description = pluginGroup.readEntry("description", QString());
+                scriptInfo.hasConfig = pluginGroup.readEntry("hasConfig", QVariant(false)).toBool();
                 scriptInfo.author = pluginGroup.readEntry("author", QString());
                 scriptInfo.email = pluginGroup.readEntry("email", QString());
                 scriptInfo.file = pluginGroup.readEntry("file", QString());
@@ -217,7 +218,12 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
             QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + result.value("icon").toString();
             scriptInfo.icon = iconPath;
 
-            scriptInfo.description = result.value("desscription").toString();
+            scriptInfo.description = result.value("description").toString();
+            if (result.contains("hasConfig")) {
+                scriptInfo.hasConfig = result.value("hasConfig").toBool();
+            } else {
+                scriptInfo.hasConfig = false;
+            }
             scriptInfo.author = result.value("author").toString();
             scriptInfo.email = result.value("email").toString();
             scriptInfo.file = fileInfo.absoluteFilePath();
@@ -243,6 +249,7 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
             pluginGroup.writeEntry("identifier",scriptInfo.identifier);
             pluginGroup.writeEntry("icon",scriptInfo.icon);
             pluginGroup.writeEntry("description",scriptInfo.description);
+            pluginGroup.writeEntry("hasConfig", QVariant(scriptInfo.hasConfig));
             pluginGroup.writeEntry("icon",scriptInfo.icon);
             pluginGroup.writeEntry("author",scriptInfo.author);
             pluginGroup.writeEntry("email",scriptInfo.email);
