@@ -117,13 +117,27 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariant
     fileurl.setEncodedUrl(file.toLatin1());
 
     if( fileurl.isLocalFile()) {
-        kDebug() << "add localfile crosref" << file;
+        kDebug() << "add nbib:publicationOf to the file ::" << file;
+
+        // get the resource for the local file uri
         Nepomuk2::File localFileRes(fileurl);
 
+        // remove any metadata from this file created by the metadata extractor
+        KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << fileurl, Nepomuk2::NoRemovalFlags, KComponentData("metadataextractor") );
+        if (!job->exec() ) {
+            kWarning() << job->errorString();
+        }
+        else {
+            kDebug() << "Successfully removed old metadata from " << fileurl;
+        }
 
-        // first we create a nepomuk resource from the file
-        // if the resoruce existed already (due to fileanalyzer added it before), we get the existing resource back
-        // if the analyzer failed a new resource is created
+        // now sometimes the fileanalyzer fails to index pdf files due to the streamanalyzer crashing when it tries to
+        // read the pdf data. This leaves a Nepomuk Resource without the NFO::FileDataObject Type and thus won#t be listed
+        // in conquirere as actual document.
+        // Here we are going to fix it and add the neccessary parts for it. Also we set the nie:title to the file
+        // so it can show up in dolphin, while all the other information is hidden behind the nbib:publishedAs property
+
+        // this works differently than all the other double typed resources (movie/tvshow/musicpiece etc)
         Nepomuk2::SimpleResourceGraph graph;
         Nepomuk2::NFO::PaginatedTextDocument localFile(localFileRes.uri());
 
@@ -134,13 +148,16 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariant
 
         graph << localFile;
 
-        Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph,Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties);
+        Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph,Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties,
+                                                                    QHash<QUrl,QVariant>(),KComponentData("metadataextractor"));
         connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
         srj->exec();
 
+        // now get the resource uri again.
         QUrl fileResourceUri = srj->mappings().value( localFile.uri() );
 
-        // now add the crossrefs
+        // and add the cross reference properties
+        // so the actual publication resource is linked to the file resource
         QList<QUrl> resUri; resUri << fileResourceUri;
         QVariantList value; value << mainPublicationUris.first;
         Nepomuk2::setProperty(resUri, NBIB::publishedAs(), value);
@@ -197,7 +214,8 @@ QPair<QUrl, QUrl>  NepomukMetaDataExtractor::Pipe::PublicationPipe::importPublic
 
     graph << publication << reference;
 
-    Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph,Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties);
+    Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph,Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties,
+                                                                QHash<QUrl,QVariant>(),KComponentData("metadataextractor"));
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
 

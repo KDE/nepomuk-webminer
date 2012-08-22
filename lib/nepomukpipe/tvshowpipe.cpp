@@ -249,17 +249,30 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
 
     graph << seriesRes;
 
-    Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph, Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties);
+    Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph, Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties,
+                                                                QHash<QUrl,QVariant>(),KComponentData("metadataextractor"));
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
 }
 
 Nepomuk2::NMM::TVShow NepomukMetaDataExtractor::Pipe::TvShowPipe::createEpisode(const QVariantMap &episodeInfo, const Nepomuk2::NMM::TVSeason &season )
 {
-    kDebug() << "create new episode with url" << episodeInfo.value(QLatin1String("resourceuri")).toString();
     QString resourceUri = episodeInfo.value(QLatin1String("resourceuri")).toString();
     QUrl existingUri;
     existingUri.setEncodedUrl(resourceUri.toLatin1());
+
+    // first remove the old metadata from the file before we create a new episode later on
+    KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << existingUri, Nepomuk2::NoRemovalFlags, KComponentData("metadataextractor") );
+    if (!job->exec() ) {
+        kWarning() << job->errorString();
+    }
+    else {
+        kDebug() << "Successfully removed old metadata from " << existingUri;
+    }
+
+    // now create the graph and fill it with all the new metadata
+    kDebug() << "create new episode with url" << episodeInfo.value(QLatin1String("resourceuri")).toString();
+
     Nepomuk2::NMM::TVShow episodeRes(existingUri);
 
     QString episodeNumber = episodeInfo.value(QLatin1String("number")).toString();

@@ -114,6 +114,18 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
         QString resourceUri = trackInfo.value(QLatin1String("resourceuri")).toString();
         QUrl existingUri;
         existingUri.setEncodedUrl(resourceUri.toLatin1());
+
+        // first remove the old metadata
+        KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << existingUri, Nepomuk2::NoRemovalFlags, KComponentData("metadataextractor") );
+        if (!job->exec() ) {
+            kWarning() << job->errorString();
+        }
+        else {
+            kDebug() << "Successfully removed old metadata from " << existingUri;
+        }
+
+        // now create the graph and fill it with all the new metadata
+
         Nepomuk2::NMM::MusicPiece trackResource(existingUri);
 
         // Note: Why album cover as artwork of the track? not of the music album?
@@ -183,7 +195,8 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
         graph << trackResource;
     }
 
-    Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph, Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties);
+    Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph, Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties,
+                                                                QHash<QUrl,QVariant>(),KComponentData("metadataextractor"));
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
 }

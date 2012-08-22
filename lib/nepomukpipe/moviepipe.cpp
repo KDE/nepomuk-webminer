@@ -42,12 +42,24 @@ NepomukMetaDataExtractor::Pipe::MoviePipe::MoviePipe(QObject *parent)
 
 void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &movieEntry)
 {
-    Nepomuk2::SimpleResourceGraph graph;
-
     //TODO: do not use local file url here, this will double type the resource for now this is the best way to deal with this
     QString resourceUri = movieEntry.value(QLatin1String("resourceuri"), QString()).toString();
     QUrl existingUri;
     existingUri.setEncodedUrl(resourceUri.toLatin1());
+
+    // first remove the old metadata
+    //BUG: Removing lots of person subresources cause virtuoso to go crazy. Takes ~10Min to get all the data removed properly
+    KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << existingUri, Nepomuk2::NoRemovalFlags, KComponentData("metadataextractor") );
+    if (!job->exec() ) {
+        kWarning() << job->errorString();
+    }
+    else {
+        kDebug() << "Successfully removed old metadata from " << existingUri;
+    }
+
+    // now create the graph and fill it with all the new metadata
+    Nepomuk2::SimpleResourceGraph graph;
+
     Nepomuk2::NMM::Movie movieResource(existingUri);
 
     QString title = movieEntry.value(QLatin1String("title")).toString();
@@ -123,7 +135,8 @@ void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &mo
 
     graph << movieResource;
 
-    Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph, Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties);
+    Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph, Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties,
+                                                                QHash<QUrl,QVariant>(),KComponentData("metadataextractor"));
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
 }
