@@ -25,7 +25,6 @@
 #include <mdesettings.h>
 #include "configfetcher.h"
 #include "configresourceextractor.h"
-#include "confignepomukpipe.h"
 
 #include "metadataparameters.h"
 #include "resourceextractor/resourceextractor.h"
@@ -179,9 +178,6 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::openSettings()
 
     ConfigResourceExtractor *cre = new ConfigResourceExtractor();
     dialog->addPage( cre, i18n("Resource Extractor"));
-
-    ConfigNepomukPipe *cnp = new ConfigNepomukPipe();
-    dialog->addPage( cnp, i18n("Nepomuk Pipe"));
 
     dialog->exec();
 }
