@@ -150,15 +150,18 @@ QList<NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name> NepomukMet
 
     QStringList personStringList;
 
-    // first Try bibtex like description: Hans Wurst and Jochen Junker
-    personStringList = cleanedPersonString.split(QLatin1String(" and "));
-    if(personStringList.size() == 1) {
-        // just in case: Hans Wurst; Jochen Junker
-        personStringList = cleanedPersonString.split(QLatin1String(";"));
-    }
+    // first try usual list of people returned from the plugins
+    // Hans Wurst; Jochen Junker
+    personStringList = cleanedPersonString.split(QLatin1String(";"));
+
     if(personStringList.size() == 1) {
         // just in case: Hans Wurst & Jochen Junker
         personStringList = cleanedPersonString.split(QLatin1String("&"));
+    }
+
+    if(personStringList.size() == 1) {
+        // now try bibtex like description: Hans Wurst and Jochen Junker
+        personStringList = cleanedPersonString.split(QLatin1String(" and "));
     }
 
     // ok now we have 1 to several names, they can be specified in different versions
