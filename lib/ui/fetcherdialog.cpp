@@ -243,6 +243,29 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::setupCurrentResourceToLookup()
         labelAlbum->setVisible(false);
         lineEditAlbum->setVisible(false);
 
+        cbSelectType->setVisible(true);
+        cbSelectType->setCurrentIndex(1);
+
+        lineEditSeason->setText( mdp->searchSeason );
+        lineEditEpisode->setText( mdp->searchEpisode );
+        lineEditShow->setText(  mdp->searchShowTitle );
+    }
+    else if(mdp->resourceType == QLatin1String("movie")) {
+        labelSeason->setVisible(false);
+        lineEditSeason->setVisible(false);
+        labelEpisode->setVisible(false);
+        lineEditEpisode->setVisible(false);
+        labelShow->setVisible(false);
+        lineEditShow->setVisible(false);
+
+        labelArtist->setVisible(false);
+        lineEditArtist->setVisible(false);
+        labelAlbum->setVisible(false);
+        lineEditAlbum->setVisible(false);
+
+        cbSelectType->setVisible(true);
+        cbSelectType->setCurrentIndex(0);
+
         lineEditSeason->setText( mdp->searchSeason );
         lineEditEpisode->setText( mdp->searchEpisode );
         lineEditShow->setText(  mdp->searchShowTitle );
@@ -254,6 +277,8 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::setupCurrentResourceToLookup()
         lineEditEpisode->setVisible(false);
         labelShow->setVisible(false);
         lineEditShow->setVisible(false);
+
+        cbSelectType->setVisible(false);
 
         labelArtist->setVisible(false);
         lineEditArtist->setVisible(false);
@@ -273,20 +298,10 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::setupCurrentResourceToLookup()
         labelAlbum->setVisible(true);
         lineEditAlbum->setVisible(true);
 
+        cbSelectType->setVisible(false);
+
         lineEditArtist->setText( mdp->searchPerson );
         lineEditAlbum->setText( mdp->searchAlbum );
-    }
-
-    if( mdp->resourceType == QLatin1String("tvshow")) {
-        cbSelectType->setVisible(true);
-        cbSelectType->setCurrentIndex(1);
-    }
-    else if( mdp->resourceType == QLatin1String("movie")) {
-        cbSelectType->setVisible(true);
-        cbSelectType->setCurrentIndex(0);
-    }
-    else {
-        cbSelectType->setVisible(false);
     }
 
     buttonFetchMore->setEnabled(false);
