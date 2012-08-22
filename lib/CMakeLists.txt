@@ -86,7 +86,7 @@ set( nepomukmetadataextractor_LIB_HDRS
   nepomukpipe/moviepipe.h
   nepomukpipe/publicationpipe.h
   nepomukpipe/tvshowpipe.h
-  nepomukpipe/musicpipe.cpp
+  nepomukpipe/musicpipe.h
 
   ui/fetcher.h
   ui/automaticfetcher.h
