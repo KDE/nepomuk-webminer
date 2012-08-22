@@ -93,17 +93,29 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
 {
     Q_D( ExtractorFactory );
 
+    // first check if we already created the extractor and reuse it in this case
+    foreach(WebExtractor *we, d->existingExtractors) {
+        foreach(const QString &urlregex, we->info().urlregex) {
+            if(uri.toString().contains( QRegExp(urlregex) )) {
+                return we;
+            }
+        }
+    }
+
+    // other wise create a new one
     foreach(const WebExtractor::Info i, d->availableScripts) {
         foreach(const QString &urlregex, i.urlregex) {
             if(uri.toString().contains( QRegExp(urlregex) )) {
 
                 kDebug() << "create KROSS web extractor for:" << i.name;
                 KrossExtractor *ke = new KrossExtractor(i.file);
+                d->existingExtractors.append(ke);
                 return ke;
             }
         }
     }
 
+    kWarning() << "Could not find the rigth KrossExtractor for url :: " << uri;
     return 0;
 }
 
