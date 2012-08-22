@@ -70,7 +70,7 @@ def searchItems( resourcetype, parameters ):
 
     WebExtractor.log( 'Start query via: ' + searchQuery )
 
-    h = httplib2.Http(".cache")
+    h = httplib2.Http("/tmp/httplib2")
     resp, content = h.request('http://www.springerlink.com/content/?k=' + urllib2.quote(searchQuery.encode("utf8")) )
 
     documentElement = BeautifulSoup( content )
@@ -117,7 +117,7 @@ def extractItemFromUri( url, options ):
     logMsg = 'start item extraction via: ' + url 
     WebExtractor.log( logMsg )
 
-    h = httplib2.Http(".cache")
+    h = httplib2.Http("/tmp/httplib2")
 
     #--------------------------------------------------------
     # fetch the abstract page first

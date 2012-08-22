@@ -70,7 +70,7 @@ def searchItems( resourcetype, parameters ):
 
     WebExtractor.log( 'Start query via: ' + searchQuery )
 
-    h = httplib2.Http(".cache")
+    h = httplib2.Http("/tmp/httplib2")
     resp, content = h.request('http://www.nature.com/search/executeSearch?sp-advanced=true&' + searchQuery)
 
     documentElement = BeautifulSoup( content )
@@ -157,7 +157,7 @@ def extractItemFromUri( url, options ):
     logMsg = 'start item extraction via: ' + url 
     WebExtractor.log( logMsg )
 
-    h = httplib2.Http(".cache")
+    h = httplib2.Http("/tmp/httplib2")
     resp, content = h.request( url )
 
     documentElement = BeautifulSoup( content )

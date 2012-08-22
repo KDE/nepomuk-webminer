@@ -87,7 +87,7 @@ def searchItems( resourcetype, parameters ):
     logMsg = 'start search query at: ' + query 
     WebExtractor.log( logMsg )
 
-    h = httplib2.Http(".cache")
+    h = httplib2.Http("/tmp/httplib2")
     resp, content = h.request(query)
 
     documentElement = BeautifulSoup( content )
@@ -118,7 +118,7 @@ def extractSearchResults(documentElement, citation=False):
     searchResults = []
 
     if noResult:
-        WebExtractor.error( 'Could not extract Item info' )
+        WebExtractor.log( 'No search results found' )
         return searchResults
 
 
@@ -199,10 +199,10 @@ def extractItemFromUri( url, options ):
     #clear all citations available from an earlier call
     global citations
     citations = []
-    global citations
+    global citationResults
     citationResults = []
 
-    h = httplib2.Http(".cache")
+    h = httplib2.Http("/tmp/httplib2")
     resp, content = h.request(url)
 
     documentElement = BeautifulSoup( content )
@@ -217,12 +217,11 @@ def extractItemFromUri( url, options ):
         logMsg = 'fetch references via ' + url 
         WebExtractor.log( logMsg )
 
-        h = httplib2.Http(".cache")
+        h = httplib2.Http("/tmp/httplib2")
         resp, content = h.request(url)
 
         documentElement = BeautifulSoup( content )
 
-        global citations
         citations = extractSearchResults(documentElement, True)
 
         if not citations:
@@ -232,7 +231,6 @@ def extractItemFromUri( url, options ):
             fetchNextCitation()
 
         # Add all found citations to the final entry
-        global citationResults
         if citationResults:
             finalEntry['references'] = citationResults
 
@@ -270,7 +268,7 @@ def extractItem( documentElement ):
     # http://academic.research.microsoft.com/64764.bib?type=2&format=0&download=1
     WebExtractor.log( 'download bibtex file' )
 
-    h = httplib2.Http(".cache")
+    h = httplib2.Http("/tmp/httplib2")
     resp, content = h.request( 'http://academic.research.microsoft.com/' + masid + '.bib?type=2&format=0&download=1' )
 
     bibtexentrytype = re.compile(r'^@(\w+)\{(.*)')   # works on            :: @article{author = {Hans Wurst},
@@ -278,7 +276,6 @@ def extractItem( documentElement ):
 
     # transform bibtex keys 1:1 into the dictionary we want to return
     for line in string.split(content, "\n"):
-        pp.pprint(line)
         typeMatch = bibtexentrytype.search(line)
         if(typeMatch):
             entry.update(dict(bibtexentrytype = typeMatch.group(1)))
@@ -314,7 +311,7 @@ def fetchNextCitation():
     logMsg = 'fetch reference: ' +  nextCitation['title']
     WebExtractor.log( logMsg )
 
-    h = httplib2.Http(".cache")
+    h = httplib2.Http("/tmp/httplib2")
     resp, content = h.request(nextCitation['url'])
 
     documentElement = BeautifulSoup( content )
