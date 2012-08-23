@@ -91,6 +91,7 @@ set( nepomukmetadataextractor_LIB_HDRS
   ui/fetcher.h
   ui/automaticfetcher.h
   ui/fetcherdialog.h
+  ui/metadatawidget.h
   ${CMAKE_CURRENT_BINARY_DIR}/ui_fetcherdialog.h
 )
 
