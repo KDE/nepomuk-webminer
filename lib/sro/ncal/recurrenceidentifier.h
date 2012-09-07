@@ -1,5 +1,5 @@
-#ifndef _NBIB_DOCUMENTSTATUS_H_
-#define _NBIB_DOCUMENTSTATUS_H_
+#ifndef _NCAL_RECURRENCEIDENTIFIER_H_
+#define _NCAL_RECURRENCEIDENTIFIER_H_
 
 #include <QtCore/QVariant>
 #include <QtCore/QStringList>
@@ -11,26 +11,28 @@
 #include <nepomuk2/simpleresource.h>
 
 namespace Nepomuk2 {
-namespace NBIB {
+namespace NCAL {
 /**
- * The status of the publication of a document. 
+ * Recurrence Identifier. Introduced to provide a structure 
+ * for the value of ncal:recurrenceId property. See the documentation 
+ * of ncal:recurrenceId for details. 
  */
-class DocumentStatus : public virtual Nepomuk2::SimpleResource
+class RecurrenceIdentifier : public virtual Nepomuk2::SimpleResource
 {
 public:
-    DocumentStatus(const QUrl& uri = QUrl())
+    RecurrenceIdentifier(const QUrl& uri = QUrl())
       : SimpleResource(uri) {
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#RecurrenceIdentifier", QUrl::StrictMode));
     }
 
-    DocumentStatus(const SimpleResource& res)
+    RecurrenceIdentifier(const SimpleResource& res)
       : SimpleResource(res) {
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#RecurrenceIdentifier", QUrl::StrictMode));
     }
 
-    DocumentStatus& operator=(const SimpleResource& res) {
+    RecurrenceIdentifier& operator=(const SimpleResource& res) {
         SimpleResource::operator=(res);
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#RecurrenceIdentifier", QUrl::StrictMode));
         return *this;
     }
 
@@ -138,32 +140,47 @@ public:
     }
 
     /**
-     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels. 
-     * Number of Low Frequency Expansion (subwoofer) channels. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#range. 
+     * To specify the effective range of recurrence instances from 
+     * the instance specified by the recurrence identifier specified 
+     * by the property. It is intended to express the RANGE parameter 
+     * specified in RFC 2445 sec. 4.2.13. The set of possible values 
+     * for this property is limited. See also the documentation for 
+     * ncal:recurrenceId for more details. 
      */
-    qint64 lfeChannels() const {
-        qint64 value;
-        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode)).first().value<qint64>();
+    QUrl range() const {
+        QUrl value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#range", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#range", QUrl::StrictMode)).first().value<QUrl>();
         return value;
     }
 
     /**
-     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels. 
-     * Number of Low Frequency Expansion (subwoofer) channels. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#range. 
+     * To specify the effective range of recurrence instances from 
+     * the instance specified by the recurrence identifier specified 
+     * by the property. It is intended to express the RANGE parameter 
+     * specified in RFC 2445 sec. 4.2.13. The set of possible values 
+     * for this property is limited. See also the documentation for 
+     * ncal:recurrenceId for more details. 
      */
-    void setLfeChannels(const qint64& value) {
+    void setRange(const QUrl& value) {
         QVariantList values;
         values << value;
-        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#range", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels. 
-     * Number of Low Frequency Expansion (subwoofer) channels. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#range. 
+     * To specify the effective range of recurrence instances from 
+     * the instance specified by the recurrence identifier specified 
+     * by the property. It is intended to express the RANGE parameter 
+     * specified in RFC 2445 sec. 4.2.13. The set of possible values 
+     * for this property is limited. See also the documentation for 
+     * ncal:recurrenceId for more details. 
      */
-    void addLfeChannels(const qint64& value) {
-        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode), value);
+    void addRange(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#range", QUrl::StrictMode), value);
     }
 
     /**
@@ -235,6 +252,41 @@ public:
      */
     void addClassRole(const QUrl& value) {
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/11/01/pimo#classRole", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#recurrenceIdDateTime. 
+     * The date and time of a recurrence identifier. Provided to express 
+     * the actual value of the ncal:recurrenceId property. See documentation 
+     * for ncal:recurrenceId for details. 
+     */
+    QUrl recurrenceIdDateTime() const {
+        QUrl value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#recurrenceIdDateTime", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#recurrenceIdDateTime", QUrl::StrictMode)).first().value<QUrl>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#recurrenceIdDateTime. 
+     * The date and time of a recurrence identifier. Provided to express 
+     * the actual value of the ncal:recurrenceId property. See documentation 
+     * for ncal:recurrenceId for details. 
+     */
+    void setRecurrenceIdDateTime(const QUrl& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#recurrenceIdDateTime", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#recurrenceIdDateTime. 
+     * The date and time of a recurrence identifier. Provided to express 
+     * the actual value of the ncal:recurrenceId property. See documentation 
+     * for ncal:recurrenceId for details. 
+     */
+    void addRecurrenceIdDateTime(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#recurrenceIdDateTime", QUrl::StrictMode), value);
     }
 
     /**
@@ -386,6 +438,35 @@ public:
      */
     void addRearChannels(const qint64& value) {
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#rearChannels", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels. 
+     * Number of Low Frequency Expansion (subwoofer) channels. 
+     */
+    qint64 lfeChannels() const {
+        qint64 value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode)).first().value<qint64>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels. 
+     * Number of Low Frequency Expansion (subwoofer) channels. 
+     */
+    void setLfeChannels(const qint64& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels. 
+     * Number of Low Frequency Expansion (subwoofer) channels. 
+     */
+    void addLfeChannels(const qint64& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lfeChannels", QUrl::StrictMode), value);
     }
 
     /**
@@ -543,11 +624,11 @@ public:
     }
 
 protected:
-    DocumentStatus(const QUrl& uri, const QUrl& type)
+    RecurrenceIdentifier(const QUrl& uri, const QUrl& type)
       : SimpleResource(uri) {
         addType(type);
     }
-    DocumentStatus(const SimpleResource& res, const QUrl& type)
+    RecurrenceIdentifier(const SimpleResource& res, const QUrl& type)
       : SimpleResource(res) {
         addType(type);
     }

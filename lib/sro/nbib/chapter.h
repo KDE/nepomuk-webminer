@@ -10,7 +10,7 @@
 
 #include <nepomuk2/simpleresource.h>
 
-#include "nbib/documentpart.h"
+#include "documentpart.h"
 
 namespace Nepomuk2 {
 namespace NBIB {
@@ -32,35 +32,6 @@ public:
         SimpleResource::operator=(res);
         addType(QUrl::fromEncoded("http://www.example.com/nbib#Chapter", QUrl::StrictMode));
         return *this;
-    }
-
-    /**
-     * Get property http://www.example.com/nbib#chapterNumber. 
-     * The number of the Chapter for example 1.2, II etc 
-     */
-    QString chapterNumber() const {
-        QString value;
-        if(contains(QUrl::fromEncoded("http://www.example.com/nbib#chapterNumber", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.example.com/nbib#chapterNumber", QUrl::StrictMode)).first().value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.example.com/nbib#chapterNumber. 
-     * The number of the Chapter for example 1.2, II etc 
-     */
-    void setChapterNumber(const QString& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#chapterNumber", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.example.com/nbib#chapterNumber. 
-     * The number of the Chapter for example 1.2, II etc 
-     */
-    void addChapterNumber(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#chapterNumber", QUrl::StrictMode), value);
     }
 
     /**
@@ -90,6 +61,35 @@ public:
      */
     void addPageEnd(const qint64& value) {
         addProperty(QUrl::fromEncoded("http://www.example.com/nbib#pageEnd", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.example.com/nbib#chapterNumber. 
+     * The number of the Chapter for example 1.2, II etc 
+     */
+    QString chapterNumber() const {
+        QString value;
+        if(contains(QUrl::fromEncoded("http://www.example.com/nbib#chapterNumber", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.example.com/nbib#chapterNumber", QUrl::StrictMode)).first().value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.example.com/nbib#chapterNumber. 
+     * The number of the Chapter for example 1.2, II etc 
+     */
+    void setChapterNumber(const QString& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#chapterNumber", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.example.com/nbib#chapterNumber. 
+     * The number of the Chapter for example 1.2, II etc 
+     */
+    void addChapterNumber(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#chapterNumber", QUrl::StrictMode), value);
     }
 
     /**

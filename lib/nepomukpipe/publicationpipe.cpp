@@ -36,7 +36,7 @@
 
 #include "pimo/note.h"
 #include "pimo/topic.h"
-#include "pimo/event.h"
+#include "ncal/event.h"
 #include "nie/informationelement.h"
 #include "nao/tag.h"
 #include "nfo/filedataobject.h"
@@ -79,18 +79,17 @@ NepomukMetaDataExtractor::Pipe::PublicationPipe::~PublicationPipe()
 
 }
 
-void  NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariantMap &bibEntry)
+void NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariantMap &bibEntry)
 {
     QVariantMap bibEntryNonConst(bibEntry);
     // The MetaDataParameters contain the metadata for the publication as bibEntry->metaData
     // also if it is related to a file the bibEntry->resourceUri points to it.
-    // if we have some information about the references used inthe publication the
+    // if we have some information about the references used in the publication the
     // bibEntry->metaData.value("references") has a list of more publications to add
 
     // here we add all this stuff step by step.
 
-    // 1. split the reference details so the next function does not complain that it does not know about
-    // this key
+    // 1. split the reference details so the next function does not complain that it does not know about this key
     QVariantList references = bibEntryNonConst.value(QLatin1String("references")).toList();
     bibEntryNonConst.remove( QLatin1String("references") );
 
@@ -168,13 +167,19 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariant
     }
 }
 
-QPair<QUrl, QUrl>  NepomukMetaDataExtractor::Pipe::PublicationPipe::importPublication( QVariantMap &metaData )
+void NepomukMetaDataExtractor::Pipe::PublicationPipe::setProjectPimoThing(Nepomuk2::Resource projectThing)
+{
+    m_projectThing = projectThing;
+}
+
+QPair<QUrl, QUrl> NepomukMetaDataExtractor::Pipe::PublicationPipe::importPublication( QVariantMap &metaData )
 {
     QString originalEntryType = metaData.value(QLatin1String("bibtexentrytype")).toString().toLower();
 
     QString citeKey = metaData.value(QLatin1String("bibtexcitekey")).toString();
     if(citeKey.isEmpty()) {
-        // if we have no citekey defined, take the first 100 chars (without whitespace) and use this one
+        //FIXME: Better automatic citykey detection
+        // if we have no citekey defined, take the first 10 chars (without whitespace) and use this one
         QString title = metaData.value(QLatin1String("title"), QLatin1String("unknwon")).toString();
         title.remove(' ');
         citeKey = title.left(10);
@@ -187,7 +192,7 @@ QPair<QUrl, QUrl>  NepomukMetaDataExtractor::Pipe::PublicationPipe::importPublic
     Nepomuk2::SimpleResourceGraph graph;
     Nepomuk2::NBIB::Publication publication;
     addPublicationSubTypes(publication, metaData);
-    // we remove it, othewise addContent complains about an unknown key
+    // we remove the entry type key, othewise addContent() complains about an unknown key
     // as it is not used anymore, this is fine and reduce wrong debug output
     metaData.remove( QLatin1String("bibtexentrytype") );
 
@@ -211,6 +216,10 @@ QPair<QUrl, QUrl>  NepomukMetaDataExtractor::Pipe::PublicationPipe::importPublic
             addContent(i.key().toLower(), i.value().toString(), publication, reference, graph, originalEntryType, citeKey);
     }
 
+    if(m_projectThing.isValid()) {
+        publication.addProperty( NAO::isRelated(), m_projectThing.uri());
+        reference.addProperty( NAO::isRelated(), m_projectThing.uri());
+    }
 
     graph << publication << reference;
 
@@ -669,7 +678,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addContent(const QString 
 
         if(accessDate.isValid()) {
             QString dateString = accessDate.toString(Qt::ISODate);
-            publication.setProperty( NUAO::lastUsage(), dateString ); //BUG: create ontology right so we include NUAO in it ??
+            publication.setProperty( NUAO::lastUsage(), dateString );
         }
     }
     else if(key == QLatin1String("date")) {
@@ -846,7 +855,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addPublisher(const QStrin
 {
     QString addressString = addressValue.toUtf8();
 
-    //FIXME extendedAddress is not correct, but determining which part of the @p address is the street/location and so on is nearly impossible
+    //FIXME: extendedAddress is not correct, but determining which part of the @p address is the street/location and so on is nearly impossible
     Nepomuk2::NCO::PostalAddress postalAddress;
     if(!addressString.isEmpty()) {
         postalAddress.setExtendedAddress( addressString );
@@ -903,6 +912,11 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addJournal(const QString 
     collection.addArticle( publication.uri() );
     collection.addProperty(NAO::hasSubResource(), publication.uri() ); // delete article when collection is removed
 
+    if(m_projectThing.isValid()) {
+        collection.addProperty( NAO::isRelated() , m_projectThing.uri());
+        series.addProperty( NAO::isRelated() , m_projectThing.uri());
+    }
+
     graph << collection << series;
 }
 
@@ -920,6 +934,10 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addSpecialArticle(const Q
     article.setProperty(NBIB::collection(), collection.uri() );
     collection.addArticle( article.uri() );
     collection.addProperty(NAO::hasSubResource(), article.uri() ); // delete article when collection is removed
+
+    if(m_projectThing.isValid()) {
+        collection.addProperty( NAO::isRelated() , m_projectThing.uri());
+    }
 
     graph << collection;
 }
@@ -1103,6 +1121,12 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addIssn(const QString &co
             collection.addArticle( publication.uri() );
 
             seriesUrl = series.uri();
+
+            if(m_projectThing.isValid()) {
+                series.addProperty( NAO::isRelated() , m_projectThing.uri() );
+                collection.addProperty( NAO::isRelated() , m_projectThing.uri() );
+            }
+
             graph << collection << series;
         }
         else {
@@ -1123,6 +1147,10 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addIssn(const QString &co
         newSeries.addSeriesOf( publication.uri() );
         publication.setInSeries( newSeries.uri() );
         newSeries.setIssn( utfContent );
+
+        if(m_projectThing.isValid()) {
+            newSeries.addProperty( NAO::isRelated() , m_projectThing.uri() );
+        }
 
         graph << newSeries;
     }
@@ -1177,6 +1205,10 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addCode(const QString &co
 
     publication.setProperty(NBIB::codeOfLaw(), codeOfLaw.uri()  );
 
+    if(m_projectThing.isValid()) {
+        codeOfLaw.addProperty( NAO::isRelated() , m_projectThing.uri() );
+    }
+
     graph << codeOfLaw;
 }
 
@@ -1191,6 +1223,10 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addCodeNumber(const QStri
 
         publication.setProperty(NBIB::codeOfLaw(), codeOfLaw.uri()  );
         codeOfLaw.setCodeNumber( QString(content.toUtf8()) );
+
+        if(m_projectThing.isValid()) {
+            codeOfLaw.addProperty( NAO::isRelated() , m_projectThing.uri() );
+        }
 
         graph << codeOfLaw;
     }
@@ -1212,6 +1248,10 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addCodeVolume(const QStri
         publication.setProperty(NBIB::codeOfLaw(), codeOfLaw.uri()  );
         codeOfLaw.setVolume( QString(content.toUtf8()) );
 
+        if(m_projectThing.isValid()) {
+            codeOfLaw.addProperty( NAO::isRelated() , m_projectThing.uri() );
+        }
+
         graph << codeOfLaw;
     }
     else {
@@ -1225,6 +1265,10 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addReporter(const QString
     Nepomuk2::NBIB::CourtReporter courtReporter;
     courtReporter.setTitle( QString(content.toUtf8()) );
     publication.setProperty(NBIB::courtReporter(), courtReporter.uri()  );
+
+    if(m_projectThing.isValid()) {
+        courtReporter.addProperty( NAO::isRelated() , m_projectThing.uri() );
+    }
 
     graph << courtReporter;
 }
@@ -1242,6 +1286,10 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addReporterVolume(const Q
         publication.setProperty(NBIB::courtReporter(), courtReporter.uri() );
         courtReporter.setVolume( QString(content.toUtf8()) );
 
+        if(m_projectThing.isValid()) {
+            courtReporter.addProperty( NAO::isRelated() , m_projectThing.uri() );
+        }
+
         graph << courtReporter;
     }
     else {
@@ -1252,12 +1300,16 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addReporterVolume(const Q
 
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addEvent(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph)
 {
-    Nepomuk2::PIMO::Event event;
+    Nepomuk2::NCAL::Event event;
 
     event.setProperty(NAO::prefLabel(), QString(content.toUtf8()));
 
-    event.addEventPublication( publication.uri() );
+    event.addProperty( NBIB::eventPublication(), publication.uri());
     publication.addEvent( event.uri() );
+
+    if(m_projectThing.isValid()) {
+        event.addProperty( NAO::isRelated() , m_projectThing.uri() );
+    }
 
     graph << event;
 }
@@ -1275,6 +1327,10 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addSeries(const QString &
 
     series.addSeriesOf( publication.uri() );
     publication.setInSeries( series.uri()  );
+
+    if(m_projectThing.isValid()) {
+        series.addProperty( NAO::isRelated() , m_projectThing.uri() );
+    }
 
     graph << series;
 }

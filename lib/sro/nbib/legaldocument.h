@@ -10,7 +10,7 @@
 
 #include <nepomuk2/simpleresource.h>
 
-#include "nbib/publication.h"
+#include "publication.h"
 
 namespace Nepomuk2 {
 namespace NBIB {
@@ -33,35 +33,6 @@ public:
         SimpleResource::operator=(res);
         addType(QUrl::fromEncoded("http://www.example.com/nbib#LegalDocument", QUrl::StrictMode));
         return *this;
-    }
-
-    /**
-     * Get property http://www.example.com/nbib#history. The 
-     * history of a legal document 
-     */
-    QString history() const {
-        QString value;
-        if(contains(QUrl::fromEncoded("http://www.example.com/nbib#history", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.example.com/nbib#history", QUrl::StrictMode)).first().value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.example.com/nbib#history. The 
-     * history of a legal document 
-     */
-    void setHistory(const QString& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#history", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.example.com/nbib#history. 
-     * The history of a legal document 
-     */
-    void addHistory(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#history", QUrl::StrictMode), value);
     }
 
     /**
@@ -121,6 +92,35 @@ public:
      */
     void addCounsel(const QUrl& value) {
         addProperty(QUrl::fromEncoded("http://www.example.com/nbib#counsel", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.example.com/nbib#history. The 
+     * history of a legal document 
+     */
+    QString history() const {
+        QString value;
+        if(contains(QUrl::fromEncoded("http://www.example.com/nbib#history", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.example.com/nbib#history", QUrl::StrictMode)).first().value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.example.com/nbib#history. The 
+     * history of a legal document 
+     */
+    void setHistory(const QString& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#history", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.example.com/nbib#history. 
+     * The history of a legal document 
+     */
+    void addHistory(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#history", QUrl::StrictMode), value);
     }
 
 protected:

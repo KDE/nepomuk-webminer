@@ -1,5 +1,5 @@
-#ifndef _NBIB_DOCUMENTSTATUS_H_
-#define _NBIB_DOCUMENTSTATUS_H_
+#ifndef _NCAL_TRIGGERRELATION_H_
+#define _NCAL_TRIGGERRELATION_H_
 
 #include <QtCore/QVariant>
 #include <QtCore/QStringList>
@@ -11,26 +11,29 @@
 #include <nepomuk2/simpleresource.h>
 
 namespace Nepomuk2 {
-namespace NBIB {
+namespace NCAL {
 /**
- * The status of the publication of a document. 
+ * The relation between the trigger and its parent calendar component. 
+ * This class has been introduced to express the limited vocabulary 
+ * for the ncal:related property. See the documentation for ncal:related 
+ * for more details. 
  */
-class DocumentStatus : public virtual Nepomuk2::SimpleResource
+class TriggerRelation : public virtual Nepomuk2::SimpleResource
 {
 public:
-    DocumentStatus(const QUrl& uri = QUrl())
+    TriggerRelation(const QUrl& uri = QUrl())
       : SimpleResource(uri) {
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#TriggerRelation", QUrl::StrictMode));
     }
 
-    DocumentStatus(const SimpleResource& res)
+    TriggerRelation(const SimpleResource& res)
       : SimpleResource(res) {
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#TriggerRelation", QUrl::StrictMode));
     }
 
-    DocumentStatus& operator=(const SimpleResource& res) {
+    TriggerRelation& operator=(const SimpleResource& res) {
         SimpleResource::operator=(res);
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#TriggerRelation", QUrl::StrictMode));
         return *this;
     }
 
@@ -543,11 +546,11 @@ public:
     }
 
 protected:
-    DocumentStatus(const QUrl& uri, const QUrl& type)
+    TriggerRelation(const QUrl& uri, const QUrl& type)
       : SimpleResource(uri) {
         addType(type);
     }
-    DocumentStatus(const SimpleResource& res, const QUrl& type)
+    TriggerRelation(const SimpleResource& res, const QUrl& type)
       : SimpleResource(res) {
         addType(type);
     }

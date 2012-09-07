@@ -1,5 +1,5 @@
-#ifndef _NBIB_DOCUMENTSTATUS_H_
-#define _NBIB_DOCUMENTSTATUS_H_
+#ifndef _NCAL_TRIGGER_H_
+#define _NCAL_TRIGGER_H_
 
 #include <QtCore/QVariant>
 #include <QtCore/QStringList>
@@ -11,27 +11,55 @@
 #include <nepomuk2/simpleresource.h>
 
 namespace Nepomuk2 {
-namespace NBIB {
+namespace NCAL {
 /**
- * The status of the publication of a document. 
+ * An alarm trigger. This class has been created to serve as the 
+ * range of ncal:trigger property. See the documentation for 
+ * ncal:trigger for more details. 
  */
-class DocumentStatus : public virtual Nepomuk2::SimpleResource
+class Trigger : public virtual Nepomuk2::SimpleResource
 {
 public:
-    DocumentStatus(const QUrl& uri = QUrl())
+    Trigger(const QUrl& uri = QUrl())
       : SimpleResource(uri) {
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#Trigger", QUrl::StrictMode));
     }
 
-    DocumentStatus(const SimpleResource& res)
+    Trigger(const SimpleResource& res)
       : SimpleResource(res) {
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#Trigger", QUrl::StrictMode));
     }
 
-    DocumentStatus& operator=(const SimpleResource& res) {
+    Trigger& operator=(const SimpleResource& res) {
         SimpleResource::operator=(res);
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#Trigger", QUrl::StrictMode));
         return *this;
+    }
+
+    /**
+     * Get property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
+     */
+    double long() const {
+        double value;
+        if(contains(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode)).first().value<double>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
+     */
+    void setLong(const double& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
+     */
+    void addLong(const double& value) {
+        addProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode), value);
     }
 
     /**
@@ -167,6 +195,32 @@ public:
     }
 
     /**
+     * Get property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     */
+    double lat() const {
+        double value;
+        if(contains(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode)).first().value<double>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     */
+    void setLat(const double& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     */
+    void addLat(const double& value) {
+        addProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode), value);
+    }
+
+    /**
      * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright. 
      * Content copyright 
      */
@@ -194,6 +248,41 @@ public:
      */
     void addCopyright(const QString& value) {
         addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#triggerDuration. 
+     * The duration of a trigger. This property has been created to 
+     * express the VALUE=DURATION parameter of the TRIGGER property. 
+     * See documentation for ncal:trigger for more details. 
+     */
+    QUrl triggerDuration() const {
+        QUrl value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#triggerDuration", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#triggerDuration", QUrl::StrictMode)).first().value<QUrl>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#triggerDuration. 
+     * The duration of a trigger. This property has been created to 
+     * express the VALUE=DURATION parameter of the TRIGGER property. 
+     * See documentation for ncal:trigger for more details. 
+     */
+    void setTriggerDuration(const QUrl& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#triggerDuration", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#triggerDuration. 
+     * The duration of a trigger. This property has been created to 
+     * express the VALUE=DURATION parameter of the TRIGGER property. 
+     * See documentation for ncal:trigger for more details. 
+     */
+    void addTriggerDuration(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#triggerDuration", QUrl::StrictMode), value);
     }
 
     /**
@@ -271,29 +360,45 @@ public:
     }
 
     /**
-     * Get property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#related. 
+     * To specify the relationship of the alarm trigger with respect 
+     * to the start or end of the calendar component. Inspired by RFC 
+     * 2445 4.2.14. The RFC has specified two possible values for this 
+     * property ('START' and 'END') they have been expressed as instances 
+     * of the TriggerRelation class. 
      */
-    double lat() const {
-        double value;
-        if(contains(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode)).first().value<double>();
+    QList<QUrl> relateds() const {
+        QList<QUrl> value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#related", QUrl::StrictMode)))
+            value << v.value<QUrl>();
         return value;
     }
 
     /**
-     * Set property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#related. 
+     * To specify the relationship of the alarm trigger with respect 
+     * to the start or end of the calendar component. Inspired by RFC 
+     * 2445 4.2.14. The RFC has specified two possible values for this 
+     * property ('START' and 'END') they have been expressed as instances 
+     * of the TriggerRelation class. 
      */
-    void setLat(const double& value) {
+    void setRelateds(const QList<QUrl>& value) {
         QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode), values);
+        foreach(const QUrl& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#related", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#related. 
+     * To specify the relationship of the alarm trigger with respect 
+     * to the start or end of the calendar component. Inspired by RFC 
+     * 2445 4.2.14. The RFC has specified two possible values for this 
+     * property ('START' and 'END') they have been expressed as instances 
+     * of the TriggerRelation class. 
      */
-    void addLat(const double& value) {
-        addProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode), value);
+    void addRelated(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#related", QUrl::StrictMode), value);
     }
 
     /**
@@ -389,29 +494,41 @@ public:
     }
 
     /**
-     * Get property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#triggerDateTime. 
+     * The exact date and time of the trigger. This property has been 
+     * created to express the VALUE=DATE, and VALUE=DATE-TIME parameters 
+     * of the TRIGGER property. See the documentation for ncal:trigger 
+     * for more details 
      */
-    double long() const {
-        double value;
-        if(contains(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode)).first().value<double>();
+    QDateTime triggerDateTime() const {
+        QDateTime value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#triggerDateTime", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#triggerDateTime", QUrl::StrictMode)).first().value<QDateTime>();
         return value;
     }
 
     /**
-     * Set property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#triggerDateTime. 
+     * The exact date and time of the trigger. This property has been 
+     * created to express the VALUE=DATE, and VALUE=DATE-TIME parameters 
+     * of the TRIGGER property. See the documentation for ncal:trigger 
+     * for more details 
      */
-    void setLong(const double& value) {
+    void setTriggerDateTime(const QDateTime& value) {
         QVariantList values;
         values << value;
-        setProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#triggerDateTime", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#triggerDateTime. 
+     * The exact date and time of the trigger. This property has been 
+     * created to express the VALUE=DATE, and VALUE=DATE-TIME parameters 
+     * of the TRIGGER property. See the documentation for ncal:trigger 
+     * for more details 
      */
-    void addLong(const double& value) {
-        addProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode), value);
+    void addTriggerDateTime(const QDateTime& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#triggerDateTime", QUrl::StrictMode), value);
     }
 
     /**
@@ -543,11 +660,11 @@ public:
     }
 
 protected:
-    DocumentStatus(const QUrl& uri, const QUrl& type)
+    Trigger(const QUrl& uri, const QUrl& type)
       : SimpleResource(uri) {
         addType(type);
     }
-    DocumentStatus(const SimpleResource& res, const QUrl& type)
+    Trigger(const SimpleResource& res, const QUrl& type)
       : SimpleResource(res) {
         addType(type);
     }

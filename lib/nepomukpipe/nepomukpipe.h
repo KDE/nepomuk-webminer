@@ -60,7 +60,7 @@ public:
     /**
       * @brief Must be implemented in subclasses. Does the actual work
       *
-      * Transforms the @c entry map into Nepomuk SimpleResources and connects the created resoruce
+      * Transforms the @c entry map into Nepomuk SimpleResources and connects the created resources,
       * sets subresource connections, downloads additional banners/poster, splits person names etc.
       *
       * @p entry input variantmap with all the necessary data

@@ -36,36 +36,6 @@ public:
     }
 
     /**
-     * Get property http://www.example.com/nbib#issn. The International 
-     * Standard Serial Number. Used to identify a series of publications. 
-     */
-    QString issn() const {
-        QString value;
-        if(contains(QUrl::fromEncoded("http://www.example.com/nbib#issn", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.example.com/nbib#issn", QUrl::StrictMode)).first().value<QString>();
-        return value;
-    }
-
-    /**
-     * Set property http://www.example.com/nbib#issn. The International 
-     * Standard Serial Number. Used to identify a series of publications. 
-     */
-    void setIssn(const QString& value) {
-        QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#issn", QUrl::StrictMode), values);
-    }
-
-    /**
-     * Add value to property http://www.example.com/nbib#issn. 
-     * The International Standard Serial Number. Used to identify 
-     * a series of publications. 
-     */
-    void addIssn(const QString& value) {
-        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#issn", QUrl::StrictMode), value);
-    }
-
-    /**
      * Get property http://www.example.com/nbib#seriesOf. The 
      * publication this series belongs to 
      */
@@ -93,6 +63,36 @@ public:
      */
     void addSeriesOf(const QUrl& value) {
         addProperty(QUrl::fromEncoded("http://www.example.com/nbib#seriesOf", QUrl::StrictMode), value);
+    }
+
+    /**
+     * Get property http://www.example.com/nbib#issn. The International 
+     * Standard Serial Number. Used to identify a series of publications. 
+     */
+    QString issn() const {
+        QString value;
+        if(contains(QUrl::fromEncoded("http://www.example.com/nbib#issn", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.example.com/nbib#issn", QUrl::StrictMode)).first().value<QString>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.example.com/nbib#issn. The International 
+     * Standard Serial Number. Used to identify a series of publications. 
+     */
+    void setIssn(const QString& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.example.com/nbib#issn", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.example.com/nbib#issn. 
+     * The International Standard Serial Number. Used to identify 
+     * a series of publications. 
+     */
+    void addIssn(const QString& value) {
+        addProperty(QUrl::fromEncoded("http://www.example.com/nbib#issn", QUrl::StrictMode), value);
     }
 
 protected:

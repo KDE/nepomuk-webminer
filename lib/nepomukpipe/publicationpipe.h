@@ -58,14 +58,13 @@ namespace Pipe {
   * @li @c importPublication() creates the Reference and Publication SimpleResource and does the cross linking
   * @li @c addPublicationSubTypes() adds the correct subtypes to the publication
   * @li @c handleSpecialCases() handles some special key/value combinations
-  * @li @c add*() handle all other key/value cases
+  * @li @c addContent() handle all other key/value cases with some add*() special cases
   *
   * The @c pipeImport is the start point where each publication is created and later on all references are added to the main publication
   *
   * @see NBIB ontology
   *
   * @todo TODO: remove the graph from the function parameters and make class member from it?
-  * @todo TODO: check if it is necessary to save some stuff into nepomuk inbetween to retrieve the real Nepomuk-Uri or I could work with temporary uri's
   */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT PublicationPipe : public NepomukPipe
 {
@@ -77,7 +76,14 @@ public:
 
     void pipeImport(const QVariantMap &bibEntry);
 
-private:
+    /**
+      * @brief if the @p projectThing is valid all imported data will be related via @c pimo:isRelated to the project
+      *
+      * Mainly added for Conquirere where sometimes new data is directly added to a specific project.
+      */
+    void setProjectPimoThing(Nepomuk2::Resource projectThing);
+
+protected:
     /**
      * @brief Create the nbib:Publication and @c nbib:Reference objects and connect them
      *
@@ -199,10 +205,13 @@ private:
     void addTopic(const QStringList &content, Nepomuk2::SimpleResource &resource, Nepomuk2::SimpleResourceGraph &graph);
 
     /**
-      * @brief creates the contact resource and push it to nepomuk if necessary
+      * @brief creates the contact resource
       */
     void addContact(const QString &contentValue, Nepomuk2::SimpleResource &resource, Nepomuk2::SimpleResourceGraph &graph, QUrl contactProperty, QUrl contactType );
 
+private:
+    Nepomuk2::Resource m_projectThing;
+    QPair<QUrl, QUrl> m_importedPublicationUris;
 };
 }
 }

@@ -1,5 +1,5 @@
-#ifndef _NBIB_DOCUMENTSTATUS_H_
-#define _NBIB_DOCUMENTSTATUS_H_
+#ifndef _NCAL_ALARMACTION_H_
+#define _NCAL_ALARMACTION_H_
 
 #include <QtCore/QVariant>
 #include <QtCore/QStringList>
@@ -11,26 +11,28 @@
 #include <nepomuk2/simpleresource.h>
 
 namespace Nepomuk2 {
-namespace NBIB {
+namespace NCAL {
 /**
- * The status of the publication of a document. 
+ * Action to be performed on alarm. This class has been introduced 
+ * to express the limited set of values of the ncal:action property. 
+ * Please refer to the documentation of ncal:action for details. 
  */
-class DocumentStatus : public virtual Nepomuk2::SimpleResource
+class AlarmAction : public virtual Nepomuk2::SimpleResource
 {
 public:
-    DocumentStatus(const QUrl& uri = QUrl())
+    AlarmAction(const QUrl& uri = QUrl())
       : SimpleResource(uri) {
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#AlarmAction", QUrl::StrictMode));
     }
 
-    DocumentStatus(const SimpleResource& res)
+    AlarmAction(const SimpleResource& res)
       : SimpleResource(res) {
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#AlarmAction", QUrl::StrictMode));
     }
 
-    DocumentStatus& operator=(const SimpleResource& res) {
+    AlarmAction& operator=(const SimpleResource& res) {
         SimpleResource::operator=(res);
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#AlarmAction", QUrl::StrictMode));
         return *this;
     }
 
@@ -543,11 +545,11 @@ public:
     }
 
 protected:
-    DocumentStatus(const QUrl& uri, const QUrl& type)
+    AlarmAction(const QUrl& uri, const QUrl& type)
       : SimpleResource(uri) {
         addType(type);
     }
-    DocumentStatus(const SimpleResource& res, const QUrl& type)
+    AlarmAction(const SimpleResource& res, const QUrl& type)
       : SimpleResource(res) {
         addType(type);
     }

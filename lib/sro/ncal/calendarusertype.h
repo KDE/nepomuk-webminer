@@ -1,5 +1,5 @@
-#ifndef _NBIB_DOCUMENTSTATUS_H_
-#define _NBIB_DOCUMENTSTATUS_H_
+#ifndef _NCAL_CALENDARUSERTYPE_H_
+#define _NCAL_CALENDARUSERTYPE_H_
 
 #include <QtCore/QVariant>
 #include <QtCore/QStringList>
@@ -11,26 +11,28 @@
 #include <nepomuk2/simpleresource.h>
 
 namespace Nepomuk2 {
-namespace NBIB {
+namespace NCAL {
 /**
- * The status of the publication of a document. 
+ * A calendar user type. This class has been introduced to express 
+ * the limited vocabulary for the ncal:cutype property. See documentation 
+ * of ncal:cutype for details. 
  */
-class DocumentStatus : public virtual Nepomuk2::SimpleResource
+class CalendarUserType : public virtual Nepomuk2::SimpleResource
 {
 public:
-    DocumentStatus(const QUrl& uri = QUrl())
+    CalendarUserType(const QUrl& uri = QUrl())
       : SimpleResource(uri) {
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#CalendarUserType", QUrl::StrictMode));
     }
 
-    DocumentStatus(const SimpleResource& res)
+    CalendarUserType(const SimpleResource& res)
       : SimpleResource(res) {
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#CalendarUserType", QUrl::StrictMode));
     }
 
-    DocumentStatus& operator=(const SimpleResource& res) {
+    CalendarUserType& operator=(const SimpleResource& res) {
         SimpleResource::operator=(res);
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#CalendarUserType", QUrl::StrictMode));
         return *this;
     }
 
@@ -543,11 +545,11 @@ public:
     }
 
 protected:
-    DocumentStatus(const QUrl& uri, const QUrl& type)
+    CalendarUserType(const QUrl& uri, const QUrl& type)
       : SimpleResource(uri) {
         addType(type);
     }
-    DocumentStatus(const SimpleResource& res, const QUrl& type)
+    CalendarUserType(const SimpleResource& res, const QUrl& type)
       : SimpleResource(res) {
         addType(type);
     }

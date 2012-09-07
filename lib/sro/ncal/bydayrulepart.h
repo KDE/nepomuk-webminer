@@ -1,5 +1,5 @@
-#ifndef _NBIB_DOCUMENTSTATUS_H_
-#define _NBIB_DOCUMENTSTATUS_H_
+#ifndef _NCAL_BYDAYRULEPART_H_
+#define _NCAL_BYDAYRULEPART_H_
 
 #include <QtCore/QVariant>
 #include <QtCore/QStringList>
@@ -11,27 +11,55 @@
 #include <nepomuk2/simpleresource.h>
 
 namespace Nepomuk2 {
-namespace NBIB {
+namespace NCAL {
 /**
- * The status of the publication of a document. 
+ * Expresses the compound value of a byday part of a recurrence 
+ * rule. It stores the weekday and the integer modifier. Inspired 
+ * by RFC 2445 sec. 4.3.10 
  */
-class DocumentStatus : public virtual Nepomuk2::SimpleResource
+class BydayRulePart : public virtual Nepomuk2::SimpleResource
 {
 public:
-    DocumentStatus(const QUrl& uri = QUrl())
+    BydayRulePart(const QUrl& uri = QUrl())
       : SimpleResource(uri) {
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#BydayRulePart", QUrl::StrictMode));
     }
 
-    DocumentStatus(const SimpleResource& res)
+    BydayRulePart(const SimpleResource& res)
       : SimpleResource(res) {
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#BydayRulePart", QUrl::StrictMode));
     }
 
-    DocumentStatus& operator=(const SimpleResource& res) {
+    BydayRulePart& operator=(const SimpleResource& res) {
         SimpleResource::operator=(res);
-        addType(QUrl::fromEncoded("http://www.example.com/nbib#DocumentStatus", QUrl::StrictMode));
+        addType(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#BydayRulePart", QUrl::StrictMode));
         return *this;
+    }
+
+    /**
+     * Get property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
+     */
+    double long() const {
+        double value;
+        if(contains(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode)).first().value<double>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
+     */
+    void setLong(const double& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
+     */
+    void addLong(const double& value) {
+        addProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode), value);
     }
 
     /**
@@ -167,6 +195,32 @@ public:
     }
 
     /**
+     * Get property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     */
+    double lat() const {
+        double value;
+        if(contains(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode)).first().value<double>();
+        return value;
+    }
+
+    /**
+     * Set property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     */
+    void setLat(const double& value) {
+        QVariantList values;
+        values << value;
+        setProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode), values);
+    }
+
+    /**
+     * Add value to property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     */
+    void addLat(const double& value) {
+        addProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode), value);
+    }
+
+    /**
      * Get property http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright. 
      * Content copyright 
      */
@@ -271,29 +325,59 @@ public:
     }
 
     /**
-     * Get property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#bydayModifier. 
+     * An integer modifier for the BYDAY rule part. Each BYDAY value 
+     * can also be preceded by a positive (+n) or negative (-n) integer. 
+     * If present, this indicates the nth occurrence of the specific 
+     * day within the MONTHLY or YEARLY RRULE. For example, within 
+     * a MONTHLY rule, +1MO (or simply 1MO) represents the first Monday 
+     * within the month, whereas -1MO represents the last Monday of 
+     * the month. If an integer modifier is not present, it means all 
+     * days of this type within the specified frequency. For example, 
+     * within a MONTHLY rule, MO represents all Mondays within the 
+     * month. Inspired by RFC 2445 sec. 4.3.10 
      */
-    double lat() const {
-        double value;
-        if(contains(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode)).first().value<double>();
+    qint64 bydayModifier() const {
+        qint64 value;
+        if(contains(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#bydayModifier", QUrl::StrictMode)))
+            value = property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#bydayModifier", QUrl::StrictMode)).first().value<qint64>();
         return value;
     }
 
     /**
-     * Set property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#bydayModifier. 
+     * An integer modifier for the BYDAY rule part. Each BYDAY value 
+     * can also be preceded by a positive (+n) or negative (-n) integer. 
+     * If present, this indicates the nth occurrence of the specific 
+     * day within the MONTHLY or YEARLY RRULE. For example, within 
+     * a MONTHLY rule, +1MO (or simply 1MO) represents the first Monday 
+     * within the month, whereas -1MO represents the last Monday of 
+     * the month. If an integer modifier is not present, it means all 
+     * days of this type within the specified frequency. For example, 
+     * within a MONTHLY rule, MO represents all Mondays within the 
+     * month. Inspired by RFC 2445 sec. 4.3.10 
      */
-    void setLat(const double& value) {
+    void setBydayModifier(const qint64& value) {
         QVariantList values;
         values << value;
-        setProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode), values);
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#bydayModifier", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.w3.org/2003/01/geo/wgs84_pos#lat. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#bydayModifier. 
+     * An integer modifier for the BYDAY rule part. Each BYDAY value 
+     * can also be preceded by a positive (+n) or negative (-n) integer. 
+     * If present, this indicates the nth occurrence of the specific 
+     * day within the MONTHLY or YEARLY RRULE. For example, within 
+     * a MONTHLY rule, +1MO (or simply 1MO) represents the first Monday 
+     * within the month, whereas -1MO represents the last Monday of 
+     * the month. If an integer modifier is not present, it means all 
+     * days of this type within the specified frequency. For example, 
+     * within a MONTHLY rule, MO represents all Mondays within the 
+     * month. Inspired by RFC 2445 sec. 4.3.10 
      */
-    void addLat(const double& value) {
-        addProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#lat", QUrl::StrictMode), value);
+    void addBydayModifier(const qint64& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#bydayModifier", QUrl::StrictMode), value);
     }
 
     /**
@@ -389,29 +473,33 @@ public:
     }
 
     /**
-     * Get property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
+     * Get property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#bydayWeekday. 
+     * Connects a BydayRulePath with a weekday. 
      */
-    double long() const {
-        double value;
-        if(contains(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode)))
-            value = property(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode)).first().value<double>();
+    QList<QUrl> bydayWeekdays() const {
+        QList<QUrl> value;
+        foreach(const QVariant& v, property(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#bydayWeekday", QUrl::StrictMode)))
+            value << v.value<QUrl>();
         return value;
     }
 
     /**
-     * Set property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
+     * Set property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#bydayWeekday. 
+     * Connects a BydayRulePath with a weekday. 
      */
-    void setLong(const double& value) {
+    void setBydayWeekdays(const QList<QUrl>& value) {
         QVariantList values;
-        values << value;
-        setProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode), values);
+        foreach(const QUrl& v, value)
+            values << v;
+        setProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#bydayWeekday", QUrl::StrictMode), values);
     }
 
     /**
-     * Add value to property http://www.w3.org/2003/01/geo/wgs84_pos#long. 
+     * Add value to property http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#bydayWeekday. 
+     * Connects a BydayRulePath with a weekday. 
      */
-    void addLong(const double& value) {
-        addProperty(QUrl::fromEncoded("http://www.w3.org/2003/01/geo/wgs84_pos#long", QUrl::StrictMode), value);
+    void addBydayWeekday(const QUrl& value) {
+        addProperty(QUrl::fromEncoded("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#bydayWeekday", QUrl::StrictMode), value);
     }
 
     /**
@@ -543,11 +631,11 @@ public:
     }
 
 protected:
-    DocumentStatus(const QUrl& uri, const QUrl& type)
+    BydayRulePart(const QUrl& uri, const QUrl& type)
       : SimpleResource(uri) {
         addType(type);
     }
-    DocumentStatus(const SimpleResource& res, const QUrl& type)
+    BydayRulePart(const SimpleResource& res, const QUrl& type)
       : SimpleResource(res) {
         addType(type);
     }
