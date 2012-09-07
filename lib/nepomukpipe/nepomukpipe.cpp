@@ -33,6 +33,7 @@
 
 NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe(QObject *parent)
     : QObject(parent)
+    , m_componentname("metadataextractor")
 {
 
 }
@@ -96,6 +97,16 @@ QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QStr
     }
 
     return dateTime;
+}
+
+void NepomukMetaDataExtractor::Pipe::NepomukPipe::overrideComponentName(const QString &name)
+{
+    m_componentname = name;
+}
+
+QString NepomukMetaDataExtractor::Pipe::NepomukPipe::componentName() const
+{
+    return m_componentname;
 }
 
 QList<Nepomuk2::NCO::Contact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createPersonContacts(const QString & listOfPersonNames) const

@@ -250,7 +250,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
     graph << seriesRes;
 
     Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph, Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties,
-                                                                QHash<QUrl,QVariant>(),KComponentData("metadataextractor"));
+                                                                QHash<QUrl,QVariant>(),KComponentData(componentName().toLatin1()));
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
 }
@@ -262,7 +262,7 @@ Nepomuk2::NMM::TVShow NepomukMetaDataExtractor::Pipe::TvShowPipe::createEpisode(
     existingUri.setEncodedUrl(resourceUri.toLatin1());
 
     // first remove the old metadata from the file before we create a new episode later on
-    KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << existingUri, Nepomuk2::NoRemovalFlags, KComponentData("metadataextractor") );
+    KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << existingUri, Nepomuk2::NoRemovalFlags, KComponentData(componentName().toLatin1()) );
     if (!job->exec() ) {
         kWarning() << job->errorString();
     }

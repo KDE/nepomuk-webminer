@@ -94,7 +94,7 @@ void NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariantM
     bibEntryNonConst.remove( QLatin1String("references") );
 
     // 2. create the main publication resource
-    QPair<QUrl,QUrl> mainPublicationUris = importPublication( bibEntryNonConst );
+    m_importedPublicationUris = importPublication( bibEntryNonConst );
 
     // 3. if we have some references, we create them now
     foreach(const QVariant &reference, references) {
@@ -104,7 +104,7 @@ void NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariantM
         QPair<QUrl,QUrl> referenceUris = importPublication( referenceMetaData );
 
         // and connect it to the mainPublication
-        QList<QUrl> resUri; resUri << mainPublicationUris.first;
+        QList<QUrl> resUri; resUri << m_importedPublicationUris.first;
         QVariantList value; value << referenceUris.second;
         Nepomuk2::addProperty(resUri, NBIB::citedReference(), value);
     }
@@ -122,7 +122,7 @@ void NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariantM
         Nepomuk2::File localFileRes(fileurl);
 
         // remove any metadata from this file created by the metadata extractor
-        KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << fileurl, Nepomuk2::NoRemovalFlags, KComponentData("metadataextractor") );
+        KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << fileurl, Nepomuk2::NoRemovalFlags, KComponentData(componentName().toLatin1()) );
         if (!job->exec() ) {
             kWarning() << job->errorString();
         }
@@ -148,7 +148,7 @@ void NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariantM
         graph << localFile;
 
         Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph,Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties,
-                                                                    QHash<QUrl,QVariant>(),KComponentData("metadataextractor"));
+                                                                    QHash<QUrl,QVariant>(),KComponentData(componentName().toLatin1()));
         connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
         srj->exec();
 
@@ -158,10 +158,10 @@ void NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariantM
         // and add the cross reference properties
         // so the actual publication resource is linked to the file resource
         QList<QUrl> resUri; resUri << fileResourceUri;
-        QVariantList value; value << mainPublicationUris.first;
+        QVariantList value; value << m_importedPublicationUris.first;
         Nepomuk2::setProperty(resUri, NBIB::publishedAs(), value);
 
-        resUri.clear(); resUri << mainPublicationUris.first;
+        resUri.clear(); resUri << m_importedPublicationUris.first;
         value.clear(); value << fileResourceUri;
         Nepomuk2::addProperty(resUri, NBIB::isPublicationOf(), value);
     }
@@ -170,6 +170,11 @@ void NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariantM
 void NepomukMetaDataExtractor::Pipe::PublicationPipe::setProjectPimoThing(Nepomuk2::Resource projectThing)
 {
     m_projectThing = projectThing;
+}
+
+QPair<QUrl, QUrl> NepomukMetaDataExtractor::Pipe::PublicationPipe::importedPublication() const
+{
+    return m_importedPublicationUris;
 }
 
 QPair<QUrl, QUrl> NepomukMetaDataExtractor::Pipe::PublicationPipe::importPublication( QVariantMap &metaData )
@@ -224,7 +229,7 @@ QPair<QUrl, QUrl> NepomukMetaDataExtractor::Pipe::PublicationPipe::importPublica
     graph << publication << reference;
 
     Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph,Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties,
-                                                                QHash<QUrl,QVariant>(),KComponentData("metadataextractor"));
+                                                                QHash<QUrl,QVariant>(),KComponentData(componentName().toLatin1()));
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
 
@@ -851,10 +856,8 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addNote(const QString &co
     graph << note;
 }
 
-void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addPublisher(const QString &publisherValue, const QString &addressValue, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph)
+void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addPublisher(const QString &publisherValue, const QString &addressString, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph)
 {
-    QString addressString = addressValue.toUtf8();
-
     //FIXME: extendedAddress is not correct, but determining which part of the @p address is the street/location and so on is nearly impossible
     Nepomuk2::NCO::PostalAddress postalAddress;
     if(!addressString.isEmpty()) {
@@ -876,13 +879,9 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addPublisher(const QStrin
     }
 }
 
-void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addJournal(const QString &journalValue, const QString &volumeValue, const QString &numberValue,
+void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addJournal(const QString &journalString, const QString &volumeString, const QString &numberString,
                                                                   Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph, QUrl seriesUrl, QUrl issueUrl)
 {
-    QString journalString = journalValue.toUtf8();
-    QString volumeString = volumeValue.toUtf8();
-    QString numberString = numberValue.toUtf8();
-
     //find existing journal or create a new series of them
     Nepomuk2::NBIB::Collection collection;
     collection.addType( issueUrl );
@@ -920,10 +919,8 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addJournal(const QString 
     graph << collection << series;
 }
 
-void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addSpecialArticle(const QString &titleValue, Nepomuk2::NBIB::Publication &article, Nepomuk2::SimpleResourceGraph &graph, QUrl collectionUrl)
+void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addSpecialArticle(const QString &collectionString, Nepomuk2::NBIB::Publication &article, Nepomuk2::SimpleResourceGraph &graph, QUrl collectionUrl)
 {
-    QString collectionString = titleValue.toUtf8();
-
     Nepomuk2::NBIB::Collection collection;
     collection.addType( collectionUrl );
 
@@ -980,8 +977,6 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addAuthor(const QString &
 
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addBooktitle(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph, const QString & originalEntryType)
 {
-    QString utfContent = content.toUtf8();
-
     //two specialities occur here
     // I. "booktitle" means the title of a book, where "title" than means the title of the article in the book where the author fits to
     // this is valid for any publication other than @InProceedings/@encyclopediaarticle
@@ -1000,7 +995,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addBooktitle(const QStrin
             collection.addType( NBIB::Encyclopedia() );
         }
 
-        collection.setTitle( utfContent );
+        collection.setTitle( content );
 
         graph << collection;
 
@@ -1011,7 +1006,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addBooktitle(const QStrin
     }
     else {
         // put booktitle as the main title of the publication
-        publication.setTitle( utfContent );
+        publication.setTitle( content );
     }
 }
 
@@ -1036,8 +1031,6 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addSeriesEditor(const QSt
 
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addChapter(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::NBIB::Reference &reference, Nepomuk2::SimpleResourceGraph &graph)
 {
-    QString utfContent = content.toUtf8();
-
     // If we import some thing we assume no reference already existed and we have a new one
     // thus referencedPart() is not valid
     // if it is valid we assume this was already a nbib:Chapter rather than an generic nbib:DocumentPart
@@ -1047,7 +1040,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addChapter(const QString 
     if(!chapterUrl.isValid()) {
         Nepomuk2::NBIB::Chapter chapterResource;
         chapterResource.setTitle( i18n("unknown chapter") );
-        chapterResource.setChapterNumber( utfContent );
+        chapterResource.setChapterNumber( content );
         //BUG: the chapter needs a "unique identifier, otherwise we merge them with other chapters together";
         chapterResource.addType(NIE::DataObject());
         chapterResource.setProperty(NAO::identifier(), QUuid::createUuid().toString());
@@ -1062,14 +1055,12 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addChapter(const QString 
         graph << chapterResource << reference;
     }
     else {
-        graph[chapterUrl].setProperty(NBIB::chapterNumber(), utfContent);
+        graph[chapterUrl].setProperty(NBIB::chapterNumber(), content);
     }
 }
 
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addChapterName(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::NBIB::Reference &reference, Nepomuk2::SimpleResourceGraph &graph)
 {
-    QString utfContent = content.toUtf8();
-
     QUrl chapterUrl = reference.referencedPart();
 
     // If we import some thing we assume no reference already existed and we have a new one
@@ -1078,7 +1069,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addChapterName(const QStr
 
     if(!chapterUrl.isValid()) {
         Nepomuk2::NBIB::Chapter chapterResource;
-        chapterResource.setTitle( utfContent );
+        chapterResource.setTitle( content );
         //BUG: the chapter needs a "unique identifier, otherwise we merge them with other chapters together";
         chapterResource.addType(NIE::DataObject());
         chapterResource.setProperty(NAO::identifier(), QUuid::createUuid().toString());
@@ -1093,15 +1084,13 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addChapterName(const QStr
         graph << chapterResource;
     }
     else {
-        graph[chapterUrl].setProperty(NIE::title(), utfContent);
+        graph[chapterUrl].setProperty(NIE::title(), content);
         graph << graph[chapterUrl];
     }
 }
 
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addIssn(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph)
 {
-    QString utfContent = content.toUtf8();
-
     QUrl seriesUrl;
     if(publication.contains(RDF::type(), NBIB::Article())) {
         if( publication.property(NBIB::collection()).isEmpty() ) {
@@ -1146,7 +1135,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addIssn(const QString &co
         Nepomuk2::NBIB::Series newSeries;
         newSeries.addSeriesOf( publication.uri() );
         publication.setInSeries( newSeries.uri() );
-        newSeries.setIssn( utfContent );
+        newSeries.setIssn( content );
 
         if(m_projectThing.isValid()) {
             newSeries.addProperty( NAO::isRelated() , m_projectThing.uri() );
@@ -1155,16 +1144,14 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addIssn(const QString &co
         graph << newSeries;
     }
     else {
-        graph[seriesUrl].setProperty(NBIB::issn(), utfContent);
+        graph[seriesUrl].setProperty(NBIB::issn(), content);
     }
 }
 
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addOrganization(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph)
 {
-    QString utfContent = content.toUtf8();
-
     Nepomuk2::NCO::OrganizationContact organization;
-    organization.setFullname( utfContent );
+    organization.setFullname( content );
 
     if(publication.contains(RDF::type(), NBIB::Article())) {
         // special case if the publication is an article, we assume the organization was responsible for the full collection
@@ -1201,7 +1188,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addOrganization(const QSt
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addCode(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph)
 {
     Nepomuk2::NBIB::CodeOfLaw codeOfLaw;
-    codeOfLaw.setTitle( QString(content.toUtf8()) );
+    codeOfLaw.setTitle( content );
 
     publication.setProperty(NBIB::codeOfLaw(), codeOfLaw.uri()  );
 
@@ -1219,10 +1206,10 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addCodeNumber(const QStri
     if(!codeOfLawUrl.isValid()) {
         // create new code of law, seems none existed up to now
         Nepomuk2::NBIB::CodeOfLaw codeOfLaw;
-        codeOfLaw.setTitle( QString(content.toUtf8()) );
+        codeOfLaw.setTitle( content );
 
         publication.setProperty(NBIB::codeOfLaw(), codeOfLaw.uri()  );
-        codeOfLaw.setCodeNumber( QString(content.toUtf8()) );
+        codeOfLaw.setCodeNumber( content );
 
         if(m_projectThing.isValid()) {
             codeOfLaw.addProperty( NAO::isRelated() , m_projectThing.uri() );
@@ -1232,7 +1219,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addCodeNumber(const QStri
     }
     else {
         // add to existing code
-        graph[codeOfLawUrl].setProperty(NBIB::codeNumber(), QString(content.toUtf8()) );
+        graph[codeOfLawUrl].setProperty(NBIB::codeNumber(), content );
     }
 }
 
@@ -1243,10 +1230,10 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addCodeVolume(const QStri
     if(!codeOfLawUrl.isValid()) {
         // create new code of law, seems none existed up to now
         Nepomuk2::NBIB::CodeOfLaw codeOfLaw;
-        codeOfLaw.setTitle( QString(content.toUtf8()) );
+        codeOfLaw.setTitle( content );
 
         publication.setProperty(NBIB::codeOfLaw(), codeOfLaw.uri()  );
-        codeOfLaw.setVolume( QString(content.toUtf8()) );
+        codeOfLaw.setVolume( content );
 
         if(m_projectThing.isValid()) {
             codeOfLaw.addProperty( NAO::isRelated() , m_projectThing.uri() );
@@ -1256,14 +1243,14 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addCodeVolume(const QStri
     }
     else {
         // add to existing code
-        graph[codeOfLawUrl].setProperty(NBIB::volume(), QString(content.toUtf8()) );
+        graph[codeOfLawUrl].setProperty(NBIB::volume(), content );
     }
 }
 
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addReporter(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph)
 {
     Nepomuk2::NBIB::CourtReporter courtReporter;
-    courtReporter.setTitle( QString(content.toUtf8()) );
+    courtReporter.setTitle( content );
     publication.setProperty(NBIB::courtReporter(), courtReporter.uri()  );
 
     if(m_projectThing.isValid()) {
@@ -1284,7 +1271,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addReporterVolume(const Q
         // create new ccourt reporter, seems none existed up to now
         Nepomuk2::NBIB::CourtReporter courtReporter;
         publication.setProperty(NBIB::courtReporter(), courtReporter.uri() );
-        courtReporter.setVolume( QString(content.toUtf8()) );
+        courtReporter.setVolume( content );
 
         if(m_projectThing.isValid()) {
             courtReporter.addProperty( NAO::isRelated() , m_projectThing.uri() );
@@ -1294,7 +1281,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addReporterVolume(const Q
     }
     else {
         // add to existing court reporter
-        graph[courtReporterUrl].setProperty(NBIB::volume(), QString(content.toUtf8()) );
+        graph[courtReporterUrl].setProperty(NBIB::volume(), content );
     }
 }
 
@@ -1302,7 +1289,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addEvent(const QString &c
 {
     Nepomuk2::NCAL::Event event;
 
-    event.setProperty(NAO::prefLabel(), QString(content.toUtf8()));
+    event.setProperty(NAO::prefLabel(), content);
 
     event.addProperty( NBIB::eventPublication(), publication.uri());
     publication.addEvent( event.uri() );
@@ -1322,8 +1309,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addSeries(const QString &
         series.addType( NBIB::BookSeries() );
     }
 
-    QString utfContent = content.toUtf8();
-    series.setTitle( utfContent );
+    series.setTitle( content );
 
     series.addSeriesOf( publication.uri() );
     publication.setInSeries( series.uri()  );
@@ -1337,8 +1323,6 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addSeries(const QString &
 
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addTitle(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::NBIB::Reference &reference, Nepomuk2::SimpleResourceGraph &graph, const QString & originalEntryType)
 {
-    QString utfContent = content.toUtf8();
-
     // in the case of @InCollection title means title of the article in the book
     // while booktitle is the actual title of the book
     if(originalEntryType == QLatin1String("incollection") || originalEntryType == QLatin1String("dictionaryentry")) {
@@ -1347,7 +1331,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addTitle(const QString &c
 
         if(!chapterUrl.isValid()) {
             Nepomuk2::NBIB::Chapter chapter;
-            chapter.setTitle( utfContent );
+            chapter.setTitle( content );
             //BUG: the chapter needs a "unique identifier, otherwise we merge them with other chapters together";
             chapter.addType(NIE::DataObject());
             chapter.setProperty(NAO::identifier(), QUuid::createUuid().toString());
@@ -1362,18 +1346,18 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addTitle(const QString &c
             graph << chapter;
         }
         else {
-            graph[chapterUrl].setProperty( NIE::title(), utfContent);
+            graph[chapterUrl].setProperty( NIE::title(), content);
         }
     }
     else {
-        publication.setProperty(NIE::title(), utfContent);
+        publication.setProperty(NIE::title(), content);
     }
 }
 
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addWebsite(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph)
 {
     //TODO: split webpages if necessary ( if we get them as list )
-    KUrl url( QString(content.toUtf8()) );
+    KUrl url( content );
 
     QString protocol = url.scheme();
 
@@ -1397,7 +1381,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addWebsite(const QString 
 
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addFileUrl(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph)
 {
-    KUrl url( QString(content.toUtf8()) );
+    KUrl url( content );
 
     if( url.isLocalFile() ) {
         Nepomuk2::NFO::Document localFile( url );
@@ -1458,7 +1442,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addPublicationDate(const 
             finalMonth = month;
         }
         else {
-            QString contentMonth = finalMonth.toLower().toUtf8();
+            QString contentMonth = finalMonth.toLower();
             //transform bibtex month to numbers
             if(contentMonth.contains(QLatin1String("jan"))) {
                 contentMonth = QString::number(1);
@@ -1526,7 +1510,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addTag(const QStringList 
         Nepomuk2::NAO::Tag tag;
 
         tag.addPrefLabel( tagText );
-        tag.addProperty( NAO::identifier(), KUrl::fromEncoded(tagText.toUtf8()));
+        tag.addProperty( NAO::identifier(), KUrl::fromEncoded(tagText.toLatin1()));
 
         graph << tag;
         resource.addProperty( NAO::hasTag(), tag.uri());
@@ -1539,7 +1523,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addTopic(const QStringLis
         Nepomuk2::PIMO::Topic topic;
 
         topic.setTagLabel(topicText);
-        topic.addProperty( NAO::identifier(), KUrl::fromEncoded(topicText.toUtf8()) );
+        topic.addProperty( NAO::identifier(), KUrl::fromEncoded(topicText.toLatin1()) );
 
         graph << topic;
         resource.addProperty( NAO::hasTopic(), topic.uri());

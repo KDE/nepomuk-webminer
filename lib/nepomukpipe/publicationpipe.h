@@ -83,6 +83,14 @@ public:
       */
     void setProjectPimoThing(Nepomuk2::Resource projectThing);
 
+    /**
+     * @brief Returns the imported @c nbib:Publication and @c nbib:Reference resource uris
+     *
+     * first publication
+     * second reference
+     */
+    QPair<QUrl, QUrl> importedPublication() const;
+
 protected:
     /**
      * @brief Create the nbib:Publication and @c nbib:Reference objects and connect them

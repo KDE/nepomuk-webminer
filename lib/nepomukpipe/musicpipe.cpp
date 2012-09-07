@@ -116,7 +116,7 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
         existingUri.setEncodedUrl(resourceUri.toLatin1());
 
         // first remove the old metadata
-        KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << existingUri, Nepomuk2::NoRemovalFlags, KComponentData("metadataextractor") );
+        KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << existingUri, Nepomuk2::NoRemovalFlags, KComponentData(componentName().toLatin1()) );
         if (!job->exec() ) {
             kWarning() << job->errorString();
         }
@@ -199,7 +199,7 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
     }
 
     Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph, Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties,
-                                                                QHash<QUrl,QVariant>(),KComponentData("metadataextractor"));
+                                                                QHash<QUrl,QVariant>(),KComponentData(componentName().toLatin1()));
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
 }

@@ -67,6 +67,27 @@ public:
       */
     virtual void pipeImport(const QVariantMap &entry) = 0;
 
+    /**
+      * @brief Transforms some common variants of date formats into a QDateTime.
+      *
+      * @p dateString string representing a date in different ways
+      */
+    QDateTime createDateTime(const QString &dateString) const;
+
+    /**
+     * @brief Override the KComponentData name used to import the nepomuk data.
+     *
+     * This is "metadataextractor" by default always.
+     * This could be changed if the NepomukPipe classes are used outside the scope of the automatic data extarction.
+     *
+     * Helps if all data from one program should be removed (as @c name is the name of the application which data will be removed)
+     *
+     * @param name the new component (application) name
+     */
+    void overrideComponentName(const QString &name);
+
+    QString componentName() const;
+
 protected:
     /**
       * @brief Helper function to download the @c banner or @c poster
@@ -79,12 +100,6 @@ protected:
       */
     KUrl downloadBanner(const QUrl &bannerUrl, const QString &filename, const QString& subFolder, const QString &resourceFolder ) const;
 
-    /**
-      * @brief Transforms some common variants of date formats into a QDateTime.
-      *
-      * @p dateString string representing a date in different ways
-      */
-    QDateTime createDateTime(const QString &dateString) const;
 
     /**
       * @brief Splits a list of person names and creates a list of @c nco:Contact from it.
@@ -135,6 +150,8 @@ private:
     // taken from KBibtex, so
     // @author Thomas Fischer <fischer@unix-ag.uni-kl.de> with some modifications
     NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name splitPersonString(const QString & persos) const;
+
+    QString m_componentname;
 };
 }
 }

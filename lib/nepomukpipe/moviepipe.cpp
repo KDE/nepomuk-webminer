@@ -49,7 +49,7 @@ void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &mo
 
     // first remove the old metadata
     //BUG: Removing lots of person subresources cause virtuoso to go crazy. Takes ~10Min to get all the data removed properly
-    KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << existingUri, Nepomuk2::NoRemovalFlags, KComponentData("metadataextractor") );
+    KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << existingUri, Nepomuk2::NoRemovalFlags, KComponentData(componentName().toLatin1()) );
     if (!job->exec() ) {
         kWarning() << job->errorString();
     }
@@ -136,7 +136,7 @@ void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &mo
     graph << movieResource;
 
     Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph, Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties,
-                                                                QHash<QUrl,QVariant>(),KComponentData("metadataextractor"));
+                                                                QHash<QUrl,QVariant>(),KComponentData(componentName().toLatin1()));
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
 }
