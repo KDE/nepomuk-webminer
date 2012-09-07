@@ -1500,7 +1500,8 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addPublicationDate(const 
         finalDay.prepend(QLatin1String("0")); // transforms '1 into 01
     }
 
-    QString parsedDate = finalYear + QLatin1String("-") + finalMonth + QLatin1String("-") + finalDay;
+    // create date in iso formart so it will be saved correctly in nepomuk
+    QString parsedDate = finalYear + QLatin1String("-") + finalMonth + QLatin1String("-") + finalDay + QLatin1String("T12:12:12");
     addPublicationDate( parsedDate, publication );
 }
 

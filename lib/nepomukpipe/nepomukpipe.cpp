@@ -96,7 +96,7 @@ QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QStr
         return QDateTime();
     }
 
-    return dateTime;
+    return dateTime.toUTC();
 }
 
 void NepomukMetaDataExtractor::Pipe::NepomukPipe::overrideComponentName(const QString &name)
