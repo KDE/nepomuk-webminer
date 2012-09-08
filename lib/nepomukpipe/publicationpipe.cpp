@@ -874,8 +874,9 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addPublisher(const QStrin
             org.addProperty(NAO::hasSubResource(), postalAddress.uri() );
         }
 
-        graph << org;
         publication.addProperty(NCO::publisher(), org);
+
+        graph << org;
     }
 }
 
