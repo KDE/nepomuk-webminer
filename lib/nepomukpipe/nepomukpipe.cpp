@@ -120,7 +120,7 @@ QList<Nepomuk2::NCO::Contact> NepomukMetaDataExtractor::Pipe::NepomukPipe::creat
         }
         // create new contact resource, duplicates will be merged by the DMS later on
         Nepomuk2::NCO::Contact personResource;
-        personResource.setFullname( person.full );
+        personResource.setFullname( person.full.trimmed() );
         //TODO: reintroduce nco:PersonContact for publication authors? Or change ontology to allow NameGiven/NameFamily etc in the generic nco:Contact
         //personResource.setNameGiven( person.first );
         //personResource.setNameFamily( person.last );
@@ -151,7 +151,7 @@ QList<Nepomuk2::NCO::OrganizationContact> NepomukMetaDataExtractor::Pipe::Nepomu
     return resultList;
 }
 
-QList<NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name> NepomukMetaDataExtractor::Pipe::NepomukPipe::splitPersonList(const QString & person) const
+QList<NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name> NepomukMetaDataExtractor::Pipe::NepomukPipe::splitPersonList(const QString & person)
 {
     // split list of names into single Strings
     // first remove any  { } rom the string
@@ -186,7 +186,7 @@ QList<NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name> NepomukMet
     return personList;
 }
 
-NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name NepomukMetaDataExtractor::Pipe::NepomukPipe::splitPersonString(const QString & person) const
+NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name NepomukMetaDataExtractor::Pipe::NepomukPipe::splitPersonString(const QString & person)
 {
     QStringList personTokens = person.split(' ');
     /**

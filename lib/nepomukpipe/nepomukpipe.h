@@ -88,6 +88,24 @@ public:
 
     QString componentName() const;
 
+    /**
+      * @brief Struct to hold parsed name parts
+      */
+    struct Name {
+        QString first;
+        QString last;
+        QString suffix;
+        QString full;
+    };
+
+    /**
+     * @brief Splits person list by "and" or ";"
+     *
+     * @param persons person list
+     * @return a list of @c Name structures
+     */
+    static QList<NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name> splitPersonList(const QString & persons);
+
 protected:
     /**
       * @brief Helper function to download the @c banner or @c poster
@@ -99,7 +117,6 @@ protected:
       * @return a KUrl with the local file url of the new image
       */
     KUrl downloadBanner(const QUrl &bannerUrl, const QString &filename, const QString& subFolder, const QString &resourceFolder ) const;
-
 
     /**
       * @brief Splits a list of person names and creates a list of @c nco:Contact from it.
@@ -129,27 +146,9 @@ private slots:
     void slotSaveToNepomukDone(KJob *job) const;
 
 private:
-    /**
-      * @brief Struct to hold parsed name parts
-      */
-    struct Name {
-        QString first;
-        QString last;
-        QString suffix;
-        QString full;
-    };
-
-    /**
-     * @brief Splits person list by "and" or ";"
-     *
-     * @param persons person list
-     * @return a list of @c Name structures
-     */
-    QList<NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name> splitPersonList(const QString & persons) const;
-
     // taken from KBibtex, so
     // @author Thomas Fischer <fischer@unix-ag.uni-kl.de> with some modifications
-    NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name splitPersonString(const QString & persos) const;
+    static NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name splitPersonString(const QString & persos);
 
     QString m_componentname;
 };
