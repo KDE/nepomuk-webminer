@@ -78,7 +78,7 @@ KUrl NepomukMetaDataExtractor::Pipe::NepomukPipe::downloadBanner(const QUrl &ban
 
 QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QString &dateString) const
 {
-    QDateTime dateTime = QDateTime::fromString(dateString, Qt::ISODate);
+    QDateTime dateTime;
 
     if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy-MM-dd"); dateTime.setTimeSpec(Qt::UTC); }
     if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "dd-MM-yyy"); dateTime.setTimeSpec(Qt::UTC); }
@@ -90,7 +90,8 @@ QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QStr
     if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "MM.yyyy"); dateTime.setTimeSpec(Qt::UTC); }
     if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy.MM"); dateTime.setTimeSpec(Qt::UTC); }
     if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy"); dateTime.setTimeSpec(Qt::UTC); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yy"); dateTime.setTimeSpec(Qt::UTC); }
+    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yy"); dateTime.setTimeSpec(Qt::UTC);  }
+    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, Qt::ISODate); }
     if(!dateTime.isValid()) {
         kWarning() << "Could not determine correct datetime format from:" << dateString;
         return QDateTime();

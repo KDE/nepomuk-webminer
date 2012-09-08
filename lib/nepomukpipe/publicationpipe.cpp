@@ -678,7 +678,6 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addContent(const QString 
             publication.setVolume( value );
     }
     else if(key == QLatin1String("accessdate")) {
-
         QDateTime accessDate = createDateTime( value );
 
         if(accessDate.isValid()) {
