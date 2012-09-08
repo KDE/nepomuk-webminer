@@ -828,7 +828,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addContent(const QString 
         QString title = citeKey + ": " + key;
         addNote( value, title, publication, graph);
     }
-    else if(key == QLatin1String("bibtexentrytype") || key == QLatin1String("resourceuri") ) {
+    else if(key == QLatin1String("bibtexentrytype") || key == QLatin1String("resourceuri") || key == QLatin1String("bibtexcitekey") ) {
         //ignore these cases
         return;
     }
