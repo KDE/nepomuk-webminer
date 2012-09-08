@@ -72,7 +72,7 @@ public:
       *
       * @p dateString string representing a date in different ways
       */
-    QDateTime createDateTime(const QString &dateString) const;
+    static QDateTime createDateTime(const QString &dateString);
 
     /**
      * @brief Override the KComponentData name used to import the nepomuk data.

@@ -76,7 +76,7 @@ KUrl NepomukMetaDataExtractor::Pipe::NepomukPipe::downloadBanner(const QUrl &ban
     return localUrl;
 }
 
-QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QString &dateString) const
+QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QString &dateString)
 {
     QDateTime dateTime;
 
