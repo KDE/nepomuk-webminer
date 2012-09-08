@@ -150,7 +150,7 @@ def getMetaData(doc):
 # the dictionary follows the bibtex file standard + few exceptions
 #
 # bibtexentrytype =...          like book, article, inproceedings // necessary for the PublicationPipe to work properly
-# references = ...              list of dicts, where each dict is another publication dict
+# bibreferences = ...           list of dicts, where each dict is another publication dict
 #
 def extractItemFromUri( url, options ):
 

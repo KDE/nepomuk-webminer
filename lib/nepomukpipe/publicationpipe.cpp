@@ -85,13 +85,13 @@ void NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariantM
     // The MetaDataParameters contain the metadata for the publication as bibEntry->metaData
     // also if it is related to a file the bibEntry->resourceUri points to it.
     // if we have some information about the references used in the publication the
-    // bibEntry->metaData.value("references") has a list of more publications to add
+    // bibEntry->metaData.value("bibreferences") has a list of more publications to add
 
     // here we add all this stuff step by step.
 
     // 1. split the reference details so the next function does not complain that it does not know about this key
-    QVariantList references = bibEntryNonConst.value(QLatin1String("references")).toList();
-    bibEntryNonConst.remove( QLatin1String("references") );
+    QVariantList references = bibEntryNonConst.value(QLatin1String("bibreferences")).toList();
+    bibEntryNonConst.remove( QLatin1String("bibreferences") );
 
     // 2. create the main publication resource
     m_importedPublicationUris = importPublication( bibEntryNonConst );

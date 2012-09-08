@@ -80,23 +80,23 @@ QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QStr
 {
     QDateTime dateTime = QDateTime::fromString(dateString, Qt::ISODate);
 
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy-MM-dd"); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "dd-MM-yyy"); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy-MM"); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "MM-yyyy"); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy.MM.dd"); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "dd.MM.yyyy"); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "dd MMMM yyyy"); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "MM.yyyy"); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy.MM"); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy"); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yy"); }
+    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy-MM-dd"); dateTime.setTimeSpec(Qt::UTC); }
+    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "dd-MM-yyy"); dateTime.setTimeSpec(Qt::UTC); }
+    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy-MM"); dateTime.setTimeSpec(Qt::UTC); }
+    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "MM-yyyy"); dateTime.setTimeSpec(Qt::UTC); }
+    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy.MM.dd"); dateTime.setTimeSpec(Qt::UTC); }
+    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "dd.MM.yyyy"); dateTime.setTimeSpec(Qt::UTC); }
+    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "dd MMMM yyyy"); dateTime.setTimeSpec(Qt::UTC); }
+    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "MM.yyyy"); dateTime.setTimeSpec(Qt::UTC); }
+    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy.MM"); dateTime.setTimeSpec(Qt::UTC); }
+    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy"); dateTime.setTimeSpec(Qt::UTC); }
+    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yy"); dateTime.setTimeSpec(Qt::UTC); }
     if(!dateTime.isValid()) {
         kWarning() << "Could not determine correct datetime format from:" << dateString;
         return QDateTime();
     }
 
-    return dateTime.toUTC();
+    return dateTime;
 }
 
 void NepomukMetaDataExtractor::Pipe::NepomukPipe::overrideComponentName(const QString &name)

@@ -187,7 +187,7 @@ def extractSearchResults(documentElement, citation=False):
 # the dictionary follows the bibtex file standard + few exceptions
 #
 # bibtexentrytype =...          like book, article, inproceedings // necessary for the PublicationPipe to work properly
-# references = ...              list of dicts, where each dict is another publication dict
+# bibreferences = ...           list of dicts, where each dict is another publication dict
 #
 def extractItemFromUri( url, options ):
 
@@ -232,7 +232,7 @@ def extractItemFromUri( url, options ):
 
         # Add all found citations to the final entry
         if citationResults:
-            finalEntry['references'] = citationResults
+            finalEntry['bibreferences'] = citationResults
 
 
     data_string = json.dumps(finalEntry)
