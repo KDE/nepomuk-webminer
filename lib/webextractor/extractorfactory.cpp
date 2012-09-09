@@ -182,7 +182,10 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
         WebExtractor::Info scriptInfo;
         scriptInfo.name = result.value("name").toString();
         scriptInfo.identifier = result.value("identifier").toString();
-        scriptInfo.icon = result.value("icon").toString();
+
+        QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + result.value("icon").toString();
+        scriptInfo.icon = iconPath;
+
         scriptInfo.description = result.value("desscription").toString();
         scriptInfo.author = result.value("author").toString();
         scriptInfo.email = result.value("email").toString();

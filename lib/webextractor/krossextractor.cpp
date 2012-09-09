@@ -18,6 +18,7 @@
 #include "krossextractor.h"
 
 #include <KDE/Kross/Manager>
+#include <KDE/KDebug>
 
 #include <qjson/parser.h>
 
@@ -54,7 +55,11 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
     d->scriptInfo.description = result.value("desscription").toString();
     d->scriptInfo.author = result.value("author").toString();
     d->scriptInfo.email = result.value("email").toString();
-    d->scriptInfo.icon = result.value("icon").toString();
+
+    QFileInfo fileInfo(scriptFile);
+    QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + result.value("icon").toString();
+    d->scriptInfo.icon = iconPath;
+
     d->scriptInfo.file = d->scriptFile->file();
 
     QVariantList resList = result.value("resource").toList();

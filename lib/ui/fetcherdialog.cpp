@@ -666,12 +666,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fillEngineList(const QString &
     QList<WebExtractor::Info> engines = extractorFactory()->listAvailablePlugins( category );
 
     foreach(const WebExtractor::Info &engine, engines) {
-
-        QFileInfo fileInfo(engine.file);
-
-        QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + engine.icon;
-
-        comboBoxSearchEngine->addItem(QIcon( iconPath ),
+        comboBoxSearchEngine->addItem(QIcon( engine.icon ),
                                           engine.name,
                                           engine.identifier);
     }
