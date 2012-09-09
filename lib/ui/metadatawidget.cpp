@@ -22,6 +22,9 @@
 #include <KDE/KTabWidget>
 #include <KDE/KLocalizedString>
 
+#include <KDE/KPixmapSequence>
+#include <KDE/KPixmapSequenceOverlayPainter>
+
 #include <QtGui/QTreeView>
 #include <QtGui/QStandardItemModel>
 
@@ -41,6 +44,7 @@ namespace UI {
         KTabWidget *tabWidget;
         QTreeView *newMetaDataWidget;
         QStandardItemModel *newMetaDataModel;
+        KPixmapSequenceOverlayPainter *busyDataWidget;
         //QTreeView *oldMetaDataWidget;
     };
 }
@@ -62,6 +66,17 @@ void NepomukMetaDataExtractor::UI::MetaDataWidget::setMetaDataParameter(const Ne
     d->mdp = mdp;
 
     setUpNewDataWidget();
+}
+
+void NepomukMetaDataExtractor::UI::MetaDataWidget::setBusy(bool busy)
+{
+    Q_D( MetaDataWidget );
+    if(busy) {
+        d->busyDataWidget->start();
+    }
+    else {
+        d->busyDataWidget->stop();
+    }
 }
 
 void NepomukMetaDataExtractor::UI::MetaDataWidget::setUpNewDataWidget()
@@ -204,6 +219,11 @@ void NepomukMetaDataExtractor::UI::MetaDataWidget::setupWidget()
     d->newMetaDataWidget->setSortingEnabled(true);
     d->newMetaDataWidget->setUniformRowHeights(true);
     layout->addWidget( d->newMetaDataWidget );
+
+    d->busyDataWidget = new KPixmapSequenceOverlayPainter(this);
+    d->busyDataWidget->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+    d->busyDataWidget->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    d->busyDataWidget->setWidget(d->newMetaDataWidget->viewport());
 
     //connect(d->newMetaDataModel, SIGNAL(itemChanged(QStandardItem*)), this, SLOT(newMetaDataChanged(QStandardItem*)) );
 /*

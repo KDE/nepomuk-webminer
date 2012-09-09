@@ -55,6 +55,8 @@ public:
      */
     void setMetaDataParameter(const NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp);
 
+    void setBusy(bool busy);
+
 private:
     void setupWidget();
 

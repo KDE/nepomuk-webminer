@@ -39,6 +39,9 @@
 #include <KDE/KStandardDirs>
 #include <KDE/KDialog>
 
+#include <KDE/KPixmapSequence>
+#include <KDE/KPixmapSequenceOverlayPainter>
+
 #include <KDE/KRun>
 #include <KDE/KDebug>
 #include <KDE/KConfigDialog>
@@ -60,6 +63,7 @@ namespace UI {
         int currentItemNumber;
         SearchResultsModel *resultModel;
         QTextDocument *progressLog;
+        KPixmapSequenceOverlayPainter *busySearchWidget;
     };
 }
 }
@@ -113,6 +117,11 @@ NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
     buttonPrevious->setIcon(KIcon("go-previous"));
     buttonLog->setIcon(KIcon("tools-report-bug"));
     buttonFetchMore->setIcon(KIcon("download"));
+
+    d->busySearchWidget = new KPixmapSequenceOverlayPainter(this);
+    d->busySearchWidget->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+    d->busySearchWidget->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    d->busySearchWidget->setWidget(searchResults->viewport());
 }
 
 NepomukMetaDataExtractor::UI::FetcherDialog::~FetcherDialog()
@@ -357,6 +366,8 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::resourceTypeSelectionChanged(i
 void NepomukMetaDataExtractor::UI::FetcherDialog::startSearch()
 {
     Q_D( FetcherDialog );
+    d->resultModel->clear();
+    d->busySearchWidget->start();
     busyFetching();
 
     MetaDataParameters *mdp = resourceExtractor()->resourcesList().at( d->currentItemNumber );
@@ -600,6 +611,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::openDetailsLink(const QString 
 void NepomukMetaDataExtractor::UI::FetcherDialog::fetchMoreDetails()
 {
     Q_D( FetcherDialog );
+    metaDataList->setBusy(true);
     busyFetching();
 
     // get the current item to fetch
@@ -640,12 +652,14 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::saveMetaDataSlot()
     Q_D( FetcherDialog );
     MetaDataParameters *mdp = resourceExtractor()->resourcesList().at( d->currentItemNumber );
 
+    metaDataList->setBusy(true);
     busyFetching();
 
     saveMetaData( mdp );
     buttonSave->setEnabled(false);
     mdp->metaDataSaved = true;
 
+    metaDataList->setBusy(false);
     finishedFetching();
 }
 
@@ -683,7 +697,6 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fillEngineList(const QString &
     else if( category == QString("publication")) {
         comboBoxSearchEngine->setCurrentIndex(comboBoxSearchEngine->findData(MDESettings::favoritePublicationPlugin()));
     }
-
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::showItemDetails()
@@ -705,6 +718,8 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showItemDetails()
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::busyFetching()
 {
+    Q_D( FetcherDialog );
+
     QWidget::setCursor( Qt::BusyCursor );
 
     buttonSearch->setEnabled(false);
@@ -717,6 +732,9 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::busyFetching()
 void NepomukMetaDataExtractor::UI::FetcherDialog::finishedFetching()
 {
     Q_D( FetcherDialog );
+    d->busySearchWidget->stop();
+    metaDataList->setBusy(false);
+
     QWidget::setCursor( Qt::ArrowCursor );
 
     MetaDataParameters *mdp = resourceExtractor()->resourcesList().at( d->currentItemNumber );
