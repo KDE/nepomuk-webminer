@@ -20,6 +20,9 @@
 #include <KDE/Kross/Manager>
 #include <KDE/KDebug>
 
+#include <QtCore/QFutureWatcher>
+#include <QtCore/QtConcurrentRun>
+
 #include <qjson/parser.h>
 
 namespace NepomukMetaDataExtractor {
@@ -28,6 +31,7 @@ namespace NepomukMetaDataExtractor {
         public:
             Kross::Action *scriptFile;
             WebExtractor::Info scriptInfo;
+            QFutureWatcher<QVariant> *futureWatcher;
         };
     }
 }
@@ -77,6 +81,7 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::~KrossExtractor()
 {
     Q_D( KrossExtractor );
     delete d->scriptFile;
+    delete d->futureWatcher;
 }
 
 NepomukMetaDataExtractor::Extractor::WebExtractor::Info NepomukMetaDataExtractor::Extractor::KrossExtractor::info()
@@ -85,14 +90,34 @@ NepomukMetaDataExtractor::Extractor::WebExtractor::Info NepomukMetaDataExtractor
     return d->scriptInfo;
 }
 
+static QVariant concurrentSearch(Kross::Action *script, const QString &resourceType, const QVariantMap &parameters)
+{
+    return script->callFunction(QString("searchItems"), QVariantList() << resourceType << parameters);
+}
+
 void NepomukMetaDataExtractor::Extractor::KrossExtractor::search(const QString &resourceType, const QVariantMap &parameters)
 {
-    emit searchItems(resourceType, parameters);
+    Q_D( KrossExtractor );
+
+    QFuture<QVariant> future = QtConcurrent::run(concurrentSearch, d->scriptFile,resourceType, parameters);
+    d->futureWatcher = new QFutureWatcher<QVariant>();
+
+    d->futureWatcher->setFuture(future);
+}
+
+static QVariant concurrentExtraction(Kross::Action *script, const QUrl &url, const QVariantMap &options)
+{
+    return script->callFunction(QString("extractItemFromUri"), QVariantList() << url << options);
 }
 
 void NepomukMetaDataExtractor::Extractor::KrossExtractor::extractItem(const QUrl &url, const QVariantMap &options)
 {
-    emit extractItemFromUri(url, options);
+    Q_D( KrossExtractor );
+
+    QFuture<QVariant> future = QtConcurrent::run(concurrentExtraction, d->scriptFile, url, options);
+    d->futureWatcher = new QFutureWatcher<QVariant>();
+
+    d->futureWatcher->setFuture(future);
 }
 
 void NepomukMetaDataExtractor::Extractor::KrossExtractor::transformJSONResult(const QString &resourceType, const QString &jsonMap)
