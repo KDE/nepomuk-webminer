@@ -32,6 +32,7 @@ except:
 #
 def info():
     return dict( name = 'Springer Link',
+                 homepage = 'http://www.springerlink.com',
                  icon = 'springer.png',
                  identifier = 'springer',
                  resource = ['publication'],

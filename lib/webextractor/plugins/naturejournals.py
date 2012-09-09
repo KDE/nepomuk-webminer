@@ -32,6 +32,7 @@ except:
 #
 def info():
     return dict( name = 'Nature Publishing Group',
+                 homepage = 'http://www.nature.com',
                  icon = 'naturejournals.png',
                  identifier = 'nature',
                  resource = ['publication'],

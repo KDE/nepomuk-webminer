@@ -48,6 +48,7 @@ public:
      */
     struct Info {
         QString name;           /**< Long name of the plugin */
+        QString homepage;       /**< Homepage of the site this plugin parses */
         QString identifier;     /**< Short unique identifier of the plugin */
         QString description;    /**< Longer description of the plugin */
         QStringList resource;   /**< List of resources that can be used (@c tvshow , @c movie @c publication ) */

@@ -33,6 +33,7 @@ except:
 #
 def info():
     return dict( name = 'The Internet Movie Database',
+                 homepage = 'http://www.imdb.com',
                  icon = 'imdb.png',
                  identifier = 'imdbmovies',
                  urlregex = ['http://www.imdb.com/title/tt'],

@@ -38,6 +38,7 @@ citationResults = []
 #
 def info():
     return dict( name = 'Microsoft Academics Search',
+                 homepage = 'http://academic.research.microsoft.com',
                  icon = 'microsoft-academic-search.png',
                  identifier = 'mas',
                  resource = ['publication'],

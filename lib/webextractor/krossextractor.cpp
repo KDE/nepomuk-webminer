@@ -55,6 +55,7 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
     // load script info
     QVariantMap result = d->scriptFile->callFunction("info").toMap();
     d->scriptInfo.name = result.value("name").toString();
+    d->scriptInfo.homepage = result.value("homepage").toString();
     d->scriptInfo.identifier = result.value("identifier").toString();
     d->scriptInfo.description = result.value("desscription").toString();
     d->scriptInfo.author = result.value("author").toString();

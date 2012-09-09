@@ -46,6 +46,7 @@ musicbrainzngs.set_useragent(
 #
 def info():
     return dict( name = 'MusicBrainz',
+                 homepage = 'http://musicbrainz.org',
                  icon = 'musicbrainz.png',
                  identifier = 'musicbrainz',
                  #urlregex = ['http://musicbrainz.org/release/.*', 'http://musicbrainz.org/recording.*'], // todo add /release to fetch all musicPiece in an musicAlbum

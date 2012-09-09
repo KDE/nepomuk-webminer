@@ -38,6 +38,7 @@ except:
 #
 def info():
     return dict( name = 'The TVDb',
+                 homepage = 'http://thetvdb.com',
                  icon = 'tvdb.png',
                  identifier = 'tvdb',
 #                 urlregex = ['http://thetvdb.com/\\?tab=episode&seriesid=(\\d+)&seasonid=(\\d+)&id=(\\d+).*', 'http://thetvdb.com/\\?tab=season&seriesid=(\\d+)&seasonid=(\\d+).*', 'http://thetvdb.com/\\?tab=series&id=(\\d+).*'],
