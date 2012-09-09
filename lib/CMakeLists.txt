@@ -79,6 +79,7 @@ set( nepomukmetadataextractor_LIB_HDRS
   resourceextractor/popplerextractor.h
   resourceextractor/odfextractor.h
 
+  webextractor/krossextractor.h
   webextractor/extractorfactory.h
   webextractor/webextractor.h
 

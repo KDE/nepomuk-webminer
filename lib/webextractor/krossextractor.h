@@ -22,6 +22,8 @@
 
 #include <KDE/Kross/Action>
 
+#include "nepomukmetadataextractor_export.h"
+
 namespace NepomukMetaDataExtractor {
 namespace Extractor {
 
@@ -47,7 +49,7 @@ class KrossExtractorPrivate;
   *
   * For more details see \ref webextractor Overview
   */
-class KrossExtractor : public WebExtractor
+class NEPOMUKMETADATAEXTRACTOR_EXPORT KrossExtractor : public WebExtractor
 {
     Q_OBJECT
 public:
