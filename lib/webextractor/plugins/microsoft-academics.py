@@ -138,9 +138,17 @@ def extractSearchResults(documentElement, citation=False):
         if citation is True:
             citationTag = child.find('a', {'id':'ctl00_MainContent_ObjectList_ctl' + fetchentry + '_Citation'})
             entryTitleTag = child.find('a', {'id':'ctl00_MainContent_ObjectList_ctl' + fetchentry + '_Title'})
+            abstractTag = child.find('span', {'id':'ctl00_MainContent_ObjectList_ctl' + fetchentry + '_snippet'})
+            otherDateTag = child.find('span', {'id':'ctl00_MainContent_ObjectList_ctl' + fetchentry + '_lblYear'})
+            articleDateTag = child.find('span', {'id':'ctl00_MainContent_ObjectList_ctl' + fetchentry + '_YearJournal'})
+            proceedingsDateTag = child.find('span', {'id':'ctl00_MainContent_ObjectList_ctl' + fetchentry + '_YearConference'})
         else:
             citationTag = child.find('a', {'id':'ctl00_MainContent_PaperList_ctl' + fetchentry + '_Citation'})
             entryTitleTag = child.find('a', {'id':'ctl00_MainContent_PaperList_ctl' + fetchentry + '_Title'})
+            abstractTag = child.find('span', {'id':'ctl00_MainContent_PaperList_ctl' + fetchentry + '_snippet'})
+            otherDateTag = child.find('span', {'id':'ctl00_MainContent_PaperList_ctl' + fetchentry + '_lblYear'})
+            articleDateTag = child.find('span', {'id':'ctl00_MainContent_PaperList_ctl' + fetchentry + '_YearJournal'})
+            proceedingsDateTag = child.find('span', {'id':'ctl00_MainContent_PaperList_ctl' + fetchentry + '_YearConference'})
 
         if entryTitleTag is not None:
 
@@ -156,20 +164,43 @@ def extractSearchResults(documentElement, citation=False):
 
             authorString = ''
             for author in child.findAll('a', {'class':'author-name-tooltip'}):
-                authorString = authorString + author.renderContents() + ', '
-                authorString = authorString[:-2]
-                detailString = authorString
+                authorString = authorString + author.renderContents() + '; '
+
+            authorString = authorString[:-2] # remove last ', '
+            detailString = authorString
+
+            abstractString = ''
+            if abstractTag is not None:
+                abstractString = ''.join(BeautifulSoup(abstractTag.renderContents(), convertEntities=BeautifulSoup.HTML_ENTITIES).findAll(text=True))
+
+            typeString = ''
+            dateString = ''
+
+            if otherDateTag is not None:
+                dateString = ''.join(BeautifulSoup(otherDateTag.renderContents(), convertEntities=BeautifulSoup.HTML_ENTITIES).findAll(text=True))
+            elif articleDateTag is not None:
+                dateString = ''.join(BeautifulSoup(articleDateTag.renderContents(), convertEntities=BeautifulSoup.HTML_ENTITIES).findAll(text=True))
+                dateString = dateString.split(', ')[-1]
+                typeString = 'article'
+            elif proceedingsDateTag is not None:
+                dateString = ''.join(BeautifulSoup(proceedingsDateTag.renderContents(), convertEntities=BeautifulSoup.HTML_ENTITIES).findAll(text=True))
+                dateString = dateString.split(', ')[-1]
+                typeString = 'inproceedings'
 
             if citationTag is not None:
                 detailString = detailString + ', ' + citationTag.renderContents()
 
-                entryDict = dict(
-                                 title = entryTitleTag.renderContents(),
-                                 details = detailString,
-                                 url = fullUrl
-                                )
+            entryDict = dict(
+                             title = ''.join(BeautifulSoup(entryTitleTag.renderContents(), convertEntities=BeautifulSoup.HTML_ENTITIES).findAll(text=True)),
+                             details = detailString,
+                             url = fullUrl,
+                             authors = authorString,
+                             plaintext = abstractString,
+                             date = dateString,
+                             publicationtype = typeString
+                            )
 
-                searchResults.append(entryDict)
+            searchResults.append(entryDict)
 
             i += 1
 

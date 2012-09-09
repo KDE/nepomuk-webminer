@@ -129,7 +129,11 @@ def searchItems( resourcetype, parameters ):
             entryDict = dict(
                             title = pubTitle,
                             details = detailsString,
-                            url = pubLink
+                            url = pubLink,
+                            authors = pubAuthors,
+                            publicationtype = pubType,
+                            date = pubDate,
+                            plaintext = ''
                             )
 
             searchResults.append(entryDict)

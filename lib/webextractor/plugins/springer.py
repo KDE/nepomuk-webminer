@@ -64,8 +64,10 @@ def searchItems( resourcetype, parameters ):
     searchQuery = ""
 
     # TODO: implement volume/issue/year may and year min
+    # TODO: Springerlink shows 10 results per page only, need to recursively parse the otehr pages
     if title and title != "":
-        searchQuery = 'ti:(' + title.decode("utf8") + ')'
+        #searchQuery = 'ti:(' + title.decode("utf8") + ')'
+        searchQuery = title.decode("utf8")
     if author and author != "":
         searchQuery = searchQuery + '+au:(' + author + ')'
 
@@ -80,28 +82,38 @@ def searchItems( resourcetype, parameters ):
 
     searchResults = []
 
-    for i in items:
-        searchResultsList = i.findAll('li', "primitive")
+    if items is not None:
+        for i in items:
+            searchResultsList = i.findAll('li', "primitive")
 
-        for sr in searchResultsList:
+            for sr in searchResultsList:
 
-            itemType = sr.find('p', "itemTag").string
+                itemType = sr.find('p', "itemTag").string
 
-            href = sr.find('a')
-            itemTitle = ''.join([e for e in href.recursiveChildGenerator() if isinstance(e,unicode)])
+                href = sr.find('a')
+                itemTitle = ''.join([e for e in href.recursiveChildGenerator() if isinstance(e,unicode)])
 
-            itemLink = href['href']
-            authorsType = sr.find('p', "authors")
-            authorList = authorsType.findAll("a")
-            itemAuthors = ";".join(a.string for a in authorList)
+                abstractString = ''
+                abstractType = sr.find('p', "snippets")
+                if abstractType is not None:
+                    abstractString = ''.join([e for e in abstractType.recursiveChildGenerator() if isinstance(e,unicode)])
 
-            entryDict = dict(
-                            title = itemTitle,
-                            details = itemType + ' - ' + itemAuthors,
-                            url = 'http://www.springerlink.com/' + itemLink
-                            )
+                itemLink = href['href']
+                authorsType = sr.find('p', "authors")
+                authorList = authorsType.findAll("a")
+                itemAuthors = "; ".join(a.string for a in authorList)
 
-            searchResults.append(entryDict)
+                entryDict = dict(
+                                title = itemTitle,
+                                details = itemType + ' - ' + itemAuthors,
+                                url = 'http://www.springerlink.com/' + itemLink,
+                                authors = itemAuthors,
+                                plaintext = abstractString,
+                                publicationtype = str(itemType),
+                                date = ''
+                                )
+
+                searchResults.append(entryDict)
 
     WebExtractor.searchResults( searchResults )
 
