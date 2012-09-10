@@ -59,6 +59,13 @@ public:
 
     explicit BatchExtractor(QObject *parent = 0);
 
+    /**
+     * @brief Returns the name of the current running extraction job
+     *
+     * @return name of the current extraction job
+     */
+    QString currentExtractionInfo() const;
+
 public slots:
     /**
      * @brief Adds a new extraction job to the queue
@@ -70,6 +77,21 @@ public slots:
      */
     void addJob(const QUrl &detailsUrl, const QVariantMap &options,
                 const QString &name, const QString &resourceUri = QString() );
+
+signals:
+    /**
+     * @brief Emitted when the extarction is in progress and everytime a new item is added to the queue
+     *
+     * Can be used to indicate the active extarction with the current amout of items in the queue
+     *
+     * @param queueSize size of all items that have to be processed
+     */
+    void extractionStarted(int queueSize);
+
+    /**
+     * @brief Emitted when the queue is empty and all items have been fetched
+     */
+    void extractionFinished();
 
 private:
     /**

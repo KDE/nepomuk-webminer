@@ -58,6 +58,19 @@ NepomukMetaDataExtractor::UI::BatchExtractor::BatchExtractor(QObject *parent)
     d->currentExtractor = 0;
 }
 
+QString NepomukMetaDataExtractor::UI::BatchExtractor::currentExtractionInfo() const
+{
+    Q_D( const BatchExtractor );
+
+    QString currentJob;
+
+    if( !d->jobList.isEmpty()) {
+        currentJob = d->jobList.first().name;
+    }
+
+    return currentJob;
+}
+
 void NepomukMetaDataExtractor::UI::BatchExtractor::addJob(const QUrl &detailsUrl, const QVariantMap &options, const QString &name, const QString &resourceUri )
 {
     Q_D( BatchExtractor );
@@ -71,6 +84,8 @@ void NepomukMetaDataExtractor::UI::BatchExtractor::addJob(const QUrl &detailsUrl
     newJob.resourceUri = resourceUri;
 
     d->jobList.append( newJob );
+
+    emit extractionStarted( d->jobList.size() );
 
     if( !d->extractionInProgress ) {
         extractNext();
@@ -219,6 +234,8 @@ void NepomukMetaDataExtractor::UI::BatchExtractor::pipeFinished()
     }
     else {
         d->extractionInProgress = false;
+
+        emit extractionFinished();
     }
 }
 
