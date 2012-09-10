@@ -185,4 +185,6 @@ void NepomukMetaDataExtractor::UI::Fetcher::saveMetaData(const NepomukMetaDataEx
     else {
         kWarning() << "No nepomuk pipe available for the resource type" << type;
     }
+
+    delete nepomukPipe;
 }
