@@ -36,7 +36,7 @@ def info():
                  icon = 'springer.png',
                  identifier = 'springer',
                  resource = ['publication'],
-                 urlregex = ['http://www.springerlink.com/content/[0-9A-Za-z]/'],
+                 urlregex = ['http://www.springerlink.com/content/[0-9A-Za-z]+/'],
                  description = 'some description',
                  author = 'Joerg Ehrichs',
                  email = 'some@mail.com',
@@ -106,7 +106,7 @@ def searchItems( resourcetype, parameters ):
                 entryDict = dict(
                                 title = itemTitle,
                                 details = itemType + ' - ' + itemAuthors,
-                                url = 'http://www.springerlink.com/' + itemLink,
+                                url = 'http://www.springerlink.com' + itemLink,
                                 authors = itemAuthors,
                                 plaintext = abstractString,
                                 publicationtype = str(itemType),

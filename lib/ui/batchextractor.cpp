@@ -80,7 +80,6 @@ void NepomukMetaDataExtractor::UI::BatchExtractor::addJob(const QUrl &detailsUrl
 void NepomukMetaDataExtractor::UI::BatchExtractor::extractNext()
 {
     Q_D( BatchExtractor );
-    d->extractionInProgress = true;
 
     ExtractionJob nextJob = d->jobList.first();
 
@@ -92,12 +91,20 @@ void NepomukMetaDataExtractor::UI::BatchExtractor::extractNext()
 
     d->currentExtractor = d->extractorFactory.getExtractor(nextJob.detailsUrl);
 
-    connect( d->currentExtractor, SIGNAL(error(QString)), this, SLOT(error(QString)) );
-    connect( d->currentExtractor, SIGNAL(log(QString)), this, SLOT(log(QString)) );
+    if( d->currentExtractor ) {
+        d->extractionInProgress = true;
+        connect( d->currentExtractor, SIGNAL(error(QString)), this, SLOT(error(QString)) );
+        connect( d->currentExtractor, SIGNAL(log(QString)), this, SLOT(log(QString)) );
 
-    connect( d->currentExtractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(itemResults(QString,QVariantMap)) );
+        connect( d->currentExtractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(itemResults(QString,QVariantMap)) );
 
-    d->currentExtractor->extractItem( nextJob.detailsUrl, nextJob.options);
+        d->currentExtractor->extractItem( nextJob.detailsUrl, nextJob.options);
+    }
+    else {
+        d->extractionInProgress = false;
+        d->jobList.takeFirst();
+        kWarning() << "could not get Webextractor for url " << nextJob.detailsUrl;
+    }
 }
 
 void NepomukMetaDataExtractor::UI::BatchExtractor::log(const QString &msg)
@@ -204,7 +211,6 @@ void NepomukMetaDataExtractor::UI::BatchExtractor::pipeFinished()
 
     Q_D( BatchExtractor );
 
-    kDebug() << "##############################################################";
     d->jobList.takeFirst();
 
     // parallel fetch from the web and pipe the last to nepomuk
