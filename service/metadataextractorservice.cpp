@@ -26,41 +26,64 @@
 #include <Nepomuk2/Vocabulary/NMM>
 #include "sro/nbib.h"
 
-#include <QtCore/QProcess>
-#include <QtCore/QFile>
-
 #include <KDE/KStandardDirs>
 #include <KDE/KDebug>
 #include <KDE/KDirNotify>
 
+#include <QtCore/QProcess>
+#include <QtCore/QFile>
+
 using namespace Nepomuk2::Vocabulary;
+
+class MetaDataExtractorServicePrivate {
+public:
+    Nepomuk2::ResourceWatcher* videoWatcher;
+    Nepomuk2::ResourceWatcher* documentWatcher;
+    Nepomuk2::ResourceWatcher* musicWatcher;
+};
 
 MetaDataExtractorService::MetaDataExtractorService(QObject *parent, const QVariantList &)
     : Nepomuk2::Service(parent)
+    , d_ptr( new MetaDataExtractorServicePrivate)
 {
+    Q_D( MetaDataExtractorService );
+
     // set up the watcher for newly created nfo:Video resources
-    m_videoWatcher = new Nepomuk2::ResourceWatcher(this);
-    m_videoWatcher->addType(NFO::Video());
-    connect(m_videoWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
+    d->videoWatcher = new Nepomuk2::ResourceWatcher(this);
+    d->videoWatcher->addType(NFO::Video());
+    connect(d->videoWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
             this, SLOT(slotVideoResourceCreated(Nepomuk2::Resource,QList<QUrl>)));
-    m_videoWatcher->start();
+    d->videoWatcher->start();
 
     // set up the watcher for newly created documents
-    m_documentWatcher = new Nepomuk2::ResourceWatcher(this);
-    m_documentWatcher->addType(NFO::PaginatedTextDocument());
-    connect(m_documentWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
+    d->documentWatcher = new Nepomuk2::ResourceWatcher(this);
+    d->documentWatcher->addType(NFO::PaginatedTextDocument());
+    connect(d->documentWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
             this, SLOT(slotDocumentResourceCreated(Nepomuk2::Resource)));
-    connect(m_documentWatcher, SIGNAL(resourceTypeAdded(Nepomuk2::Resource,Nepomuk2::Types::Class)),
+    connect(d->documentWatcher, SIGNAL(resourceTypeAdded(Nepomuk2::Resource,Nepomuk2::Types::Class)),
             this, SLOT(slotDocumentResourceCreated(Nepomuk2::Resource)));
-    m_documentWatcher->start();
+    d->documentWatcher->start();
+
+    // set up the watcher for newly created music files
+    d->musicWatcher = new Nepomuk2::ResourceWatcher(this);
+    d->musicWatcher->addType(NFO::Audio());
+    connect(d->musicWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
+            this, SLOT(slotDocumentResourceCreated(Nepomuk2::Resource)));
+    connect(d->musicWatcher, SIGNAL(resourceTypeAdded(Nepomuk2::Resource,Nepomuk2::Types::Class)),
+            this, SLOT(slotDocumentResourceCreated(Nepomuk2::Resource)));
+    d->musicWatcher->start();
 }
 
 MetaDataExtractorService::~MetaDataExtractorService()
 {
-    m_videoWatcher->stop();
-    m_documentWatcher->stop();
-    delete m_videoWatcher;
-    delete m_documentWatcher;
+    Q_D( MetaDataExtractorService );
+
+    d->videoWatcher->stop();
+    d->documentWatcher->stop();
+    d->musicWatcher->stop();
+    delete d->videoWatcher;
+    delete d->documentWatcher;
+    delete d->musicWatcher;
 }
 
 void MetaDataExtractorService::slotVideoResourceCreated(const Nepomuk2::Resource &res, const QList<QUrl> &types)
@@ -104,6 +127,22 @@ void MetaDataExtractorService::slotDocumentResourceCreated(const Nepomuk2::Resou
         if(res.hasProperty(Nepomuk2::Vocabulary::NBIB::publishedAs())) {
             return;
         }
+
+        const QString path = res.toFile().url().toLocalFile();
+        if(QFile::exists(path)) {
+            kDebug() << "Calling" << KStandardDirs::findExe(QLatin1String("metadataextractor")) << path;
+
+            QProcess::startDetached(KStandardDirs::findExe(QLatin1String("metadataextractor")),
+                                    QStringList() << QLatin1String("-auto") << QLatin1String("-force") << path);
+        }
+    }
+}
+
+void MetaDataExtractorService::slotMusicResourceCreated(const Nepomuk2::Resource& res, const QList<QUrl>& types)
+{
+    Q_UNUSED(types);
+
+    if(res.isFile()) {
 
         const QString path = res.toFile().url().toLocalFile();
         if(QFile::exists(path)) {

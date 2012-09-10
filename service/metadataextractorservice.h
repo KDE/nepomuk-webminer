@@ -31,8 +31,10 @@ namespace Nepomuk2 {
     class ResourceWatcher;
 }
 
+class MetaDataExtractorServicePrivate;
+
 /**
- * @brief This service calls the metadata extarctor every time a new @c nfo:Video or @c nfo::PaginatedTextDocument resource was created
+ * @brief This service calls the metadata extarctor every time a new @c nfo:Video, @c nfo:Audio or @c nfo::PaginatedTextDocument resource was created
  *
  * Extracts the metadata from the web based on the AutomaticFetcher.
  */
@@ -52,6 +54,7 @@ private Q_SLOTS:
      * @param types list of types for this resource
      */
     void slotVideoResourceCreated(const Nepomuk2::Resource& res, const QList<QUrl>& types);
+
     /**
      * @brief Fetch publication data if the resource is an existing file and does not already have a @c nbib:Publication connected
      *
@@ -60,9 +63,17 @@ private Q_SLOTS:
      */
     void slotDocumentResourceCreated(const Nepomuk2::Resource& res, const QList<QUrl>& types);
 
+    /**
+     * @brief Fetch music data if the resource is an existing file
+     *
+     * @param res the file resource that will be checked
+     * @param types list of types for this resource
+     */
+    void slotMusicResourceCreated(const Nepomuk2::Resource& res, const QList<QUrl>& types);
+
 private:
-    Nepomuk2::ResourceWatcher* m_videoWatcher;
-    Nepomuk2::ResourceWatcher* m_documentWatcher;
+    Q_DECLARE_PRIVATE(MetaDataExtractorService)
+    MetaDataExtractorServicePrivate *const d_ptr; /**< d-pointer for this class */
 };
 
 #endif // METADATAEXTRACTORSERVICE_H
