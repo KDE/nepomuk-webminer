@@ -20,6 +20,9 @@
 #include <KDE/Kross/Manager>
 #include <KDE/KDebug>
 
+#include <KDE/KConfig>
+#include <KDE/KConfigGroup>
+
 #include <QtCore/QFutureWatcher>
 #include <QtCore/QtConcurrentRun>
 
@@ -52,29 +55,46 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
     d->scriptFile->setFile( scriptFile );
     d->scriptFile->trigger();
 
-    // load script info
-    QVariantMap result = d->scriptFile->callFunction("info").toMap();
-    d->scriptInfo.name = result.value("name").toString();
-    d->scriptInfo.homepage = result.value("homepage").toString();
-    d->scriptInfo.identifier = result.value("identifier").toString();
-    d->scriptInfo.description = result.value("desscription").toString();
-    d->scriptInfo.author = result.value("author").toString();
-    d->scriptInfo.email = result.value("email").toString();
+    KConfig config("nepomukmetadataextractorrc");
+    if( config.hasGroup( scriptFile ) ) {
+        KConfigGroup pluginGroup( &config, scriptFile );
 
-    QFileInfo fileInfo(scriptFile);
-    QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + result.value("icon").toString();
-    d->scriptInfo.icon = iconPath;
-
-    d->scriptInfo.file = d->scriptFile->file();
-
-    QVariantList resList = result.value("resource").toList();
-    foreach(const QVariant &res, resList) {
-        d->scriptInfo.resource << res.toString();
+        d->scriptInfo.name = pluginGroup.readEntry("name", QString());
+        d->scriptInfo.homepage = pluginGroup.readEntry("homepage", QString());
+        d->scriptInfo.identifier = pluginGroup.readEntry("identifier", QString());
+        d->scriptInfo.icon = pluginGroup.readEntry("icon", QString());
+        d->scriptInfo.description = pluginGroup.readEntry("description", QString());
+        d->scriptInfo.author = pluginGroup.readEntry("author", QString());
+        d->scriptInfo.email = pluginGroup.readEntry("email", QString());
+        d->scriptInfo.file = pluginGroup.readEntry("file", QString());
+        d->scriptInfo.resource = pluginGroup.readEntry("resource", QStringList());
+        d->scriptInfo.urlregex = pluginGroup.readEntry("urlregex", QStringList());
     }
+    else {
+        // load script info
+        QVariantMap result = d->scriptFile->callFunction("info").toMap();
+        d->scriptInfo.name = result.value("name").toString();
+        d->scriptInfo.homepage = result.value("homepage").toString();
+        d->scriptInfo.identifier = result.value("identifier").toString();
+        d->scriptInfo.description = result.value("desscription").toString();
+        d->scriptInfo.author = result.value("author").toString();
+        d->scriptInfo.email = result.value("email").toString();
 
-    resList = result.value("urlregex").toList();
-    foreach(const QVariant &res, resList) {
-        d->scriptInfo.urlregex << res.toString();
+        QFileInfo fileInfo(scriptFile);
+        QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + result.value("icon").toString();
+        d->scriptInfo.icon = iconPath;
+
+        d->scriptInfo.file = d->scriptFile->file();
+
+        QVariantList resList = result.value("resource").toList();
+        foreach(const QVariant &res, resList) {
+            d->scriptInfo.resource << res.toString();
+        }
+
+        resList = result.value("urlregex").toList();
+        foreach(const QVariant &res, resList) {
+            d->scriptInfo.urlregex << res.toString();
+        }
     }
 }
 

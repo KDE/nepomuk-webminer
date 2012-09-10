@@ -163,48 +163,94 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
         }
     }
 
+    KConfig config("nepomukmetadataextractorrc");
+
     foreach( const QFileInfo &fileInfo, pluginList) {
 
         if( !acceptedFileTypes.contains(fileInfo.completeSuffix())) {
             continue;
         }
 
-        action.setFile( fileInfo.absoluteFilePath() );
+        bool readFromCache = false;
+        if( config.hasGroup( fileInfo.absoluteFilePath() ) ) {
+            KConfigGroup pluginGroup( &config, fileInfo.absoluteFilePath() );
 
-        QVariantMap result = action.callFunction("info").toMap();
+            QDateTime cacheDate = pluginGroup.readEntry("cachedate", QDateTime());
+            if (fileInfo.lastModified() <= cacheDate) {
+                readFromCache = true;
 
-        if(result.value(QLatin1String("isAvailable")).toBool() == false) {
-            kDebug() << "failed loading the plugin: " << result.value("name").toString() << " from:" << fileInfo.absoluteFilePath()
-                     << " Reason:" << result.value("errorMsg").toString();
-            continue;
+                WebExtractor::Info scriptInfo;
+                scriptInfo.name = pluginGroup.readEntry("name", QString());
+                scriptInfo.homepage = pluginGroup.readEntry("homepage", QString());
+                scriptInfo.identifier = pluginGroup.readEntry("identifier", QString());
+                scriptInfo.icon = pluginGroup.readEntry("icon", QString());
+                scriptInfo.description = pluginGroup.readEntry("description", QString());
+                scriptInfo.author = pluginGroup.readEntry("author", QString());
+                scriptInfo.email = pluginGroup.readEntry("email", QString());
+                scriptInfo.file = pluginGroup.readEntry("file", QString());
+                scriptInfo.resource = pluginGroup.readEntry("resource", QStringList());
+                scriptInfo.urlregex = pluginGroup.readEntry("urlregex", QStringList());
+
+                kDebug() << "add plugin (" << scriptInfo.name << ") via KConfig cache for file: " << scriptInfo.file;
+                d->availableScripts.append( scriptInfo );
+            }
         }
 
-        WebExtractor::Info scriptInfo;
-        scriptInfo.name = result.value("name").toString();
-        scriptInfo.homepage = result.value("homepage").toString();
-        scriptInfo.identifier = result.value("identifier").toString();
 
-        QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + result.value("icon").toString();
-        scriptInfo.icon = iconPath;
+        if(!readFromCache) {
 
-        scriptInfo.description = result.value("desscription").toString();
-        scriptInfo.author = result.value("author").toString();
-        scriptInfo.email = result.value("email").toString();
-        scriptInfo.file = fileInfo.absoluteFilePath();
+            action.setFile( fileInfo.absoluteFilePath() );
 
-        QVariantList resList = result.value("resource").toList();
-        foreach(const QVariant &res, resList) {
-            scriptInfo.resource << res.toString();
+            QVariantMap result = action.callFunction("info").toMap();
+
+            if(result.value(QLatin1String("isAvailable")).toBool() == false) {
+                kDebug() << "failed loading the plugin: " << result.value("name").toString() << " from:" << fileInfo.absoluteFilePath()
+                         << " Reason:" << result.value("errorMsg").toString();
+                continue;
+            }
+
+            WebExtractor::Info scriptInfo;
+            scriptInfo.name = result.value("name").toString();
+            scriptInfo.homepage = result.value("homepage").toString();
+            scriptInfo.identifier = result.value("identifier").toString();
+
+            QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + result.value("icon").toString();
+            scriptInfo.icon = iconPath;
+
+            scriptInfo.description = result.value("desscription").toString();
+            scriptInfo.author = result.value("author").toString();
+            scriptInfo.email = result.value("email").toString();
+            scriptInfo.file = fileInfo.absoluteFilePath();
+
+            QVariantList resList = result.value("resource").toList();
+            foreach(const QVariant &res, resList) {
+                scriptInfo.resource << res.toString();
+            }
+
+            resList = result.value("urlregex").toList();
+            foreach(const QVariant &res, resList) {
+                scriptInfo.urlregex << res.toString();
+            }
+
+            kDebug() << "add plugin (" << scriptInfo.name << ") via file: " << scriptInfo.file;
+            d->availableScripts.append( scriptInfo );
+
+            // and add info to the config as chaced values
+            KConfigGroup pluginGroup( &config, scriptInfo.file );
+            pluginGroup.writeEntry("cachedate",fileInfo.lastModified());
+            pluginGroup.writeEntry("name",scriptInfo.name);
+            pluginGroup.writeEntry("homepage",scriptInfo.homepage);
+            pluginGroup.writeEntry("identifier",scriptInfo.identifier);
+            pluginGroup.writeEntry("icon",scriptInfo.icon);
+            pluginGroup.writeEntry("description",scriptInfo.description);
+            pluginGroup.writeEntry("icon",scriptInfo.icon);
+            pluginGroup.writeEntry("author",scriptInfo.author);
+            pluginGroup.writeEntry("email",scriptInfo.email);
+            pluginGroup.writeEntry("file",scriptInfo.file);
+            pluginGroup.writeEntry("resource",scriptInfo.resource);
+            pluginGroup.writeEntry("urlregex",scriptInfo.urlregex);
+            pluginGroup.config()->sync();
         }
-
-        resList = result.value("urlregex").toList();
-        foreach(const QVariant &res, resList) {
-            scriptInfo.urlregex << res.toString();
-        }
-
-        d->availableScripts.append( scriptInfo );
-
-        kDebug() << "add plugin (" << scriptInfo.name << ") via file: " << scriptInfo.file;
     }
 
     kDebug() << "found " << d->availableScripts.size() << "search plugins";
