@@ -76,6 +76,7 @@ To interact with the calling c++ part you can use the following methods of the o
 # Python example for imdb fetcher
 def info():
     return dict( name = 'The Internet Movie Database',
+                 homepage = 'http://www.imdb.com',
                  icon = 'imdb.png',
                  identifier = 'imdbmovies',
                  urlregex = 'http://www.imdb.com/title/tt',

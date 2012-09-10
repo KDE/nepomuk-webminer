@@ -268,7 +268,7 @@ bool NepomukMetaDataExtractor::Extractor::VideoExtractor::parseTvShowFileName(Ne
                 mdp->searchEpisode = re.cap( 2 );
                 // should be no harm presetting this, some filenames omit the season assuming it's 1
                 // presetting lets anime fansub files be automatically fetchable
-                mdp->searchSeason = "1";
+                mdp->searchSeason = '1';
             }
             else {
                 mdp->searchEpisode = re.cap( 1 );

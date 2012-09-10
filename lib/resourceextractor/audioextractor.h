@@ -33,7 +33,7 @@ class MetaDataParameters;
  *
  * This class uses @c TagLib to read the ID3 tags of any music file and retrieve basic information from it for the search.
  *
- * @todo TODO: Add regular expressions to analyze the filename and get informations from there if TagLib didn't find anything
+ * @todo TODO: Add regular expressions to analyze the filename and get information from there if TagLib didn't find anything
  */
 class NEPOMUKMETADATAEXTRACTOR_EXPORT AudioExtractor : public QObject
 {

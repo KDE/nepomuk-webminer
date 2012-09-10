@@ -63,7 +63,7 @@ public:
          * @param other
          * @return @arg true if 2 Info items are the same @arg false if they are different
          */
-        bool operator==(const Info& other) {
+        bool operator==(const Info& other) const {
             return  identifier == other.identifier;
         }
     };

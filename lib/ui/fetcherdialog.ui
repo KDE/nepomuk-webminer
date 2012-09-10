@@ -64,7 +64,7 @@
      <item row="1" column="0">
       <widget class="QLabel" name="labelTitle">
        <property name="text">
-        <string>Title:</string>
+        <string comment="Title of the Publication/Movie/Music Track/tv-show episode">Title:</string>
        </property>
       </widget>
      </item>
@@ -138,7 +138,7 @@
      <item row="1" column="4">
       <widget class="QPushButton" name="buttonSearch">
        <property name="text">
-        <string>Search</string>
+        <string comment="Start the Web-Search">Search</string>
        </property>
       </widget>
      </item>
@@ -159,7 +159,7 @@
      <item row="3" column="1" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="QLineEdit" name="lineEditArtist"/>
+        <widget class="KLineEdit" name="lineEditArtist"/>
        </item>
        <item>
         <widget class="QLabel" name="labelAlbum">
@@ -169,14 +169,14 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEditAlbum"/>
+        <widget class="KLineEdit" name="lineEditAlbum"/>
        </item>
       </layout>
      </item>
      <item row="2" column="1" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLineEdit" name="lineEditShow"/>
+        <widget class="KLineEdit" name="lineEditShow"/>
        </item>
        <item>
         <widget class="QLabel" name="labelSeason">
@@ -186,7 +186,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEditSeason">
+        <widget class="KLineEdit" name="lineEditSeason">
          <property name="minimumSize">
           <size>
            <width>40</width>
@@ -209,7 +209,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEditEpisode">
+        <widget class="KLineEdit" name="lineEditEpisode">
          <property name="minimumSize">
           <size>
            <width>40</width>
@@ -410,7 +410,7 @@
      <item>
       <widget class="QPushButton" name="buttonSave">
        <property name="text">
-        <string>Save</string>
+        <string comment="Save metadata to nepomuk">Save</string>
        </property>
       </widget>
      </item>
@@ -448,14 +448,14 @@
      <item>
       <widget class="QPushButton" name="buttonPrevious">
        <property name="text">
-        <string>Previous</string>
+        <string comment="Select previous file">Previous</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="buttonNext">
        <property name="text">
-        <string>Next</string>
+        <string comment="Select next file">Next</string>
        </property>
       </widget>
      </item>
@@ -465,7 +465,7 @@
         <bool>true</bool>
        </property>
        <property name="text">
-        <string>Close</string>
+        <string comment="Close the Dialog">Close</string>
        </property>
       </widget>
      </item>

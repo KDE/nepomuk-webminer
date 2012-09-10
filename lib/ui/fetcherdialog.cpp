@@ -44,13 +44,13 @@
 #include <KDE/KRun>
 #include <KDE/KDebug>
 #include <KDE/KConfigDialog>
+#include <KDE/KTextEdit>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QPointer>
 #include <QtGui/QGridLayout>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QTextDocument>
-#include <QtGui/QTextEdit>
 #include <QtGui/QMessageBox>
 
 namespace NepomukMetaDataExtractor {
@@ -164,7 +164,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showProgressLog()
     log->setInitialSize(QSize(600,300));
     log->setButtons( KDialog::Ok );
 
-    QTextEdit *logView = new QTextEdit(log);
+    KTextEdit *logView = new KTextEdit(log);
     logView->setDocument(d->progressLog);
     logView->setReadOnly(true);
     log->setMainWidget(logView);
@@ -471,87 +471,87 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showSearchParameters()
     w->setLayout(vbl);
 
     MetaDataParameters *mdp = resourceExtractor()->resourcesList().at( d->currentItemNumber );
-    QLabel *labelTitle = new QLabel(i18nc("@item:the title of a publication/movie/show", "Title:"),w);
-    QLineEdit *editTitle = new QLineEdit(mdp->searchTitle,w);
+    QLabel *labelTitle = new QLabel(i18nc("The title of a publication/movie/show", "Title:"),w);
+    KLineEdit *editTitle = new KLineEdit(mdp->searchTitle,w);
     gl->addWidget(labelTitle, 0,0);
     gl->addWidget(editTitle, 0,1);
     QLabel *labelAltTitle = new QLabel(i18n("Alternative Title:"),w);
-    QLineEdit *editAltTitle = new QLineEdit(mdp->searchAltTitle,w);
+    KLineEdit *editAltTitle = new KLineEdit(mdp->searchAltTitle,w);
     gl->addWidget(labelAltTitle, 1,0);
     gl->addWidget(editAltTitle, 1,1);
 
     QLabel *labelYearMin = new QLabel(i18n("Year Min:"),w);
-    QLineEdit *editYearMin = new QLineEdit(mdp->searchYearMin,w);
+    KLineEdit *editYearMin = new KLineEdit(mdp->searchYearMin,w);
     gl->addWidget(labelYearMin, 2,0);
     gl->addWidget(editYearMin, 2,1);
 
     QLabel *labelYearMax = new QLabel(i18n("Year Max:"),w);
-    QLineEdit *editYearMax = new QLineEdit(mdp->searchYearMax,w);
+    KLineEdit *editYearMax = new KLineEdit(mdp->searchYearMax,w);
     gl->addWidget(labelYearMax, 3,0);
     gl->addWidget(editYearMax, 3,1);
 
     QLabel *labelAuthor = 0;
-    QLineEdit *editAuthor = 0;
+    KLineEdit *editAuthor = 0;
 
     QLabel *labelJournal = 0;
-    QLineEdit *editJournal = 0;
+    KLineEdit *editJournal = 0;
 
     QLabel *labelSeason = 0;
-    QLineEdit *editSeason = 0;
+    KLineEdit *editSeason = 0;
 
     QLabel *labelEpisode = 0;
-    QLineEdit *editEpisode = 0;
+    KLineEdit *editEpisode = 0;
 
     QLabel *labelShow = 0;
-    QLineEdit *editShow = 0;
+    KLineEdit *editShow = 0;
 
     QLabel *labelTrack = 0;
-    QLineEdit *editTrack = 0;
+    KLineEdit *editTrack = 0;
 
     QLabel *labelAlbum = 0;
-    QLineEdit *editAlbum = 0;
+    KLineEdit *editAlbum = 0;
 
     if(mdp->resourceType == QLatin1String("publication")) {
-        labelAuthor = new QLabel(i18n("Author:"),w);
-        editAuthor = new QLineEdit(mdp->searchPerson,w);
+        labelAuthor = new QLabel(i18nc("The author of the publication","Author:"),w);
+        editAuthor = new KLineEdit(mdp->searchPerson,w);
         gl->addWidget(labelAuthor, 4,0);
         gl->addWidget(editAuthor, 4,1);
 
-        labelJournal = new QLabel(i18n("Journal:"),w);
-        editJournal = new QLineEdit(mdp->searchJournal,w);
+        labelJournal = new QLabel(i18nc("The name of the journal the article is in","Journal:"),w);
+        editJournal = new KLineEdit(mdp->searchJournal,w);
         gl->addWidget(labelJournal, 5,0);
         gl->addWidget(editJournal, 5,1);
     }
     else if(mdp->resourceType == QLatin1String("tvshow")) {
-        labelSeason = new QLabel(i18n("Season:"),w);
-        editSeason = new QLineEdit(mdp->searchSeason,w);
+        labelSeason = new QLabel(i18nc("The number of the tv season","Season:"),w);
+        editSeason = new KLineEdit(mdp->searchSeason,w);
         gl->addWidget(labelSeason, 4,0);
         gl->addWidget(editSeason, 4,1);
 
-        labelEpisode = new QLabel(i18n("Episode:"),w);
-        editEpisode = new QLineEdit(mdp->searchEpisode,w);
+        labelEpisode = new QLabel(i18nc("The number of the tv show episode","Episode:"),w);
+        editEpisode = new KLineEdit(mdp->searchEpisode,w);
         gl->addWidget(labelEpisode, 5,0);
         gl->addWidget(editEpisode, 5,1);
 
-        labelShow = new QLabel(i18n("Show:"),w);
-        editShow = new QLineEdit(mdp->searchShowTitle,w);
+        labelShow = new QLabel(i18nc("The name of the tv Show","Show:"),w);
+        editShow = new KLineEdit(mdp->searchShowTitle,w);
         gl->addWidget(labelShow, 6,0);
         gl->addWidget(editShow, 6,1);
     }
 
     if(mdp->resourceType == QLatin1String("music")) {
-        labelAuthor = new QLabel(i18n("Artist:"),w);
-        editAuthor = new QLineEdit(mdp->searchPerson,w);
+        labelAuthor = new QLabel(i18nc("The music artist of the track","Artist:"),w);
+        editAuthor = new KLineEdit(mdp->searchPerson,w);
         gl->addWidget(labelAuthor, 4,0);
         gl->addWidget(editAuthor, 4,1);
 
-        labelTrack = new QLabel(i18n("Track:"),w);
-        editTrack = new QLineEdit(mdp->searchTrack,w);
+        labelTrack = new QLabel(i18nc("The single music piece/track ","Track:"),w);
+        editTrack = new KLineEdit(mdp->searchTrack,w);
         gl->addWidget(labelTrack, 5,0);
         gl->addWidget(editTrack, 5,1);
 
-        labelAlbum = new QLabel(i18n("Album:"),w);
-        editAlbum = new QLineEdit(mdp->searchAlbum,w);
+        labelAlbum = new QLabel(i18nc("The name of the music album the track is in","Album:"),w);
+        editAlbum = new KLineEdit(mdp->searchAlbum,w);
         gl->addWidget(labelAlbum, 6,0);
         gl->addWidget(editAlbum, 6,1);
     }
@@ -667,8 +667,9 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::cancelClose()
 void NepomukMetaDataExtractor::UI::FetcherDialog::fillEngineList(const QString &category)
 {
     // don't fetch information we already have
-    if( comboBoxSearchEngine->property("currentListCategory").toString() == category)
+    if( comboBoxSearchEngine->property("currentListCategory").toString() == category) {
         return;
+    }
 
     comboBoxSearchEngine->setProperty("currentListCategory", category);
     comboBoxSearchEngine->clear();
@@ -714,8 +715,6 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showItemDetails()
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::busyFetching()
 {
-    Q_D( FetcherDialog );
-
     QWidget::setCursor( Qt::BusyCursor );
 
     buttonSearch->setEnabled(false);

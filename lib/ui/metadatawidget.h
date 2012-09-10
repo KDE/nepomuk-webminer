@@ -55,6 +55,11 @@ public:
      */
     void setMetaDataParameter(const NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp);
 
+    /**
+     * @brief Shows a spinner icon to indicate that the data fetching is in progress
+     * @param busy @arg true show spinner
+     *             @arg false hdie spinner
+     */
     void setBusy(bool busy);
 
 private:

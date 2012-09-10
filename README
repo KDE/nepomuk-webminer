@@ -1,17 +1,12 @@
 
-Metadata extractor
+Nepomuk Metadata extractor
 
 Idea:
-* extarct meta data from files (or existing nepomuk:resource)
+* extract meta data from files (or existing Nepomuk::Resources)
 * take this info and search the internet for more details
 * python plugins (easy to write) handle the actual search.
 * python plugins only create a simple dictionary (transformed into QVariantMap)
-* the c++ part have neopomuk pipe classes, that transform such QVariantMap data into DMS calls
-
-+ not working yet, but planned
-* nepomuk resource based fetching
-* mp3 support
-* a lot more python plugins
+* the c++ part has neopomuk pipe classes, that transform such QVariantMap data into DMS calls
 
 For more information run:
 
@@ -26,9 +21,16 @@ and check the doxygen documentation
 ** SDO 0.10.0
 
 * poppler (for pdf parsing)
-* TagLib (for music/video parsing)
+* TagLib (for music parsing)
 * Kross framework with working python interpreters
-* For python: imdbpy 4.9, Musicbrainz NGS (master), tvdb_api module (master)
+* For the python plugins:
+  + imdbpy 4.9 - ttp://imdbpy.sourceforge.net/
+  + Musicbrainz NGS (master) - https://github.com/alastair/python-musicbrainz-ngs/
+  + tvdb_api module (master) - https://github.com/dbr/tvdb_api
+  + json
+  + BeautifulSoup
+  + httplib2
+  + urllib2
 
 OpenSuse user need to install the python Kross intepreters from source. see:
 https://projects.kde.org/projects/kde/kdebindings/kross-interpreters/repository
@@ -46,12 +48,3 @@ and start via metadatafetcher <url to file or folder>
 or via right click service menu in dolphin
 
 see metadatafetcher --help for more info
-
-#################################################################
-# install necessary ontology
-copy
-nbib/nbib.trig
-nbib/nbib.ontology
-
-into
-/usr/share/ontology/nie

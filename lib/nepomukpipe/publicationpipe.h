@@ -215,7 +215,7 @@ protected:
     /**
       * @brief creates the contact resource
       */
-    void addContact(const QString &contentValue, Nepomuk2::SimpleResource &resource, Nepomuk2::SimpleResourceGraph &graph, QUrl contactProperty, QUrl contactType );
+    void addContact(const QString &contentValue, Nepomuk2::SimpleResource &resource, Nepomuk2::SimpleResourceGraph &graph, QUrl contactProperty );
 
 private:
     Nepomuk2::Resource m_projectThing;

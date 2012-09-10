@@ -2,10 +2,11 @@
 
 \brief The UI namespace holds all classes that implement the full set of metadata classes as an easy to use frontend
 
-the namespace contains 2 different frontends to fetch metadata
+The namespace contains 3 different frontends to fetch metadata
 
 @li NepomukMetaDataExtractor::UI::AutomaticFetcher - fetches metadata without user interaction
 @li NepomukMetaDataExtractor::UI::FetcherDialog - Displays a Dialog to allow user interaction
+@li NepomukMetaDataExtractor::UI::BulkExtractor - Download queue for a set of downloads
 
 \section nepomuk_example Example usage
 

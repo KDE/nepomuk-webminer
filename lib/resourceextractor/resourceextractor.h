@@ -39,7 +39,7 @@ class ResourceExtractorPrivate;
   * Here we check the file or the Nepomuk resource and extract values from it that can be used for the @c WebExtractor search.
   * Usually it would be enough to check only Nepomuk for this info and when some files are given as input the right nepomuk
   * resource can be looked up and used for the retrival. As the @c libstreamanalyzer might fail on several pdf files this class
-  * uses its own pdf parsing to get the right details. Also the filename will be analyzed to get some additional informations
+  * uses its own pdf parsing to get the right details. Also the filename will be analyzed to get some additional information
   *
   * Each file/resource is represented by its @c MetaDataParameters that is used for the actual search
   *

@@ -22,9 +22,9 @@ except:
 # general script settings
 musicbrainzngs.set_rate_limit(False) # set on again to reduce server load?
 musicbrainzngs.set_useragent(
-    "python-musicbrainz-ngs-example",
-    "0.1",
-    "https://github.com/alastair/python-musicbrainz-ngs/",
+    "kde-nepomuk-metadata-extractor",
+    "0.2",
+    "https://projects.kde.org/projects/playground/base/nepomuk-metadata-extractor",
 )
 
 #------------------------------------------------------------------------------

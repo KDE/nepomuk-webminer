@@ -36,7 +36,7 @@ namespace Pipe {
  * @li @c cover - url for the cover image
  * @li @c genre - list of genres for the album split by ;
  *
- * @li @c tracks - QVariantList containing more QVariantMaps with the track infos
+ * @li @c tracks - QVariantList containing more QVariantMaps with the track information
  *
  * The QVariantMap containing the @c track information looks like this:
  *

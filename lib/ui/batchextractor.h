@@ -107,6 +107,9 @@ private slots:
      */
     void itemResults(const QString &resourceType, const QVariantMap &entry);
 
+    /**
+     * @brief Called by the QFutureWatcher when the asycron pipe action has finished
+     */
     void pipeFinished();
 
 private:

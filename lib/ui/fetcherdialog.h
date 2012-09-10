@@ -182,7 +182,7 @@ private:
     /**
      * @brief Takes the current selected MetaDataParameters object and enables/disables some gui parts depending on the resourcetype
      *
-     * The list of available search plugins weill also be changed accordingly
+     * The list of available search plugins will also be changed accordingly
      * Calls showItemDetails afterwards
      */
     void setupCurrentResourceToLookup();
@@ -198,7 +198,14 @@ private:
      */
     void showItemDetails();
 
+    /**
+     * @brief Disabled various buttons and adds a busy mouse cursor
+     */
     void busyFetching();
+
+    /**
+     * @brief Enables the buttons again and shows the normal mouse cursor
+     */
     void finishedFetching();
 
 private:

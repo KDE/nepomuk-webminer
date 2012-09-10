@@ -18,7 +18,9 @@
 #include "webextractor.h"
 
 NepomukMetaDataExtractor::Extractor::WebExtractor::WebExtractor(QObject *parent)
+    : QObject(parent)
 {
+
 }
 
 NepomukMetaDataExtractor::Extractor::WebExtractor::~WebExtractor()

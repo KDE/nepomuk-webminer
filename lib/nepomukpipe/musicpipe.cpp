@@ -112,7 +112,7 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
 
         kDebug() << "create new music track from url" << trackInfo.value(QLatin1String("resourceuri")).toString();
         QString resourceUri = trackInfo.value(QLatin1String("resourceuri")).toString();
-        QUrl existingUri;
+        KUrl existingUri;
         existingUri.setEncodedUrl(resourceUri.toLatin1());
 
         // first remove the old metadata

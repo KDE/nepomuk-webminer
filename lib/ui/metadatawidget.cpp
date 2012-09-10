@@ -165,40 +165,40 @@ void NepomukMetaDataExtractor::UI::MetaDataWidget::insertIntoTree(QStandardItem 
 QString NepomukMetaDataExtractor::UI::MetaDataWidget::i18nKey(const QString &key)
 {
     if(key==QString("title")) { return i18nc("Title of the Show/Publication/Episode/Track", "Title"); }
-    if(key==QString("resourceuri")) { return i18n("Resource"); }
-    if(key==QString("episodes")) { return i18n("Episodes"); }
-    if(key==QString("writer")) { return i18n("Writer"); }
-    if(key==QString("overview")) { return i18n("Overview"); }
-    if(key==QString("firstaired")) { return i18n("First-Aired"); }
-    if(key==QString("director")) { return i18n("Director"); }
-    if(key==QString("number")) { return i18n("Number"); }
-    if(key==QString("actors")) { return i18n("Actors"); }
-    if(key==QString("genre")) { return i18n("Genre"); }
-    if(key==QString("banner")) { return i18n("Banner"); }
-    if(key==QString("poster")) { return i18n("Poster"); }
-    if(key==QString("seasons")) { return i18n("Seasons"); }
-    if(key==QString("performer")) { return i18n("Performer"); }
-    if(key==QString("musicbrainz")) { return i18n("MusicBrainz"); }
-    if(key==QString("tracks")) { return i18n("Tracks"); }
-    if(key==QString("releasedate")) { return i18n("Release date"); }
-    if(key==QString("year")) { return i18n("Year"); }
-    if(key==QString("cast")) { return i18n("Cast"); }
-    if(key==QString("plot")) { return i18n("Plot"); }
-    if(key==QString("runtime")) { return i18n("Runtime"); }
-    if(key==QString("countries")) { return i18n("Countries"); }
+    if(key==QString("resourceuri")) { return i18nc("The Nepomuk resource Uri","Resource"); }
+    if(key==QString("episodes")) { return i18nc("The list of tv show Episodes","Episodes"); }
+    if(key==QString("writer")) { return i18nc("The writer of the tv show/movie script","Writer"); }
+    if(key==QString("overview")) { return i18nc("Tvshow/ MoviePlot overview","Overview"); }
+    if(key==QString("firstaired")) { return i18nc("First aired date of a tvshow","First-Aired"); }
+    if(key==QString("director")) { return i18nc("The director of a movie/tvshow","Director"); }
+    if(key==QString("number")) { return i18nc("The number of journal","Number"); }
+    if(key==QString("actors")) { return i18nc("Actor names of tvshows/movies","Actors"); }
+    if(key==QString("genre")) { return i18nc("The genre of the movie/tvshow/music track","Genre"); }
+    if(key==QString("banner")) { return i18nc("Banner url for the movie/tvshow","Banner"); }
+    if(key==QString("poster")) { return i18nc("Poster url for the movie/tvshow","Poster"); }
+    if(key==QString("seasons")) { return i18nc("List of season in the tvshow","Seasons"); }
+    if(key==QString("performer")) { return i18nc("The performer of a music track","Performer"); }
+    if(key==QString("musicbrainz")) { return i18nc("MusicBrainz id for a music track","MusicBrainz"); }
+    if(key==QString("tracks")) { return i18nc("List of tracks for a music album","Tracks"); }
+    if(key==QString("releasedate")) { return i18nc("Release date of the movie","Release date"); }
+    if(key==QString("year")) { return i18nc("Release/publication year","Year"); }
+    if(key==QString("cast")) { return i18nc("Movie/ Tvshow cast member","Cast"); }
+    if(key==QString("plot")) { return i18nc("Tvshow/ MoviePlot overview","Plot"); }
+    if(key==QString("runtime")) { return i18nc("Movie/tvshow length","Runtime"); }
+    if(key==QString("countries")) { return i18nc("List of countries the movie is from","Countries"); }
 
     //bibtex related
-    if(key==QString("abstract")) { return i18n("Abstract"); }
-    if(key==QString("author")) { return i18n("Author"); }
-    if(key==QString("booktitle")) { return i18n("Booktitle"); }
-    if(key==QString("references")) { return i18n("References"); }
-    if(key==QString("pages")) { return i18n("Pages"); }
-    if(key==QString("doi")) { return i18n("DOI"); }
-    if(key==QString("bibtexentrytype")) { return i18n("Type"); }
-    if(key==QString("chapter")) { return i18n("Chapter"); }
-    if(key==QString("volume")) { return i18n("volume"); }
-    if(key==QString("issue")) { return i18n("Issue"); }
-    if(key==QString("journal")) { return i18n("Journal"); }
+    if(key==QString("abstract")) { return i18nc("The publication abstract","Abstract"); }
+    if(key==QString("author")) { return i18nc("Publication author","Author"); }
+    if(key==QString("booktitle")) { return i18nc("Publication booktitle","Booktitle"); }
+    if(key==QString("bibreferences")) { return i18nc("List of publication references","References"); }
+    if(key==QString("pages")) { return i18nc("Range of pages like 15--45","Pages"); }
+    if(key==QString("doi")) { return i18nc("Digital object identifier","DOI"); }
+    if(key==QString("bibtexentrytype")) { return i18nc("The publication type. Like Book, Article, Blog etc","Type"); }
+    if(key==QString("chapter")) { return i18nc("The chapter (name and/or number) that will be referenced","Chapter"); }
+    if(key==QString("volume")) { return i18nc("The volume of the publication journal","Volume"); }
+    if(key==QString("issue")) { return i18nc("The issue number of the journal","Issue"); }
+    if(key==QString("journal")) { return i18nc("The name of the journal","Journal"); }
 
     return key;
 }

@@ -133,7 +133,7 @@ void NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariantM
         // now sometimes the fileanalyzer fails to index pdf files due to the streamanalyzer crashing when it tries to
         // read the pdf data. This leaves a Nepomuk Resource without the NFO::FileDataObject Type and thus won#t be listed
         // in conquirere as actual document.
-        // Here we are going to fix it and add the neccessary parts for it. Also we set the nie:title to the file
+        // Here we are going to fix it and add the necessary parts for it. Also we set the nie:title to the file
         // so it can show up in dolphin, while all the other information is hidden behind the nbib:publishedAs property
 
         // this works differently than all the other double typed resources (movie/tvshow/musicpiece etc)
@@ -409,6 +409,8 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addPublicationSubTypes(Ne
 
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::handleSpecialCases(QVariantMap &metaData, Nepomuk2::SimpleResourceGraph &graph, Nepomuk2::NBIB::Publication &publication, Nepomuk2::NBIB::Reference &reference)
 {
+    Q_UNUSED(reference);
+
     // I. publisher/school/institution + address
     //    means address belongs to publisher
     if(metaData.contains(QLatin1String("address"))) {
@@ -696,28 +698,28 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addContent(const QString 
         addAuthor(value, publication, reference, graph, originalEntryType);
     }
     else if(key == QLatin1String("bookauthor")) {
-        addContact(value, publication, graph, NCO::creator(), NCO::PersonContact());
+        addContact(value, publication, graph, NCO::creator());
     }
     else if(key == QLatin1String("contributor")) {
-        addContact(value, publication, graph, NBIB::contributor(), NCO::PersonContact());
+        addContact(value, publication, graph, NBIB::contributor());
     }
     else if(key == QLatin1String("translator")) {
-        addContact(value, publication, graph, NBIB::translator(), NCO::PersonContact());
+        addContact(value, publication, graph, NBIB::translator());
     }
     else if(key == QLatin1String("reviewedauthor")) {
-        addContact(value, publication, graph, NBIB::reviewedAuthor(), NCO::PersonContact());
+        addContact(value, publication, graph, NBIB::reviewedAuthor());
     }
     else if(key == QLatin1String("attorneyagent")) {
-        addContact(value, publication, graph, NBIB::attorneyAgent(), NCO::PersonContact());
+        addContact(value, publication, graph, NBIB::attorneyAgent());
     }
     else if(key == QLatin1String("counsel")) {
-        addContact(value, publication, graph, NBIB::counsel(), NCO::PersonContact());
+        addContact(value, publication, graph, NBIB::counsel());
     }
     else if(key == QLatin1String("cosponsor")) {
-        addContact(value, publication, graph, NBIB::coSponsor(), NCO::PersonContact());
+        addContact(value, publication, graph, NBIB::coSponsor());
     }
     else if(key == QLatin1String("commenter")) {
-        addContact(value, publication, graph, NBIB::commenter(), NCO::PersonContact());
+        addContact(value, publication, graph, NBIB::commenter());
     }
     else if(key == QLatin1String("serieseditor")) {
         addSeriesEditor(value, publication, graph);
@@ -732,7 +734,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addContent(const QString 
         addChapterName(value, publication, reference, graph);
     }
     else if(key == QLatin1String("editor")) {
-        addContact(value, publication, graph, NBIB::editor(), NCO::PersonContact());
+        addContact(value, publication, graph, NBIB::editor());
     }
     else if(key == QLatin1String("institution")) {
         addPublisher(value, QString(), publication, graph);
@@ -805,7 +807,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addContent(const QString 
         addTopic(keywords, publication, graph);
     }
     else if(key == QLatin1String("assignee")) {
-        addContact(value, publication, graph, NBIB::assignee(), QUrl());
+        addContact(value, publication, graph, NBIB::assignee());
     }
     else if(key == QLatin1String("descriptor") ||
             key == QLatin1String("classification") ||
@@ -964,14 +966,14 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addAuthor(const QString &
 
             graph << chapterResource;
 
-            addContact(contentValue, graph[chapterResource.uri()], graph, NCO::creator(), NCO::PersonContact());
+            addContact(contentValue, graph[chapterResource.uri()], graph, NCO::creator());
         }
         else {
-            addContact(contentValue, graph[chapterUrl], graph, NCO::creator(), NCO::PersonContact());
+            addContact(contentValue, graph[chapterUrl], graph, NCO::creator());
         }
     }
     else {
-        addContact(contentValue, publication, graph, NCO::creator(), NCO::PersonContact());
+        addContact(contentValue, publication, graph, NCO::creator());
     }
 }
 
@@ -1022,10 +1024,10 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addSeriesEditor(const QSt
 
         graph << newSeries;
 
-        addContact(contentValue, newSeries, graph, NBIB::editor(), NCO::PersonContact());
+        addContact(contentValue, newSeries, graph, NBIB::editor());
     }
     else {
-        addContact(contentValue, graph[seriesUrl], graph, NBIB::editor(), NCO::PersonContact());
+        addContact(contentValue, graph[seriesUrl], graph, NBIB::editor());
     }
 }
 
@@ -1531,7 +1533,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addTopic(const QStringLis
     }
 }
 
-void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addContact(const QString &contentValue, Nepomuk2::SimpleResource &resource, Nepomuk2::SimpleResourceGraph &graph, QUrl contactProperty, QUrl contactType )
+void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addContact(const QString &contentValue, Nepomuk2::SimpleResource &resource, Nepomuk2::SimpleResourceGraph &graph, QUrl contactProperty)
 {
     QList<Nepomuk2::NCO::Contact> personsList = createPersonContacts( contentValue );
 
