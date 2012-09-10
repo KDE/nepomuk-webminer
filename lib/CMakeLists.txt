@@ -22,6 +22,7 @@ set( nepomukextractor_LIB_SRCS
 
   ui/fetcher.cpp
   ui/fetcherdialog.cpp
+  ui/batchextractor.cpp
   ui/searchresultsmodel.cpp
   ui/searchresultdelegate.cpp
   ui/automaticfetcher.cpp
@@ -90,6 +91,7 @@ set( nepomukmetadataextractor_LIB_HDRS
   nepomukpipe/musicpipe.h
 
   ui/fetcher.h
+  ui/batchextractor.h
   ui/automaticfetcher.h
   ui/fetcherdialog.h
   ui/metadatawidget.h
