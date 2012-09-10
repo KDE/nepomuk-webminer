@@ -74,9 +74,7 @@ void ConfigFetcher::setupUi()
     QList<WebExtractor::Info> engines = extractorFactory->listAvailablePlugins( "music" );
 
     foreach(const WebExtractor::Info &engine, engines) {
-        QFileInfo fileInfo(engine.file);
-        QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + engine.icon;
-        ui->musicPlugin->addItem(QIcon( iconPath ),engine.name,engine.identifier);
+        ui->musicPlugin->addItem(QIcon( engine.icon ),engine.name,engine.identifier);
     }
 
     // publication list
@@ -84,9 +82,7 @@ void ConfigFetcher::setupUi()
     engines = extractorFactory->listAvailablePlugins( "publication" );
 
     foreach(const WebExtractor::Info &engine, engines) {
-        QFileInfo fileInfo(engine.file);
-        QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + engine.icon;
-        ui->publicationPlugin->addItem(QIcon( iconPath ),engine.name,engine.identifier);
+        ui->publicationPlugin->addItem(QIcon( engine.icon ),engine.name,engine.identifier);
     }
 
     // movie list
@@ -94,9 +90,7 @@ void ConfigFetcher::setupUi()
     engines = extractorFactory->listAvailablePlugins( "movie" );
 
     foreach(const WebExtractor::Info &engine, engines) {
-        QFileInfo fileInfo(engine.file);
-        QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + engine.icon;
-        ui->moviePlugin->addItem(QIcon( iconPath ),engine.name,engine.identifier);
+        ui->moviePlugin->addItem(QIcon( engine.icon ),engine.name,engine.identifier);
     }
 
     // tvshow list
@@ -104,9 +98,7 @@ void ConfigFetcher::setupUi()
     engines = extractorFactory->listAvailablePlugins( "tvshow" );
 
     foreach(const WebExtractor::Info &engine, engines) {
-        QFileInfo fileInfo(engine.file);
-        QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + engine.icon;
-        ui->tvshowPlugin->addItem(QIcon( iconPath ),engine.name,engine.identifier);
+        ui->tvshowPlugin->addItem(QIcon( engine.icon ),engine.name,engine.identifier);
     }
 
     ui->musicPlugin->setCurrentIndex(ui->musicPlugin->findData(MDESettings::favoriteMusicPlugin()));
