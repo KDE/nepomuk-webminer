@@ -28,7 +28,6 @@ set( nepomukextractor_LIB_SRCS
   ui/automaticfetcher.cpp
   ui/metadatawidget.cpp
   ui/configfetcher.cpp
-  ui/configresourceextractor.cpp
 
   sro/nbib.cpp
 )
@@ -36,7 +35,6 @@ set( nepomukextractor_LIB_SRCS
 kde4_add_ui_files( nepomukextractor_LIB_SRCS
                    ui/fetcherdialog.ui
                    ui/configfetcher.ui
-                   ui/configresourceextractor.ui
 )
 
 kde4_add_kcfg_files(nepomukextractor_LIB_SRCS mdesettings.kcfgc)
