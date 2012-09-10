@@ -54,6 +54,7 @@ add_subdirectory( lib )
 add_subdirectory( extractor )
 add_subdirectory( service )
 add_subdirectory( browser/konqueror )
+add_subdirectory( ontology )
 
 macro_display_feature_log()
 
