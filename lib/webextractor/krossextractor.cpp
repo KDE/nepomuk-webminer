@@ -120,10 +120,16 @@ void NepomukMetaDataExtractor::Extractor::KrossExtractor::search(const QString &
 {
     Q_D( KrossExtractor );
 
-    QFuture<QVariant> future = QtConcurrent::run(concurrentSearch, d->scriptFile,resourceType, parameters);
-    d->futureWatcher = new QFutureWatcher<QVariant>();
+    if( d->scriptInfo.identifier == "imdbmovies") {
+        kDebug() << "use workaround for imdb. This once crashes if executed in its own thread";
+        emit searchItems( resourceType, parameters );
+    }
+    else {
+        QFuture<QVariant> future = QtConcurrent::run(concurrentSearch, d->scriptFile,resourceType, parameters);
+        d->futureWatcher = new QFutureWatcher<QVariant>();
 
-    d->futureWatcher->setFuture(future);
+        d->futureWatcher->setFuture(future);
+    }
 }
 
 static QVariant concurrentExtraction(Kross::Action *script, const QUrl &url, const QVariantMap &options)
@@ -134,11 +140,16 @@ static QVariant concurrentExtraction(Kross::Action *script, const QUrl &url, con
 void NepomukMetaDataExtractor::Extractor::KrossExtractor::extractItem(const QUrl &url, const QVariantMap &options)
 {
     Q_D( KrossExtractor );
+    if( d->scriptInfo.identifier == "imdbmovies") {
+        kDebug() << "use workaround for imdb. This once crashes if executed in its own thread";
+        emit extractItemFromUri( url, options );
+    }
+    else {
+        QFuture<QVariant> future = QtConcurrent::run(concurrentExtraction, d->scriptFile, url, options);
+        d->futureWatcher = new QFutureWatcher<QVariant>();
 
-    QFuture<QVariant> future = QtConcurrent::run(concurrentExtraction, d->scriptFile, url, options);
-    d->futureWatcher = new QFutureWatcher<QVariant>();
-
-    d->futureWatcher->setFuture(future);
+        d->futureWatcher->setFuture(future);
+    }
 }
 
 void NepomukMetaDataExtractor::Extractor::KrossExtractor::transformJSONResult(const QString &resourceType, const QString &jsonMap)
