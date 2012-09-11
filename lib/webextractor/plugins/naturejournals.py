@@ -13,13 +13,13 @@ try:
 
 except:
     isAvailable = False
-    errorMsg = "Module requirements missing. springer.py needs:\nThe BeautifulSoup python module. see: http://www.crummy.com/software/BeautifulSoup/\nThe Httplib2 python module. See: http://code.google.com/p/httplib2/"
+    errorMsg = "Module requirements missing. naturejournals.py needs:\nThe BeautifulSoup python module. see: http://www.crummy.com/software/BeautifulSoup/\nThe Httplib2 python module. See: http://code.google.com/p/httplib2/"
 
 #------------------------------------------------------------------------------
 # Module options
 
 # Must have:
-# name          = Long name of teh service
+# name          = Long name of the service
 # icon          = download the favicon and put is as png in the folder, icon is than name.png
 # identifier    = short unique identifier for the service, no special chars, whitespaces
 # resource      = must be either publication, tvshow or movie. Describes what kind of data this plugin fetches

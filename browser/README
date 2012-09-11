@@ -2,7 +2,7 @@
 
 In here you'll find the browser plug-ins for the meta-data extractor
 
-While the LPart plugin for konqueror is build togethe rwith the main cmake setup, th NPAPI part will not be build.
+While the LPart plugin for konqueror is build together with the main cmake setup, the NPAPI part will not be build.
 
 For the Chrome/Firefox etc plugins, you need to compile the NPAPI plugin first
 
@@ -20,7 +20,7 @@ make
 
 Now copy the created "npMetaDataFetcherPlugin.so" into the chrome folder.
 
-To get this into chorme
+To get this into chrome
 * open it
 * select Tools->Extensions from the menu
 * Enable the Developer mode
@@ -32,7 +32,7 @@ Everything is working now.
 Navigate to:
 http://academic.research.microsoft.com/Publication/64764/toward-a-standard-process-the-use-of-uml-for-designing-simulation-models
 
-and you'll the the nepomuk icon in the adress bar, left click on it and the item will be fetched and added to nepomuk.
+and you'll the the Nepomuk icon in the address bar, left click on it and the item will be fetched and added to Nepomuk.
 
 The metadatafetcher has to be installed for this.
 The library to compile the NPAPI program and the commandline program to get the fetching and saving to work
