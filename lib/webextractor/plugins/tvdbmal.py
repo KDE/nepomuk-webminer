@@ -71,7 +71,7 @@ def info():
 #                 urlregex = ['http://thetvdb.com/\\?tab=episode&seriesid=(\\d+)&seasonid=(\\d+)&id=(\\d+).*', 'http://thetvdb.com/\\?tab=season&seriesid=(\\d+)&seasonid=(\\d+).*', 'http://thetvdb.com/\\?tab=series&id=(\\d+).*'],
                  urlregex = ['http://thetvdb.com/\\?tab=episode&seriesid=(\\d+)&seasonid=(\\d+)&id=(\\d+).*'],
                  resource = ['tvshow'],
-                 description = 'An open database for television fans. This plugin will also attempt to find show aliases using the MyAnimeList API',
+                 description = 'An open database for television fans. This plugin will also attempt to find show aliases using the MyAnimeList API, as well as allow manual alias configurations',
                  author = 'Lim Yuen Hoe, Joerg Ehrichs',
                  email = 'yuenhoe@hotmail.com',
                  isAvailable = isAvailable,
@@ -107,12 +107,12 @@ def searchItems( resourcetype, parameters ):
 
 def trySearch(parameters, t, recurse = True):
     title = parameters['title']
-    episode = parameters['episode']
     WebExtractor.log("looking for configured aliases")
-    parameters['showtitle'], parameters['season'] = getConfiguredAlias(parameters['showtitle'], parameters['season'])
+    parameters['showtitle'], parameters['season'], parameters['episode'] = getConfiguredAlias(parameters['showtitle'], parameters['season'], parameters['episode'])
     showtitle = parameters['showtitle']
     season = parameters['season']
-    WebExtractor.log("Showtitle is " + showtitle + " and season is " + season)
+    episode = parameters['episode']
+    WebExtractor.log("Showtitle is " + showtitle + " and season is " + season + " and episode is " + episode)
 
     searchResults = []
     try:
@@ -183,25 +183,40 @@ def getEpisodeDetails(episode):
 #------------------------------------------------------------------------------
 # helper function that checks a config file for configured alias overrides
 #
-def getConfiguredAlias(showtitle, showseason):
+def getConfiguredAlias(showtitle, showseason, showepisode):
     conf = kdecore.KConfig(confFileName)
     confgroup = kdecore.KConfigGroup(conf, "aliases")
     rawdata = confgroup.readEntry(showtitle, QtCore.QStringList()).toStringList()
     if len(rawdata) > 1:
         if rawdata[1] == "-":
-            return str(rawdata[0]), showseason
+            return str(rawdata[0]), showseason, showepisode
         else:
-            return str(rawdata[0]), str(rawdata[1])
+            alias = rawdata.takeFirst()
+            season, episode = process_seasonrule(rawdata, showseason, showepisode)
+            return str(alias), season, episode
     # in case there's unicode involved
     rawdata = confgroup.readEntry(showtitle.decode('utf'), QtCore.QStringList()).toStringList()
     if len(rawdata) > 1:
         if rawdata[1] == "-":
-            return str(rawdata[0]), showseason
+            return str(rawdata[0]), showseason, showepisode
         else:
-            return str(rawdata[0]), str(rawdata[1])
-    return showtitle, showseason
+            alias = rawdata.takeFirst()
+            season, episode = process_seasonrule(rawdata, showseason, showepisode)
+            return str(alias), season, episode
+    return showtitle, showseason, showepisode
 
-
+# Helper function for above
+def process_seasonrule(rules, showseason, showepisode):
+    for rule in rules:
+        components = QtCore.QString(rule).split(ruleSeparator)
+        if components.count() < 2:
+            return str(components[0]), showepisode
+        if showepisode >= str(components[1]) and (components[2] == "-" or showepisode <= str(components[2])) :
+            if components[3] == "1":
+                return str(components[0]), str(int(str(showepisode)) - int(str(components[1])) + 1)
+            else:
+                return str(components[0]), showepisode
+    return showseason, showepisode # no rules matched
 
 #------------------------------------------------------------------------------
 # extracts all information from the given url
@@ -373,12 +388,16 @@ def get_other_titles(query):
 # Just a simple interface to add and delete custom aliases.
 # Dealing with uic from python is pretty ill-documented, so not sure
 # how good the methods here are, but they work well enough.
+ruleSeparator = "|"
 class ConfDialogController:
     def __init__(self):
         self.ui = uic.loadUi(uifileFolder + "/tvdbmalconfig.ui", QtGui.QDialog())
         self.conf = kdecore.KConfig(confFileName)
         self.confgroup = kdecore.KConfigGroup(self.conf, "aliases")
         self.refresh_widgets()
+        self.ui.addButton.clicked.connect(self.add_item)
+        self.ui.deleteButton.clicked.connect(self.remove_item)
+        self.ui.modifyButton.clicked.connect(self.modify_item)
 
     def execdialog(self):
         self.ui.exec_()
@@ -386,20 +405,14 @@ class ConfDialogController:
     def refresh_widgets(self):
         self.ui.overrideList.clear()
         for key in self.confgroup.keyList():
-            i = QtGui.QListWidgetItem(key + " -> " + self.confgroup.readEntry(key))
+            entry = self.confgroup.readEntry(key, QtCore.QStringList()).toStringList()
+            alias = entry[0]
+            if entry.__len__ > 1 and entry[1] != "-":
+              alias += " (custom season rules)"
+            i = QtGui.QListWidgetItem(key + " -> " + alias)
             i.setData(4, key)
-            i.setData(5, self.confgroup.readEntry(key))
+            i.setData(5, self.confgroup.readEntry(key, QtCore.QStringList()))
             self.ui.overrideList.addItem(i)
-        self.ui.addButton.clicked.connect(self.add_item)
-        self.ui.deleteButton.clicked.connect(self.remove_item)
-        self.ui.customSeasonCheckbox.stateChanged.connect(self.update_seasonfield)
-        self.update_seasonfield()
-
-    def update_seasonfield(self):
-        if self.ui.customSeasonCheckbox.isChecked():
-            self.ui.customSeasonText.setDisabled(False)
-        else:
-            self.ui.customSeasonText.setDisabled(True)
 
     def remove_item(self):
         i = self.ui.overrideList.currentItem()
@@ -409,15 +422,164 @@ class ConfDialogController:
             self.refresh_widgets()
 
     def add_item(self):
-        if self.ui.beforeText.text().trimmed() != "" and self.ui.afterText.text().trimmed() != "":
-            if self.ui.customSeasonCheckbox.isChecked() and self.ui.customSeasonText.text().trimmed() != "":
-                self.confgroup.writeEntry(self.ui.beforeText.text(), [self.ui.afterText.text(), self.ui.customSeasonText.text()])
-                self.conf.sync()
-                self.refresh_widgets()
-            elif not self.ui.customSeasonCheckbox.isChecked():
-                self.confgroup.writeEntry(self.ui.beforeText.text(), [self.ui.afterText.text(), "-"])
-                self.conf.sync()
-                self.refresh_widgets()
+        self.show_aliasui("", QtCore.QStringList(["", "-"]))
+
+    def modify_item(self):
+        i = self.ui.overrideList.currentItem()
+        if i:
+            self.show_aliasui(i.data(4).toString(), i.data(5).toStringList())
+
+    def show_aliasui(self, field, value):
+        self.aliasui = uic.loadUi(uifileFolder + "/tvdbmalaliasconfig.ui", QtGui.QDialog())
+        self.aliasui.accepted.connect(self.save_new_alias)
+        self.aliasui.autoRadio.clicked.connect(self.disable_aliascustom)
+        self.aliasui.manualRadio.clicked.connect(self.enable_aliascustom)
+        self.aliasui.allOrRangeCombo.currentIndexChanged.connect(self.toggle_episode_from)
+        self.aliasui.toOrOnwardsCombo.currentIndexChanged.connect(self.toggle_episode_to)
+        self.aliasui.addButton.clicked.connect(self.add_rule)
+        self.aliasui.deleteButton.clicked.connect(self.delete_rule)
+        self.aliasui.okButton.clicked.connect(self.validate_newalias)
+        self.aliasui.beforeText.setText(field)
+        self.aliasui.afterText.setText(value.takeFirst())
+        self.definedRuleList = []
+        if value[0] != "-":
+            self.definedRuleList.extend(value)
+            self.aliasui.manualRadio.setChecked(True)
+            self.enable_aliascustom(True)
+        self.refresh_rulelist_widget()
+        self.aliasui.exec_()
+        self.definedRuleList = []
+
+    def save_new_alias(self):
+        newEntry, newRule = self.get_new_aliasrule()
+        self.confgroup.writeEntry(newEntry, newRule)
+        self.confgroup.sync()
+        self.refresh_widgets()
+
+    def get_new_aliasrule(self):
+        newEntry = self.aliasui.beforeText.text()
+        newRule = []
+        newRule.append(self.aliasui.afterText.text())
+        if self.aliasui.autoRadio.isChecked():
+            newRule.append("-")
+        else:
+            newRule.extend(self.definedRuleList)
+        return newEntry, newRule
+
+    def delete_rule(self):
+        i = 0
+        self.definedRuleList.pop(self.aliasui.ruleList.currentRow())
+        self.refresh_rulelist_widget()
+
+    def validate_newalias(self):
+        if self.aliasui.beforeText.text().isEmpty() or self.aliasui.afterText.text().isEmpty():
+            kdeui.KMessageBox.error(None, "Enter the original and the alias to configure!")
+        elif self.aliasui.manualRadio.isChecked() and self.definedRuleList.__len__() == 0:
+            kdeui.KMessageBox.error(None, "You haven't created any custom season rules!")
+        else:
+            self.aliasui.accept()
+
+    def add_rule(self):
+        ok = False
+        season, ok = self.aliasui.seasonEdit.text().toInt()
+        if not ok:
+            kdeui.KMessageBox.error(None, "Enter an integer for season number!")
+            return
+        if self.aliasui.allOrRangeCombo.currentIndex() == 0:
+            self.definedRuleList.append(str(season))
+            self.clear_rule_area()
+            self.refresh_rulelist_widget()
+            return
+        fromEpisode, ok = self.aliasui.fromEpisodeEdit.text().toInt()
+        if not ok:
+            kdeui.KMessageBox.error(None, "Enter a numeric value for episode numbers!")
+            return
+        reset = "0"
+        if self.aliasui.resetEpisodes.isChecked():
+            reset = "1"
+        if self.aliasui.toOrOnwardsCombo.currentIndex() == 0:
+            self.definedRuleList.append(str(season) + ruleSeparator + str(fromEpisode) + ruleSeparator + "-" + ruleSeparator + reset)
+            self.clear_rule_area()
+            self.refresh_rulelist_widget()
+            return
+        toEpisode, ok = self.aliasui.toEpisodeEdit.text().toInt()
+        if not ok:
+            kdeui.KMessageBox.error(None, "Enter a numeric value for episode numbers!")
+            return
+        self.definedRuleList.append(str(season) + ruleSeparator + str(fromEpisode) + ruleSeparator + str(toEpisode) + ruleSeparator + reset)
+        self.clear_rule_area()
+        self.refresh_rulelist_widget()
+
+    def clear_rule_area(self):
+        self.aliasui.seasonEdit.setText("")
+        self.aliasui.allOrRangeCombo.setCurrentIndex(0)
+        self.aliasui.fromEpisodeEdit.setText("")
+        self.aliasui.toOrOnwardsCombo.setCurrentIndex(0)
+        self.aliasui.toEpisodeEdit.setText("")
+        self.aliasui.resetEpisodes.setChecked(True);
+
+    def refresh_rulelist_widget(self):
+        self.aliasui.ruleList.clear()
+        for rule in self.definedRuleList:
+            components = QtCore.QString(rule).split(ruleSeparator)
+            if components.__len__() == 1:
+                self.aliasui.ruleList.addItem("Use season " + components[0] + " for all episodes")
+            elif components[2] == "-":
+                addition = ""
+                if components[3] == "1":
+                    addition = " (reset)"
+                self.aliasui.ruleList.addItem("Use season " + components[0] + " for episode " + components[1] + " and after" + addition)
+            else:
+                addition = ""
+                if components[3] == "1":
+                    addition = " (reset)"
+                self.aliasui.ruleList.addItem("Use season " + components[0] + " for episodes " + components[1] + " through " + components[2] + addition)
+
+    def toggle_episode_from(self, index):
+        if index == 1:
+            self.aliasui.fromEpisodeEdit.setEnabled(True);
+            self.aliasui.toOrOnwardsCombo.setEnabled(True);
+            self.aliasui.resetEpisodes.setEnabled(True);
+            if self.aliasui.toOrOnwardsCombo.currentIndex() == 1:
+                self.aliasui.toEpisodeEdit.setEnabled(True);
+        elif index == 0:
+            self.aliasui.fromEpisodeEdit.setEnabled(False);
+            self.aliasui.toOrOnwardsCombo.setEnabled(False);
+            self.aliasui.toEpisodeEdit.setEnabled(False);
+            self.aliasui.resetEpisodes.setEnabled(False);
+
+    def toggle_episode_to(self, index):
+        if index == 1:
+            self.aliasui.toEpisodeEdit.setEnabled(True);
+        elif index == 0:
+            self.aliasui.toEpisodeEdit.setEnabled(False);
+
+    def disable_aliascustom(self, checked):
+        if checked:
+            self.aliasui.seasonEdit.setEnabled(False);
+            self.aliasui.allOrRangeCombo.setEnabled(False);
+            self.aliasui.fromEpisodeEdit.setEnabled(False);
+            self.aliasui.toOrOnwardsCombo.setEnabled(False);
+            self.aliasui.toEpisodeEdit.setEnabled(False);
+            self.aliasui.resetEpisodes.setEnabled(False);
+            self.aliasui.addButton.setEnabled(False);
+            self.aliasui.ruleList.setEnabled(False);
+            self.aliasui.deleteButton.setEnabled(False);
+
+    def enable_aliascustom(self, checked):
+        if checked:
+            self.aliasui.seasonEdit.setEnabled(True);
+            self.aliasui.allOrRangeCombo.setEnabled(True);
+            if self.aliasui.allOrRangeCombo.currentIndex() == 1:
+                self.aliasui.fromEpisodeEdit.setEnabled(True);
+                self.aliasui.toOrOnwardsCombo.setEnabled(True);
+                self.aliasui.resetEpisodes.setEnabled(True);
+                if self.aliasui.toOrOnwardsCombo.currentIndex() == 1:
+                    self.aliasui.toEpisodeEdit.setEnabled(True);
+            self.aliasui.addButton.setEnabled(True);
+            self.aliasui.ruleList.setEnabled(True);
+            self.aliasui.deleteButton.setEnabled(True);
+
 
 def showConfigDialog():
     test = ConfDialogController()
