@@ -115,6 +115,7 @@ def searchMovieResults(results):
         if not item.has_key('kind'):
             raise Exception("There is no \"kind\" key in \"results\" parameter.")
 
+	WebExtractor.log( 'found search result: ' + str(item['title']) )
         itemKind = str(item['kind'])
         if itemKind == 'movie':
             detailString = itemKind
@@ -180,6 +181,8 @@ def searchTvShowResults( ia, results, showtitle, title, selectedSeason, selected
             if selectedSeason and selectedEpisode:
 
                 if len(show['episodes']) < int(selectedSeason):
+                    continue
+                if int(selectedSeason) not in show['episodes']:
                     continue
                 if len(show['episodes'][int(selectedSeason)]) < int(selectedEpisode):
                     continue
