@@ -80,7 +80,8 @@ void MetaDataExtractorPlugin::lateInitialization()
     KIconLoader *loader = KIconLoader::global();
     m_icon.setPixmap(loader->loadIcon("nepomuk", KIconLoader::Small));
     KParts::StatusBarExtension* barExt = KParts::StatusBarExtension::childObject(m_Part);
-    barExt->addStatusBarItem(&m_icon, 0, false);
+    if( barExt )
+        barExt->addStatusBarItem(&m_icon, 0, false);
     m_icon.setVisible(false);
     m_icon.setToolTip(i18n("Import Item into Nepomuk"));
 
