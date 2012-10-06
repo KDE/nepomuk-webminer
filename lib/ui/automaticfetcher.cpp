@@ -238,9 +238,11 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::fetchedItemDetails(const QS
     d->pluginqueue.clear();
 
     // delete the current item, we do not need it anymore
-    resourceExtractor()->takeNext(); // pop it off the list
-    delete d->currentItemToupdate; // and delete it
-    d->currentItemToupdate = 0;
+    if( !resourceExtractor()->resourcesList().isEmpty() ) {
+        resourceExtractor()->takeNext(); // pop it off the list
+        delete d->currentItemToupdate; // and delete it
+        d->currentItemToupdate = 0;
+    }
 
     // and start the next round
     searchNextItem();
