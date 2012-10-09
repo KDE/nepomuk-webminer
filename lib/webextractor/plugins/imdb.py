@@ -115,7 +115,7 @@ def searchMovieResults(results):
         if not item.has_key('kind'):
             raise Exception("There is no \"kind\" key in \"results\" parameter.")
 
-	WebExtractor.log( 'found search result: ' + str(item['title']) )
+	WebExtractor.log( 'found search result: ' + str(item['title'].encode("utf-8")) )
         itemKind = str(item['kind'])
         if itemKind == 'movie':
             detailString = itemKind
@@ -125,7 +125,7 @@ def searchMovieResults(results):
 
             fullUrl = 'http://www.imdb.com/title/tt' + str(item.movieID)
             entryDict = dict(
-                            title = item['title'],
+                            title = item['title'].encode("utf-8"),
                             details = detailString,
                             url = fullUrl
                             )
