@@ -434,7 +434,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::searchResultList( QVariantList
     d->resultModel->setSearchResults( searchResults );
 
     QString searchEngineName = comboBoxSearchEngine->currentText();
-    labelSearchResults->setText( i18n("Found <b>%1</b> results via <b>%2</b>", searchResults.size(), searchEngineName));
+    labelSearchResults->setText( i18ncp("%2 is a search engine", "Found <b>1</b> result via <b>%2</b>", "Found <b>%1</b> results via <b>%2</b>", searchResults.size(), searchEngineName));
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::searchEntrySelected(const QModelIndex &current, const QModelIndex &previous)
