@@ -27,8 +27,10 @@
 #include "sro/nbib.h"
 
 #include <KDE/KStandardDirs>
-#include <KDE/KDebug>
 #include <KDE/KDirNotify>
+#include <KDE/KConfig>
+#include <KDE/KConfigGroup>
+#include <KDE/KDebug>
 
 #include <QtCore/QProcess>
 #include <QtCore/QFile>
@@ -40,6 +42,9 @@ public:
     Nepomuk2::ResourceWatcher* videoWatcher;
     Nepomuk2::ResourceWatcher* documentWatcher;
     Nepomuk2::ResourceWatcher* musicWatcher;
+
+    int runningProcesses;
+    QStringList processQueue;
 };
 
 MetaDataExtractorService::MetaDataExtractorService(QObject *parent, const QVariantList &)
@@ -47,6 +52,8 @@ MetaDataExtractorService::MetaDataExtractorService(QObject *parent, const QVaria
     , d_ptr( new MetaDataExtractorServicePrivate)
 {
     Q_D( MetaDataExtractorService );
+
+    d->runningProcesses = 0;
 
     // set up the watcher for newly created nfo:Video resources
     d->videoWatcher = new Nepomuk2::ResourceWatcher(this);
@@ -60,17 +67,13 @@ MetaDataExtractorService::MetaDataExtractorService(QObject *parent, const QVaria
     d->documentWatcher->addType(NFO::PaginatedTextDocument());
     connect(d->documentWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
             this, SLOT(slotDocumentResourceCreated(Nepomuk2::Resource)));
-    connect(d->documentWatcher, SIGNAL(resourceTypeAdded(Nepomuk2::Resource,Nepomuk2::Types::Class)),
-            this, SLOT(slotDocumentResourceCreated(Nepomuk2::Resource)));
     d->documentWatcher->start();
 
     // set up the watcher for newly created music files
     d->musicWatcher = new Nepomuk2::ResourceWatcher(this);
     d->musicWatcher->addType(NFO::Audio());
     connect(d->musicWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
-            this, SLOT(slotDocumentResourceCreated(Nepomuk2::Resource)));
-    connect(d->musicWatcher, SIGNAL(resourceTypeAdded(Nepomuk2::Resource,Nepomuk2::Types::Class)),
-            this, SLOT(slotDocumentResourceCreated(Nepomuk2::Resource)));
+            this, SLOT(slotMusicResourceCreated(Nepomuk2::Resource)));
     d->musicWatcher->start();
 }
 
@@ -84,6 +87,8 @@ MetaDataExtractorService::~MetaDataExtractorService()
     delete d->videoWatcher;
     delete d->documentWatcher;
     delete d->musicWatcher;
+
+    //TODO: save cache to disk? Load cache again on restart
 }
 
 void MetaDataExtractorService::slotVideoResourceCreated(const Nepomuk2::Resource &res, const QList<QUrl> &types)
@@ -104,10 +109,9 @@ void MetaDataExtractorService::slotVideoResourceCreated(const Nepomuk2::Resource
 
         const QString path = res.toFile().url().toLocalFile();
         if(QFile::exists(path)) {
-            kDebug() << "Calling" << KStandardDirs::findExe(QLatin1String("metadataextractor")) << path;
-
-            QProcess::startDetached(KStandardDirs::findExe(QLatin1String("metadataextractor")),
-                                    QStringList() << QLatin1String("-auto") << QLatin1String("-force") << path);
+            Q_D( MetaDataExtractorService );
+            d->processQueue.append( path );
+            startNextProcess();
         }
     }
 }
@@ -130,10 +134,9 @@ void MetaDataExtractorService::slotDocumentResourceCreated(const Nepomuk2::Resou
 
         const QString path = res.toFile().url().toLocalFile();
         if(QFile::exists(path)) {
-            kDebug() << "Calling" << KStandardDirs::findExe(QLatin1String("metadataextractor")) << path;
-
-            QProcess::startDetached(KStandardDirs::findExe(QLatin1String("metadataextractor")),
-                                    QStringList() << QLatin1String("-auto") << QLatin1String("-force") << path);
+            Q_D( MetaDataExtractorService );
+            d->processQueue.append( path );
+            startNextProcess();
         }
     }
 }
@@ -146,11 +149,50 @@ void MetaDataExtractorService::slotMusicResourceCreated(const Nepomuk2::Resource
 
         const QString path = res.toFile().url().toLocalFile();
         if(QFile::exists(path)) {
-            kDebug() << "Calling" << KStandardDirs::findExe(QLatin1String("metadataextractor")) << path;
-
-            QProcess::startDetached(KStandardDirs::findExe(QLatin1String("metadataextractor")),
-                                    QStringList() << QLatin1String("-auto") << QLatin1String("-force") << path);
+            Q_D( MetaDataExtractorService );
+            d->processQueue.append( path );
+            startNextProcess();
         }
+    }
+}
+
+void MetaDataExtractorService::processFinished(int returnCode, QProcess::ExitStatus status)
+{
+    Q_UNUSED(returnCode);
+    Q_UNUSED(status);
+
+    sender()->deleteLater(); // delete the calling QProcess again
+
+    Q_D( MetaDataExtractorService );
+
+    d->runningProcesses--;
+    startNextProcess();
+}
+
+void MetaDataExtractorService::startNextProcess()
+{
+    Q_D( MetaDataExtractorService );
+
+    KConfig config("nepomukmetadataextractorrc");
+    KConfigGroup serviceGroup( &config, "Service" );
+
+    int maxProcesses = serviceGroup.readEntry("maxprocesses", 3);
+
+    kDebug() << "Current running Processes:" << d->runningProcesses << " || Process Queue: " << d->processQueue.size();
+
+    // only start the process if we haven't reached the maximum queue number and there ar e still entries in the queue left
+    if( d->runningProcesses < maxProcesses && !d->processQueue.isEmpty() ) {
+        QString path = d->processQueue.takeFirst();
+
+        kDebug() << "Calling" << KStandardDirs::findExe(QLatin1String("metadataextractor")) << path;
+        d->runningProcesses++;
+
+        QProcess *p = new QProcess();
+        connect(p, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(processFinished(int,QProcess::ExitStatus)) );
+        p->start(KStandardDirs::findExe(QLatin1String("metadataextractor")),
+                 QStringList() << QLatin1String("-auto") << QLatin1String("-force") << path);
+
+        startNextProcess();
     }
 }
 

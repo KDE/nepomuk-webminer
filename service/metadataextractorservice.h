@@ -26,6 +26,7 @@
 
 #include <QtCore/QList>
 #include <QtCore/QUrl>
+#include <QtCore/QProcess>
 
 namespace Nepomuk2 {
     class ResourceWatcher;
@@ -71,7 +72,22 @@ private Q_SLOTS:
      */
     void slotMusicResourceCreated(const Nepomuk2::Resource& res, const QList<QUrl>& types);
 
+    /**
+     * @brief Called when the QProcess finished calling the metadataextractor
+     *
+     * @param returnCode the return code
+     * @param status Normal or crashed exit status
+     */
+    void processFinished(int returnCode, QProcess::ExitStatus status);
+
 private:
+    /**
+     * @brief Starts the next Process call
+     *
+     * Starts only a call if the max queue size is not reached and there are still items on the queue left
+     */
+    void startNextProcess();
+
     Q_DECLARE_PRIVATE(MetaDataExtractorService)
     MetaDataExtractorServicePrivate *const d_ptr; /**< d-pointer for this class */
 };
