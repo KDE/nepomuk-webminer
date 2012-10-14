@@ -54,7 +54,6 @@ target_link_libraries( nepomukmetadataextractor
 # include nepomuk stuff
   ${SOPRANO_LIBRARIES}
   ${NEPOMUK_CORE_LIBRARY}
-  ${NEPOMUK_CORE_SYNC_LIBRARY}
 
 # other parts
   ${POPPLER_LIBRARY}

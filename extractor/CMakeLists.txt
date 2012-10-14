@@ -20,7 +20,6 @@ target_link_libraries( metadataextractor
 
   nepomukmetadataextractor
   ${NEPOMUK_CORE_LIBRARY}
-  ${NEPOMUK_CORE_SYNC_LIBRARY}
 )
 
 install(TARGETS metadataextractor ${INSTALL_TARGETS_DEFAULT_ARGS})

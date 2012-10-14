@@ -14,7 +14,6 @@ target_link_libraries(metadataextractorservice
 # include nepomuk stuff
   ${SOPRANO_LIBRARIES}
   ${NEPOMUK_CORE_LIBRARY}
-  ${NEPOMUK_CORE_SYNC_LIBRARY}
   )
 
 install(
