@@ -75,6 +75,13 @@ MetaDataExtractorService::MetaDataExtractorService(QObject *parent, const QVaria
     connect(d->musicWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
             this, SLOT(slotMusicResourceCreated(Nepomuk2::Resource)));
     d->musicWatcher->start();
+
+    KConfig config("nepomukmetadataextractorrc");
+    KConfigGroup serviceGroup( &config, "Service" );
+
+    d->processQueue = serviceGroup.readEntry("notfinishedqueue",QStringList());
+
+    startNextProcess();
 }
 
 MetaDataExtractorService::~MetaDataExtractorService()
@@ -88,7 +95,12 @@ MetaDataExtractorService::~MetaDataExtractorService()
     delete d->documentWatcher;
     delete d->musicWatcher;
 
-    //TODO: save cache to disk? Load cache again on restart
+    KConfig config("nepomukmetadataextractorrc");
+    KConfigGroup serviceGroup( &config, "Service" );
+
+    serviceGroup.writeEntry("notfinishedqueue",d->processQueue);
+    serviceGroup.sync();
+    config.sync();
 }
 
 void MetaDataExtractorService::slotVideoResourceCreated(const Nepomuk2::Resource &res, const QList<QUrl> &types)
