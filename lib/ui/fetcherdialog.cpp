@@ -182,16 +182,16 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::openSettings()
 
     ConfigFetcher *cfd = new ConfigFetcher();
     cfd->setExtractorFactory(extractorFactory());
-    dialog->addPage( cfd, i18n("Fetcher"));
+    dialog->addPage( cfd, i18n("Fetcher"), QLatin1String("download"));
     connect(cfd, SIGNAL(configChanged(bool)), dialog, SLOT(enableButtonApply(bool)) );
     connect(dialog, SIGNAL(applyClicked()), cfd, SLOT(saveConfig()) );
 
     PluginList *pl = new PluginList();
     pl->setExtractorFactory(extractorFactory());
-    dialog->addPage( pl, i18n("Plugins"));
+    dialog->addPage( pl, i18n("Plugins"), QLatin1String("run-build-configure"));
 
     ConfigService *csd = new ConfigService();
-    dialog->addPage( csd, i18n("Service"));
+    dialog->addPage( csd, i18n("Service"), QLatin1String("services"));
 
     dialog->exec();
 }
