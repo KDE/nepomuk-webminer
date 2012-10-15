@@ -40,6 +40,13 @@
     </entry>
   </group>
 
+  <group name="Service">
+    <entry name="SimultaneousCalls" type="int">
+      <label>Number of simultaneous extractor calls.</label>
+      <default>3</default>
+    </entry>
+  </group>
+
   <group name="ResourceExtractor">
     <entry name="TvShowRegExp" type="StringList">
       <label>Regular expressions that will detect and extract a tv show. Valid placeholders are %n (show name), %t (episode title), %s (season), %e (episode) </label>

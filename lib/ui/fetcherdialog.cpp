@@ -24,6 +24,7 @@
 
 #include <mdesettings.h>
 #include "configfetcher.h"
+#include "configservice.h"
 #include "pluginlist.h"
 
 #include "metadataparameters.h"
@@ -188,6 +189,9 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::openSettings()
     PluginList *pl = new PluginList();
     pl->setExtractorFactory(extractorFactory());
     dialog->addPage( pl, i18n("Plugins"));
+
+    ConfigService *csd = new ConfigService();
+    dialog->addPage( csd, i18n("Service"));
 
     dialog->exec();
 }
