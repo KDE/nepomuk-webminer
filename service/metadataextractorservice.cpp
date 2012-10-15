@@ -66,14 +66,14 @@ MetaDataExtractorService::MetaDataExtractorService(QObject *parent, const QVaria
     d->documentWatcher = new Nepomuk2::ResourceWatcher(this);
     d->documentWatcher->addType(NFO::PaginatedTextDocument());
     connect(d->documentWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
-            this, SLOT(slotDocumentResourceCreated(Nepomuk2::Resource)));
+            this, SLOT(slotDocumentResourceCreated(Nepomuk2::Resource,QList<QUrl>)));
     d->documentWatcher->start();
 
     // set up the watcher for newly created music files
     d->musicWatcher = new Nepomuk2::ResourceWatcher(this);
     d->musicWatcher->addType(NFO::Audio());
     connect(d->musicWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
-            this, SLOT(slotMusicResourceCreated(Nepomuk2::Resource)));
+            this, SLOT(slotMusicResourceCreated(Nepomuk2::Resource,QList<QUrl>)));
     d->musicWatcher->start();
 
     KConfig config("nepomukmetadataextractorrc");
@@ -188,11 +188,11 @@ void MetaDataExtractorService::startNextProcess()
     KConfig config("nepomukmetadataextractorrc");
     KConfigGroup serviceGroup( &config, "Service" );
 
-    int maxProcesses = serviceGroup.readEntry("maxprocesses", 3);
+    int maxProcesses = serviceGroup.readEntry("SimultaneousCalls", 3);
 
     kDebug() << "Current running Processes:" << d->runningProcesses << " || Process Queue: " << d->processQueue.size();
 
-    // only start the process if we haven't reached the maximum queue number and there ar e still entries in the queue left
+    // only start the process if we haven't reached the maximum queue number and there are still entries in the queue left
     if( d->runningProcesses < maxProcesses && !d->processQueue.isEmpty() ) {
         QString path = d->processQueue.takeFirst();
 
