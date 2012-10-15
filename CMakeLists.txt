@@ -42,6 +42,7 @@ include_directories(
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/kcm
   ${CMAKE_SOURCE_DIR}/lib
   ${CMAKE_SOURCE_DIR}/lib/sro
   ${CMAKE_SOURCE_DIR}/lib/ui
@@ -55,6 +56,7 @@ add_subdirectory( extractor )
 add_subdirectory( service )
 add_subdirectory( browser/konqueror )
 add_subdirectory( ontology )
+add_subdirectory( kcm )
 
 macro_display_feature_log()
 

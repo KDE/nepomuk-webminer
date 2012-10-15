@@ -23,9 +23,6 @@
 #include "metadatawidget.h"
 
 #include <mdesettings.h>
-#include "configfetcher.h"
-#include "configservice.h"
-#include "pluginlist.h"
 
 #include "metadataparameters.h"
 #include "resourceextractor/resourceextractor.h"
@@ -54,6 +51,7 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QTextDocument>
 #include <QtGui/QMessageBox>
+#include <QtCore/QProcess>
 
 namespace NepomukMetaDataExtractor {
 namespace UI {
@@ -178,22 +176,12 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showProgressLog()
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::openSettings()
 {
-    KConfigDialog* dialog = new KConfigDialog( this, "settings", MDESettings::self() );
-
-    ConfigFetcher *cfd = new ConfigFetcher();
-    cfd->setExtractorFactory(extractorFactory());
-    dialog->addPage( cfd, i18n("Fetcher"), QLatin1String("download"));
-    connect(cfd, SIGNAL(configChanged(bool)), dialog, SLOT(enableButtonApply(bool)) );
-    connect(dialog, SIGNAL(applyClicked()), cfd, SLOT(saveConfig()) );
-
-    PluginList *pl = new PluginList();
-    pl->setExtractorFactory(extractorFactory());
-    dialog->addPage( pl, i18n("Plugins"), QLatin1String("run-build-configure"));
-
-    ConfigService *csd = new ConfigService();
-    dialog->addPage( csd, i18n("Service"), QLatin1String("services"));
-
-    dialog->exec();
+    QProcess::startDetached(QLatin1String("kcmshell4 kcm_metadataextractor"));
+    /*
+    KCModuleLoader::loadModule(  "kcm_metadataextractor",
+                                KCModuleLoader::Inline, this, QStringList( "message/rfc822" ) ),
+                                i18n(  "Mail Servers" );
+    */
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::resourceFetchingDone()

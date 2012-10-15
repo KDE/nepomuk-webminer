@@ -1,0 +1,16 @@
+[Desktop Entry]
+Exec=kcmshell4 kcm_metadataextractor
+Icon=nepomuk
+Type=Service
+
+X-DocPath=kcontrol/metadataextractor/index.html
+
+X-KDE-ServiceTypes=KCModule
+X-KDE-Library=kcm_metadataextractor
+X-KDE-ParentApp=kcontrol
+X-KDE-System-Settings-Parent-Category=workspace-appearance-and-behavior
+
+Name=Metadata Extractor
+Comment=Nepomuk Metadata Extractor Configuration
+X-KDE-Keywords=Nepomuk,Metadata
+

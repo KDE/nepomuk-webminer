@@ -27,18 +27,12 @@ set( nepomukextractor_LIB_SRCS
   ui/searchresultdelegate.cpp
   ui/automaticfetcher.cpp
   ui/metadatawidget.cpp
-  ui/configfetcher.cpp
-  ui/configservice.cpp
-  ui/pluginlist.cpp
 
   sro/nbib.cpp
 )
 
 kde4_add_ui_files( nepomukextractor_LIB_SRCS
                    ui/fetcherdialog.ui
-                   ui/configfetcher.ui
-                   ui/configservice.ui
-                   ui/pluginlist.ui
 )
 
 kde4_add_kcfg_files(nepomukextractor_LIB_SRCS mdesettings.kcfgc)
@@ -96,7 +90,6 @@ set( nepomukmetadataextractor_LIB_HDRS
   ui/automaticfetcher.h
   ui/fetcherdialog.h
   ui/metadatawidget.h
-  ui/pluginlist.h
   ${CMAKE_CURRENT_BINARY_DIR}/ui_fetcherdialog.h
 )
 

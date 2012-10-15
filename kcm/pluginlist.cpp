@@ -21,10 +21,15 @@
 #include "webextractor/extractorfactory.h"
 #include "webextractor/webextractor.h"
 
+#include <KDE/KUrlLabel>
+#include <KDE/KDebug>
+
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimer>
-#include <KDE/KMessageBox>
-#include <KDE/KDebug>
+#include <QtCore/QPointer>
+#include <QtGui/QDialog>
+#include <QtGui/QLabel>
+#include <QtGui/QFormLayout>
 
 using namespace NepomukMetaDataExtractor;
 using namespace Extractor;
@@ -53,47 +58,18 @@ void PluginList::setupUi()
 {
     // music list
     QList<WebExtractor::Info> engines = extractorFactory->listAvailablePlugins( "music" );
+    engines.append( extractorFactory->listAvailablePlugins( "publication" ) );
+    engines.append( extractorFactory->listAvailablePlugins( "movie" ) );
+    engines.append( extractorFactory->listAvailablePlugins( "tvshow" ) );
 
     foreach(const WebExtractor::Info &engine, engines) {
-        QFileInfo fileInfo(engine.file);
-        QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + engine.icon;
-        QListWidgetItem *item = new QListWidgetItem(QIcon(iconPath), engine.name);
-        item->setData(5, engine.identifier);
-        ui->pluginList->addItem(item);
-    }
+        if( !ui->pluginList->findItems(engine.name, Qt::MatchExactly).isEmpty()) {
+            continue; // already added
+        }
 
-    // publication list
-    engines.clear();
-    engines = extractorFactory->listAvailablePlugins( "publication" );
-
-    foreach(const WebExtractor::Info &engine, engines) {
-        QFileInfo fileInfo(engine.file);
-        QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + engine.icon;
-        QListWidgetItem *item = new QListWidgetItem(QIcon(iconPath), engine.name);
-        item->setData(5, engine.identifier);
-        ui->pluginList->addItem(item);
-    }
-
-    // movie list
-    engines.clear();
-    engines = extractorFactory->listAvailablePlugins( "movie" );
-
-    foreach(const WebExtractor::Info &engine, engines) {
-        QFileInfo fileInfo(engine.file);
-        QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + engine.icon;
-        QListWidgetItem *item = new QListWidgetItem(QIcon(iconPath), engine.name);
-        item->setData(5, engine.identifier);
-        ui->pluginList->addItem(item);
-    }
-
-    // tvshow list
-    engines.clear();
-    engines = extractorFactory->listAvailablePlugins( "tvshow" );
-
-    foreach(const WebExtractor::Info &engine, engines) {
-        QFileInfo fileInfo(engine.file);
-        QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + engine.icon;
-        QListWidgetItem *item = new QListWidgetItem(QIcon(iconPath), engine.name);
+        //QFileInfo fileInfo(engine.file);
+        //QString iconPath = fileInfo.absolutePath() + QLatin1String("/") + engine.icon;
+        QListWidgetItem *item = new QListWidgetItem(KIcon(engine.icon), engine.name);
         item->setData(5, engine.identifier);
         ui->pluginList->addItem(item);
     }
@@ -116,22 +92,33 @@ void PluginList::updateButtons(QListWidgetItem* item) {
 }
 
 void PluginList::showInfo() {
-    //TODO: more interesting info dialog?
     if (!selectedPlugin) {
         return; // nothing to show
     }
-    QString description = "";
+
     WebExtractor::Info info = selectedPlugin->info();
-    description += info.description;
-    description += "\n\n";
-    description += i18n("Author: %1", info.author) + "\n";
-    description += i18n("Email: %1", info.email) + "\n";
-    KMessageBox::information(this, description, i18n("About %1", info.name));
+    QPointer<QDialog> dlg = new QDialog( this );
+
+    dlg->setWindowTitle(i18n("About %1", info.name) );
+    QFormLayout *formLayout = new QFormLayout(this);
+
+    formLayout->addRow(QLatin1String("<b>") + i18n("Name:") + QLatin1String("</b>"), new QLabel(info.name));
+    formLayout->addRow(QLatin1String("<b>") + i18n("Link:") + QLatin1String("</b>"), new KUrlLabel(info.homepage));
+    QLabel *desc = new QLabel(info.description);
+    desc->setWordWrap( true );
+    formLayout->addRow(QLatin1String("<b>") + i18n("Description:") + QLatin1String("</b>"), desc);
+    formLayout->addRow(QLatin1String("<b>") + i18n("Author:") + QLatin1String("</b>"), new QLabel(info.author));
+    formLayout->addRow(QLatin1String("<b>") + i18n("Email:") + QLatin1String("</b>"), new QLabel(info.email));
+    dlg->setLayout(formLayout);
+
+    dlg->exec();
+    delete dlg;
 }
 
 void PluginList::showConfig() {
     if (!selectedPlugin) {
         return; // nothing to show
     }
+
     QTimer::singleShot(0, selectedPlugin, SLOT(showConfigDialog()));
 }

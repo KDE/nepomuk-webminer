@@ -18,16 +18,15 @@
 #ifndef CONFIGFETCHER_H
 #define CONFIGFETCHER_H
 
-#include <QWidget>
+#include <QtGui/QWidget>
+
+namespace Ui {
+    class ConfigFetcher;
+}
 
 namespace NepomukMetaDataExtractor {
 namespace Extractor {
     class ExtractorFactory;
-}
-}
-
-namespace Ui {
-class ConfigFetcher;
 }
 
 /**
@@ -52,11 +51,14 @@ signals:
 public slots:
     void updateConfiguration();
     void saveConfig();
+    void resetConfig();
 
 private:
     void setupUi();
     Ui::ConfigFetcher *ui;
     NepomukMetaDataExtractor::Extractor::ExtractorFactory  *extractorFactory;
 };
+
+}
 
 #endif // CONFIGFETCHER_H

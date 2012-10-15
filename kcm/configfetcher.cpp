@@ -23,8 +23,6 @@
 #include "webextractor/extractorfactory.h"
 #include "webextractor/webextractor.h"
 
-#include <QtCore/QFileInfo>
-
 #include <KDE/KDebug>
 
 using namespace NepomukMetaDataExtractor;
@@ -55,6 +53,10 @@ void ConfigFetcher::updateConfiguration()
 
 void ConfigFetcher::saveConfig()
 {
+    MDESettings::setDownloadBanner( ui->kcfg_DownloadBanner->isChecked() );
+    MDESettings::setDownloadReferences( ui->kcfg_DownloadReferences->isChecked() );
+    MDESettings::setSaveBannerInResourceFolder( ui->kcfg_SaveBannerInResourceFolder->isChecked() );
+
     int curIndex = ui->musicPlugin->currentIndex();
     MDESettings::setFavoriteMusicPlugin( ui->musicPlugin->itemData(curIndex).toString() );
 
@@ -66,10 +68,31 @@ void ConfigFetcher::saveConfig()
 
     curIndex = ui->tvshowPlugin->currentIndex();
     MDESettings::setFavoriteTvShowPlugin( ui->tvshowPlugin->itemData(curIndex).toString() );
+
+    MDESettings::self()->writeConfig();
+}
+
+void ConfigFetcher::resetConfig()
+{
+    ui->kcfg_DownloadBanner->setChecked( MDESettings::downloadBanner());
+    ui->kcfg_DownloadReferences->setChecked( MDESettings::downloadReferences());
+    ui->kcfg_SaveBannerInResourceFolder->setChecked( MDESettings::saveBannerInResourceFolder());
+
+    ui->musicPlugin->setCurrentIndex(ui->musicPlugin->findData(MDESettings::favoriteMusicPlugin()));
+    ui->publicationPlugin->setCurrentIndex(ui->publicationPlugin->findData(MDESettings::favoritePublicationPlugin()));
+    ui->moviePlugin->setCurrentIndex(ui->moviePlugin->findData(MDESettings::favoriteMoviePlugin()));
+    ui->tvshowPlugin->setCurrentIndex(ui->tvshowPlugin->findData(MDESettings::favoriteTvShowPlugin()));
 }
 
 void ConfigFetcher::setupUi()
 {
+    ui->kcfg_DownloadBanner->setChecked( MDESettings::downloadBanner());
+    connect(ui->kcfg_DownloadBanner, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()) );
+    ui->kcfg_DownloadReferences->setChecked( MDESettings::downloadReferences());
+    connect(ui->kcfg_DownloadReferences, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()) );
+    ui->kcfg_SaveBannerInResourceFolder->setChecked( MDESettings::saveBannerInResourceFolder());
+    connect(ui->kcfg_SaveBannerInResourceFolder, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()) );
+
     // music list
     QList<WebExtractor::Info> engines = extractorFactory->listAvailablePlugins( "music" );
 
@@ -110,5 +133,4 @@ void ConfigFetcher::setupUi()
     connect(ui->publicationPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()) );
     connect(ui->moviePlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()) );
     connect(ui->tvshowPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()) );
-
 }

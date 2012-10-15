@@ -9,6 +9,8 @@
 #include <QtDBus/QDBusInterface>
 #include <QtCore/QProcess>
 
+using namespace NepomukMetaDataExtractor;
+
 ConfigService::ConfigService(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ConfigService)
@@ -17,14 +19,14 @@ ConfigService::ConfigService(QWidget *parent) :
 
     connect(ui->enableService, SIGNAL(clicked(bool)), this, SLOT(serviceEnabled(bool)) );
 
-    QDBusServiceWatcher * watcher = new QDBusServiceWatcher( this );
-    watcher->addWatchedService( QLatin1String("org.kde.nepomuk.services.metadataextractorservice") );
-    watcher->setConnection( QDBusConnection::sessionBus() );
-    watcher->setWatchMode( QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration );
+    m_watcher = new QDBusServiceWatcher( this );
+    m_watcher->addWatchedService( QLatin1String("org.kde.nepomuk.services.metadataextractorservice") );
+    m_watcher->setConnection( QDBusConnection::sessionBus() );
+    m_watcher->setWatchMode( QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration );
 
-    connect( watcher, SIGNAL( serviceRegistered(const QString&) ),
+    connect( m_watcher, SIGNAL( serviceRegistered(const QString&) ),
              this, SLOT( serviceRegistered() ) );
-    connect( watcher, SIGNAL( serviceUnregistered(const QString&) ),
+    connect( m_watcher, SIGNAL( serviceUnregistered(const QString&) ),
              this, SLOT( serviceUnregistered() ) );
 
     if( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.nepomuk.services.metadataextractorservice" ) ) {
@@ -38,6 +40,7 @@ ConfigService::ConfigService(QWidget *parent) :
 ConfigService::~ConfigService()
 {
     delete ui;
+    delete m_watcher;
 }
 
 void ConfigService::serviceEnabled(bool enabled)
@@ -64,5 +67,17 @@ void ConfigService::serviceUnregistered()
 
 void ConfigService::changeSettings()
 {
+    emit configChanged(true);
+}
+
+void ConfigService::saveConfig()
+{
     MDESettings::setSimultaneousCalls(ui->kintspinbox->value());
+
+    MDESettings::self()->writeConfig();
+}
+
+void ConfigService::resetConfig()
+{
+    ui->kintspinbox->setValue( MDESettings::simultaneousCalls() );
 }

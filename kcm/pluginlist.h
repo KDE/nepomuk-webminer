@@ -20,19 +20,23 @@
 
 #include <QWidget>
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
-    class ExtractorFactory;
-    class WebExtractor;
-}
-}
-
 class QListWidgetItem;
 
 namespace Ui {
 class PluginList;
 }
 
+namespace NepomukMetaDataExtractor {
+namespace Extractor {
+    class ExtractorFactory;
+    class WebExtractor;
+}
+
+/**
+ * @brief Shows a list of all available plugins and their description.
+ *
+ * If a plugin has a configuration interface, it can be shown here
+ */
 class PluginList : public QWidget
 {
     Q_OBJECT
@@ -43,16 +47,19 @@ public:
 
     void setExtractorFactory(NepomukMetaDataExtractor::Extractor::ExtractorFactory  *ef);
 
+private slots:
+    void updateButtons(QListWidgetItem*);
+    void showInfo();
+    void showConfig();
+
 private:
     void setupUi();
     Ui::PluginList *ui;
     NepomukMetaDataExtractor::Extractor::ExtractorFactory  *extractorFactory;
     NepomukMetaDataExtractor::Extractor::WebExtractor  *selectedPlugin;
 
-private slots:
-    void updateButtons(QListWidgetItem*);
-    void showInfo();
-    void showConfig();
 };
+
+}
 
 #endif // PLUGINLIST_H
