@@ -38,9 +38,9 @@ def info():
                  identifier = 'imdbmovies',
                  urlregex = ['http://www.imdb.com/title/tt'],
                  resource = ['movie', 'tvshow'],
-                 description = 'some description',
+                 description = 'IMDb is the world’s most popular and authoritative source for movie, TV and celebrity content.',
                  author = 'Joerg Ehrichs',
-                 email = 'some@mail.com',
+                 email = 'Joerg.Ehrichs@gmx.de',
                  isAvailable = isAvailable,
                  errorMsg = errorMsg)
 

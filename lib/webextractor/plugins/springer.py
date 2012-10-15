@@ -37,9 +37,9 @@ def info():
                  identifier = 'springer',
                  resource = ['publication'],
                  urlregex = ['http://www.springerlink.com/content/[0-9A-Za-z]+/'],
-                 description = 'some description',
+                 description = 'SpringerLink is an integrated full-text database for journals, books, protocols, eReferences, and book series published by Springer.',
                  author = 'Joerg Ehrichs',
-                 email = 'some@mail.com',
+                 email = 'Joerg.Ehrichs@gmx.de',
                  isAvailable = isAvailable,
                  errorMsg = errorMsg)
 

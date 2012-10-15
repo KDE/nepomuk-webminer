@@ -43,9 +43,9 @@ def info():
                  identifier = 'mas',
                  resource = ['publication'],
                  urlregex = ['http://academic.research.microsoft.com/Publication/'],
-                 description = 'some description',
+                 description = 'Publication search engine with citation support from Microsoft',
                  author = 'Joerg Ehrichs',
-                 email = 'some@mail.com',
+                 email = 'Joerg.Ehrichs@gmx.de',
                  isAvailable = isAvailable,
                  errorMsg = errorMsg)
 
