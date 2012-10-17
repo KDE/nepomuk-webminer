@@ -11,6 +11,21 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=workspace-appearance-and-behavior
 
 Name=Metadata Extractor
+Name[et]=Metaandmete ekstraktija
+Name[pt]=Extracção de Meta-Dados
+Name[sv]=Extrahering av metadata
+Name[uk]=Видобування метаданих
+Name[x-test]=xxMetadata Extractorxx
 Comment=Nepomuk Metadata Extractor Configuration
+Comment[et]=Nepomuki metaandmete ekstraktimise seadistus
+Comment[pt]=Configuração da Extracção de Meta-Dados do Nepomuk
+Comment[sv]=Inställning av extrahering av Nepomuk metadata
+Comment[uk]=Налаштування видобування метаданих Nepomuk
+Comment[x-test]=xxNepomuk Metadata Extractor Configurationxx
 X-KDE-Keywords=Nepomuk,Metadata
+X-KDE-Keywords[et]=Nepomuk,metaandmed
+X-KDE-Keywords[pt]=Nepomuk,Meta-dados
+X-KDE-Keywords[sv]=Nepomuk,metadata
+X-KDE-Keywords[uk]=Nepomuk,Metadata,немомук,непом’юк,метадані
+X-KDE-Keywords[x-test]=xxNepomuk,Metadataxx
 
