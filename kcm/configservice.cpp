@@ -3,6 +3,9 @@
 
 #include <mdesettings.h>
 
+#include <KDE/KConfig>
+#include <KDE/KConfigGroup>
+
 #include <QtDBus/QDBusServiceWatcher>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
@@ -53,6 +56,11 @@ void ConfigService::serviceEnabled(bool enabled)
                                 "org.kde.nepomuk.ServiceControl" );
         service.call( "shutdown" );
     }
+
+    KConfig config(QLatin1String("nepomukserverrc"));
+    KConfigGroup generalGroup( &config, QLatin1String("Service-metadataextractorservice") );
+    generalGroup.writeEntry(QLatin1String("autostart"),enabled);
+    generalGroup.sync();
 }
 
 void ConfigService::serviceRegistered()
