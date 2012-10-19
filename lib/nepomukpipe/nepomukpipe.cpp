@@ -68,7 +68,7 @@ KUrl NepomukMetaDataExtractor::Pipe::NepomukPipe::downloadBanner(const QUrl &ban
     }
 
     if(!QFile::exists(localUrl.toLocalFile())) {
-        KIO::CopyJob* job = KIO::copy(bannerUrl, localUrl, KIO::HideProgressInfo);
+        KIO::CopyJob* job = KIO::copy(bannerUrl, localUrl, KIO::HideProgressInfo | KIO::Overwrite);
         if(!job->exec()) {
             return KUrl();
         }
