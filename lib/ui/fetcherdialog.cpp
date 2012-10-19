@@ -44,6 +44,7 @@
 #include <KDE/KDebug>
 #include <KDE/KConfigDialog>
 #include <KDE/KTextEdit>
+#include <KDE/KToolInvocation>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QPointer>
@@ -107,6 +108,8 @@ NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
     connect(detailsUrl, SIGNAL(leftClickedUrl(QString)), this, SLOT(openDetailsLink(QString)));
     connect(cbSelectType, SIGNAL(currentIndexChanged(int)), this, SLOT(resourceTypeSelectionChanged(int)));
 
+    connect(buttonHelp, SIGNAL(clicked()), this, SLOT(openHelp()) );
+
     buttonEngineSettings->setIcon(KIcon("configure"));
     buttonSearchDetails->setIcon(KIcon("system-search"));
     buttonSearch->setIcon(KIcon("edit-find"));
@@ -116,6 +119,7 @@ NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
     buttonPrevious->setIcon(KIcon("go-previous"));
     buttonLog->setIcon(KIcon("tools-report-bug"));
     buttonFetchMore->setIcon(KIcon("download"));
+    buttonHelp->setIcon(KIcon("help-contents"));
 
     d->busySearchWidget = new KPixmapSequenceOverlayPainter(this);
     d->busySearchWidget->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
@@ -182,6 +186,11 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::openSettings()
                                 KCModuleLoader::Inline, this, QStringList( "message/rfc822" ) ),
                                 i18n(  "Mail Servers" );
     */
+}
+
+void NepomukMetaDataExtractor::UI::FetcherDialog::openHelp()
+{
+    KToolInvocation::invokeHelp(QString(), QString("kcontrol/metadataextractor"));
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::resourceFetchingDone()

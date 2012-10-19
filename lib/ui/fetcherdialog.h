@@ -70,6 +70,11 @@ public:
 
 private slots:
     /**
+     * @brief Starts the KHelpCenter with the metadata extarctor docbook
+     */
+    void openHelp();
+
+    /**
      * @brief Called from the ResourceExtractor when all files/resources are parsed and the fetching can begin
      */
     void resourceFetchingDone();
