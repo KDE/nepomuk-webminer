@@ -57,6 +57,7 @@ add_subdirectory( service )
 add_subdirectory( browser/konqueror )
 add_subdirectory( ontology )
 add_subdirectory( kcm )
+add_subdirectory( doc )
 
 macro_display_feature_log()
 

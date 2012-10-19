@@ -1,0 +1,230 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+  <!ENTITY kappname "<application>Metadata Extractor</application>">
+  <!ENTITY package "kcontrol">
+  <!ENTITY kappversion "0.3"><!--Application version. Use this variable everywhere it's needed.-->
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % English "INCLUDE">
+]>
+<book lang="&language;">
+    <bookinfo>
+    <title>The &kappname; Handbook</title>
+
+    <authorgroup>
+	<author>
+	    <firstname>Jörg</firstname>
+	    <surname>Ehrichs</surname>
+	    <affiliation>
+		<address><email>joerg.ehrichs@gmx.de</email></address>
+	    </affiliation>
+	</author>
+	<!-- TRANS:ROLES_OF_TRANSLATORS -->
+    </authorgroup>
+    <copyright>
+	<year>2012</year>
+	<holder>Jörg Ehrichs</holder>
+    </copyright>
+
+    <legalnotice>&FDLNotice;</legalnotice>
+
+    <date>2012-10-19</date><!-- Date of (re)writing, or update.-->
+    <releaseinfo>&kappversion;</releaseinfo><!-- Application version number. Use the variable definitions within header to change this value.-->
+
+    <abstract>
+        <para>This is the documentation for the &kde; &systemsettings; module that configures the <application>Nepomuk</application> &kappname; service.</para>
+    </abstract>
+
+    <keywordset>
+	<keyword>KDE</keyword><!-- do not change this! -->
+	<keyword>System Settings</keyword>
+	<keyword>Nepomuk</keyword>
+	<keyword>Metadata</keyword>
+    </keywordset>
+
+    </bookinfo>
+
+    <chapter id="introduction">
+    <title>Introduction</title>
+    <para>
+        The Nepomuk &kappname; finds additional metadata on the internet <emphasis>(via Python plugins)</emphasis> and adds them to Nepomuk.
+        It can retrieve data for any document/movie/tv-show or music file.
+    </para>
+    </chapter>
+
+    <chapter id="dolphin-integration">
+    <title>Dolphin Integration</title>
+    <para>
+        To start a manual extraction you can start the &kappname; from <application>Dolphin</application> via the contex menue.
+        To do right-click a file or folder and select <guimenu>Action</guimenu> -> <guisubmenu>Desktop Search</guisubmenu> -> <guimenuitem>...</guimenuitem>
+
+        Here you have 4 different options to fetch the metadata:
+        <itemizedlist>
+            <listitem>
+                <para><guilabel>Normal</guilabel> :
+                     This will show the extraction dialog but skip any file that already has some metadata attached to it.
+                </para>
+            </listitem>
+            <listitem>
+                <para><guilabel>Automatically</guilabel> :
+                     This will run the extraction job in the background dialog but skip any file that already has some metadata attached to it.
+                </para>
+            </listitem>
+            <listitem>
+                <para><guilabel>Force Download</guilabel> :
+                     Will show the extraction dialog and also include files that already have metadata attached to it.
+                     This allows you to manually specify new search parameter and thus correct wrong metadata.
+                </para>
+            </listitem>
+            <listitem>
+                <para><guilabel>Automatically, Force Download</guilabel> :
+                     This will run the extraction job in the background and also replace already any data from a previous extarction job.
+                </para>
+            </listitem>
+        </itemizedlist>
+    </para>
+    </chapter>
+
+    <chapter id="extractor-dialog">
+    <title>Extractor Dialog</title>
+    <para>
+    <screenshot>
+      <screeninfo>Screenshot of &kappname;</screeninfo>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="dialog.jpg" format="JPG" />
+              </imageobject>
+              <textobject>
+                <phrase>Screenshot of &kappname;</phrase>
+              </textobject>
+            </mediaobject>
+    </screenshot>
+    </para>
+    <para>
+        The dialog allows to adjust the search parameter for each file. For each file the automatically extracted metadata can be seen in <command>1</command>.
+        Depending on the file type different search options are available. For a movie its is the title, for a Tv-Show it is the name, season and episode,
+        for publications its the author and title.
+        Beside the search parameter it is possible to switch the used plugin for the lookup. By default the preferred plugin is selected.
+
+        Additional settings are available via the configure buttons as seen in <command>2</command>.
+        Once everything is setup correctly the lookup can be started via the <guibutton>Search</guibutton> button.
+    </para>
+    <para>
+        All search results will be listed in the list view <command>3</command>.
+        Select the right entry you want fetch here.
+    </para>
+    <para>
+        Some more details about the currently selected entry is shown in <command>4</command>. The show online link will open the webbrowser with the website
+        that will be used for the data extraction. To start the extraction click on the <guibutton>Fetch Metadata</guibutton> button.
+    </para>
+    <para>
+        The results of the item extraction is shown in the list <command>5</command>. To save the metadata press the <guibutton>Save</guibutton> button.
+    </para>
+    <para>
+        To select a different file in the list of files the <guibutton>Previous</guibutton> and <guibutton>Next</guibutton> buttons in <command>6</command> can be used.
+    </para>
+    </chapter>
+
+    <chapter id="service">
+    <title>Service</title>
+    <para>
+        The background service is responsible for the metadata extraction for each new file on the disk.
+
+        As soon as the <application>Nepomuk fileinder</application> detects a new file the extractor is
+        started and tries to fetch additional data from the internet.
+    </para>
+    <note>
+        <para>
+            This will cause a lot of traffic especially when nepomuk starts its initial indexing.
+        </para>
+    </note>
+    </chapter>
+
+    <chapter id="settings">
+    <title>Settings</title>
+
+    <sect1 id="fetcher-settings">
+    <title>Fetcher</title>
+    <para>
+    The fetcher settings handle the general behaviour of the &kappname;.
+    </para>
+    <itemizedlist>
+        <listitem>
+            <para>
+                <guilabel>Download Banner/Poster/Cover</guilabel> :
+                 If enabled the extractor looks for the matching poster/banner or cover of the item to fetch.
+                 The image will be saved into the application directory and added to the resource via <application>Nepomuk</application>.
+            </para>
+        </listitem>
+        <listitem>
+            <para>
+                <guilabel>Save Banner in Resource Folder</guilabel> :
+                 Instead of saving the image into the application directory the image is saved next to the file.
+                 <note>
+                     <para>
+                         Might lead to duplicated images if the same image for two different resources will be saved in different folders.
+                         This can happen for Tv-shows and the season posters, when the episodes are in two different folders.
+                     </para>
+                 </note>
+            </para>
+        </listitem>
+        <listitem>
+            <para>
+                <guilabel>Download Publication References</guilabel> :
+                 This option allows the publication search to download all cited references of the current publication resource.
+                 <note>
+                     <para>
+                         As most publications tend to have many cited resources, this will take a lot of time.
+                         If the information about the cited resources are not needed or just for a few resources, it is better to
+                         disable this option. The cited references can be retrieved later on for a single resource if necessary.
+                     </para>
+                 </note>
+            </para>
+        </listitem><listitem>
+        <para>
+            <guilabel>Preferred Plugin</guilabel> :
+             Defines which plugin will be used first to fetch the metadata from. Only if the first search failed the other plugins are queried
+             to get the information.
+        </para>
+    </listitem>
+    </itemizedlist>
+    </sect1>
+
+
+    <sect1 id="fetcher-plugins">
+    <title>Plugins</title>
+    <para>
+        In this list all available plugins are shown. For more information about the plugin press the <guibutton>Info</guibutton> button.
+        Some plugins allow to specify additional settings which can be seen via the <guibutton>Configure</guibutton> button.
+    </para>
+    </sect1>
+
+
+    <sect1 id="fetcher-service">
+    <title>Service</title>
+    <para>
+    The service settings allow to <command>enable/disable</command> the background service.
+    If the service is enabled the extractor will be run on each newly indexed file created by the <application>Nepomuk fileindexerservice</application>.
+
+    When the service is disabled the metadata will only be fetched if the user requests it via the <application>Dolphin</application> context menue.
+
+    The number of <guilabel>Simultaneous calls</guilabel> denotes the number of extractor processes that are executed at the same time.
+    </para>
+    <important>
+        <para>
+            A hight number of simultaneous running processes can lead to an unresponsive system.
+            Good values for this entry are between 1 and 6.
+        </para>
+    </important>
+    </sect1>
+
+    </chapter>
+
+    <chapter id="credits"><title>Credits and License</title> 
+    <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
+
+    &underFDL;
+
+    &underGPL;
+    
+    </chapter>
+</book>
