@@ -183,7 +183,10 @@ NepomukMetaDataExtractor::Extractor::MetaDataParameters *NepomukMetaDataExtracto
 {
     Q_D( ResourceExtractor );
 
-    return d->resourcesToLookup.takeFirst();
+    if(d->resourcesToLookup.isEmpty())
+        return 0;
+    else
+        return d->resourcesToLookup.takeFirst();
 }
 
 void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(const KUrl &fileUrl)
