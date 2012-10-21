@@ -139,7 +139,9 @@ def trySearch(parameters, t, recurse = True):
         else:
             WebExtractor.error('no useful search parameters defined')
 
-    except (tvdb_api.tvdb_shownotfound, tvdb_api.tvdb_seasonnotfound, tvdb_api.tvdb_episodenotfound) as err:
+    except (tvdb_api.tvdb_shownotfound, tvdb_api.tvdb_seasonnotfound) as err:
+    #BUG: find out why tvdb_api.tvdb_episodenotfound crashes KROSS:Python 
+    #except (tvdb_api.tvdb_shownotfound, tvdb_api.tvdb_seasonnotfound, tvdb_api.tvdb_episodenotfound) as err: 
         if recurse:
             # we try to find aliases
             WebExtractor.log("finding aliases")

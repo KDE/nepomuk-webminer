@@ -68,26 +68,35 @@ def info():
 #
 def searchItems( resourcetype, parameters ):
 
-    title = parameters['title']
-    season = parameters['season']
-    episode = parameters['episode']
-    showtitle = parameters['showtitle']
+    title = ''
+    season = ''
+    episode = ''
+    showtitle = ''
+    if(parameters.has_key('title') ):
+        title = parameters['title']
+    if(parameters.has_key('season') ):
+        season = parameters['season']
+    if(parameters.has_key('episode') ):
+        episode = parameters['episode']
+    if(parameters.has_key('showtitle') ):
+        showtitle = parameters['showtitle']
 
     searchResults = []
     t = tvdb_api.Tvdb()
+
 
     try:
         if showtitle and season and episode:
             episodeResult = t[showtitle.decode('utf')][int(season)][int(episode)] # the utf part is to prevent flipping out when filename has unicode
             searchResults.append( getEpisodeDetails(episodeResult) )
-
+        
         elif showtitle and season:
             seasonResult = t[showtitle][int(season)]
 
             for episodeNumber in seasonResult:
                 episodeResult = seasonResult[episodeNumber]
                 searchResults.append( getEpisodeDetails(episodeResult) )
-
+        
         elif showtitle:
             showResult = t[showtitle]
 
@@ -101,14 +110,17 @@ def searchItems( resourcetype, parameters ):
             WebExtractor.error('no useful search parameters defined')
 
         WebExtractor.searchResults( searchResults )
-
-    except (tvdb_api.tvdb_shownotfound, tvdb_api.tvdb_seasonnotfound, tvdb_api.tvdb_episodenotfound) as err:
+ 
+    except (tvdb_api.tvdb_shownotfound, tvdb_api.tvdb_seasonnotfound) as err:
+    #BUG: find out why tvdb_api.tvdb_episodenotfound crashes KROSS:Python 
+    #except (tvdb_api.tvdb_shownotfound, tvdb_api.tvdb_seasonnotfound, tvdb_api.tvdb_episodenotfound) as err: 
         WebExtractor.log( str(err) )
         WebExtractor.searchResults( searchResults )
 
     except Exception as err:
         WebExtractor.error("Script error: \n" + str(err))
-
+        WebExtractor.searchResults( searchResults )
+    
 #------------------------------------------------------------------------------
 # helper function to fill the search result dictionary
 #
