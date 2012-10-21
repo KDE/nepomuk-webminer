@@ -107,9 +107,13 @@ def searchItems( resourcetype, parameters ):
 
 def trySearch(parameters, t, recurse = True):
     title = parameters['title']
+    showtitle = ''
+    
+    if(parameters.has_key['showtitle'] )
+      showtitle = parameters['showtitle']
+      
     WebExtractor.log("looking for configured aliases")
-    parameters['showtitle'], parameters['season'], parameters['episode'] = getConfiguredAlias(parameters['showtitle'], parameters['season'], parameters['episode'])
-    showtitle = parameters['showtitle']
+    parameters['showtitle'], parameters['season'], parameters['episode'] = getConfiguredAlias(showtitle, parameters['season'], parameters['episode'])
     season = parameters['season']
     episode = parameters['episode']
     WebExtractor.log("Showtitle is " + showtitle + " and season is " + season + " and episode is " + episode)
