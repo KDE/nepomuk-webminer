@@ -200,12 +200,21 @@ void MetaDataExtractorService::startNextProcess()
         d->runningProcesses++;
 
         QProcess *p = new QProcess();
+        connect(p, SIGNAL(readyReadStandardError()), this, SLOT(processOutput()));
+        connect(p, SIGNAL(readyReadStandardOutput()), this, SLOT(processOutput()));
+
         connect(p, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(processFinished(int,QProcess::ExitStatus)) );
         p->start(KStandardDirs::findExe(QLatin1String("metadataextractor")),
                  QStringList() << QLatin1String("-auto") << QLatin1String("-force") << path);
 
         startNextProcess();
     }
+}
+
+void MetaDataExtractorService::processOutput()
+{
+    QProcess *p = qobject_cast<QProcess *>(sender());
+    kDebug() << p->readAllStandardError();
 }
 
 #include <kpluginfactory.h>

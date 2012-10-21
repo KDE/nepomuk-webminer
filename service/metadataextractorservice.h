@@ -79,6 +79,7 @@ private Q_SLOTS:
      * @param status Normal or crashed exit status
      */
     void processFinished(int returnCode, QProcess::ExitStatus status);
+    void processOutput();
 
 private:
     /**

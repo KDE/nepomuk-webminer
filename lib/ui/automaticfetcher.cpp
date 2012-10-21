@@ -250,7 +250,21 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::fetchedItemDetails(const QS
 
 void NepomukMetaDataExtractor::UI::AutomaticFetcher::errorInScriptExecution(const QString &error)
 {
+    Q_D( AutomaticFetcher );
     kDebug() << error;
+
+    // clear the pluginqueue so it will be initialized for the next item
+    d->pluginqueue.clear();
+
+    // delete the current item, we do not need it anymore
+    if( !resourceExtractor()->resourcesList().isEmpty() ) {
+        resourceExtractor()->takeNext(); // pop it off the list
+        delete d->currentItemToupdate; // and delete it
+        d->currentItemToupdate = 0;
+    }
+
+    // and start the next round
+    searchNextItem();
 }
 
 void NepomukMetaDataExtractor::UI::AutomaticFetcher::log(const QString &msg)
