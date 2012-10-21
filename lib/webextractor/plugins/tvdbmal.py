@@ -106,16 +106,25 @@ def searchItems( resourcetype, parameters ):
 # put the logic code here into a helper so we can retry recursively (for cases where we have aliases)
 
 def trySearch(parameters, t, recurse = True):
-    title = parameters['title']
+    
+    title = ''
     showtitle = ''
+    season = ''
+    episode = ''
+    
+    if(parameters.has_key('title') ):
+        title = parameters['title']
+    if(parameters.has_key('season') ):
+        season = parameters['season']
+    if(parameters.has_key('episode') ):
+        episode = parameters['episode']
     
     if(parameters.has_key('showtitle') ):
-      showtitle = parameters['showtitle']
+        showtitle = parameters['showtitle']
       
-    WebExtractor.log("looking for configured aliases")
-    parameters['showtitle'], parameters['season'], parameters['episode'] = getConfiguredAlias(showtitle, parameters['season'], parameters['episode'])
-    season = parameters['season']
-    episode = parameters['episode']
+        WebExtractor.log("looking for configured aliases")
+        showtitle, season, episode = getConfiguredAlias(showtitle, parameters['season'], parameters['episode'])
+    
     WebExtractor.log("Showtitle is " + showtitle + " and season is " + season + " and episode is " + episode)
 
     searchResults = []
