@@ -123,7 +123,7 @@ def trySearch(parameters, t, recurse = True):
         showtitle = parameters['showtitle']
       
         WebExtractor.log("looking for configured aliases")
-        showtitle, season, episode = getConfiguredAlias(showtitle, parameters['season'], parameters['episode'])
+        showtitle, season, episode = getConfiguredAlias(showtitle, season, episode)
     
     WebExtractor.log("Showtitle is " + showtitle + " and season is " + season + " and episode is " + episode)
 
