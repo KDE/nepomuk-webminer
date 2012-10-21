@@ -458,7 +458,10 @@ def extractItemFromUri( url, options ):
             if show['title'] == movie['series title'] and (showKind == 'tv series' or showKind == 'tv mini series'):
                 ia.update(show, info=('akas', 'main'))
                 WebExtractor.log( 'Found original show: ' + show['title'] )
-                WebExtractor.log( 'with akas: ' + ';'.join(show['akas']) )
+                if( show.has_key('akas') ):
+		  WebExtractor.log( 'with akas: ' + ';'.join(show['akas']) )
+                else:
+		  WebExtractor.log( 'no akas available' )
                 selectedShow = show
                 break;
 
