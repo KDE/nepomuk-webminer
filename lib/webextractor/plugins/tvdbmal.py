@@ -109,7 +109,7 @@ def trySearch(parameters, t, recurse = True):
     title = parameters['title']
     showtitle = ''
     
-    if(parameters.has_key['showtitle'] )
+    if(parameters.has_key('showtitle') ):
       showtitle = parameters['showtitle']
       
     WebExtractor.log("looking for configured aliases")
