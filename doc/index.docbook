@@ -211,7 +211,7 @@
     </para>
     <important>
         <para>
-            A hight number of simultaneous running processes can lead to an unresponsive system.
+            A large number of simultaneous running processes can lead to an unresponsive system.
             Good values for this entry are between 1 and 6.
         </para>
     </important>
