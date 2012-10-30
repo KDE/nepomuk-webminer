@@ -125,7 +125,7 @@ def trySearch(parameters, t, recurse = True):
         WebExtractor.log("looking for configured aliases")
         showtitle, season, episode = getConfiguredAlias(showtitle, season, episode)
     
-    WebExtractor.log("Showtitle is " + showtitle + " and season is " + season + " and episode is " + episode)
+    WebExtractor.log("Showtitle is " + str(showtitle) + " and season is " + str(season) + " and episode is " + str(episode))
 
     searchResults = []
     try:
@@ -152,12 +152,11 @@ def trySearch(parameters, t, recurse = True):
         else:
             WebExtractor.error('no useful search parameters defined')
 
-    except (tvdb_api.tvdb_shownotfound, tvdb_api.tvdb_seasonnotfound) as err:
-    #BUG: find out why tvdb_api.tvdb_episodenotfound crashes KROSS:Python 
-    #except (tvdb_api.tvdb_shownotfound, tvdb_api.tvdb_seasonnotfound, tvdb_api.tvdb_episodenotfound) as err: 
+    except (tvdb_api.tvdb_shownotfound, tvdb_api.tvdb_seasonnotfound, tvdb_api.tvdb_episodenotfound) as err: 
         if recurse:
             # we try to find aliases
             WebExtractor.log("finding aliases")
+            
             aliases = get_other_titles(showtitle)
             if aliases:
                 for alias in aliases:
@@ -169,6 +168,7 @@ def trySearch(parameters, t, recurse = True):
                     searchResults = trySearch(newparameters, t, False) # try the alias
                     if searchResults:
                         return searchResults
+            
             WebExtractor.log( str(err) )
             return searchResults # we genuinely cannot find nuts :C
         else:
@@ -199,6 +199,10 @@ def getEpisodeDetails(episode):
 # helper function that checks a config file for configured alias overrides
 #
 def getConfiguredAlias(showtitle, showseason, showepisode):
+  
+    if showtitle is None or showtitle is '':
+        return showtitle, showseason, showepisode
+    
     conf = kdecore.KConfig(confFileName)
     confgroup = kdecore.KConfigGroup(conf, "aliases")
     rawdata = confgroup.readEntry(showtitle, QtCore.QStringList()).toStringList()
