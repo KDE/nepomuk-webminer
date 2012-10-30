@@ -6,6 +6,11 @@
 # Windows template platform definition CMake file
 # Included from ../CMakeLists.txt
 
+# Copyright (c) 2012, Jörg Ehrichs, <Joerg.Ehrichs@gmx.de>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 # remember that the current source dir is the project root; this file is in Win/
 file (GLOB PLATFORM RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     Win/[^.]*.cpp

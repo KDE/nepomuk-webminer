@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "MetaDataFetcherPluginAPI.h"
+
 #include "JSObject.h"
 #include "variant_list.h"
 #include "DOM/Document.h"
 #include "global/config.h"
-
-#include "MetaDataFetcherPluginAPI.h"
 
 #include <nepomukmetadataextractor/webextractor.h>
 

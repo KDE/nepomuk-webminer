@@ -6,6 +6,11 @@
 # X11 template platform definition CMake file
 # Included from ../CMakeLists.txt
 
+# Copyright (c) 2012, Jörg Ehrichs, <Joerg.Ehrichs@gmx.de>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 FIND_PACKAGE(Qt4 REQUIRED)
 
 INCLUDE(${QT_USE_FILE})

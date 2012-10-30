@@ -4,6 +4,9 @@
 #  DJVULIBRE_FOUND - system has the DjVuLibre library
 #  DJVULIBRE_INCLUDE_DIR - the DjVuLibre include directory
 #  DJVULIBRE_LIBRARY - Link this to use the DjVuLibre library
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 if (DJVULIBRE_INCLUDE_DIR AND DJVULIBRE_LIBRARY)
 

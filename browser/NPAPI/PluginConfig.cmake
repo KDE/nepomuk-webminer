@@ -5,6 +5,11 @@
 #
 #\**********************************************************/
 
+# Copyright (c) 2012, Jörg Ehrichs, <Joerg.Ehrichs@gmx.de>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 set(PLUGIN_NAME "MetaDataFetcherPlugin")
 set(PLUGIN_PREFIX "MDFP")
 set(COMPANY_NAME "KDE")

@@ -80,7 +80,7 @@ public slots:
 
 signals:
     /**
-     * @brief Emitted when the extarction is in progress and everytime a new item is added to the queue
+     * @brief Emitted when the extarction is in progress and every time a new item is added to the queue
      *
      * Can be used to indicate the active extarction with the current amout of items in the queue
      *

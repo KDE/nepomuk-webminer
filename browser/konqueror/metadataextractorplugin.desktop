@@ -1,5 +1,5 @@
 [Desktop Entry]
-Type=KPart
+Type=Application
 Icon=metadataextractorplugin
 X-KDE-Library=metadataextractorplugin
 X-KDE-PluginInfo-Author=Jörg Ehrichs

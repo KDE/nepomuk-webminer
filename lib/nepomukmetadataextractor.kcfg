@@ -41,7 +41,7 @@
   </group>
 
   <group name="Service">
-    <entry name="SimultaneousCalls" type="int">
+    <entry name="SimultaneousCalls" type="Int">
       <label>Number of simultaneous extractor calls.</label>
       <default>1</default>
     </entry>

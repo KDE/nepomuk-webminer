@@ -1,3 +1,20 @@
+/*
+ * Copyright 2012 Jörg Ehrichs <joerg.ehrichs@gmx.de>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "configservice.h"
 #include "ui_configservice.h"
 
@@ -27,10 +44,8 @@ ConfigService::ConfigService(QWidget *parent) :
     m_watcher->setConnection( QDBusConnection::sessionBus() );
     m_watcher->setWatchMode( QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration );
 
-    connect( m_watcher, SIGNAL( serviceRegistered(const QString&) ),
-             this, SLOT( serviceRegistered() ) );
-    connect( m_watcher, SIGNAL( serviceUnregistered(const QString&) ),
-             this, SLOT( serviceUnregistered() ) );
+    connect( m_watcher, SIGNAL( serviceRegistered(QString) ), this, SLOT( serviceRegistered() ) );
+    connect( m_watcher, SIGNAL( serviceUnregistered(QString) ), this, SLOT( serviceUnregistered() ) );
 
     if( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.nepomuk.services.metadataextractorservice" ) ) {
         ui->enableService->setChecked(true);
