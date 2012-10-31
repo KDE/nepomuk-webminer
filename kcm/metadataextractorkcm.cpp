@@ -38,7 +38,7 @@
 using namespace NepomukMetaDataExtractor;
 
 K_PLUGIN_FACTORY( MetaDataExtractorKCMFactory, registerPlugin<MetaDataExtractorKCM>(); )
-K_EXPORT_PLUGIN( MetaDataExtractorKCMFactory("kcm_metadataextractor") )
+K_EXPORT_PLUGIN( MetaDataExtractorKCMFactory("kcm_metadataextractor","metadataextractor") )
 
 MetaDataExtractorKCM::MetaDataExtractorKCM(QWidget *parent, const QVariantList &list)
     : KCModule( MetaDataExtractorKCMFactory::componentData(), parent, list )
