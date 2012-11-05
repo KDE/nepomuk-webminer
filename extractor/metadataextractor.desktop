@@ -43,6 +43,7 @@ Exec=metadataextractor %f
 
 [Desktop Action mdfetcher2]
 Name=Fetch MetaData for this file or folder (automatically)
+Name[es]=Obtener metadatos para este archivo o carpeta (automáticamente)
 Name[et]=Faili või kataloogi metaandmete hankimine (automaatne)
 Name[fr]=Extraction de métadonnées pour ce fichier ou ce dossier (automatiquement)
 Name[hu]=Metaadat lekérése ehhez a fájlhoz vagy mappához (automatikusan)
@@ -77,6 +78,7 @@ Exec=metadataextractor -f %f
 
 [Desktop Action mdfetcher4]
 Name=Fetch MetaData for this file or folder (automatically, force download)
+Name[es]=Obtener metadatos para este archivo o carpeta (automáticamente, descarga forzada)
 Name[et]=Faili või kataloogi metaandmete hankimine (automaatne, jõuga allalaadimine)
 Name[fr]=Extraction de métadonnées pour ce fichier ou ce dossier (automatiquement, forcer le téléchargement)
 Name[hu]=Metaadat lekérése ehhez a fájlhoz vagy mappához (automatikusan, letöltés kényszerítése)
