@@ -22,6 +22,8 @@
 
 namespace NepomukMetaDataExtractor {
 namespace UI {
+
+class SearchResultsModelPrivate;
 /**
   * @brief ListModel to present the @c search @c result @c entries in a nice way
   *
@@ -73,7 +75,8 @@ public:
     QVariant data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;
 
 private:
-    QVariantList m_searchResults; /**< Holds the list of all search results from the python plugin */
+    Q_DECLARE_PRIVATE(SearchResultsModel)
+    SearchResultsModelPrivate *const d_ptr; /**< d-pointer for this class */
 };
 }
 }

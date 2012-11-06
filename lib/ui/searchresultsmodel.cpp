@@ -19,22 +19,34 @@
 
 #include <QtCore/QRegExp>
 
-NepomukMetaDataExtractor::UI::SearchResultsModel::SearchResultsModel(QObject *parent) :
-    QAbstractListModel(parent)
+
+namespace NepomukMetaDataExtractor {
+namespace UI {
+    class SearchResultsModelPrivate {
+    public:
+        QVariantList searchResults; /**< Holds the list of all search results from the python plugin */
+    };
+}
+}
+
+NepomukMetaDataExtractor::UI::SearchResultsModel::SearchResultsModel(QObject *parent)
+    : QAbstractListModel(parent)
+    , d_ptr( new NepomukMetaDataExtractor::UI::SearchResultsModelPrivate )
 {
 }
 
 void NepomukMetaDataExtractor::UI::SearchResultsModel::setSearchResults(const QVariantList & searchResults)
 {
-    beginInsertRows(QModelIndex(), m_searchResults.size(), m_searchResults.size() + searchResults.size());
-    m_searchResults = searchResults;
+    Q_D( SearchResultsModel );
+    beginInsertRows(QModelIndex(), d->searchResults.size(), d->searchResults.size() + searchResults.size());
+    d->searchResults = searchResults;
     endInsertRows();
 }
 
 QVariantMap NepomukMetaDataExtractor::UI::SearchResultsModel::searchResultEntry( const QModelIndex & index ) const
 {
-    if( index.row() >= 0 && index.row() < m_searchResults.size()) {
-        return m_searchResults.at(index.row()).toMap();
+    if( index.row() >= 0 && index.row() < d_ptr->searchResults.size()) {
+        return d_ptr->searchResults.at(index.row()).toMap();
     }
     else {
         return QVariantMap();
@@ -43,8 +55,9 @@ QVariantMap NepomukMetaDataExtractor::UI::SearchResultsModel::searchResultEntry(
 
 void NepomukMetaDataExtractor::UI::SearchResultsModel::clear( )
 {
-    beginRemoveRows(QModelIndex(), 0, m_searchResults.size());
-    m_searchResults.clear();
+    Q_D( SearchResultsModel );
+    beginRemoveRows(QModelIndex(), 0, d->searchResults.size());
+    d->searchResults.clear();
     endRemoveRows();
 }
 
@@ -52,19 +65,19 @@ int NepomukMetaDataExtractor::UI::SearchResultsModel::rowCount ( const QModelInd
 {
     Q_UNUSED(parent);
 
-    return m_searchResults.size();
+    return d_ptr->searchResults.size();
 }
 
 QVariant NepomukMetaDataExtractor::UI::SearchResultsModel::data ( const QModelIndex & index, int role ) const
 {
     if( role == Qt::DisplayRole) {
-        QString title = m_searchResults.at(index.row()).toMap().value("title").toString();
+        QString title = d_ptr->searchResults.at(index.row()).toMap().value("title").toString();
         title.remove(QRegExp("<[^>]*>")); // sometimes titles from the search have html tags attached, which will be removed here
 
         return title;
     }
     else if( role == Qt::UserRole) {
-        return m_searchResults.at(index.row()).toMap().value("details");
+        return d_ptr->searchResults.at(index.row()).toMap().value("details");
     }
 
     return QVariant();
