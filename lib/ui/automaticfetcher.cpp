@@ -142,7 +142,16 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
             faveinfo.identifier = favPlugin;
         }
         if (d->pluginqueue.contains(faveinfo)) {
-            d->pluginqueue.move(d->pluginqueue.indexOf(faveinfo), 0);
+            // if we do not want to check more than the fav plugin
+            // clear list again and set only the fav plugin
+            if( !MDESettings::checkNextPlugin()) {
+                d->pluginqueue.clear();
+                d->pluginqueue << faveinfo;
+            }
+            // otherwise just put it in the front and start with it
+            else {
+                d->pluginqueue.move(d->pluginqueue.indexOf(faveinfo), 0);
+            }
         }
     }
     selectedEngine = d->pluginqueue.takeFirst();

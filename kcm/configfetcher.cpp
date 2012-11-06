@@ -69,6 +69,8 @@ void ConfigFetcher::saveConfig()
     curIndex = ui->tvshowPlugin->currentIndex();
     MDESettings::setFavoriteTvShowPlugin( ui->tvshowPlugin->itemData(curIndex).toString() );
 
+    MDESettings::setCheckNextPlugin( ui->checkOtherPlugins->isChecked() );
+
     MDESettings::self()->writeConfig();
 }
 
@@ -82,6 +84,8 @@ void ConfigFetcher::resetConfig()
     ui->publicationPlugin->setCurrentIndex(ui->publicationPlugin->findData(MDESettings::favoritePublicationPlugin()));
     ui->moviePlugin->setCurrentIndex(ui->moviePlugin->findData(MDESettings::favoriteMoviePlugin()));
     ui->tvshowPlugin->setCurrentIndex(ui->tvshowPlugin->findData(MDESettings::favoriteTvShowPlugin()));
+
+    ui->checkOtherPlugins->setChecked( MDESettings::checkNextPlugin() );
 }
 
 void ConfigFetcher::setupUi()
@@ -129,8 +133,12 @@ void ConfigFetcher::setupUi()
     ui->moviePlugin->setCurrentIndex(ui->moviePlugin->findData(MDESettings::favoriteMoviePlugin()));
     ui->tvshowPlugin->setCurrentIndex(ui->tvshowPlugin->findData(MDESettings::favoriteTvShowPlugin()));
 
+    ui->checkOtherPlugins->setChecked( MDESettings::checkNextPlugin() );
+
     connect(ui->musicPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()) );
     connect(ui->publicationPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()) );
     connect(ui->moviePlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()) );
     connect(ui->tvshowPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()) );
+
+    connect(ui->checkOtherPlugins, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()) );
 }

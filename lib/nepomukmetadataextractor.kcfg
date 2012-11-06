@@ -38,6 +38,10 @@
     <entry name="AdditionalPluginFolder" type="String">
       <label>A folder where plugins can be found, aside the installed folder.</label>
     </entry>
+    <entry name="CheckNextPlugin" type="Bool">
+      <label>If the preferred plugin did not return any results, this will try the all other plugins until a result could be found.</label>
+      <default>false</default>
+    </entry>
   </group>
 
   <group name="Service">
