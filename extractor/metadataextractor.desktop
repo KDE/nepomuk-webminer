@@ -5,6 +5,7 @@ MimeType=application/*;video/*;inode/directory;
 Actions=mdfetcher;mdfetcher2;mdfetcher3;mdfetcher4;
 X-KDE-Submenu=Desktop Search
 X-KDE-Submenu[cs]=Vyhledávací služby
+X-KDE-Submenu[da]=Skrivebordssøgning
 X-KDE-Submenu[de]=Desktop-Suche
 X-KDE-Submenu[es]=Búsqueda de escritorio
 X-KDE-Submenu[et]=Töölauaotsing
@@ -25,6 +26,7 @@ Icon=nepomuk
 
 [Desktop Action mdfetcher]
 Name=Fetch MetaData for this file or folder
+Name[da]=Hent metadata for denne fil eller mappe
 Name[es]=Obtener metadatos para este archivo o carpeta
 Name[et]=Faili või kataloogi metaandmete hankimine
 Name[fr]=Extraction des métadonnées pour ce fichier ou ce dossier
@@ -43,6 +45,7 @@ Exec=metadataextractor %f
 
 [Desktop Action mdfetcher2]
 Name=Fetch MetaData for this file or folder (automatically)
+Name[da]=Hent metadata for denne fil eller mappe (automatisk)
 Name[es]=Obtener metadatos para este archivo o carpeta (automáticamente)
 Name[et]=Faili või kataloogi metaandmete hankimine (automaatne)
 Name[fr]=Extraction de métadonnées pour ce fichier ou ce dossier (automatiquement)
@@ -59,6 +62,7 @@ Exec=metadataextractor -a %f
 
 [Desktop Action mdfetcher3]
 Name=Fetch MetaData for this file or folder (force download)
+Name[da]=Hent metadata for denne fil eller mappe (gennemtving download)
 Name[es]=Obtener metadatos para este archivo o carpeta (descarga forzada)
 Name[et]=Faili või kataloogi metaandmete hankimine (jõuga allalaadimine)
 Name[fr]=Extraction de métadonnées pour ce fichier ou ce dossier (forcer le téléchargement)
@@ -78,6 +82,7 @@ Exec=metadataextractor -f %f
 
 [Desktop Action mdfetcher4]
 Name=Fetch MetaData for this file or folder (automatically, force download)
+Name[da]=Hent metadata for denne fil eller mappe (automatisk, gennemtving download)
 Name[es]=Obtener metadatos para este archivo o carpeta (automáticamente, descarga forzada)
 Name[et]=Faili või kataloogi metaandmete hankimine (automaatne, jõuga allalaadimine)
 Name[fr]=Extraction de métadonnées pour ce fichier ou ce dossier (automatiquement, forcer le téléchargement)
