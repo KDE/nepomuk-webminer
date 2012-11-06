@@ -54,30 +54,43 @@ MetaDataExtractorService::MetaDataExtractorService(QObject *parent, const QVaria
     Q_D( MetaDataExtractorService );
 
     d->runningProcesses = 0;
-
-    // set up the watcher for newly created nfo:Video resources
-    d->videoWatcher = new Nepomuk2::ResourceWatcher(this);
-    d->videoWatcher->addType(NFO::Video());
-    connect(d->videoWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
-            this, SLOT(slotVideoResourceCreated(Nepomuk2::Resource,QList<QUrl>)));
-    d->videoWatcher->start();
-
-    // set up the watcher for newly created documents
-    d->documentWatcher = new Nepomuk2::ResourceWatcher(this);
-    d->documentWatcher->addType(NFO::PaginatedTextDocument());
-    connect(d->documentWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
-            this, SLOT(slotDocumentResourceCreated(Nepomuk2::Resource,QList<QUrl>)));
-    d->documentWatcher->start();
-
-    // set up the watcher for newly created music files
-    d->musicWatcher = new Nepomuk2::ResourceWatcher(this);
-    d->musicWatcher->addType(NFO::Audio());
-    connect(d->musicWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
-            this, SLOT(slotMusicResourceCreated(Nepomuk2::Resource,QList<QUrl>)));
-    d->musicWatcher->start();
+    d->videoWatcher = 0;
+    d->documentWatcher = 0;
+    d->musicWatcher = 0;
 
     KConfig config("nepomukmetadataextractorrc");
     KConfigGroup serviceGroup( &config, "Service" );
+
+    bool videoServiceEnabled = serviceGroup.readEntry("VideoServiceEnabled",true);
+    bool musicServiceEnabled = serviceGroup.readEntry("MusicServiceEnabled",true);
+    bool documentServiceEnabled = serviceGroup.readEntry("DocumentServiceEnabled",false);
+
+    // set up the watcher for newly created nfo:Video resources
+    if(videoServiceEnabled) {
+        d->videoWatcher = new Nepomuk2::ResourceWatcher(this);
+        d->videoWatcher->addType(NFO::Video());
+        connect(d->videoWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
+                this, SLOT(slotVideoResourceCreated(Nepomuk2::Resource,QList<QUrl>)));
+        d->videoWatcher->start();
+    }
+
+    // set up the watcher for newly created documents
+    if(documentServiceEnabled) {
+        d->documentWatcher = new Nepomuk2::ResourceWatcher(this);
+        d->documentWatcher->addType(NFO::PaginatedTextDocument());
+        connect(d->documentWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
+                this, SLOT(slotDocumentResourceCreated(Nepomuk2::Resource,QList<QUrl>)));
+        d->documentWatcher->start();
+    }
+
+    // set up the watcher for newly created music files
+    if(musicServiceEnabled) {
+        d->musicWatcher = new Nepomuk2::ResourceWatcher(this);
+        d->musicWatcher->addType(NFO::Audio());
+        connect(d->musicWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
+                this, SLOT(slotMusicResourceCreated(Nepomuk2::Resource,QList<QUrl>)));
+        d->musicWatcher->start();
+    }
 
     d->processQueue = serviceGroup.readEntry("notfinishedqueue",QStringList());
 
@@ -88,12 +101,18 @@ MetaDataExtractorService::~MetaDataExtractorService()
 {
     Q_D( MetaDataExtractorService );
 
-    d->videoWatcher->stop();
-    d->documentWatcher->stop();
-    d->musicWatcher->stop();
-    delete d->videoWatcher;
-    delete d->documentWatcher;
-    delete d->musicWatcher;
+    if(d->videoWatcher) {
+        d->videoWatcher->stop();
+        delete d->videoWatcher;
+    }
+    if(d->documentWatcher) {
+        d->documentWatcher->stop();
+        delete d->documentWatcher;
+    }
+    if(d->musicWatcher) {
+        d->musicWatcher->stop();
+        delete d->musicWatcher;
+    }
 
     KConfig config("nepomukmetadataextractorrc");
     KConfigGroup serviceGroup( &config, "Service" );

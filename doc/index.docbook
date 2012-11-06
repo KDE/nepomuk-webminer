@@ -215,6 +215,31 @@
             Good values for this entry are between 1 and 6.
         </para>
     </important>
+    
+    <para>
+    <itemizedlist>
+      <listitem>
+        <para> <guilabel>Fetch document information</guilabel> :
+	When this option is enabled the Service will automatically fetch additional information about any document that got indexed by Nepomuk.
+	  <important>
+            <para>
+             This could expose private data to the used plugin search engine. The search will use data from the filename, any given metadata attached to the file and some possible title string from the first page of any pdf file.
+             </para>
+          </important>
+	  If you are not sure you want this, leave this option disabled and call the metadata extractor manually on any document that should be used.
+        </para>
+      </listitem><listitem>
+        <para> <guilabel>Fetch music information</guilabel> :
+	When this option is enabled the Service will automatically fetch additional information about any music file that got indexed by Nepomuk. If disabled you need to start the extractor manually for any music file.
+        </para>
+      </listitem><listitem>
+        <para> <guilabel>Fetch video information</guilabel> :
+	When this option is enabled the Service will automatically fetch additional information about any video file that got indexed by Nepomuk. If disabled you need to start the extractor manually for any video file.
+        </para>
+      </listitem>
+    </itemizedlist>
+      
+    </para>
     </sect1>
 
     </chapter>

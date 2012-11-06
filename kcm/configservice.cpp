@@ -53,6 +53,15 @@ ConfigService::ConfigService(QWidget *parent) :
 
     ui->kintspinbox->setValue( MDESettings::simultaneousCalls() );
     connect( ui->kintspinbox, SIGNAL(valueChanged(int)), this, SLOT(changeSettings()) );
+
+    ui->documentServiceBox->setChecked( MDESettings::documentServiceEnabled() );
+    connect( ui->documentServiceBox, SIGNAL(toggled(bool)), this, SLOT(changeSettings()) );
+
+    ui->musicServiceBox->setChecked( MDESettings::musicServiceEnabled() );
+    connect( ui->musicServiceBox, SIGNAL(toggled(bool)), this, SLOT(changeSettings()) );
+
+    ui->videoServiceBox->setChecked( MDESettings::videoServiceEnabled() );
+    connect( ui->videoServiceBox, SIGNAL(toggled(bool)), this, SLOT(changeSettings()) );
 }
 
 ConfigService::~ConfigService()
@@ -96,6 +105,9 @@ void ConfigService::changeSettings()
 void ConfigService::saveConfig()
 {
     MDESettings::setSimultaneousCalls(ui->kintspinbox->value());
+    MDESettings::setDocumentServiceEnabled( ui->documentServiceBox->isChecked() );
+    MDESettings::setMusicServiceEnabled( ui->musicServiceBox->isChecked() );
+    MDESettings::setVideoServiceEnabled( ui->videoServiceBox->isChecked() );
 
     MDESettings::self()->writeConfig();
 }
@@ -103,4 +115,8 @@ void ConfigService::saveConfig()
 void ConfigService::resetConfig()
 {
     ui->kintspinbox->setValue( MDESettings::simultaneousCalls() );
+
+    ui->documentServiceBox->setChecked( MDESettings::documentServiceEnabled() );
+    ui->musicServiceBox->setChecked( MDESettings::musicServiceEnabled() );
+    ui->videoServiceBox->setChecked( MDESettings::videoServiceEnabled() );
 }

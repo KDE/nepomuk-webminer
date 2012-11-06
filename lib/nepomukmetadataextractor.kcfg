@@ -45,6 +45,18 @@
       <label>Number of simultaneous extractor calls.</label>
       <default>1</default>
     </entry>
+    <entry name="DocumentServiceEnabled" type="Bool">
+      <label>Automatic document fetcher enabled.</label>
+      <default>false</default>
+    </entry>
+    <entry name="MusicServiceEnabled" type="Bool">
+      <label>Automatic music fetcher enabled.</label>
+      <default>true</default>
+    </entry>
+    <entry name="VideoServiceEnabled" type="Bool">
+      <label>Automatic video fetcher enabled.</label>
+      <default>true</default>
+    </entry>
   </group>
 
   <group name="ResourceExtractor">
