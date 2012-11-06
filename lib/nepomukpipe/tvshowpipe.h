@@ -27,6 +27,9 @@
 
 namespace NepomukMetaDataExtractor {
 namespace Pipe {
+
+class TvShowPipePrivate;
+
 /**
   * @brief Pipes a @c QVariantMap with <i>TV Shows</i> information into @c Nempomuk
   *
@@ -102,6 +105,9 @@ private:
       * @param season the created season SimpleResource where the episode is added to
       */
     Nepomuk2::NMM::TVShow createEpisode(const QVariantMap &episodeInfo, const Nepomuk2::NMM::TVSeason &season);
+
+    Q_DECLARE_PRIVATE(TvShowPipe)
+    TvShowPipePrivate *const d_ptr; /**< d-pointer for this class */
 };
 }
 }

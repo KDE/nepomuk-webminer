@@ -69,8 +69,21 @@
 using namespace Nepomuk2::Vocabulary;
 using namespace Soprano::Vocabulary;
 
+namespace NepomukMetaDataExtractor {
+namespace Pipe {
+class PublicationPipePrivate {
+public:
+    Nepomuk2::Resource projectThing;
+    QPair<QUrl, QUrl> importedPublicationUris;
+};
+}
+}
+
+
+
 NepomukMetaDataExtractor::Pipe::PublicationPipe::PublicationPipe(QObject *parent)
     : NepomukPipe(parent)
+    , d_ptr( new NepomukMetaDataExtractor::Pipe::PublicationPipePrivate )
 {
 }
 
@@ -94,7 +107,8 @@ void NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariantM
     bibEntryNonConst.remove( QLatin1String("bibreferences") );
 
     // 2. create the main publication resource
-    m_importedPublicationUris = importPublication( bibEntryNonConst );
+    Q_D( PublicationPipe );
+    d->importedPublicationUris = importPublication( bibEntryNonConst );
 
     // 3. if we have some references, we create them now
     foreach(const QVariant &reference, references) {
@@ -104,7 +118,7 @@ void NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariantM
         QPair<QUrl,QUrl> referenceUris = importPublication( referenceMetaData );
 
         // and connect it to the mainPublication
-        QList<QUrl> resUri; resUri << m_importedPublicationUris.first;
+        QList<QUrl> resUri; resUri << d->importedPublicationUris.first;
         QVariantList value; value << referenceUris.second;
         Nepomuk2::addProperty(resUri, NBIB::citedReference(), value);
     }
@@ -158,10 +172,10 @@ void NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariantM
         // and add the cross reference properties
         // so the actual publication resource is linked to the file resource
         QList<QUrl> resUri; resUri << fileResourceUri;
-        QVariantList value; value << m_importedPublicationUris.first;
+        QVariantList value; value << d->importedPublicationUris.first;
         Nepomuk2::setProperty(resUri, NBIB::publishedAs(), value);
 
-        resUri.clear(); resUri << m_importedPublicationUris.first;
+        resUri.clear(); resUri << d->importedPublicationUris.first;
         value.clear(); value << fileResourceUri;
         Nepomuk2::addProperty(resUri, NBIB::isPublicationOf(), value);
     }
@@ -169,12 +183,13 @@ void NepomukMetaDataExtractor::Pipe::PublicationPipe::pipeImport(const QVariantM
 
 void NepomukMetaDataExtractor::Pipe::PublicationPipe::setProjectPimoThing(Nepomuk2::Resource projectThing)
 {
-    m_projectThing = projectThing;
+    Q_D( PublicationPipe );
+    d->projectThing = projectThing;
 }
 
 QPair<QUrl, QUrl> NepomukMetaDataExtractor::Pipe::PublicationPipe::importedPublication() const
 {
-    return m_importedPublicationUris;
+    return d_ptr->importedPublicationUris;
 }
 
 QPair<QUrl, QUrl> NepomukMetaDataExtractor::Pipe::PublicationPipe::importPublication( QVariantMap &metaData )
@@ -221,9 +236,10 @@ QPair<QUrl, QUrl> NepomukMetaDataExtractor::Pipe::PublicationPipe::importPublica
             addContent(i.key().toLower(), i.value().toString(), publication, reference, graph, originalEntryType, citeKey);
     }
 
-    if(m_projectThing.isValid()) {
-        publication.addProperty( NAO::isRelated(), m_projectThing.uri());
-        reference.addProperty( NAO::isRelated(), m_projectThing.uri());
+    Q_D( PublicationPipe );
+    if(d->projectThing.isValid()) {
+        publication.addProperty( NAO::isRelated(), d->projectThing.uri());
+        reference.addProperty( NAO::isRelated(), d->projectThing.uri());
     }
 
     graph << publication << reference;
@@ -913,9 +929,10 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addJournal(const QString 
     collection.addArticle( publication.uri() );
     collection.addProperty(NAO::hasSubResource(), publication.uri() ); // delete article when collection is removed
 
-    if(m_projectThing.isValid()) {
-        collection.addProperty( NAO::isRelated() , m_projectThing.uri());
-        series.addProperty( NAO::isRelated() , m_projectThing.uri());
+    Q_D( PublicationPipe );
+    if(d->projectThing.isValid()) {
+        collection.addProperty( NAO::isRelated() , d->projectThing.uri());
+        series.addProperty( NAO::isRelated() , d->projectThing.uri());
     }
 
     graph << collection << series;
@@ -934,8 +951,9 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addSpecialArticle(const Q
     collection.addArticle( article.uri() );
     collection.addProperty(NAO::hasSubResource(), article.uri() ); // delete article when collection is removed
 
-    if(m_projectThing.isValid()) {
-        collection.addProperty( NAO::isRelated() , m_projectThing.uri());
+    Q_D( PublicationPipe );
+    if(d->projectThing.isValid()) {
+        collection.addProperty( NAO::isRelated() , d->projectThing.uri());
     }
 
     graph << collection;
@@ -1093,6 +1111,7 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addChapterName(const QStr
 
 void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addIssn(const QString &content, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph)
 {
+    Q_D( PublicationPipe );
     QUrl seriesUrl;
     if(publication.contains(RDF::type(), NBIB::Article())) {
         if( publication.property(NBIB::collection()).isEmpty() ) {
@@ -1113,9 +1132,9 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addIssn(const QString &co
 
             seriesUrl = series.uri();
 
-            if(m_projectThing.isValid()) {
-                series.addProperty( NAO::isRelated() , m_projectThing.uri() );
-                collection.addProperty( NAO::isRelated() , m_projectThing.uri() );
+            if(d->projectThing.isValid()) {
+                series.addProperty( NAO::isRelated() , d->projectThing.uri() );
+                collection.addProperty( NAO::isRelated() , d->projectThing.uri() );
             }
 
             graph << collection << series;
@@ -1139,8 +1158,8 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addIssn(const QString &co
         publication.setInSeries( newSeries.uri() );
         newSeries.setIssn( content );
 
-        if(m_projectThing.isValid()) {
-            newSeries.addProperty( NAO::isRelated() , m_projectThing.uri() );
+        if(d->projectThing.isValid()) {
+            newSeries.addProperty( NAO::isRelated() , d->projectThing.uri() );
         }
 
         graph << newSeries;
@@ -1194,8 +1213,9 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addCode(const QString &co
 
     publication.setProperty(NBIB::codeOfLaw(), codeOfLaw.uri()  );
 
-    if(m_projectThing.isValid()) {
-        codeOfLaw.addProperty( NAO::isRelated() , m_projectThing.uri() );
+    Q_D( PublicationPipe );
+    if(d->projectThing.isValid()) {
+        codeOfLaw.addProperty( NAO::isRelated() , d->projectThing.uri() );
     }
 
     graph << codeOfLaw;
@@ -1213,8 +1233,9 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addCodeNumber(const QStri
         publication.setProperty(NBIB::codeOfLaw(), codeOfLaw.uri()  );
         codeOfLaw.setCodeNumber( content );
 
-        if(m_projectThing.isValid()) {
-            codeOfLaw.addProperty( NAO::isRelated() , m_projectThing.uri() );
+        Q_D( PublicationPipe );
+        if(d->projectThing.isValid()) {
+            codeOfLaw.addProperty( NAO::isRelated() , d->projectThing.uri() );
         }
 
         graph << codeOfLaw;
@@ -1237,8 +1258,9 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addCodeVolume(const QStri
         publication.setProperty(NBIB::codeOfLaw(), codeOfLaw.uri()  );
         codeOfLaw.setVolume( content );
 
-        if(m_projectThing.isValid()) {
-            codeOfLaw.addProperty( NAO::isRelated() , m_projectThing.uri() );
+        Q_D( PublicationPipe );
+        if(d->projectThing.isValid()) {
+            codeOfLaw.addProperty( NAO::isRelated() , d->projectThing.uri() );
         }
 
         graph << codeOfLaw;
@@ -1255,8 +1277,9 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addReporter(const QString
     courtReporter.setTitle( content );
     publication.setProperty(NBIB::courtReporter(), courtReporter.uri()  );
 
-    if(m_projectThing.isValid()) {
-        courtReporter.addProperty( NAO::isRelated() , m_projectThing.uri() );
+    Q_D( PublicationPipe );
+    if(d->projectThing.isValid()) {
+        courtReporter.addProperty( NAO::isRelated() , d->projectThing.uri() );
     }
 
     graph << courtReporter;
@@ -1269,14 +1292,15 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addReporterVolume(const Q
         courtReporterUrl = publication.property(NBIB::courtReporter()).first().toUrl();
     }
 
+    Q_D( PublicationPipe );
     if(!courtReporterUrl.isValid()) {
         // create new ccourt reporter, seems none existed up to now
         Nepomuk2::NBIB::CourtReporter courtReporter;
         publication.setProperty(NBIB::courtReporter(), courtReporter.uri() );
         courtReporter.setVolume( content );
 
-        if(m_projectThing.isValid()) {
-            courtReporter.addProperty( NAO::isRelated() , m_projectThing.uri() );
+        if(d->projectThing.isValid()) {
+            courtReporter.addProperty( NAO::isRelated() , d->projectThing.uri() );
         }
 
         graph << courtReporter;
@@ -1296,8 +1320,9 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addEvent(const QString &c
     event.addProperty( NBIB::eventPublication(), publication.uri());
     publication.addEvent( event.uri() );
 
-    if(m_projectThing.isValid()) {
-        event.addProperty( NAO::isRelated() , m_projectThing.uri() );
+    Q_D( PublicationPipe );
+    if(d->projectThing.isValid()) {
+        event.addProperty( NAO::isRelated() , d->projectThing.uri() );
     }
 
     graph << event;
@@ -1316,8 +1341,9 @@ void  NepomukMetaDataExtractor::Pipe::PublicationPipe::addSeries(const QString &
     series.addSeriesOf( publication.uri() );
     publication.setInSeries( series.uri()  );
 
-    if(m_projectThing.isValid()) {
-        series.addProperty( NAO::isRelated() , m_projectThing.uri() );
+    Q_D( PublicationPipe );
+    if(d->projectThing.isValid()) {
+        series.addProperty( NAO::isRelated() , d->projectThing.uri() );
     }
 
     graph << series;

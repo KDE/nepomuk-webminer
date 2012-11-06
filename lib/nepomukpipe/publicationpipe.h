@@ -40,6 +40,9 @@ class KJob;
 
 namespace NepomukMetaDataExtractor {
 namespace Pipe {
+
+class PublicationPipePrivate;
+
 /**
   * @brief Pipes a @c QVariantMap with @c publication @c information into @c Nempomuk
   *
@@ -218,8 +221,8 @@ protected:
     void addContact(const QString &contentValue, Nepomuk2::SimpleResource &resource, Nepomuk2::SimpleResourceGraph &graph, QUrl contactProperty );
 
 private:
-    Nepomuk2::Resource m_projectThing;
-    QPair<QUrl, QUrl> m_importedPublicationUris;
+    Q_DECLARE_PRIVATE(PublicationPipe)
+    PublicationPipePrivate *const d_ptr; /**< d-pointer for this class */
 };
 }
 }

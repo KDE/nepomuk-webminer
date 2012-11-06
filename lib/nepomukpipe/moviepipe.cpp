@@ -35,8 +35,18 @@
 
 using namespace Soprano::Vocabulary;
 
+namespace NepomukMetaDataExtractor {
+namespace Pipe {
+class MoviePipePrivate {
+    // nothing yet, but might be needed in the future
+};
+}
+}
+
+
 NepomukMetaDataExtractor::Pipe::MoviePipe::MoviePipe(QObject *parent)
     : NepomukPipe(parent)
+    , d_ptr( new NepomukMetaDataExtractor::Pipe::MoviePipePrivate )
 {
 }
 

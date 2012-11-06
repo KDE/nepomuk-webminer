@@ -24,6 +24,8 @@
 namespace NepomukMetaDataExtractor {
 namespace Pipe {
 
+class MusicPipePrivate;
+
 /**
  * @brief Pipes a @c QVariantMap with @c Music information about a @c album and its @c tracks into nepomuk
  *
@@ -63,6 +65,10 @@ public:
     explicit MusicPipe(QObject *parent = 0);
 
     void pipeImport(const QVariantMap &movieEntry);
+
+private:
+    Q_DECLARE_PRIVATE(MusicPipe)
+    MusicPipePrivate *const d_ptr; /**< d-pointer for this class */
 };
 }
 }

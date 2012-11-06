@@ -24,6 +24,8 @@
 namespace NepomukMetaDataExtractor {
 namespace Pipe {
 
+class MoviePipePrivate;
+
 /**
   * @brief Pipes a @c QVariantMap with movie information into @c Nempomuk
   *
@@ -56,6 +58,10 @@ public:
     MoviePipe(QObject *parent = 0);
 
     void pipeImport(const QVariantMap &movieEntry);
+
+private:
+    Q_DECLARE_PRIVATE(MoviePipe)
+    MoviePipePrivate *const d_ptr; /**< d-pointer for this class */
 };
 }
 }

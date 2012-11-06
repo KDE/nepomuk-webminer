@@ -31,10 +31,26 @@
 
 #include <mdesettings.h>
 
+
+namespace NepomukMetaDataExtractor {
+namespace Pipe {
+class NepomukPipePrivate {
+public:
+    QString componentname; /**< Name of the component that will be used for the Nepomuk DMS calls.
+                                Useful if all data that 1 component created should be deleted.
+                                This should not always the the metadata extarctor itself
+                                But might be the application, that reuses this library */
+};
+}
+}
+
+
 NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe(QObject *parent)
     : QObject(parent)
-    , m_componentname("metadataextractor")
+    , d_ptr( new NepomukMetaDataExtractor::Pipe::NepomukPipePrivate )
 {
+    Q_D( NepomukPipe );
+    d->componentname = QLatin1String("metadataextractor");
 
 }
 
@@ -102,12 +118,14 @@ QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QStr
 
 void NepomukMetaDataExtractor::Pipe::NepomukPipe::overrideComponentName(const QString &name)
 {
-    m_componentname = name;
+    Q_D( NepomukPipe );
+    d->componentname = name;
 }
 
 QString NepomukMetaDataExtractor::Pipe::NepomukPipe::componentName() const
 {
-    return m_componentname;
+    //Q_D( NepomukPipe );
+    return d_ptr->componentname;
 }
 
 QList<Nepomuk2::NCO::Contact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createPersonContacts(const QString & listOfPersonNames) const

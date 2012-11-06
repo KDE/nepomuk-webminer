@@ -39,6 +39,8 @@ class KJob;
 namespace NepomukMetaDataExtractor {
 namespace Pipe {
 
+class NepomukPipePrivate;
+
 /**
   * @brief This part is used to import a plain @c QVariantMap into @c Nepomuk
   *
@@ -150,7 +152,8 @@ private:
     // @author Thomas Fischer <fischer@unix-ag.uni-kl.de> with some modifications
     static NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name splitPersonString(const QString & persos);
 
-    QString m_componentname;
+    Q_DECLARE_PRIVATE(NepomukPipe)
+    NepomukPipePrivate *const d_ptr; /**< d-pointer for this class */
 };
 }
 }
