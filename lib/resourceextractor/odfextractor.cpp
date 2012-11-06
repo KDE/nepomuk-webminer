@@ -26,18 +26,15 @@
 
 namespace NepomukMetaDataExtractor {
 namespace Extractor{
-    /**
-      * Private class of the OdfExtractorPrivate for the d-pointer
-      */
-    class OdfExtractorPrivate {
-    public:
-        MetaDataParameters *publicationEntry;
-    };
+class OdfExtractorPrivate {
+        // nothing yet, but might be needed in the future
+};
 }
 }
 
 NepomukMetaDataExtractor::Extractor::OdfExtractor::OdfExtractor(QObject *parent)
     : QObject(parent)
+    , d_ptr( new NepomukMetaDataExtractor::Extractor::OdfExtractorPrivate )
 {
 }
 

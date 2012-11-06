@@ -26,6 +26,7 @@
 namespace NepomukMetaDataExtractor {
 namespace Extractor {
 
+class OdfExtractorPrivate;
 class MetaDataParameters;
 
 /**
@@ -56,6 +57,10 @@ public:
      * @param fileUrl the url of the file on the harddrive
      */
     void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
+
+private:
+    Q_DECLARE_PRIVATE(OdfExtractor)
+    OdfExtractorPrivate *const d_ptr; /**< d-pointer for this class */
 };
 }
 }

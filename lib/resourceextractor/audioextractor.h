@@ -26,6 +26,7 @@
 namespace NepomukMetaDataExtractor {
 namespace Extractor {
 
+class AudioExtractorPrivate;
 class MetaDataParameters;
 
 /**
@@ -72,6 +73,9 @@ private:
      *         @arg false otherwise
      */
     bool findByFileName( MetaDataParameters *mdp );
+
+    Q_DECLARE_PRIVATE(AudioExtractor)
+    AudioExtractorPrivate *const d_ptr; /**< d-pointer for this class */
 };
 }
 }

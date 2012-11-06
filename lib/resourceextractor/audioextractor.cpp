@@ -28,8 +28,17 @@
 
 #include <KDE/KDebug>
 
+namespace NepomukMetaDataExtractor {
+namespace Extractor {
+class AudioExtractorPrivate {
+    // nothing yet, but might be needed in the future
+};
+}
+}
+
 NepomukMetaDataExtractor::Extractor::AudioExtractor::AudioExtractor(QObject *parent)
     : QObject(parent)
+    , d_ptr( new NepomukMetaDataExtractor::Extractor::AudioExtractorPrivate )
 {
 }
 
