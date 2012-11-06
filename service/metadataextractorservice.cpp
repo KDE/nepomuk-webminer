@@ -61,6 +61,29 @@ MetaDataExtractorService::MetaDataExtractorService(QObject *parent, const QVaria
     KConfig config("nepomukmetadataextractorrc");
     KConfigGroup serviceGroup( &config, "Service" );
 
+    bool firstRun = serviceGroup.readEntry("FirstRun",true);
+
+    // This disabled the service on first run
+    // Normally when the service is installed it will be enabled by default.
+    // This would expose private data to the internet and might not be what a user expects
+    // when he installs the metadata extractor, to avoid this the extractor must be enabled
+    // explicitly in the KCM config settings
+    if(firstRun) {
+        KConfig serverConfig(QLatin1String("nepomukserverrc"));
+        KConfigGroup serverGroup( &serverConfig, QLatin1String("Service-metadataextractorservice") );
+        serverGroup.writeEntry(QLatin1String("autostart"),false);
+        serverGroup.sync();
+
+        serviceGroup.writeEntry("FirstRun",false);
+        serviceGroup.sync();
+
+        QDBusInterface service( "org.kde.nepomuk.services.metadataextractorservice", "/servicecontrol",
+                                "org.kde.nepomuk.ServiceControl" );
+        service.call( "shutdown" );
+
+        return;
+    }
+
     bool videoServiceEnabled = serviceGroup.readEntry("VideoServiceEnabled",true);
     bool musicServiceEnabled = serviceGroup.readEntry("MusicServiceEnabled",true);
     bool documentServiceEnabled = serviceGroup.readEntry("DocumentServiceEnabled",false);

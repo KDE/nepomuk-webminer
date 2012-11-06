@@ -57,6 +57,10 @@
       <label>Automatic video fetcher enabled.</label>
       <default>true</default>
     </entry>
+    <entry name="FirstRun" type="Bool">
+      <label>Used to disable the service on the first run after installation for privacy reasons</label>
+      <default>true</default>
+    </entry>
   </group>
 
   <group name="ResourceExtractor">
