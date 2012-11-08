@@ -149,8 +149,8 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(cons
     }
 
     Extractor::MetaDataParameters *metaDataParameters = new Extractor::MetaDataParameters;
-    metaDataParameters->resourceType = QLatin1String("publication"); // default to publication just in case we can't find anything else
-    metaDataParameters->metaDataSaved = true;
+    metaDataParameters->setResourceType(QLatin1String("publication")); // default to publication just in case we can't find anything else
+    metaDataParameters->setMetaDataSaved(true);
 
     if( fileResource.url().isLocalFile() ) {
         fileChecker(metaDataParameters, fileResource.url());
@@ -204,7 +204,7 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(cons
     }
 
     Extractor::MetaDataParameters *metaDataParameters = new Extractor::MetaDataParameters;
-    metaDataParameters->metaDataSaved = true;
+    metaDataParameters->setMetaDataSaved(true);
 
     bool fileSupported = fileChecker(metaDataParameters, fileUrl);
 
@@ -266,96 +266,96 @@ bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourceChecker(Nep
     // Now get some values from the resource for the search parameters
 
     if( queryResource.hasType(Nepomuk2::Vocabulary::NBIB::Publication()) ) {
-        mdp->resourceType = QLatin1String("publication");
+        mdp->setResourceType(QLatin1String("publication"));
         //Nepomuk2::NBIB::Publication publication( fileResource.uri() ); seems this only works for new resources
 
         QString title = queryResource.property( Nepomuk2::Vocabulary::NIE::title()).toString();
         if( !title.isEmpty()) {
-            mdp->searchTitle = title;
+            mdp->setSearchTitle(title);
         }
         if( !queryResource.property( Nepomuk2::Vocabulary::NCO::creator() ).toResourceList().isEmpty()) {
             Nepomuk2::Resource author = queryResource.property( Nepomuk2::Vocabulary::NCO::creator() ).toResourceList().first();
-            mdp->searchPerson = author.genericLabel();
+            mdp->setSearchPerson(author.genericLabel());
         }
 
         QString releaseDateString = queryResource.property( Nepomuk2::Vocabulary::NBIB::publicationDate()).toString();
         QDateTime releaseDate = QDateTime::fromString(releaseDateString);
         if( releaseDate.isValid() ) {
-            mdp->searchYearMax = releaseDate.toString(QLatin1String("yyyy"));
-            mdp->searchYearMin = releaseDate.toString(QLatin1String("yyyy"));
+            mdp->setSearchYearMax(releaseDate.toString(QLatin1String("yyyy")));
+            mdp->setSearchYearMin(releaseDate.toString(QLatin1String("yyyy")));
         }
     }
     else if( resource.hasType(Nepomuk2::Vocabulary::NMM::TVShow()) ) {
-        mdp->resourceType = QLatin1String("tvshow");
+        mdp->setResourceType(QLatin1String("tvshow"));
 
         QString title = queryResource.property( Nepomuk2::Vocabulary::NIE::title()).toString();
         if(!title.isEmpty()) {
-            mdp->searchTitle =title;
+            mdp->setSearchTitle(title);
         }
 
         QString episodeNumber = queryResource.property( Nepomuk2::Vocabulary::NMM::episodeNumber()).toString();
         if(!episodeNumber.isEmpty()) {
-            mdp->searchEpisode = episodeNumber;
+            mdp->setSearchEpisode(episodeNumber);
         }
 
         Nepomuk2::Resource seasonResource = queryResource.property( Nepomuk2::Vocabulary::NMM::isPartOfSeason()).toResource();
         QString seasonNumber = seasonResource.property( Nepomuk2::Vocabulary::NMM::seasonNumber()).toString();
         if(!seasonNumber.isEmpty()) {
-            mdp->searchSeason = seasonNumber;
+            mdp->setSearchSeason(seasonNumber);
         }
 
         Nepomuk2::Resource seriesResource = queryResource.property( Nepomuk2::Vocabulary::NMM::series()).toResource();
         QString seriesTitle = seriesResource.property( Nepomuk2::Vocabulary::NIE::title()).toString();
         if(!seriesTitle.isEmpty()) {
-            mdp->searchShowTitle =seriesTitle;
+            mdp->setSearchShowTitle(seriesTitle);
         }
 
     }
     else if( resource.hasType(Nepomuk2::Vocabulary::NMM::Movie()) ) {
-        mdp->resourceType = QLatin1String("movie");
+        mdp->setResourceType(QLatin1String("movie"));
         //Nepomuk2::NMM::Movie movie(queryResource.uri()); seems this only works for new resources
 
         kDebug() << "title" << queryResource.property( Nepomuk2::Vocabulary::NIE::title());
         QString title = queryResource.property( Nepomuk2::Vocabulary::NIE::title()).toString();
         if(!title.isEmpty()) {
-            mdp->searchTitle =title;
+            mdp->setSearchTitle(title);
         }
 
         QString releaseDateString = queryResource.property( Nepomuk2::Vocabulary::NMM::releaseDate()).toString();
         QDateTime releaseDate = QDateTime::fromString(releaseDateString);
         if( releaseDate.isValid() ) {
-            mdp->searchYearMax = releaseDate.toString(QLatin1String("yyyy"));
-            mdp->searchYearMin = releaseDate.toString(QLatin1String("yyyy"));
+            mdp->setSearchYearMax(releaseDate.toString(QLatin1String("yyyy")));
+            mdp->setSearchYearMin(releaseDate.toString(QLatin1String("yyyy")));
         }
     }
     else if( resource.hasType(Nepomuk2::Vocabulary::NMM::MusicPiece()) ) {
-        mdp->resourceType = QLatin1String("music");
+        mdp->setResourceType(QLatin1String("music"));
 
         QString title = queryResource.property( Nepomuk2::Vocabulary::NIE::title()).toString();
         if(!title.isEmpty()) {
-            mdp->searchTitle =title;
+            mdp->setSearchTitle(title);
         }
 
         QString track = queryResource.property( Nepomuk2::Vocabulary::NMM::trackNumber()).toString();
         if(!track.isEmpty()) {
-            mdp->searchTrack =track;
+            mdp->setSearchTrack(track);
         }
 
         QString performer = queryResource.property( Nepomuk2::Vocabulary::NMM::performer()).toResource().genericLabel();
         if(!performer.isEmpty()) {
-            mdp->searchPerson =performer;
+            mdp->setSearchPerson(performer);
         }
 
         Nepomuk2::Resource album = queryResource.property( Nepomuk2::Vocabulary::NMM::musicAlbum()).toResource();
         QString albumName = album.property( Nepomuk2::Vocabulary::NIE::title()).toString();
         if(!albumName.isEmpty()) {
-            mdp->searchAlbum =albumName;
+            mdp->setSearchAlbum(albumName);
         }
     }
     else {
         // try to get some general info
-        if( mdp->searchTitle.isEmpty() && !queryResource.genericLabel().isEmpty()) {
-            mdp->searchTitle = queryResource.genericLabel();
+        if( mdp->searchTitle().isEmpty() && !queryResource.genericLabel().isEmpty()) {
+            mdp->setSearchTitle(queryResource.genericLabel());
         }
     }
 

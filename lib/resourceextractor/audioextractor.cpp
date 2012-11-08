@@ -44,8 +44,8 @@ NepomukMetaDataExtractor::Extractor::AudioExtractor::AudioExtractor(QObject *par
 
 void NepomukMetaDataExtractor::Extractor::AudioExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
 {
-    mdp->resourceUri = fileUrl;
-    mdp->resourceType = QLatin1String("music");
+    mdp->setResourceUri(fileUrl);
+    mdp->setResourceType(QLatin1String("music"));
 
     if (!findByTag(mdp) ) {
         findByFileName( mdp );
@@ -54,36 +54,36 @@ void NepomukMetaDataExtractor::Extractor::AudioExtractor::parseUrl(MetaDataParam
 
 bool NepomukMetaDataExtractor::Extractor::AudioExtractor::findByTag( MetaDataParameters *mdp )
 {
-    TagLib::FileRef f( mdp->resourceUri.toLocalFile().toUtf8().data(), false );
+    TagLib::FileRef f( mdp->resourceUri().toLocalFile().toUtf8().data(), false );
 
     if(f.isNull()) {
-        kDebug() << "TagLib couldn't create FileRef resource for" << mdp->resourceUri.toLocalFile();
+        kDebug() << "TagLib couldn't create FileRef resource for" << mdp->resourceUri().toLocalFile();
         return false;
     }
 
     // fill the search parameters with the found data
     TagLib::String title = f.tag()->title();
-    mdp->searchTitle = QString::fromUtf8(title.toCString(true));
+    mdp->setSearchTitle(QString::fromUtf8(title.toCString(true)));
 
     TagLib::String artist = f.tag()->artist();
-    mdp->searchPerson = QString::fromUtf8(artist.toCString(true));
+    mdp->setSearchPerson(QString::fromUtf8(artist.toCString(true)));
 
     TagLib::String album = f.tag()->album();
-    mdp->searchAlbum = QString::fromUtf8(album.toCString(true));
+    mdp->setSearchAlbum(QString::fromUtf8(album.toCString(true)));
 
     //TagLib::String genre = g.tag()->genre();
     uint year = f.tag()->year();
-    mdp->searchYearMax = QString("%1").arg(year);
-    mdp->searchYearMin = QString("%1").arg(year);
+    mdp->setSearchYearMax(QString("%1").arg(year));
+    mdp->setSearchYearMin(QString("%1").arg(year));
 
     uint track = f.tag()->track();
-    mdp->searchTrack = QString("%1").arg(track);
-    if(mdp->searchTrack == QString("0")) {
-        mdp->searchTrack.clear();
+    mdp->setSearchTrack(QString("%1").arg(track));
+    if(mdp->searchTrack() == QString("0")) {
+        mdp->setSearchTrack(QString());
     }
 
-    if( mdp->searchTitle.isEmpty() && mdp->searchPerson.isEmpty() && mdp->searchAlbum.isEmpty() && mdp->searchTrack.isEmpty()) {
-        kDebug() << "TagLib couldn't find any information on" << mdp->resourceUri.toLocalFile();
+    if( mdp->searchTitle().isEmpty() && mdp->searchPerson().isEmpty() && mdp->searchAlbum().isEmpty() && mdp->searchTrack().isEmpty()) {
+        kDebug() << "TagLib couldn't find any information on" << mdp->resourceUri().toLocalFile();
         return false;
     }
     else {

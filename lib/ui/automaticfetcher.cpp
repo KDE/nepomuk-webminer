@@ -111,24 +111,24 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
     d->currentItemToupdate = resourceExtractor()->resourcesList().first();
 
     if (d->pluginqueue.isEmpty()) {
-        d->pluginqueue.append(extractorFactory()->listAvailablePlugins(d->currentItemToupdate->resourceType));
+        d->pluginqueue.append(extractorFactory()->listAvailablePlugins(d->currentItemToupdate->resourceType()));
     }
     if( d->pluginqueue.isEmpty()) {
-        kWarning() << "Could not get any plugins for the resourcetype :: " << d->currentItemToupdate->resourceType;
+        kWarning() << "Could not get any plugins for the resourcetype :: " << d->currentItemToupdate->resourceType();
         return;
     }
 
     QString favPlugin;
-    if( d->currentItemToupdate->resourceType == QString("movie")) {
+    if( d->currentItemToupdate->resourceType() == QString("movie")) {
         favPlugin = MDESettings::favoriteMoviePlugin();
     }
-    if( d->currentItemToupdate->resourceType == QString("tvshow")) {
+    if( d->currentItemToupdate->resourceType() == QString("tvshow")) {
         favPlugin = MDESettings::favoriteTvShowPlugin();
     }
-    if( d->currentItemToupdate->resourceType == QString("publication")) {
+    if( d->currentItemToupdate->resourceType() == QString("publication")) {
         favPlugin = MDESettings::favoritePublicationPlugin();
     }
-    if( d->currentItemToupdate->resourceType == QString("music")) {
+    if( d->currentItemToupdate->resourceType() == QString("music")) {
         favPlugin = MDESettings::favoriteMusicPlugin();
     }
 
@@ -174,22 +174,22 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
     }
 
     QVariantMap searchParameters;
-    searchParameters.insert("title", d->currentItemToupdate->searchTitle);
-    searchParameters.insert("alttitle", d->currentItemToupdate->searchAltTitle);
-    searchParameters.insert("author", d->currentItemToupdate->searchPerson);
-    searchParameters.insert("season", d->currentItemToupdate->searchSeason);
-    searchParameters.insert("episode", d->currentItemToupdate->searchEpisode);
-    searchParameters.insert("yearMin", d->currentItemToupdate->searchYearMin);
-    searchParameters.insert("yearMax", d->currentItemToupdate->searchYearMax);
-    searchParameters.insert("journal", d->currentItemToupdate->searchJournal);
-    searchParameters.insert("showtitle", d->currentItemToupdate->searchShowTitle);
-    searchParameters.insert("album", d->currentItemToupdate->searchAlbum);
-    searchParameters.insert("track", d->currentItemToupdate->searchTrack);
+    searchParameters.insert("title", d->currentItemToupdate->searchTitle());
+    searchParameters.insert("alttitle", d->currentItemToupdate->searchAltTitle());
+    searchParameters.insert("author", d->currentItemToupdate->searchPerson());
+    searchParameters.insert("season", d->currentItemToupdate->searchSeason());
+    searchParameters.insert("episode", d->currentItemToupdate->searchEpisode());
+    searchParameters.insert("yearMin", d->currentItemToupdate->searchYearMin());
+    searchParameters.insert("yearMax", d->currentItemToupdate->searchYearMax());
+    searchParameters.insert("journal", d->currentItemToupdate->searchJournal());
+    searchParameters.insert("showtitle", d->currentItemToupdate->searchShowTitle());
+    searchParameters.insert("album", d->currentItemToupdate->searchAlbum());
+    searchParameters.insert("track", d->currentItemToupdate->searchTrack());
 
     kDebug() << "Start searching with " << d->webextractor->info().name;
     //kDebug() << searchParameters;
 
-    d->webextractor->search( d->currentItemToupdate->resourceType, searchParameters );
+    d->webextractor->search( d->currentItemToupdate->resourceType(), searchParameters );
 }
 
 void NepomukMetaDataExtractor::UI::AutomaticFetcher::selectSearchEntry( QVariantList searchResults)
@@ -197,7 +197,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::selectSearchEntry( QVariant
     Q_D( AutomaticFetcher );
 
     if( searchResults.isEmpty() ) {
-        kDebug() << "Could not find any search results for the item" << d->currentItemToupdate->resourceUri;
+        kDebug() << "Could not find any search results for the item" << d->currentItemToupdate->resourceUri();
 
         if (d->pluginqueue.isEmpty()) {
             // we're out of plugins
@@ -238,8 +238,8 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::fetchedItemDetails(const QS
     }
 
     // copy the fetched meta data into the current item details
-    d->currentItemToupdate->metaData = itemDetails;
-    d->currentItemToupdate->resourceType = resourceType;
+    d->currentItemToupdate->setMetaData(itemDetails);
+    d->currentItemToupdate->setResourceType(resourceType);
 
     addResourceUriToMetaData( d->currentItemToupdate );
 

@@ -86,7 +86,7 @@ void NepomukMetaDataExtractor::UI::MetaDataWidget::setUpNewDataWidget()
     d->newMetaDataModel->clear();
 
     d->newMetaDataModel->blockSignals(true);
-    insertIntoTree( 0, d->mdp->metaData);
+    insertIntoTree( 0, d->mdp->metaData());
     d->newMetaDataModel->blockSignals(false);
 
     d->newMetaDataWidget->expandAll();

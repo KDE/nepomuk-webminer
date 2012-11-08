@@ -164,21 +164,21 @@ void NepomukMetaDataExtractor::Extractor::VideoExtractor::setMovieMode(bool movi
 void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl)
 {
     Q_D( VideoExtractor );
-    mdp->resourceUri = fileUrl;
+    mdp->setResourceUri(fileUrl);
 
     // All we need to check is if we can parse a movie name and year from the file name
     if( d->movieOnly ) {
-        mdp->resourceType = QLatin1String("movie");
+        mdp->setResourceType(QLatin1String("movie"));
 
         // in case the detection failed, we use the filename as search title for the web search
         if(!parseMovieFileName(mdp, fileUrl.fileName())) {
-            mdp->searchTitle = fileUrl.fileName();
+            mdp->setSearchTitle(fileUrl.fileName());
         }
     }
 
     // in this case the url is definitly a tv show
     if( d->tvshowOnly ) {
-        mdp->resourceType = QLatin1String("tvshow");
+        mdp->setResourceType(QLatin1String("tvshow"));
 
         // first check the folder name scheme
         if(d->useFolderNames) {
@@ -186,7 +186,7 @@ void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(NepomukMetaDa
                 // should this fail we fall back to normal file name detection
                 if(!parseTvShowFileName(mdp, fileUrl.fileName()) ) {
                     // fallback to filename if even this fails
-                    mdp->searchTitle = fileUrl.fileName();
+                    mdp->setSearchTitle(fileUrl.fileName());
                 }
             }
         }
@@ -194,7 +194,7 @@ void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(NepomukMetaDa
             // if we did not specify to use folder names, use filenames only
             if(!parseTvShowFileName(mdp, fileUrl.fileName()) ) {
                 // falback to filename if even this fails
-                mdp->searchTitle = fileUrl.fileName();
+                mdp->setSearchTitle(fileUrl.fileName());
             }
         }
     }
@@ -203,22 +203,22 @@ void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(NepomukMetaDa
     if( !d->tvshowOnly && !d->movieOnly) {
         // first check tvshow file name
         if(parseTvShowFileName(mdp, fileUrl.fileName()) ) {
-            mdp->resourceType = QLatin1String("tvshow");
+            mdp->setResourceType(QLatin1String("tvshow"));
             //yay works, stop here
             return;
         }
 
         //if this did not work, check movie file name
         if(parseMovieFileName(mdp, fileUrl.fileName())) {
-            mdp->resourceType = QLatin1String("movie");
+            mdp->setResourceType(QLatin1String("movie"));
             //yay works, stop here
             return;
         }
     }
 
     // still no luck? :(
-    mdp->resourceType = QLatin1String("movie");
-    mdp->searchTitle = fileUrl.fileName().split('.').first();
+    mdp->setResourceType(QLatin1String("movie"));
+    mdp->setSearchTitle(fileUrl.fileName().split('.').first());
 }
 
 bool NepomukMetaDataExtractor::Extractor::VideoExtractor::parseTvShowFolder(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl)
@@ -232,14 +232,14 @@ bool NepomukMetaDataExtractor::Extractor::VideoExtractor::parseTvShowFolder(Nepo
         if ( re.exactMatch( strippedFolderUpOne ) ) {
 
             if( !re.cap( 1 ).simplified().isEmpty())
-                mdp->searchShowTitle = re.cap( 1 ).simplified();
+                mdp->setSearchShowTitle(re.cap( 1 ).simplified());
             if(re.captureCount() == 4) {
                 if( !re.cap( 3 ).isEmpty())
-                    mdp->searchSeason = re.cap( 3 );
+                    mdp->setSearchSeason(re.cap( 3 ));
             }
             else {
                 if( !re.cap( 2 ).isEmpty())
-                    mdp->searchSeason = re.cap( 2 );
+                    mdp->setSearchSeason(re.cap( 2 ));
             }
             return true;
         }
@@ -258,32 +258,35 @@ bool NepomukMetaDataExtractor::Extractor::VideoExtractor::parseTvShowFileName(Ne
                 kDebug() << ii << " : " << re.cap( ii );
             }
             if(re.captureCount() > 2) {
-                mdp->searchShowTitle = re.cap( 1 ).simplified();
-                mdp->searchSeason = re.cap( 2 );
-                mdp->searchEpisode = re.cap( 3 );
+                mdp->setSearchShowTitle(re.cap( 1 ).simplified());
+                mdp->setSearchSeason(re.cap( 2 ));
+                mdp->setSearchEpisode(re.cap( 3 ));
 
             }
             else if(re.captureCount() == 2) {
-                mdp->searchShowTitle = re.cap( 1 );
-                mdp->searchEpisode = re.cap( 2 );
+                mdp->setSearchShowTitle(re.cap( 1 ));
+                mdp->setSearchEpisode(re.cap( 2 ));
                 // should be no harm presetting this, some filenames omit the season assuming it's 1
                 // presetting lets anime fansub files be automatically fetchable
-                mdp->searchSeason = '1';
+                mdp->setSearchSeason(QChar('1'));
             }
             else {
-                mdp->searchEpisode = re.cap( 1 );
+                mdp->setSearchEpisode(re.cap( 1 ));
             }
             // 3. clean up tv show name
             // remove subber tag from the show name if it exists
+            QString curShowTitle = mdp->searchShowTitle();
             QRegExp subberCheck("\\[(.+)\\](.+)");
-            if (subberCheck.exactMatch(mdp->searchShowTitle)) {
-                mdp->searchShowTitle = subberCheck.cap(2).simplified();
+            if (subberCheck.exactMatch(curShowTitle)) {
+                curShowTitle = subberCheck.cap(2).simplified();
             }
-            mdp->searchShowTitle.replace( '.', ' ' );
-            mdp->searchShowTitle.replace( '_', ' ' );
-            if ( mdp->searchShowTitle.endsWith( '-' ) )
-                mdp->searchShowTitle.truncate( mdp->searchShowTitle.length()-1 );
-            mdp->searchShowTitle = mdp->searchShowTitle.simplified();
+            curShowTitle.replace( '.', ' ' );
+            curShowTitle.replace( '_', ' ' );
+            if ( curShowTitle.endsWith( '-' ) ) {
+                curShowTitle.truncate( curShowTitle.length()-1 );
+            }
+
+            mdp->setSearchShowTitle(curShowTitle.simplified());
 
             return true;
         }
@@ -298,7 +301,7 @@ bool NepomukMetaDataExtractor::Extractor::VideoExtractor::parseMovieFileName(Nep
     foreach(const QRegExp &re, d->movieFilenameRegExps) {
         if ( re.exactMatch( fileName ) ) {
 
-            mdp->searchTitle = re.cap( 1 ).simplified();
+            mdp->setSearchTitle(re.cap( 1 ).simplified());
             return true;
         }
     }

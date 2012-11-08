@@ -123,46 +123,52 @@ void NepomukMetaDataExtractor::UI::Fetcher::addResourceUriToMetaData( NepomukMet
 {
     // For tv shows put the resource uri into the Episode part of the MetaData
     // this way around it is possible to use the TvShowPipe with more episode/files at once
-    if( mdp->resourceType == QLatin1String("tvshow")) {
-        QVariantList seasons = mdp->metaData.value(QLatin1String("seasons")).toList();
+    if( mdp->resourceType() == QLatin1String("tvshow")) {
+        QVariantList seasons = mdp->metaData().value(QLatin1String("seasons")).toList();
         if(!seasons.isEmpty()) {
             QVariantMap season = seasons.takeFirst().toMap();
             QVariantList episodes = season.value(QLatin1String("episodes")).toList();
 
             if(!episodes.isEmpty()) {
                 QVariantMap episodesMap = episodes.takeFirst().toMap();
-                kDebug() << "add to episode" << episodesMap.value(QLatin1String("title")).toString() << "url" << mdp->resourceUri.url();
-                episodesMap.insert(QLatin1String("resourceuri"), mdp->resourceUri.url());
+                kDebug() << "add to episode" << episodesMap.value(QLatin1String("title")).toString() << "url" << mdp->resourceUri().url();
+                episodesMap.insert(QLatin1String("resourceuri"), mdp->resourceUri().url());
 
                 episodes << episodesMap;
                 season.insert( QLatin1String("episodes"), episodes);
                 seasons << season;
-                mdp->metaData.insert( QLatin1String("seasons"), seasons);
+                QVariantMap savedMetaData = mdp->metaData();
+                savedMetaData.insert( QLatin1String("seasons"), seasons);
+                mdp->setMetaData(savedMetaData);
             }
         }
     }
     // music piece / album works the same as tvshows, we add the fileurl to the track not the toplevel album
-    else if( mdp->resourceType == QLatin1String("music")) {
-        QVariantList trackList = mdp->metaData.value(QLatin1String("tracks")).toList();
+    else if( mdp->resourceType() == QLatin1String("music")) {
+        QVariantList trackList = mdp->metaData().value(QLatin1String("tracks")).toList();
 
         if(!trackList.isEmpty()) {
             QVariantMap trackMap = trackList.takeFirst().toMap();
-            kDebug() << "add to track" << trackMap.value(QLatin1String("title")).toString() << "url" << mdp->resourceUri.url();
-            trackMap.insert(QLatin1String("resourceuri"), mdp->resourceUri.url());
+            kDebug() << "add to track" << trackMap.value(QLatin1String("title")).toString() << "url" << mdp->resourceUri().url();
+            trackMap.insert(QLatin1String("resourceuri"), mdp->resourceUri().url());
 
             trackList << trackMap;
-            mdp->metaData.insert( QLatin1String("tracks"), trackList);
+            QVariantMap savedMetaData = mdp->metaData();
+            savedMetaData.insert( QLatin1String("tracks"), trackList);
+            mdp->setMetaData(savedMetaData);
         }
     }
 
     // For all other cases put the resource uri in the top part of the MetaData
     // add this for all cases, helps to find the folder for the poster/cover download easier for music/tvshows)
-    mdp->metaData.insert(QLatin1String("resourceuri"), mdp->resourceUri.url());
+    QVariantMap savedMetaData = mdp->metaData();
+    savedMetaData.insert(QLatin1String("resourceuri"), mdp->resourceUri().url());
+    mdp->setMetaData(savedMetaData);
 }
 
-void NepomukMetaDataExtractor::UI::Fetcher::saveMetaData(const NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp) const
+void NepomukMetaDataExtractor::UI::Fetcher::saveMetaData(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp) const
 {
-    QString type = mdp->resourceType;
+    QString type = mdp->resourceType();
 
     Pipe::NepomukPipe *nepomukPipe = 0;
 
@@ -180,7 +186,7 @@ void NepomukMetaDataExtractor::UI::Fetcher::saveMetaData(const NepomukMetaDataEx
     }
 
     if(nepomukPipe) {
-        nepomukPipe->pipeImport( mdp->metaData );
+        nepomukPipe->pipeImport( mdp->metaData() );
     }
     else {
         kWarning() << "No nepomuk pipe available for the resource type" << type;

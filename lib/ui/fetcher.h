@@ -140,7 +140,7 @@ protected:
      *
      * @param mdp the MetaDataParameters which should be saved
      */
-    void saveMetaData(const NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp) const;
+    void saveMetaData(Extractor::MetaDataParameters *mdp) const;
 
 private:
     Q_DECLARE_PRIVATE(Fetcher)

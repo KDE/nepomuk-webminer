@@ -4,6 +4,8 @@
 # -------------------------------------------
 set( nepomukextractor_LIB_SRCS
 
+  metadataparameters.cpp
+
   webextractor/extractorfactory.cpp
   webextractor/webextractor.cpp
   webextractor/krossextractor.cpp
