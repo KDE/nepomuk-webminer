@@ -17,10 +17,13 @@
 
 #include "webextractor.h"
 
+#include <KDE/KGlobal>
+
+static const KCatalogLoader loader("metadataextractor");
+
 NepomukMetaDataExtractor::Extractor::WebExtractor::WebExtractor(QObject *parent)
     : QObject(parent)
 {
-
 }
 
 NepomukMetaDataExtractor::Extractor::WebExtractor::~WebExtractor()
