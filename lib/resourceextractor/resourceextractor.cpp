@@ -30,7 +30,7 @@
 #include <Nepomuk2/Vocabulary/NMM>
 #include <Nepomuk2/Vocabulary/NCO>
 #include <Nepomuk2/Vocabulary/NIE>
-#include "ontology/nbib/nbib.h"
+#include "ontology/nbib.h"
 
 #include "ontology/nbib/publication.h"
 #include "ontology/nbib/article.h"

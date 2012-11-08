@@ -22,7 +22,7 @@
 #include <Nepomuk2/StoreResourcesJob>
 #include <KDE/KJob>
 
-#include "ontology/nbib/nbib.h"
+#include "ontology/nbib.h"
 #include "ontology/nbib/series.h"
 #include "ontology/nbib/collection.h"
 #include "ontology/nbib/documentpart.h"

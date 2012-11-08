@@ -27,8 +27,6 @@ set( nepomukextractor_LIB_SRCS
   ui/searchresultdelegate.cpp
   ui/automaticfetcher.cpp
   ui/metadatawidget.cpp
-
-  ../ontology/nbib/nbib.cpp
 )
 
 kde4_add_ui_files( nepomukextractor_LIB_SRCS
@@ -41,6 +39,8 @@ install(FILES nepomukmetadataextractor.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 kde4_add_library( nepomukmetadataextractor SHARED ${nepomukextractor_LIB_SRCS} )
 
 target_link_libraries( nepomukmetadataextractor
+
+  nbibontology
 
   ${KDE4_KDECORE_LIBS}
   ${KDE4_KIO_LIBS}
@@ -63,8 +63,6 @@ target_link_libraries( nepomukmetadataextractor
 set_target_properties( nepomukmetadataextractor
   PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}
 )
-
-ADD_DEPENDENCIES(nepomukmetadataextractor ontology)
 
 install( TARGETS nepomukmetadataextractor ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

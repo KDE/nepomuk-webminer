@@ -28,6 +28,14 @@ else(DEFINED NOONTOLOGY)
                                        )
 endif(DEFINED NOONTOLOGY)
 
+set(nbibontology_LIB_SRCS)
+
+# -DFPIC -fPIC are needed to compile and use the nbib ontology
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DFPIC -fPIC")
+
+soprano_add_ontology(nbibontology_LIB_SRCS ${CMAKE_SOURCE_DIR}/ontology/nbib/nbib.trig "NBIB" "Nepomuk2::Vocabulary" "trig")
+kde4_add_library( nbibontology STATIC ${nbibontology_LIB_SRCS} )
+
 # -------------------------------------------
 # install the nbib ontology
 # this is a temporary action until nbib is not in SDO
