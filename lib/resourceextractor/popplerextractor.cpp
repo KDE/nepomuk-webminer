@@ -23,9 +23,12 @@
 
 #include <KDE/KDebug>
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
-class PopplerExtractorPrivate {
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
+class PopplerExtractorPrivate
+{
 public:
     Poppler::Document  *pdfdoc;
     MetaDataParameters *publicationEntry;
@@ -35,22 +38,22 @@ public:
 
 NepomukMetaDataExtractor::Extractor::PopplerExtractor::PopplerExtractor(QObject *parent)
     : QObject(parent)
-    , d_ptr( new NepomukMetaDataExtractor::Extractor::PopplerExtractorPrivate )
+    , d_ptr(new NepomukMetaDataExtractor::Extractor::PopplerExtractorPrivate)
 {
 }
 
 NepomukMetaDataExtractor::Extractor::PopplerExtractor::~PopplerExtractor()
 {
-    Q_D( PopplerExtractor );
+    Q_D(PopplerExtractor);
     delete d->pdfdoc;
 }
 
 void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseUrl(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl)
 {
-    Q_D( PopplerExtractor );
-    d->pdfdoc = Poppler::Document::load( fileUrl.toLocalFile(), 0, 0 );
+    Q_D(PopplerExtractor);
+    d->pdfdoc = Poppler::Document::load(fileUrl.toLocalFile(), 0, 0);
 
-    if(!d->pdfdoc) {
+    if (!d->pdfdoc) {
         kWarning() << "could not load " << fileUrl;
         return;
     }
@@ -66,40 +69,38 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseUrl(NepomukMeta
     // get parsed rdf metadata from poppler
     // strip some unneeded info and split the keywords
     QStringList metaData = d->pdfdoc->infoKeys();
-    foreach(const QString &key, metaData) {
+    foreach (const QString & key, metaData) {
 
-        if(key == QLatin1String("Title")) {
+        if (key == QLatin1String("Title")) {
             // sometimes the doi string was added as title value >_<
-            if(d->pdfdoc->info(key).contains(QLatin1String("doi:"))) {
+            if (d->pdfdoc->info(key).contains(QLatin1String("doi:"))) {
                 savedMetaData.insert(QLatin1String("doi"), d->pdfdoc->info(key).remove(QLatin1String("doi:")));
-            }
-            else {
+            } else {
                 savedMetaData.insert(QLatin1String("title"), d->pdfdoc->info(key));
             }
         }
         // ignore the following attributes, they are not of interrest
-        else if(key == QLatin1String("Creator") ||
-                key == QLatin1String("Producer") ||
-                key == QLatin1String("CreationDate") ||
-                key == QLatin1String("ModDate") ||
-                key == QLatin1String("Trapped") ||
-                key.startsWith(QLatin1String("ptex"), Qt::CaseInsensitive)) {
+        else if (key == QLatin1String("Creator") ||
+                 key == QLatin1String("Producer") ||
+                 key == QLatin1String("CreationDate") ||
+                 key == QLatin1String("ModDate") ||
+                 key == QLatin1String("Trapped") ||
+                 key.startsWith(QLatin1String("ptex"), Qt::CaseInsensitive)) {
             continue;
         }
         // combine subject and keywords and treat them all as pimo:Topic later on
-        else if(key == QLatin1String("Subject") ||
-                key == QLatin1String("Keywords")) {
+        else if (key == QLatin1String("Subject") ||
+                 key == QLatin1String("Keywords")) {
             QString keywords = d->pdfdoc->info(key);
             keywords.replace(',', QLatin1String(";"));
 
             QString currentKeywordList = savedMetaData.value(QLatin1String("keywords"), QString()).toString();
-            if(!currentKeywordList.isEmpty()) {
+            if (!currentKeywordList.isEmpty()) {
                 keywords.append(QLatin1String(";"));
             }
-            currentKeywordList.append( keywords );
+            currentKeywordList.append(keywords);
             savedMetaData.insert(QLatin1String("keyword"), currentKeywordList);
-        }
-        else {
+        } else {
             savedMetaData.insert(key.toLower(), d->pdfdoc->info(key));
         }
     }
@@ -107,10 +108,10 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseUrl(NepomukMeta
     // add the toc if available
     QDomDocument *toc = d->pdfdoc->toc();
 
-    if(toc) {
+    if (toc) {
         QDomNode firstNode = toc->firstChild();
         QDomDocument parsedToc;
-        tocCreation( parsedToc , firstNode);
+        tocCreation(parsedToc , firstNode);
         savedMetaData.insert(QLatin1String("toc"), parsedToc.toString());
     }
 
@@ -121,13 +122,13 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseUrl(NepomukMeta
 
 void NepomukMetaDataExtractor::Extractor::PopplerExtractor::tocCreation(const QDomDocument &toc, QDomNode &node)
 {
-    while(!node.isNull()) {
+    while (!node.isNull()) {
 
         QDomElement e = node.toElement();
 
-        if(!e.isNull()) {
+        if (!e.isNull()) {
             // ignore toc with externel references, won't work anyway
-            if(e.hasAttribute(QLatin1String("ExternalFileName"))) {
+            if (e.hasAttribute(QLatin1String("ExternalFileName"))) {
                 node = node.nextSibling();
                 continue;
             }
@@ -139,7 +140,7 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::tocCreation(const QD
             //            qDebug() << chapterNumber << ":"  << chapterName;
         }
 
-        if(e.hasChildNodes()) {
+        if (e.hasChildNodes()) {
             QDomNode nextSubSection = e.firstChild();
             tocCreation(toc, nextSubSection);
         }
@@ -150,7 +151,7 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::tocCreation(const QD
 
 void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseFirstpage()
 {
-    Q_D( PopplerExtractor );
+    Q_D(PopplerExtractor);
     Poppler::Page *p = d->pdfdoc->page(0);
 
     QList<Poppler::TextBox*> tbList = p->textList();
@@ -158,10 +159,10 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseFirstpage()
 
     int currentLargestChar = 0;
     int skipTextboxes = 0;
-    foreach(Poppler::TextBox* tb,tbList) {
+    foreach (Poppler::TextBox * tb, tbList) {
 
         // if we added followup words, skip the textboxes here now
-        if(skipTextboxes > 0) {
+        if (skipTextboxes > 0) {
             skipTextboxes--;
             continue;
         }
@@ -169,25 +170,25 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseFirstpage()
         int height = tb->charBoundingBox(0).height();
 
         // if the following text is smaller than the biggest we found up to now, ignore it
-        if(height >= currentLargestChar) {
+        if (height >= currentLargestChar) {
             QString possibleTitle;
-            possibleTitle.append( tb->text() );
+            possibleTitle.append(tb->text());
             currentLargestChar = height;
 
             // if the text has follow up words add them to to create the full title
-            Poppler::TextBox * next =tb->nextWord();
-            while(next) {
+            Poppler::TextBox * next = tb->nextWord();
+            while (next) {
                 possibleTitle.append(QLatin1String(" "));
-                possibleTitle.append( next->text() );
+                possibleTitle.append(next->text());
                 next = next->nextWord();
                 skipTextboxes++;
             }
 
             // now combine text for each font size together, very likeley it must be connected
-            QString existingTitlePart = possibleTitleMap.value( currentLargestChar, QString());
+            QString existingTitlePart = possibleTitleMap.value(currentLargestChar, QString());
             existingTitlePart.append(QLatin1String(" "));
-            existingTitlePart.append( possibleTitle );
-            possibleTitleMap.insert( currentLargestChar, existingTitlePart);
+            existingTitlePart.append(possibleTitle);
+            possibleTitleMap.insert(currentLargestChar, existingTitlePart);
         }
     }
 
@@ -200,37 +201,36 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseFirstpage()
     QString newPossibleTitle;
 
     // find the text with the largest font that is not just 1 character
-    foreach(int i, titleSizes) {
+    foreach (int i, titleSizes) {
         QString title = possibleTitleMap.value(i);
 
         // sometime the biggest part is a single letter
         // as a starting paragraph letter
-        if(title.size() < 5) {
+        if (title.size() < 5) {
             continue;
-        }
-        else {
+        } else {
             newPossibleTitle = title.trimmed();
             break;
         }
     }
 
     newPossibleTitle = newPossibleTitle.toAscii();
-    QString currentTitle = d->publicationEntry->metaData().value( QLatin1String("title"), QString() ).toString();
+    QString currentTitle = d->publicationEntry->metaData().value(QLatin1String("title"), QString()).toString();
 
     // if no title from metadata was fetched, the possible Title is the title we want
-    if( currentTitle.trimmed().isEmpty()) {
+    if (currentTitle.trimmed().isEmpty()) {
         d->publicationEntry->setSearchTitle(newPossibleTitle);
         return;
     }
     // otherwise check if the actual metadata title is part of the title we found by fetching
     // if so, we can stop, we didn't get a better result, possible just some wrong words at the  end attached
-    else if(newPossibleTitle.contains(currentTitle, Qt::CaseInsensitive)) {
+    else if (newPossibleTitle.contains(currentTitle, Qt::CaseInsensitive)) {
         d->publicationEntry->setSearchTitle(currentTitle);
         return;
     }
 
     //if the metadata title has no white space, we assume it was just junk and we take the possible title as real title
-    if( !currentTitle.contains(' ') || currentTitle.contains(QLatin1String("Microsoft"))) {
+    if (!currentTitle.contains(' ') || currentTitle.contains(QLatin1String("Microsoft"))) {
         d->publicationEntry->setSearchTitle(newPossibleTitle);
         d->publicationEntry->setSearchAltTitle(currentTitle);
         return;

@@ -32,15 +32,18 @@
 #include <QtCore/QFutureWatcher>
 #include <QtCore/QtConcurrentRun>
 
-namespace NepomukMetaDataExtractor {
-namespace UI {
-    class BatchExtractorPrivate {
-    public:
-        NepomukMetaDataExtractor::Extractor::ExtractorFactory extractorFactory;
-        NepomukMetaDataExtractor::Extractor::WebExtractor *currentExtractor;
-        QList<NepomukMetaDataExtractor::UI::BatchExtractor::ExtractionJob> jobList;
-        bool extractionInProgress;
-    };
+namespace NepomukMetaDataExtractor
+{
+namespace UI
+{
+class BatchExtractorPrivate
+{
+public:
+    NepomukMetaDataExtractor::Extractor::ExtractorFactory extractorFactory;
+    NepomukMetaDataExtractor::Extractor::WebExtractor *currentExtractor;
+    QList<NepomukMetaDataExtractor::UI::BatchExtractor::ExtractionJob> jobList;
+    bool extractionInProgress;
+};
 }
 }
 
@@ -50,9 +53,9 @@ using namespace NepomukMetaDataExtractor::UI;
 
 NepomukMetaDataExtractor::UI::BatchExtractor::BatchExtractor(QObject *parent)
     : QObject(parent)
-    , d_ptr( new NepomukMetaDataExtractor::UI::BatchExtractorPrivate )
+    , d_ptr(new NepomukMetaDataExtractor::UI::BatchExtractorPrivate)
 {
-    Q_D( BatchExtractor );
+    Q_D(BatchExtractor);
 
     d->extractionInProgress = false;
     d->currentExtractor = 0;
@@ -60,20 +63,20 @@ NepomukMetaDataExtractor::UI::BatchExtractor::BatchExtractor(QObject *parent)
 
 QString NepomukMetaDataExtractor::UI::BatchExtractor::currentExtractionInfo() const
 {
-    Q_D( const BatchExtractor );
+    Q_D(const BatchExtractor);
 
     QString currentJob;
 
-    if( !d->jobList.isEmpty()) {
+    if (!d->jobList.isEmpty()) {
         currentJob = d->jobList.first().name;
     }
 
     return currentJob;
 }
 
-void NepomukMetaDataExtractor::UI::BatchExtractor::addJob(const QUrl &detailsUrl, const QVariantMap &options, const QString &name, const QString &resourceUri )
+void NepomukMetaDataExtractor::UI::BatchExtractor::addJob(const QUrl &detailsUrl, const QVariantMap &options, const QString &name, const QString &resourceUri)
 {
-    Q_D( BatchExtractor );
+    Q_D(BatchExtractor);
 
     kDebug() << "addJob running?" << d->extractionInProgress;
 
@@ -83,39 +86,38 @@ void NepomukMetaDataExtractor::UI::BatchExtractor::addJob(const QUrl &detailsUrl
     newJob.name = name;
     newJob.resourceUri = resourceUri;
 
-    d->jobList.append( newJob );
+    d->jobList.append(newJob);
 
-    emit extractionStarted( d->jobList.size() );
+    emit extractionStarted(d->jobList.size());
 
-    if( !d->extractionInProgress ) {
+    if (!d->extractionInProgress) {
         extractNext();
     }
 }
 
 void NepomukMetaDataExtractor::UI::BatchExtractor::extractNext()
 {
-    Q_D( BatchExtractor );
+    Q_D(BatchExtractor);
 
     ExtractionJob nextJob = d->jobList.first();
 
-    if( d->currentExtractor ) {
-        disconnect( d->currentExtractor, SIGNAL(error(QString)), this, SLOT(error(QString)) );
-        disconnect( d->currentExtractor, SIGNAL(log(QString)), this, SLOT(log(QString)) );
-        disconnect( d->currentExtractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(itemResults(QString,QVariantMap)) );
+    if (d->currentExtractor) {
+        disconnect(d->currentExtractor, SIGNAL(error(QString)), this, SLOT(error(QString)));
+        disconnect(d->currentExtractor, SIGNAL(log(QString)), this, SLOT(log(QString)));
+        disconnect(d->currentExtractor, SIGNAL(itemResults(QString, QVariantMap)), this, SLOT(itemResults(QString, QVariantMap)));
     }
 
     d->currentExtractor = d->extractorFactory.getExtractor(nextJob.detailsUrl);
 
-    if( d->currentExtractor ) {
+    if (d->currentExtractor) {
         d->extractionInProgress = true;
-        connect( d->currentExtractor, SIGNAL(error(QString)), this, SLOT(error(QString)) );
-        connect( d->currentExtractor, SIGNAL(log(QString)), this, SLOT(log(QString)) );
+        connect(d->currentExtractor, SIGNAL(error(QString)), this, SLOT(error(QString)));
+        connect(d->currentExtractor, SIGNAL(log(QString)), this, SLOT(log(QString)));
 
-        connect( d->currentExtractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(itemResults(QString,QVariantMap)) );
+        connect(d->currentExtractor, SIGNAL(itemResults(QString, QVariantMap)), this, SLOT(itemResults(QString, QVariantMap)));
 
-        d->currentExtractor->extractItem( nextJob.detailsUrl, nextJob.options);
-    }
-    else {
+        d->currentExtractor->extractItem(nextJob.detailsUrl, nextJob.options);
+    } else {
         d->extractionInProgress = false;
         d->jobList.takeFirst();
         kWarning() << "could not get Webextractor for url " << nextJob.detailsUrl;
@@ -137,23 +139,19 @@ static void concurrentPipe(const QString &resourceType, const QVariantMap &entry
     // find the right nepomuk pipe and throw it in
     NepomukPipe *nepomukPipe = 0;
 
-    if(resourceType == QLatin1String("publication")) {
+    if (resourceType == QLatin1String("publication")) {
         nepomukPipe = new PublicationPipe;
-    }
-    else if(resourceType == QLatin1String("tvshow")) {
+    } else if (resourceType == QLatin1String("tvshow")) {
         nepomukPipe = new TvShowPipe;
-    }
-    else if(resourceType == QLatin1String("movie")) {
+    } else if (resourceType == QLatin1String("movie")) {
         nepomukPipe = new MoviePipe;
-    }
-    else if(resourceType == QLatin1String("music")) {
+    } else if (resourceType == QLatin1String("music")) {
         nepomukPipe = new MusicPipe;
     }
 
-    if(nepomukPipe) {
-        nepomukPipe->pipeImport( entry );
-    }
-    else {
+    if (nepomukPipe) {
+        nepomukPipe->pipeImport(entry);
+    } else {
         kWarning() << "No nepomuk pipe available for the resource type" << resourceType;
     }
 
@@ -162,56 +160,56 @@ static void concurrentPipe(const QString &resourceType, const QVariantMap &entry
 
 void NepomukMetaDataExtractor::UI::BatchExtractor::itemResults(const QString &resourceType, const QVariantMap &entry)
 {
-    Q_D( BatchExtractor );
+    Q_D(BatchExtractor);
 
     ExtractionJob nextJob = d->jobList.first();
 
     QVariantMap metaData = entry;
-    if( !nextJob.resourceUri.isEmpty() ) {
+    if (!nextJob.resourceUri.isEmpty()) {
         addResourceUriToMetaData(resourceType, nextJob.resourceUri, metaData);
     }
 
     QFuture<void> future = QtConcurrent::run(concurrentPipe, resourceType, metaData);
     QFutureWatcher<void> *futureWatcher = new QFutureWatcher<void>();
 
-    connect( futureWatcher, SIGNAL(finished()), this, SLOT(pipeFinished()) );
+    connect(futureWatcher, SIGNAL(finished()), this, SLOT(pipeFinished()));
 
     futureWatcher->setFuture(future);
 }
 
-void NepomukMetaDataExtractor::UI::BatchExtractor::addResourceUriToMetaData( const QString &resourceType, const QString &uri, QVariantMap &metadata )
+void NepomukMetaDataExtractor::UI::BatchExtractor::addResourceUriToMetaData(const QString &resourceType, const QString &uri, QVariantMap &metadata)
 {
     // For tv shows put the resource uri into the Episode part of the MetaData
     // this way around it is possible to use the TvShowPipe with more episode/files at once
-    if( resourceType == QLatin1String("tvshow")) {
+    if (resourceType == QLatin1String("tvshow")) {
         QVariantList seasons = metadata.value(QLatin1String("seasons")).toList();
-        if(!seasons.isEmpty()) {
+        if (!seasons.isEmpty()) {
             QVariantMap season = seasons.takeFirst().toMap();
             QVariantList episodes = season.value(QLatin1String("episodes")).toList();
 
-            if(!episodes.isEmpty()) {
+            if (!episodes.isEmpty()) {
                 QVariantMap episodesMap = episodes.takeFirst().toMap();
                 kDebug() << "add to episode" << episodesMap.value(QLatin1String("title")).toString() << "url" << uri;
                 episodesMap.insert(QLatin1String("resourceuri"), uri);
 
                 episodes << episodesMap;
-                season.insert( QLatin1String("episodes"), episodes);
+                season.insert(QLatin1String("episodes"), episodes);
                 seasons << season;
-                metadata.insert( QLatin1String("seasons"), seasons);
+                metadata.insert(QLatin1String("seasons"), seasons);
             }
         }
     }
     // music piece / album works the same as tvshows, we add the fileurl to the track not the toplevel album
-    else if( resourceType == QLatin1String("music")) {
+    else if (resourceType == QLatin1String("music")) {
         QVariantList trackList = metadata.value(QLatin1String("tracks")).toList();
 
-        if(!trackList.isEmpty()) {
+        if (!trackList.isEmpty()) {
             QVariantMap trackMap = trackList.takeFirst().toMap();
             kDebug() << "add to track" << trackMap.value(QLatin1String("title")).toString() << "url" << uri;
             trackMap.insert(QLatin1String("resourceuri"), uri);
 
             trackList << trackMap;
-            metadata.insert( QLatin1String("tracks"), trackList);
+            metadata.insert(QLatin1String("tracks"), trackList);
         }
     }
 
@@ -224,15 +222,14 @@ void NepomukMetaDataExtractor::UI::BatchExtractor::pipeFinished()
 {
     sender()->deleteLater(); // delete the created future watcher again
 
-    Q_D( BatchExtractor );
+    Q_D(BatchExtractor);
 
     d->jobList.takeFirst();
 
     // parallel fetch from the web and pipe the last to nepomuk
-    if( !d->jobList.isEmpty() ) {
+    if (!d->jobList.isEmpty()) {
         extractNext();
-    }
-    else {
+    } else {
         d->extractionInProgress = false;
 
         emit extractionFinished();

@@ -23,12 +23,15 @@
 
 #include "nepomukmetadataextractor_export.h"
 
-namespace Nepomuk2 {
-    class Resource;
+namespace Nepomuk2
+{
+class Resource;
 }
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
 
 class MetaDataParameters;
 class ResourceExtractorPrivate;

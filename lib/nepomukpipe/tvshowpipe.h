@@ -25,8 +25,10 @@
 
 #include "nepomukmetadataextractor_export.h"
 
-namespace NepomukMetaDataExtractor {
-namespace Pipe {
+namespace NepomukMetaDataExtractor
+{
+namespace Pipe
+{
 
 class TvShowPipePrivate;
 

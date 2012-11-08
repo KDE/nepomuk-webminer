@@ -18,9 +18,12 @@
 #include "metadataparameters.h"
 
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
-class MetaDataParametersPrivate {
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
+class MetaDataParametersPrivate
+{
 public:
     //NOTE: replace single QString parameters with a search QMap in case we need to add many other parameters in the future?
     QString searchTitle;          /**< title of the entry to search for */
@@ -51,13 +54,13 @@ public:
 }
 
 NepomukMetaDataExtractor::Extractor::MetaDataParameters::MetaDataParameters()
-    : d_ptr( new NepomukMetaDataExtractor::Extractor::MetaDataParametersPrivate )
+    : d_ptr(new NepomukMetaDataExtractor::Extractor::MetaDataParametersPrivate)
 {
 }
 
 void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchTitle(const QString &title)
 {
-    Q_D( MetaDataParameters );
+    Q_D(MetaDataParameters);
     d->searchTitle = title;
 }
 
@@ -68,7 +71,7 @@ QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchTitle() c
 
 void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchAltTitle(const QString &alttitle)
 {
-    Q_D( MetaDataParameters );
+    Q_D(MetaDataParameters);
     d->searchAltTitle = alttitle;
 }
 
@@ -79,7 +82,7 @@ QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchAltTitle(
 
 void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchYearMin(const QString &minyear)
 {
-    Q_D( MetaDataParameters );
+    Q_D(MetaDataParameters);
     d->searchYearMin = minyear;
 }
 
@@ -90,7 +93,7 @@ QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchYearMin()
 
 void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchYearMax(const QString &maxyear)
 {
-    Q_D( MetaDataParameters );
+    Q_D(MetaDataParameters);
     d->searchYearMax = maxyear;
 }
 
@@ -101,7 +104,7 @@ QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchYearMax()
 
 void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchPerson(const QString &name)
 {
-    Q_D( MetaDataParameters );
+    Q_D(MetaDataParameters);
     d->searchPerson = name;
 }
 
@@ -112,7 +115,7 @@ QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchPerson() 
 
 void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchShowTitle(const QString &showtitle)
 {
-    Q_D( MetaDataParameters );
+    Q_D(MetaDataParameters);
     d->searchShowTitle = showtitle;
 }
 
@@ -123,7 +126,7 @@ QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchShowTitle
 
 void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchEpisode(const QString &episode)
 {
-    Q_D( MetaDataParameters );
+    Q_D(MetaDataParameters);
     d->searchEpisode = episode;
 }
 
@@ -134,7 +137,7 @@ QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchEpisode()
 
 void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchSeason(const QString &season)
 {
-    Q_D( MetaDataParameters );
+    Q_D(MetaDataParameters);
     d->searchSeason = season;
 }
 
@@ -145,7 +148,7 @@ QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchSeason() 
 
 void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchAlbum(const QString &album)
 {
-    Q_D( MetaDataParameters );
+    Q_D(MetaDataParameters);
     d->searchAlbum = album;
 }
 
@@ -156,7 +159,7 @@ QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchAlbum() c
 
 void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchTrack(const QString &track)
 {
-    Q_D( MetaDataParameters );
+    Q_D(MetaDataParameters);
     d->searchTrack = track;
 }
 
@@ -167,7 +170,7 @@ QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchTrack() c
 
 void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchJournal(const QString &journal)
 {
-    Q_D( MetaDataParameters );
+    Q_D(MetaDataParameters);
     d->searchJournal = journal;
 }
 
@@ -178,7 +181,7 @@ QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchJournal()
 
 void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setResourceType(const QString &resourceType)
 {
-    Q_D( MetaDataParameters );
+    Q_D(MetaDataParameters);
     d->resourceType = resourceType;
 }
 
@@ -189,7 +192,7 @@ QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::resourceType() 
 
 void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setResourceUri(const KUrl &resourceUri)
 {
-    Q_D( MetaDataParameters );
+    Q_D(MetaDataParameters);
     d->resourceUri = resourceUri;
 }
 
@@ -200,7 +203,7 @@ KUrl NepomukMetaDataExtractor::Extractor::MetaDataParameters::resourceUri() cons
 
 void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setMetaData(const QVariantMap &metaData)
 {
-    Q_D( MetaDataParameters );
+    Q_D(MetaDataParameters);
     d->metaData = metaData;
 }
 
@@ -211,7 +214,7 @@ QVariantMap NepomukMetaDataExtractor::Extractor::MetaDataParameters::metaData() 
 
 void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setMetaDataSaved(bool metaDataSaved)
 {
-    Q_D( MetaDataParameters );
+    Q_D(MetaDataParameters);
     d->metaDataSaved = metaDataSaved;
 }
 

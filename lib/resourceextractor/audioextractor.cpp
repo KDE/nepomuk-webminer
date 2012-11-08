@@ -28,9 +28,12 @@
 
 #include <KDE/KDebug>
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
-class AudioExtractorPrivate {
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
+class AudioExtractorPrivate
+{
     // nothing yet, but might be needed in the future
 };
 }
@@ -38,7 +41,7 @@ class AudioExtractorPrivate {
 
 NepomukMetaDataExtractor::Extractor::AudioExtractor::AudioExtractor(QObject *parent)
     : QObject(parent)
-    , d_ptr( new NepomukMetaDataExtractor::Extractor::AudioExtractorPrivate )
+    , d_ptr(new NepomukMetaDataExtractor::Extractor::AudioExtractorPrivate)
 {
 }
 
@@ -47,16 +50,16 @@ void NepomukMetaDataExtractor::Extractor::AudioExtractor::parseUrl(MetaDataParam
     mdp->setResourceUri(fileUrl);
     mdp->setResourceType(QLatin1String("music"));
 
-    if (!findByTag(mdp) ) {
-        findByFileName( mdp );
+    if (!findByTag(mdp)) {
+        findByFileName(mdp);
     }
 }
 
-bool NepomukMetaDataExtractor::Extractor::AudioExtractor::findByTag( MetaDataParameters *mdp )
+bool NepomukMetaDataExtractor::Extractor::AudioExtractor::findByTag(MetaDataParameters *mdp)
 {
-    TagLib::FileRef f( mdp->resourceUri().toLocalFile().toUtf8().data(), false );
+    TagLib::FileRef f(mdp->resourceUri().toLocalFile().toUtf8().data(), false);
 
-    if(f.isNull()) {
+    if (f.isNull()) {
         kDebug() << "TagLib couldn't create FileRef resource for" << mdp->resourceUri().toLocalFile();
         return false;
     }
@@ -78,20 +81,19 @@ bool NepomukMetaDataExtractor::Extractor::AudioExtractor::findByTag( MetaDataPar
 
     uint track = f.tag()->track();
     mdp->setSearchTrack(QString("%1").arg(track));
-    if(mdp->searchTrack() == QString("0")) {
+    if (mdp->searchTrack() == QString("0")) {
         mdp->setSearchTrack(QString());
     }
 
-    if( mdp->searchTitle().isEmpty() && mdp->searchPerson().isEmpty() && mdp->searchAlbum().isEmpty() && mdp->searchTrack().isEmpty()) {
+    if (mdp->searchTitle().isEmpty() && mdp->searchPerson().isEmpty() && mdp->searchAlbum().isEmpty() && mdp->searchTrack().isEmpty()) {
         kDebug() << "TagLib couldn't find any information on" << mdp->resourceUri().toLocalFile();
         return false;
-    }
-    else {
+    } else {
         return true;
     }
 }
 
-bool NepomukMetaDataExtractor::Extractor::AudioExtractor::findByFileName( MetaDataParameters *mdp )
+bool NepomukMetaDataExtractor::Extractor::AudioExtractor::findByFileName(MetaDataParameters *mdp)
 {
     return false;
 }

@@ -57,13 +57,13 @@ void PluginList::setExtractorFactory(NepomukMetaDataExtractor::Extractor::Extrac
 void PluginList::setupUi()
 {
     // music list
-    QList<WebExtractor::Info> engines = extractorFactory->listAvailablePlugins( "music" );
-    engines.append( extractorFactory->listAvailablePlugins( "publication" ) );
-    engines.append( extractorFactory->listAvailablePlugins( "movie" ) );
-    engines.append( extractorFactory->listAvailablePlugins( "tvshow" ) );
+    QList<WebExtractor::Info> engines = extractorFactory->listAvailablePlugins("music");
+    engines.append(extractorFactory->listAvailablePlugins("publication"));
+    engines.append(extractorFactory->listAvailablePlugins("movie"));
+    engines.append(extractorFactory->listAvailablePlugins("tvshow"));
 
-    foreach(const WebExtractor::Info &engine, engines) {
-        if( !ui->pluginList->findItems(engine.name, Qt::MatchExactly).isEmpty()) {
+    foreach (const WebExtractor::Info & engine, engines) {
+        if (!ui->pluginList->findItems(engine.name, Qt::MatchExactly).isEmpty()) {
             continue; // already added
         }
 
@@ -74,14 +74,15 @@ void PluginList::setupUi()
         ui->pluginList->addItem(item);
     }
 
-    connect(ui->pluginList, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(updateButtons(QListWidgetItem*)) );
+    connect(ui->pluginList, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(updateButtons(QListWidgetItem*)));
     connect(ui->infoButton, SIGNAL(clicked()), this, SLOT(showInfo()));
     connect(ui->configButton, SIGNAL(clicked()), this, SLOT(showConfig()));
     ui->infoButton->setDisabled(true);
     ui->configButton->setDisabled(true);
 }
 
-void PluginList::updateButtons(QListWidgetItem* item) {
+void PluginList::updateButtons(QListWidgetItem* item)
+{
     selectedPlugin = extractorFactory->getExtractor(item->data(5).toString()); // the factory automatically reuses existing instances
     ui->infoButton->setDisabled(false);
     if (selectedPlugin->info().hasConfig) {
@@ -91,21 +92,22 @@ void PluginList::updateButtons(QListWidgetItem* item) {
     }
 }
 
-void PluginList::showInfo() {
+void PluginList::showInfo()
+{
     if (!selectedPlugin) {
         return; // nothing to show
     }
 
     WebExtractor::Info info = selectedPlugin->info();
-    QPointer<QDialog> dlg = new QDialog( this );
+    QPointer<QDialog> dlg = new QDialog(this);
 
-    dlg->setWindowTitle(i18n("About %1", info.name) );
+    dlg->setWindowTitle(i18n("About %1", info.name));
     QFormLayout *formLayout = new QFormLayout(this);
 
     formLayout->addRow(QLatin1String("<b>") + i18n("Name:") + QLatin1String("</b>"), new QLabel(info.name));
     formLayout->addRow(QLatin1String("<b>") + i18n("Link:") + QLatin1String("</b>"), new KUrlLabel(info.homepage));
     QLabel *desc = new QLabel(info.description);
-    desc->setWordWrap( true );
+    desc->setWordWrap(true);
     formLayout->addRow(QLatin1String("<b>") + i18n("Description:") + QLatin1String("</b>"), desc);
     formLayout->addRow(QLatin1String("<b>") + i18n("Author:") + QLatin1String("</b>"), new QLabel(info.author));
     formLayout->addRow(QLatin1String("<b>") + i18n("Email:") + QLatin1String("</b>"), new QLabel(info.email));
@@ -115,7 +117,8 @@ void PluginList::showInfo() {
     delete dlg;
 }
 
-void PluginList::showConfig() {
+void PluginList::showConfig()
+{
     if (!selectedPlugin) {
         return; // nothing to show
     }

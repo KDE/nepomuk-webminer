@@ -24,16 +24,19 @@
 
 #include "nepomukmetadataextractor_export.h"
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
-    class ExtractorFactory;
-    class WebExtractor;
-    class ResourceExtractor;
-    class MetaDataParameters;
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
+class ExtractorFactory;
+class WebExtractor;
+class ResourceExtractor;
+class MetaDataParameters;
 }
 
-namespace UI {
-    class AutomaticFetcherPrivate;
+namespace UI
+{
+class AutomaticFetcherPrivate;
 
 /**
  * @brief Automatic background fetcher for the meta data
@@ -119,7 +122,7 @@ private slots:
      *
      * @todo TODO: don't just use first search result, add additional checks to avoid adding wrong data
      */
-    void selectSearchEntry( QVariantList searchResults );
+    void selectSearchEntry(QVariantList searchResults);
 
     /**
      * @brief Processes the returned otem data from the python plugins

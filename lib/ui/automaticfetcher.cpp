@@ -25,15 +25,18 @@
 
 #include <KDE/KDebug>
 
-namespace NepomukMetaDataExtractor {
-namespace UI {
-    class AutomaticFetcherPrivate {
-    public:
-        NepomukMetaDataExtractor::Extractor::WebExtractor *webextractor;
-        NepomukMetaDataExtractor::Extractor::MetaDataParameters *currentItemToupdate;
-        QList<KUrl> urlList;
-        QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> pluginqueue;
-    };
+namespace NepomukMetaDataExtractor
+{
+namespace UI
+{
+class AutomaticFetcherPrivate
+{
+public:
+    NepomukMetaDataExtractor::Extractor::WebExtractor *webextractor;
+    NepomukMetaDataExtractor::Extractor::MetaDataParameters *currentItemToupdate;
+    QList<KUrl> urlList;
+    QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> pluginqueue;
+};
 }
 }
 
@@ -42,23 +45,23 @@ using namespace Extractor;
 
 NepomukMetaDataExtractor::UI::AutomaticFetcher::AutomaticFetcher(QObject *parent)
     : QObject(parent)
-    , d_ptr( new NepomukMetaDataExtractor::UI::AutomaticFetcherPrivate )
+    , d_ptr(new NepomukMetaDataExtractor::UI::AutomaticFetcherPrivate)
 {
-    Q_D( AutomaticFetcher );
+    Q_D(AutomaticFetcher);
     d->webextractor = 0;
     d->currentItemToupdate = 0;
 }
 
 NepomukMetaDataExtractor::UI::AutomaticFetcher::~AutomaticFetcher()
 {
-    Q_D( AutomaticFetcher );
+    Q_D(AutomaticFetcher);
     delete d->currentItemToupdate;
 }
 
 void NepomukMetaDataExtractor::UI::AutomaticFetcher::addFetcherUrl(const KUrl& url)
 {
-    Q_D( AutomaticFetcher );
-    d->urlList.append( url );
+    Q_D(AutomaticFetcher);
+    d->urlList.append(url);
 }
 
 void NepomukMetaDataExtractor::UI::AutomaticFetcher::startFetcher()
@@ -70,8 +73,8 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::startFetcher()
 
 void NepomukMetaDataExtractor::UI::AutomaticFetcher::startUrlFetcher()
 {
-    Q_D( AutomaticFetcher );
-    if(d->urlList.isEmpty()) {
+    Q_D(AutomaticFetcher);
+    if (d->urlList.isEmpty()) {
         kWarning() << "started url fetcher without any urls";
         emit finished();
         return;
@@ -80,28 +83,27 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::startUrlFetcher()
     //TODO: implement downloading of more than one url, loop trough all urls in d->urllist
 
     // create a webextractor
-    d->webextractor = extractorFactory()->getExtractor( d->urlList.first() );
+    d->webextractor = extractorFactory()->getExtractor(d->urlList.first());
 
-    if(!d->webextractor) {
+    if (!d->webextractor) {
         kWarning() << "could not find webextractor plugin for URL" << d->urlList.first();
-    }
-    else {
+    } else {
         d->currentItemToupdate = new MetaDataParameters;
-        connect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
+        connect(d->webextractor, SIGNAL(itemResults(QString, QVariantMap)), this, SLOT(fetchedItemDetails(QString, QVariantMap)));
         connect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
 
         QVariantMap options;
         options.insert(QString("references"), MDESettings::downloadReferences());
         options.insert(QString("banner"), MDESettings::downloadBanner());
 
-        d->webextractor->extractItem( d->urlList.first(), options );
+        d->webextractor->extractItem(d->urlList.first(), options);
     }
 }
 
 void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
 {
-    Q_D( AutomaticFetcher );
-    if( resourceExtractor()->resourcesList().isEmpty() ) {
+    Q_D(AutomaticFetcher);
+    if (resourceExtractor()->resourcesList().isEmpty()) {
         kDebug() << "Finished fetching all items";
         emit finished();
         return;
@@ -113,28 +115,28 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
     if (d->pluginqueue.isEmpty()) {
         d->pluginqueue.append(extractorFactory()->listAvailablePlugins(d->currentItemToupdate->resourceType()));
     }
-    if( d->pluginqueue.isEmpty()) {
+    if (d->pluginqueue.isEmpty()) {
         kWarning() << "Could not get any plugins for the resourcetype :: " << d->currentItemToupdate->resourceType();
         return;
     }
 
     QString favPlugin;
-    if( d->currentItemToupdate->resourceType() == QString("movie")) {
+    if (d->currentItemToupdate->resourceType() == QString("movie")) {
         favPlugin = MDESettings::favoriteMoviePlugin();
     }
-    if( d->currentItemToupdate->resourceType() == QString("tvshow")) {
+    if (d->currentItemToupdate->resourceType() == QString("tvshow")) {
         favPlugin = MDESettings::favoriteTvShowPlugin();
     }
-    if( d->currentItemToupdate->resourceType() == QString("publication")) {
+    if (d->currentItemToupdate->resourceType() == QString("publication")) {
         favPlugin = MDESettings::favoritePublicationPlugin();
     }
-    if( d->currentItemToupdate->resourceType() == QString("music")) {
+    if (d->currentItemToupdate->resourceType() == QString("music")) {
         favPlugin = MDESettings::favoriteMusicPlugin();
     }
 
     Extractor::WebExtractor::Info selectedEngine;
     // if a fave is set we put it in the front of the queue, if it exists!
-    if(!favPlugin.isEmpty()) {
+    if (!favPlugin.isEmpty()) {
         Extractor::WebExtractor::Info faveinfo;
         if (d->webextractor && d->webextractor->info().identifier == favPlugin) {
             faveinfo = d->webextractor->info();
@@ -144,7 +146,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
         if (d->pluginqueue.contains(faveinfo)) {
             // if we do not want to check more than the fav plugin
             // clear list again and set only the fav plugin
-            if( !MDESettings::checkNextPlugin()) {
+            if (!MDESettings::checkNextPlugin()) {
                 d->pluginqueue.clear();
                 d->pluginqueue << faveinfo;
             }
@@ -156,19 +158,19 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
     }
     selectedEngine = d->pluginqueue.takeFirst();
 
-    if(!d->webextractor || d->webextractor->info().identifier != selectedEngine.identifier) {
+    if (!d->webextractor || d->webextractor->info().identifier != selectedEngine.identifier) {
 
-        if(d->webextractor) {
+        if (d->webextractor) {
             disconnect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
-            disconnect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
+            disconnect(d->webextractor, SIGNAL(itemResults(QString, QVariantMap)), this, SLOT(fetchedItemDetails(QString, QVariantMap)));
             disconnect(d->webextractor, SIGNAL(log(QString)), this, SLOT(log(QString)));
             disconnect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
         }
 
-        d->webextractor = extractorFactory()->getExtractor( selectedEngine.identifier );
+        d->webextractor = extractorFactory()->getExtractor(selectedEngine.identifier);
 
         connect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
-        connect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
+        connect(d->webextractor, SIGNAL(itemResults(QString, QVariantMap)), this, SLOT(fetchedItemDetails(QString, QVariantMap)));
         connect(d->webextractor, SIGNAL(log(QString)), this, SLOT(log(QString)));
         connect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
     }
@@ -189,14 +191,14 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
     kDebug() << "Start searching with " << d->webextractor->info().name;
     //kDebug() << searchParameters;
 
-    d->webextractor->search( d->currentItemToupdate->resourceType(), searchParameters );
+    d->webextractor->search(d->currentItemToupdate->resourceType(), searchParameters);
 }
 
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::selectSearchEntry( QVariantList searchResults)
+void NepomukMetaDataExtractor::UI::AutomaticFetcher::selectSearchEntry(QVariantList searchResults)
 {
-    Q_D( AutomaticFetcher );
+    Q_D(AutomaticFetcher);
 
-    if( searchResults.isEmpty() ) {
+    if (searchResults.isEmpty()) {
         kDebug() << "Could not find any search results for the item" << d->currentItemToupdate->resourceUri();
 
         if (d->pluginqueue.isEmpty()) {
@@ -210,29 +212,28 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::selectSearchEntry( QVariant
 
         // and start the next round
         searchNextItem();
-    }
-    else {
+    } else {
         //FIXME: Find a good way to determine which search result is the best one to take. Or if none fit skip this to avoid false results
         kDebug() << "Found " << searchResults.size() << "search results, taking the first entry";
         kDebug() << searchResults.first();
 
         QVariantMap selectedSearchResult = searchResults.first().toMap();
 
-        KUrl fetchUrl( selectedSearchResult.value(QLatin1String("url")).toString() );
+        KUrl fetchUrl(selectedSearchResult.value(QLatin1String("url")).toString());
 
         QVariantMap options;
         options.insert(QString("references"), MDESettings::downloadReferences());
         options.insert(QString("banner"), MDESettings::downloadBanner());
 
-        d->webextractor->extractItem( fetchUrl, options );
+        d->webextractor->extractItem(fetchUrl, options);
     }
 }
 
 void NepomukMetaDataExtractor::UI::AutomaticFetcher::fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails)
 {
-    Q_D( AutomaticFetcher );
+    Q_D(AutomaticFetcher);
 
-    if(!d->currentItemToupdate) {
+    if (!d->currentItemToupdate) {
         kWarning() << "tried to add fetched item data to non existing item";
         return;
     }
@@ -241,15 +242,15 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::fetchedItemDetails(const QS
     d->currentItemToupdate->setMetaData(itemDetails);
     d->currentItemToupdate->setResourceType(resourceType);
 
-    addResourceUriToMetaData( d->currentItemToupdate );
+    addResourceUriToMetaData(d->currentItemToupdate);
 
-    saveMetaData( d->currentItemToupdate );
+    saveMetaData(d->currentItemToupdate);
 
     // clear the pluginqueue so it will be initialized for the next item
     d->pluginqueue.clear();
 
     // delete the current item, we do not need it anymore
-    if( !resourceExtractor()->resourcesList().isEmpty() ) {
+    if (!resourceExtractor()->resourcesList().isEmpty()) {
         resourceExtractor()->takeNext(); // pop it off the list
         delete d->currentItemToupdate; // and delete it
         d->currentItemToupdate = 0;

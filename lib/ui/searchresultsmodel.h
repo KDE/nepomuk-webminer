@@ -20,8 +20,10 @@
 
 #include <QtCore/QAbstractListModel>
 
-namespace NepomukMetaDataExtractor {
-namespace UI {
+namespace NepomukMetaDataExtractor
+{
+namespace UI
+{
 
 class SearchResultsModelPrivate;
 /**
@@ -50,7 +52,7 @@ public:
      * @param index the selected index in the list
      * @return the search result information
      */
-    QVariantMap searchResultEntry( const QModelIndex & index ) const;
+    QVariantMap searchResultEntry(const QModelIndex & index) const;
 
     /**
      * @brief Remove all search results from the model
@@ -63,7 +65,7 @@ public:
      * @param parent parent model index
      * @return number of entries
      */
-    int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
+    int rowCount(const QModelIndex & parent = QModelIndex()) const;
 
     /**
      * @brief Returns the single data for one search entry at the given @p index and @p role
@@ -72,7 +74,7 @@ public:
      * @param role what data will be used (DisplayRole = title, UserDataRole = details)
      * @return the info as string
      */
-    QVariant data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
 private:
     Q_DECLARE_PRIVATE(SearchResultsModel)

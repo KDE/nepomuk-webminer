@@ -38,8 +38,10 @@
 
 class KJob;
 
-namespace NepomukMetaDataExtractor {
-namespace Pipe {
+namespace NepomukMetaDataExtractor
+{
+namespace Pipe
+{
 
 class PublicationPipePrivate;
 
@@ -101,7 +103,7 @@ protected:
      * Also adds all the refercen details in here, as all further chages will operate on the nbib:Publication
      * @return QPair with first = publicationUr and second = referenceUri
      */
-    QPair<QUrl, QUrl> importPublication( QVariantMap &metaData );
+    QPair<QUrl, QUrl> importPublication(QVariantMap &metaData);
 
     /**
      * @brief adds some subpublication types (like @c article, book etc) to teh created nbib:Publication
@@ -218,7 +220,7 @@ protected:
     /**
       * @brief creates the contact resource
       */
-    void addContact(const QString &contentValue, Nepomuk2::SimpleResource &resource, Nepomuk2::SimpleResourceGraph &graph, QUrl contactProperty );
+    void addContact(const QString &contentValue, Nepomuk2::SimpleResource &resource, Nepomuk2::SimpleResourceGraph &graph, QUrl contactProperty);
 
 private:
     Q_DECLARE_PRIVATE(PublicationPipe)

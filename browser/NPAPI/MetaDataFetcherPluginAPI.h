@@ -33,17 +33,16 @@ class MetaDataFetcherPluginAPI : public FB::JSAPIAuto
 public:
     /**
      * @brief Constructor for your JSAPI object.
-     * 
+     *
      * You should register your methods, properties, and events
      * that should be accessible to Javascript from here.
-     * 
+     *
      * @see FB::JSAPIAuto::registerMethod
      * @see FB::JSAPIAuto::registerProperty
      * @see FB::JSAPIAuto::registerEvent
      */
     MetaDataFetcherPluginAPI(const MetaDataFetcherPluginPtr& plugin, const FB::BrowserHostPtr& host) :
-        m_plugin(plugin), m_host(host)
-    {
+        m_plugin(plugin), m_host(host) {
         registerMethod("checkUrl",      make_method(this, &MetaDataFetcherPluginAPI::checkUrl));
         registerMethod("fetchMetaData", make_method(this, &MetaDataFetcherPluginAPI::fetchMetaData));
 
@@ -53,7 +52,7 @@ public:
 
     /**
      * @brief  Destructor.
-     * 
+     *
      * Remember that this object will not be released until
      * the browser is done with it; this will almost definitely be after
      * the plugin is released.
@@ -62,8 +61,8 @@ public:
 
     /**
      * @brief  Gets a reference to the plugin that was passed in when the object was created.
-     * 
-     * If the plugin has already been released then this will throw a @c FB::script_error 
+     *
+     * If the plugin has already been released then this will throw a @c FB::script_error
      * that will be translated into a javascript exception in the page.
      * */
     MetaDataFetcherPluginPtr getPlugin();

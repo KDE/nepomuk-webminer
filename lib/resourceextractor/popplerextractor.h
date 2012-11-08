@@ -25,15 +25,18 @@
 
 #include "nepomukmetadataextractor_export.h"
 
-namespace Poppler {
-    class Document;
+namespace Poppler
+{
+class Document;
 }
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
 
-    class MetaDataParameters;
-    class PopplerExtractorPrivate;
+class MetaDataParameters;
+class PopplerExtractorPrivate;
 
 /**
   * @brief Extractor for pdf documents via the poppler library

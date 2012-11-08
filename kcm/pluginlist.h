@@ -22,14 +22,17 @@
 
 class QListWidgetItem;
 
-namespace Ui {
+namespace Ui
+{
 class PluginList;
 }
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
-    class ExtractorFactory;
-    class WebExtractor;
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
+class ExtractorFactory;
+class WebExtractor;
 }
 
 /**

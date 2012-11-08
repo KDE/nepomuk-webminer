@@ -27,17 +27,21 @@
 
 #include "nepomukmetadataextractor_export.h"
 
-namespace Nepomuk2 {
-    namespace NCO {
-        class Contact;
-        class OrganizationContact;
-    }
+namespace Nepomuk2
+{
+namespace NCO
+{
+class Contact;
+class OrganizationContact;
+}
 }
 
 class KJob;
 
-namespace NepomukMetaDataExtractor {
-namespace Pipe {
+namespace NepomukMetaDataExtractor
+{
+namespace Pipe
+{
 
 class NepomukPipePrivate;
 
@@ -118,7 +122,7 @@ protected:
       * @p filename how the file should be named on the local harddrive
       * @return a KUrl with the local file url of the new image
       */
-    KUrl downloadBanner(const QUrl &bannerUrl, const QString &filename, const QString& subFolder, const QString &resourceFolder ) const;
+    KUrl downloadBanner(const QUrl &bannerUrl, const QString &filename, const QString& subFolder, const QString &resourceFolder) const;
 
     /**
       * @brief Splits a list of person names and creates a list of @c nco:Contact from it.

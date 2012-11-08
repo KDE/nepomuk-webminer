@@ -47,16 +47,18 @@ public:
     // If you want your plugin to be optionally windowless based on the
     // value of the "windowless" param tag, remove this method or return
     // FB::PluginCore::isWindowless()
-    virtual bool isWindowless() { return false; }
+    virtual bool isWindowless() {
+        return false;
+    }
 
 
     BEGIN_PLUGIN_EVENT_MAP()
-        EVENTTYPE_CASE(FB::MouseDownEvent, onMouseDown, FB::PluginWindow)
-        EVENTTYPE_CASE(FB::MouseUpEvent, onMouseUp, FB::PluginWindow)
-        EVENTTYPE_CASE(FB::MouseMoveEvent, onMouseMove, FB::PluginWindow)
-        EVENTTYPE_CASE(FB::MouseMoveEvent, onMouseMove, FB::PluginWindow)
-        EVENTTYPE_CASE(FB::AttachedEvent, onWindowAttached, FB::PluginWindow)
-        EVENTTYPE_CASE(FB::DetachedEvent, onWindowDetached, FB::PluginWindow)
+    EVENTTYPE_CASE(FB::MouseDownEvent, onMouseDown, FB::PluginWindow)
+    EVENTTYPE_CASE(FB::MouseUpEvent, onMouseUp, FB::PluginWindow)
+    EVENTTYPE_CASE(FB::MouseMoveEvent, onMouseMove, FB::PluginWindow)
+    EVENTTYPE_CASE(FB::MouseMoveEvent, onMouseMove, FB::PluginWindow)
+    EVENTTYPE_CASE(FB::AttachedEvent, onWindowAttached, FB::PluginWindow)
+    EVENTTYPE_CASE(FB::DetachedEvent, onWindowDetached, FB::PluginWindow)
     END_PLUGIN_EVENT_MAP()
 
     /** BEGIN EVENTDEF -- DON'T CHANGE THIS LINE **/
@@ -66,7 +68,7 @@ public:
     virtual bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *);
     virtual bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *);
     /** END EVENTDEF -- DON'T CHANGE THIS LINE **/
-    
+
 };
 
 

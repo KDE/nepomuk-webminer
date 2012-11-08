@@ -30,131 +30,134 @@
 
 #include <KDE/KDebug>
 
-namespace NepomukMetaDataExtractor {
-namespace UI {
-    class FetcherPrivate {
-    public:
-        Extractor::ResourceExtractor *m_re;
-        Extractor::ExtractorFactory *m_ef;
-    };
+namespace NepomukMetaDataExtractor
+{
+namespace UI
+{
+class FetcherPrivate
+{
+public:
+    Extractor::ResourceExtractor *m_re;
+    Extractor::ExtractorFactory *m_ef;
+};
 }
 }
 
 NepomukMetaDataExtractor::UI::Fetcher::Fetcher()
-    : d_ptr( new NepomukMetaDataExtractor::UI::FetcherPrivate )
+    : d_ptr(new NepomukMetaDataExtractor::UI::FetcherPrivate)
 
 {
-    Q_D( Fetcher );
+    Q_D(Fetcher);
     d->m_re = new Extractor::ResourceExtractor;
     d->m_ef = new Extractor::ExtractorFactory;
 }
 
 NepomukMetaDataExtractor::UI::Fetcher::~Fetcher()
 {
-    Q_D( Fetcher );
+    Q_D(Fetcher);
     delete d->m_re;
     delete d->m_ef;
 }
 
-void NepomukMetaDataExtractor::UI::Fetcher::addFetcherPath( const KUrl &url )
+void NepomukMetaDataExtractor::UI::Fetcher::addFetcherPath(const KUrl &url)
 {
-    Q_D( Fetcher );
+    Q_D(Fetcher);
     d->m_re->lookupFiles(url);
 }
 
-void NepomukMetaDataExtractor::UI::Fetcher::addFetcherResource( const KUrl &url )
+void NepomukMetaDataExtractor::UI::Fetcher::addFetcherResource(const KUrl &url)
 {
-    Nepomuk2::Resource r = Nepomuk2::Resource::fromResourceUri( url );
+    Nepomuk2::Resource r = Nepomuk2::Resource::fromResourceUri(url);
 
-    if(r.exists()) {
+    if (r.exists()) {
         addFetcherResource(r);
     }
 }
 
 void NepomukMetaDataExtractor::UI::Fetcher::addFetcherResource(const Nepomuk2::Resource &resource)
 {
-    Q_D( Fetcher );
+    Q_D(Fetcher);
     d->m_re->lookupResource(resource);
 }
 
 void NepomukMetaDataExtractor::UI::Fetcher::addFetcherResource(const QList<Nepomuk2::Resource> &resources)
 {
-    Q_D( Fetcher );
+    Q_D(Fetcher);
     d->m_re->lookupResource(resources);
 }
 
 void NepomukMetaDataExtractor::UI::Fetcher::setForceUpdate(bool update)
 {
-    Q_D( Fetcher );
+    Q_D(Fetcher);
     d->m_re->setForceUpdate(update);
 }
 
 void NepomukMetaDataExtractor::UI::Fetcher::setTvShowMode(bool tvshowMode)
 {
-    Q_D( Fetcher );
-    d->m_re->setTvShowMode( tvshowMode );
+    Q_D(Fetcher);
+    d->m_re->setTvShowMode(tvshowMode);
 }
 
 void NepomukMetaDataExtractor::UI::Fetcher::setTvShowNamesInFolders(bool useFolderNames)
 {
-    Q_D( Fetcher );
-    d->m_re->setTvShowNamesInFolders( useFolderNames );
+    Q_D(Fetcher);
+    d->m_re->setTvShowNamesInFolders(useFolderNames);
 }
 
 void NepomukMetaDataExtractor::UI::Fetcher::setMovieMode(bool movieMode)
 {
-    Q_D( Fetcher );
-    d->m_re->setMovieMode( movieMode );
+    Q_D(Fetcher);
+    d->m_re->setMovieMode(movieMode);
 }
 
 NepomukMetaDataExtractor::Extractor::ResourceExtractor *NepomukMetaDataExtractor::UI::Fetcher::resourceExtractor()
 {
-    Q_D( Fetcher );
+    Q_D(Fetcher);
     return d->m_re;
 }
 
 NepomukMetaDataExtractor::Extractor::ExtractorFactory* NepomukMetaDataExtractor::UI::Fetcher::extractorFactory()
 {
-    Q_D( Fetcher );
+    Q_D(Fetcher);
     return d->m_ef;
 }
 
-void NepomukMetaDataExtractor::UI::Fetcher::addResourceUriToMetaData( NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp )
+void NepomukMetaDataExtractor::UI::Fetcher::addResourceUriToMetaData(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp)
 {
     // For tv shows put the resource uri into the Episode part of the MetaData
     // this way around it is possible to use the TvShowPipe with more episode/files at once
-    if( mdp->resourceType() == QLatin1String("tvshow")) {
+    if (mdp->resourceType() == QLatin1String("tvshow")) {
         QVariantList seasons = mdp->metaData().value(QLatin1String("seasons")).toList();
-        if(!seasons.isEmpty()) {
+        if (!seasons.isEmpty()) {
             QVariantMap season = seasons.takeFirst().toMap();
             QVariantList episodes = season.value(QLatin1String("episodes")).toList();
 
-            if(!episodes.isEmpty()) {
+            if (!episodes.isEmpty()) {
                 QVariantMap episodesMap = episodes.takeFirst().toMap();
                 kDebug() << "add to episode" << episodesMap.value(QLatin1String("title")).toString() << "url" << mdp->resourceUri().url();
                 episodesMap.insert(QLatin1String("resourceuri"), mdp->resourceUri().url());
 
                 episodes << episodesMap;
-                season.insert( QLatin1String("episodes"), episodes);
+                season.insert(QLatin1String("episodes"), episodes);
                 seasons << season;
                 QVariantMap savedMetaData = mdp->metaData();
-                savedMetaData.insert( QLatin1String("seasons"), seasons);
+                savedMetaData.insert(QLatin1String("seasons"), seasons);
                 mdp->setMetaData(savedMetaData);
             }
         }
     }
     // music piece / album works the same as tvshows, we add the fileurl to the track not the toplevel album
-    else if( mdp->resourceType() == QLatin1String("music")) {
+    else if (mdp->resourceType() == QLatin1String("music")) {
         QVariantList trackList = mdp->metaData().value(QLatin1String("tracks")).toList();
 
-        if(!trackList.isEmpty()) {
+        if (!trackList.isEmpty()) {
             QVariantMap trackMap = trackList.takeFirst().toMap();
             kDebug() << "add to track" << trackMap.value(QLatin1String("title")).toString() << "url" << mdp->resourceUri().url();
             trackMap.insert(QLatin1String("resourceuri"), mdp->resourceUri().url());
 
             trackList << trackMap;
             QVariantMap savedMetaData = mdp->metaData();
-            savedMetaData.insert( QLatin1String("tracks"), trackList);
+            savedMetaData.insert(QLatin1String("tracks"), trackList);
             mdp->setMetaData(savedMetaData);
         }
     }
@@ -172,23 +175,19 @@ void NepomukMetaDataExtractor::UI::Fetcher::saveMetaData(NepomukMetaDataExtracto
 
     Pipe::NepomukPipe *nepomukPipe = 0;
 
-    if(type == QLatin1String("publication")) {
+    if (type == QLatin1String("publication")) {
         nepomukPipe = new Pipe::PublicationPipe;
-    }
-    else if(type == QLatin1String("tvshow")) {
+    } else if (type == QLatin1String("tvshow")) {
         nepomukPipe = new Pipe::TvShowPipe;
-    }
-    else if(type == QLatin1String("movie")) {
+    } else if (type == QLatin1String("movie")) {
         nepomukPipe = new Pipe::MoviePipe;
-    }
-    else if(type == QLatin1String("music")) {
+    } else if (type == QLatin1String("music")) {
         nepomukPipe = new Pipe::MusicPipe;
     }
 
-    if(nepomukPipe) {
-        nepomukPipe->pipeImport( mdp->metaData() );
-    }
-    else {
+    if (nepomukPipe) {
+        nepomukPipe->pipeImport(mdp->metaData());
+    } else {
         kWarning() << "No nepomuk pipe available for the resource type" << type;
     }
 

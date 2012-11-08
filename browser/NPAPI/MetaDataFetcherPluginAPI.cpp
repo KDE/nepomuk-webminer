@@ -35,15 +35,14 @@ using namespace UI;
 FB::variant MetaDataFetcherPluginAPI::checkUrl(const FB::variant& inputUrl)
 {
     std::string inputString   = inputUrl.cast<std::string>();
-    QString urlString = QString::fromUtf8( inputString.data(), inputString.size() );
+    QString urlString = QString::fromUtf8(inputString.data(), inputString.size());
     QUrl url = QUrl(urlString);
-    WebExtractor *we = m_ef->createExtractor( url );
+    WebExtractor *we = m_ef->createExtractor(url);
 
-    if(we) {
+    if (we) {
         delete we;
         return true;
-    }
-    else {
+    } else {
         delete we;
         return false;
     }
@@ -54,12 +53,12 @@ FB::variant MetaDataFetcherPluginAPI::fetchMetaData(const FB::variant& inputUrl)
     std::string inputUrlString   = inputUrl.cast<std::string>();
 
     std::string command = "metadataextractor -auto -url ";
-    command.append( inputUrlString );
+    command.append(inputUrlString);
 
     // calls the commandline program to do the data fetching and nepomuk importing
     // even better would be to use the WebExtractor and NepomukPipe classes directly
     // but I need the Qt signal/slot mechanism then :/
-    system( command.c_str() );
+    system(command.c_str());
 
     return "finished extraction of :: " + inputUrlString;
 }

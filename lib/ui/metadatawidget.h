@@ -25,13 +25,16 @@
 
 class QStandardItem;
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
-    class MetaDataParameters;
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
+class MetaDataParameters;
 }
 
-namespace UI {
-    class MetaDataWidgetPrivate;
+namespace UI
+{
+class MetaDataWidgetPrivate;
 
 /**
  * @brief Small widget to show the metadata downloaded from the web
@@ -47,7 +50,7 @@ class MetaDataWidget : public QWidget
     Q_OBJECT
 public:
     explicit MetaDataWidget(QWidget *parent = 0);
-    
+
     /**
      * @brief Tell the Widget which metadata will be shown
      *
@@ -78,7 +81,7 @@ private:
 
     Q_DECLARE_PRIVATE(MetaDataWidget)
     MetaDataWidgetPrivate *const d_ptr; /**< d-pointer for this class */
-    
+
 };
 }
 }

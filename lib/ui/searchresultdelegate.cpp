@@ -25,7 +25,7 @@ NepomukMetaDataExtractor::UI::SearchResultDelegate::SearchResultDelegate(QObject
 {
 }
 
-void NepomukMetaDataExtractor::UI::SearchResultDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,const QModelIndex &index) const
+void NepomukMetaDataExtractor::UI::SearchResultDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QStyleOptionViewItemV4 opt = option;
     initStyleOption(&opt, index);
@@ -54,7 +54,7 @@ void NepomukMetaDataExtractor::UI::SearchResultDelegate::paint(QPainter *painter
     titleFont.setBold(true);
     titleFont.setPointSize(9);
     painter->setFont(titleFont);
-    painter->drawText(QRect(rect.left(), rect.top(), rect.width(), rect.height()/2),
+    painter->drawText(QRect(rect.left(), rect.top(), rect.width(), rect.height() / 2),
                       opt.displayAlignment, title);
 
     QFont infoFont;
@@ -62,13 +62,13 @@ void NepomukMetaDataExtractor::UI::SearchResultDelegate::paint(QPainter *painter
     infoFont.setItalic(true);
     infoFont.setPointSize(8);
     painter->setFont(infoFont);
-    painter->drawText(QRect(rect.left(), rect.top()+rect.height()/2, rect.width(), rect.height()/2),
+    painter->drawText(QRect(rect.left(), rect.top() + rect.height() / 2, rect.width(), rect.height() / 2),
                       opt.displayAlignment, details);
 }
 
-QSize NepomukMetaDataExtractor::UI::SearchResultDelegate::sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QSize NepomukMetaDataExtractor::UI::SearchResultDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
     QSize result = QStyledItemDelegate::sizeHint(option, index);
-    result.setHeight(result.height()*2);
+    result.setHeight(result.height() * 2);
     return result;
 }

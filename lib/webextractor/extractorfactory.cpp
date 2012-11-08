@@ -35,9 +35,12 @@
 
 using namespace NepomukMetaDataExtractor::Extractor;
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
-class ExtractorFactoryPrivate {
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
+class ExtractorFactoryPrivate
+{
 public:
     QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> availableScripts;
     QList<NepomukMetaDataExtractor::Extractor::WebExtractor*> existingExtractors;
@@ -47,7 +50,7 @@ public:
 
 NepomukMetaDataExtractor::Extractor::ExtractorFactory::ExtractorFactory(QObject *parent)
     : QObject(parent)
-    , d_ptr( new NepomukMetaDataExtractor::Extractor::ExtractorFactoryPrivate )
+    , d_ptr(new NepomukMetaDataExtractor::Extractor::ExtractorFactoryPrivate)
 
 {
     loadScriptInfo();
@@ -55,27 +58,27 @@ NepomukMetaDataExtractor::Extractor::ExtractorFactory::ExtractorFactory(QObject 
 
 NepomukMetaDataExtractor::Extractor::ExtractorFactory::~ExtractorFactory()
 {
-    Q_D( ExtractorFactory );
-    while( !d->existingExtractors.isEmpty() ) {
+    Q_D(ExtractorFactory);
+    while (!d->existingExtractors.isEmpty()) {
         WebExtractor *we = d->existingExtractors.takeFirst();
         we->deleteLater();
     }
 }
 
-NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::getExtractor( const QString &webEngine )
+NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::getExtractor(const QString &webEngine)
 {
-    Q_D( ExtractorFactory );
+    Q_D(ExtractorFactory);
 
     // first check if we already created the extractor and reuse it in this case
-    foreach(WebExtractor *we, d->existingExtractors) {
-        if(we->info().identifier == webEngine) {
+    foreach (WebExtractor * we, d->existingExtractors) {
+        if (we->info().identifier == webEngine) {
             return we;
         }
     }
 
     // other wise create a new one
-    foreach(const WebExtractor::Info i, d->availableScripts) {
-        if( i.identifier == webEngine ) {
+    foreach (const WebExtractor::Info i, d->availableScripts) {
+        if (i.identifier == webEngine) {
 
             kDebug() << "create KROSS web extractor for:" << i.name;
             KrossExtractor *ke = new KrossExtractor(i.file);
@@ -89,23 +92,23 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
     return 0;
 }
 
-NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::getExtractor( const QUrl &uri )
+NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::getExtractor(const QUrl &uri)
 {
-    Q_D( ExtractorFactory );
+    Q_D(ExtractorFactory);
 
     // first check if we already created the extractor and reuse it in this case
-    foreach(WebExtractor *we, d->existingExtractors) {
-        foreach(const QString &urlregex, we->info().urlregex) {
-            if(uri.toString().contains( QRegExp(urlregex) )) {
+    foreach (WebExtractor * we, d->existingExtractors) {
+        foreach (const QString & urlregex, we->info().urlregex) {
+            if (uri.toString().contains(QRegExp(urlregex))) {
                 return we;
             }
         }
     }
 
     // other wise create a new one
-    foreach(const WebExtractor::Info i, d->availableScripts) {
-        foreach(const QString &urlregex, i.urlregex) {
-            if(uri.toString().contains( QRegExp(urlregex) )) {
+    foreach (const WebExtractor::Info i, d->availableScripts) {
+        foreach (const QString & urlregex, i.urlregex) {
+            if (uri.toString().contains(QRegExp(urlregex))) {
 
                 kDebug() << "create KROSS web extractor for:" << i.name;
                 KrossExtractor *ke = new KrossExtractor(i.file);
@@ -119,14 +122,14 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
     return 0;
 }
 
-QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> NepomukMetaDataExtractor::Extractor::ExtractorFactory::listAvailablePlugins( const QString &type )
+QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> NepomukMetaDataExtractor::Extractor::ExtractorFactory::listAvailablePlugins(const QString &type)
 {
-    Q_D( ExtractorFactory );
+    Q_D(ExtractorFactory);
 
     QList<WebExtractor::Info> pluginList;
 
-    foreach(const WebExtractor::Info i, d->availableScripts) {
-        if(i.resource.contains(type) ) {
+    foreach (const WebExtractor::Info i, d->availableScripts) {
+        if (i.resource.contains(type)) {
             pluginList.append(i);
         }
     }
@@ -136,13 +139,13 @@ QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> NepomukMetaDataEx
 
 void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
 {
-    Q_D( ExtractorFactory );
+    Q_D(ExtractorFactory);
 
     QStringList acceptedFileTypes;
     QStringList interpreters = Kross::Manager::self().interpreters();
     kDebug() << "available interpreters" << interpreters;
 
-    foreach(const QString &suffix, interpreters) {
+    foreach (const QString & suffix, interpreters) {
         QString wildcard = Kross::Manager::self().interpreter(suffix)->interpreterInfo()->wildcard();
         acceptedFileTypes << wildcard.remove(QLatin1String("*."));
     }
@@ -154,26 +157,26 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
     pluginDirs << MDESettings::additionalPluginFolder();;
 
     QFileInfoList pluginList;
-    foreach(const QString &folder, pluginDirs) {
+    foreach (const QString & folder, pluginDirs) {
 
-        QDir dir( folder );
-        if( dir.exists() ) {
+        QDir dir(folder);
+        if (dir.exists()) {
             kDebug() << "look for plugins in the folder: " << folder;
-            pluginList.append( dir.entryInfoList() );
+            pluginList.append(dir.entryInfoList());
         }
     }
 
     KConfig config("nepomukmetadataextractorrc");
 
-    foreach( const QFileInfo &fileInfo, pluginList) {
+    foreach (const QFileInfo & fileInfo, pluginList) {
 
-        if( !acceptedFileTypes.contains(fileInfo.completeSuffix())) {
+        if (!acceptedFileTypes.contains(fileInfo.completeSuffix())) {
             continue;
         }
 
         bool readFromCache = false;
-        if( config.hasGroup( fileInfo.absoluteFilePath() ) ) {
-            KConfigGroup pluginGroup( &config, fileInfo.absoluteFilePath() );
+        if (config.hasGroup(fileInfo.absoluteFilePath())) {
+            KConfigGroup pluginGroup(&config, fileInfo.absoluteFilePath());
 
             QDateTime cacheDate = pluginGroup.readEntry("cachedate", QDateTime());
             if (fileInfo.lastModified() <= cacheDate) {
@@ -193,18 +196,18 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
                 scriptInfo.urlregex = pluginGroup.readEntry("urlregex", QStringList());
 
                 kDebug() << "add plugin (" << scriptInfo.name << ") via KConfig cache for file: " << scriptInfo.file;
-                d->availableScripts.append( scriptInfo );
+                d->availableScripts.append(scriptInfo);
             }
         }
 
 
-        if(!readFromCache) {
+        if (!readFromCache) {
 
-            action.setFile( fileInfo.absoluteFilePath() );
+            action.setFile(fileInfo.absoluteFilePath());
 
             QVariantMap result = action.callFunction("info").toMap();
 
-            if(result.value(QLatin1String("isAvailable")).toBool() == false) {
+            if (result.value(QLatin1String("isAvailable")).toBool() == false) {
                 kDebug() << "failed loading the plugin: " << result.value("name").toString() << " from:" << fileInfo.absoluteFilePath()
                          << " Reason:" << result.value("errorMsg").toString();
                 continue;
@@ -229,33 +232,33 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
             scriptInfo.file = fileInfo.absoluteFilePath();
 
             QVariantList resList = result.value("resource").toList();
-            foreach(const QVariant &res, resList) {
+            foreach (const QVariant & res, resList) {
                 scriptInfo.resource << res.toString();
             }
 
             resList = result.value("urlregex").toList();
-            foreach(const QVariant &res, resList) {
+            foreach (const QVariant & res, resList) {
                 scriptInfo.urlregex << res.toString();
             }
 
             kDebug() << "add plugin (" << scriptInfo.name << ") via file: " << scriptInfo.file;
-            d->availableScripts.append( scriptInfo );
+            d->availableScripts.append(scriptInfo);
 
             // and add info to the config as chaced values
-            KConfigGroup pluginGroup( &config, scriptInfo.file );
-            pluginGroup.writeEntry("cachedate",fileInfo.lastModified());
-            pluginGroup.writeEntry("name",scriptInfo.name);
-            pluginGroup.writeEntry("homepage",scriptInfo.homepage);
-            pluginGroup.writeEntry("identifier",scriptInfo.identifier);
-            pluginGroup.writeEntry("icon",scriptInfo.icon);
-            pluginGroup.writeEntry("description",scriptInfo.description);
+            KConfigGroup pluginGroup(&config, scriptInfo.file);
+            pluginGroup.writeEntry("cachedate", fileInfo.lastModified());
+            pluginGroup.writeEntry("name", scriptInfo.name);
+            pluginGroup.writeEntry("homepage", scriptInfo.homepage);
+            pluginGroup.writeEntry("identifier", scriptInfo.identifier);
+            pluginGroup.writeEntry("icon", scriptInfo.icon);
+            pluginGroup.writeEntry("description", scriptInfo.description);
             pluginGroup.writeEntry("hasConfig", QVariant(scriptInfo.hasConfig));
-            pluginGroup.writeEntry("icon",scriptInfo.icon);
-            pluginGroup.writeEntry("author",scriptInfo.author);
-            pluginGroup.writeEntry("email",scriptInfo.email);
-            pluginGroup.writeEntry("file",scriptInfo.file);
-            pluginGroup.writeEntry("resource",scriptInfo.resource);
-            pluginGroup.writeEntry("urlregex",scriptInfo.urlregex);
+            pluginGroup.writeEntry("icon", scriptInfo.icon);
+            pluginGroup.writeEntry("author", scriptInfo.author);
+            pluginGroup.writeEntry("email", scriptInfo.email);
+            pluginGroup.writeEntry("file", scriptInfo.file);
+            pluginGroup.writeEntry("resource", scriptInfo.resource);
+            pluginGroup.writeEntry("urlregex", scriptInfo.urlregex);
             pluginGroup.config()->sync();
         }
     }

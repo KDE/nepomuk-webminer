@@ -25,9 +25,11 @@
 
 #include "nepomukmetadataextractor_export.h"
 
-namespace NepomukMetaDataExtractor {
-namespace UI {
-    class BatchExtractorPrivate;
+namespace NepomukMetaDataExtractor
+{
+namespace UI
+{
+class BatchExtractorPrivate;
 
 /**
  * @brief The BatchExtractor will extract metadata and pipe it to nepomuk in the background
@@ -76,7 +78,7 @@ public slots:
      * @param resourceUri optional nepomuk resource uri if the data should be added to an existing resource (file for example)
      */
     void addJob(const QUrl &detailsUrl, const QVariantMap &options,
-                const QString &name, const QString &resourceUri = QString() );
+                const QString &name, const QString &resourceUri = QString());
 
 signals:
     /**
@@ -107,7 +109,7 @@ private:
      * @param uri the nepomuk resource uri
      * @param metadata the metadata map
      */
-    void addResourceUriToMetaData( const QString &resourceType, const QString &uri, QVariantMap &metadata );
+    void addResourceUriToMetaData(const QString &resourceType, const QString &uri, QVariantMap &metadata);
 
 private slots:
     /**

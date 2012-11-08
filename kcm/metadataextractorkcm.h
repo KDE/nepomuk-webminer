@@ -20,7 +20,8 @@
 
 #include <KDE/KCModule>
 
-namespace NepomukMetaDataExtractor {
+namespace NepomukMetaDataExtractor
+{
 
 class ConfigFetcher;
 class PluginList;
@@ -28,7 +29,7 @@ class ConfigService;
 
 namespace Extractor
 {
-    class ExtractorFactory;
+class ExtractorFactory;
 }
 
 /**

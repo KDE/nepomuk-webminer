@@ -35,9 +35,12 @@
 
 using namespace Soprano::Vocabulary;
 
-namespace NepomukMetaDataExtractor {
-namespace Pipe {
-class MoviePipePrivate {
+namespace NepomukMetaDataExtractor
+{
+namespace Pipe
+{
+class MoviePipePrivate
+{
     // nothing yet, but might be needed in the future
 };
 }
@@ -46,7 +49,7 @@ class MoviePipePrivate {
 
 NepomukMetaDataExtractor::Pipe::MoviePipe::MoviePipe(QObject *parent)
     : NepomukPipe(parent)
-    , d_ptr( new NepomukMetaDataExtractor::Pipe::MoviePipePrivate )
+    , d_ptr(new NepomukMetaDataExtractor::Pipe::MoviePipePrivate)
 {
 }
 
@@ -59,11 +62,10 @@ void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &mo
 
     // first remove the old metadata
     //BUG: Removing lots of person subresources cause virtuoso to go crazy. Takes ~10Min to get all the data removed properly
-    KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << existingUri, Nepomuk2::NoRemovalFlags, KComponentData(componentName().toLatin1()) );
-    if (!job->exec() ) {
+    KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << existingUri, Nepomuk2::NoRemovalFlags, KComponentData(componentName().toLatin1()));
+    if (!job->exec()) {
         kWarning() << job->errorString();
-    }
-    else {
+    } else {
         kDebug() << "Successfully removed old metadata from " << existingUri;
     }
 
@@ -73,12 +75,12 @@ void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &mo
     Nepomuk2::NMM::Movie movieResource(existingUri);
 
     QString title = movieEntry.value(QLatin1String("title")).toString();
-    movieResource.setTitle( title );
+    movieResource.setTitle(title);
 
     kDebug() << "Import movie from url" << resourceUri << "with name " << title;
 
     QString plot = movieEntry.value(QLatin1String("plot")).toString();
-    if(!plot.isEmpty()) {
+    if (!plot.isEmpty()) {
         movieResource.setSynopsis(plot);
     }
 
@@ -86,59 +88,59 @@ void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &mo
     QStringList genres = genreList.split(';');
     QStringList genres2;
 
-    foreach(const QString &genre, genres) {
+    foreach (const QString & genre, genres) {
         QString gen = genre.trimmed();
-        if(!gen.isEmpty())
+        if (!gen.isEmpty())
             genres2 << gen;
     }
-    if(!genres2.isEmpty()) {
-        movieResource.setGenres( genres2 );
+    if (!genres2.isEmpty()) {
+        movieResource.setGenres(genres2);
     }
 
     QString moviePosterUrl = movieEntry.value(QLatin1String("poster")).toString();
-    if( !moviePosterUrl.isEmpty() ) {
+    if (!moviePosterUrl.isEmpty()) {
         KUrl resourceFolder(existingUri);
-        const KUrl localUrl = downloadBanner( moviePosterUrl,
-                                              QString("%1-poster").arg(title),
-                                              title,
-                                              resourceFolder.directory());
-        if(!localUrl.isEmpty()) {
+        const KUrl localUrl = downloadBanner(moviePosterUrl,
+                                             QString("%1-poster").arg(title),
+                                             title,
+                                             resourceFolder.directory());
+        if (!localUrl.isEmpty()) {
             Nepomuk2::NFO::Image banner(localUrl);
             movieResource.addDepiction(banner.uri());
             graph << banner;
         }
     }
 
-    QDateTime releaseDate = createDateTime( movieEntry.value(QLatin1String("year")).toString() );
-    if(releaseDate.isValid())
-        movieResource.setReleaseDate( releaseDate );
+    QDateTime releaseDate = createDateTime(movieEntry.value(QLatin1String("year")).toString());
+    if (releaseDate.isValid())
+        movieResource.setReleaseDate(releaseDate);
 
-    QList<Nepomuk2::NCO::Contact> directorList = createPersonContacts( movieEntry.value(QLatin1String("director")).toString() );
-    foreach(const Nepomuk2::NCO::Contact &director, directorList) {
+    QList<Nepomuk2::NCO::Contact> directorList = createPersonContacts(movieEntry.value(QLatin1String("director")).toString());
+    foreach (const Nepomuk2::NCO::Contact & director, directorList) {
         graph << director;
-        movieResource.addDirector( director.uri() );
+        movieResource.addDirector(director.uri());
         movieResource.addProperty(NAO::hasSubResource(), director.uri());
     }
 
-    QList<Nepomuk2::NCO::Contact> writerList = createPersonContacts( movieEntry.value(QLatin1String("writer")).toString() );
-    foreach(const Nepomuk2::NCO::Contact &writer, writerList) {
+    QList<Nepomuk2::NCO::Contact> writerList = createPersonContacts(movieEntry.value(QLatin1String("writer")).toString());
+    foreach (const Nepomuk2::NCO::Contact & writer, writerList) {
         graph << writer;
-        movieResource.addWriter( writer.uri() );
+        movieResource.addWriter(writer.uri());
         movieResource.addProperty(NAO::hasSubResource(), writer.uri());
     }
 
-    QList<Nepomuk2::NCO::Contact> actorList = createPersonContacts( movieEntry.value(QLatin1String("cast")).toString() );
-    foreach(const Nepomuk2::NCO::Contact &actor, actorList) {
+    QList<Nepomuk2::NCO::Contact> actorList = createPersonContacts(movieEntry.value(QLatin1String("cast")).toString());
+    foreach (const Nepomuk2::NCO::Contact & actor, actorList) {
         graph << actor;
-        movieResource.addActor( actor.uri() );
+        movieResource.addActor(actor.uri());
         movieResource.addProperty(NAO::hasSubResource(), actor.uri());
     }
 
     //Add the url where we fetched the data from as SeeAlso
     QString seeAlso = movieEntry.value(QLatin1String("seealso")).toString();
-    if ( !seeAlso.isEmpty() ) {
+    if (!seeAlso.isEmpty()) {
         QUrl saUrl = QUrl(seeAlso);
-        Nepomuk2::NFO::WebDataObject seeAlsoRes( saUrl );
+        Nepomuk2::NFO::WebDataObject seeAlsoRes(saUrl);
         movieResource.addProperty(RDFS::seeAlso(), seeAlsoRes.uri());
         graph << seeAlsoRes;
     }
@@ -146,7 +148,7 @@ void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &mo
     graph << movieResource;
 
     Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph, Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties,
-                                                                QHash<QUrl,QVariant>(),KComponentData(componentName().toLatin1()));
+                                       QHash<QUrl, QVariant>(), KComponentData(componentName().toLatin1()));
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
 }

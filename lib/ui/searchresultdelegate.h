@@ -20,8 +20,10 @@
 
 #include <QtGui/QStyledItemDelegate>
 
-namespace NepomukMetaDataExtractor {
-namespace UI {
+namespace NepomukMetaDataExtractor
+{
+namespace UI
+{
 
 /**
   * @brief Delegate to show the search result information in a nice way.
@@ -34,9 +36,9 @@ class SearchResultDelegate : public QStyledItemDelegate
 public:
     explicit SearchResultDelegate(QObject *parent = 0);
 
-    void paint(QPainter *painter, const QStyleOptionViewItem &option,const QModelIndex &index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-    QSize sizeHint( const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
 };
 }
 }

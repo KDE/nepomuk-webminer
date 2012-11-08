@@ -36,9 +36,12 @@
 
 using namespace Soprano::Vocabulary;
 
-namespace NepomukMetaDataExtractor {
-namespace Pipe {
-class MusicPipePrivate {
+namespace NepomukMetaDataExtractor
+{
+namespace Pipe
+{
+class MusicPipePrivate
+{
     // nothing yet, but might be needed in the future
 };
 }
@@ -46,7 +49,7 @@ class MusicPipePrivate {
 
 NepomukMetaDataExtractor::Pipe::MusicPipe::MusicPipe(QObject *parent)
     : NepomukPipe(parent)
-    , d_ptr( new NepomukMetaDataExtractor::Pipe::MusicPipePrivate )
+    , d_ptr(new NepomukMetaDataExtractor::Pipe::MusicPipePrivate)
 {
 }
 
@@ -58,13 +61,13 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
     Nepomuk2::NMM::MusicAlbum albumResource;
 
     QString albumTitle = musicEntry.value(QLatin1String("title")).toString();
-    if(!albumTitle.isEmpty()) {
-        albumResource.setTitle( albumTitle );
+    if (!albumTitle.isEmpty()) {
+        albumResource.setTitle(albumTitle);
     }
 
     QString musicBrainz = musicEntry.value(QLatin1String("musicbrainz")).toString();
-    if(!musicBrainz.isEmpty()) {
-        albumResource.setMusicBrainzAlbumID( musicBrainz );
+    if (!musicBrainz.isEmpty()) {
+        albumResource.setMusicBrainzAlbumID(musicBrainz);
     }
 
     /*
@@ -73,7 +76,7 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
     QStringList genres = genreList.split(';');
     QStringList genres2;
 
-    foreach(const QString &genre, genres) {
+    foreach (const QString &genre, genres) {
         QString gen = genre.trimmed();
         if(!gen.isEmpty())
             genres2 << gen;
@@ -88,23 +91,23 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
 //        albumResource.setArtist( albumArtist.);
 //    }
 
-    if( !musicEntry.value(QLatin1String("trackcount")).isNull()) {
+    if (!musicEntry.value(QLatin1String("trackcount")).isNull()) {
         int trackCount = musicEntry.value(QLatin1String("trackcount")).toInt();
-        albumResource.setAlbumTrackCount( trackCount );
+        albumResource.setAlbumTrackCount(trackCount);
     }
 
     // download cover
     QString albumCoverUrl = musicEntry.value(QLatin1String("cover")).toString();
     KUrl localCoverUrl;
-    if( !albumCoverUrl.isEmpty() ) {
-        KUrl resourceFolder(musicEntry.value(QLatin1String("resourceuri")).toString() );
-        localCoverUrl = downloadBanner( albumCoverUrl,
-                                              QString("%1 - %2").arg(albumArtist).arg(albumTitle),
-                                              albumArtist,
-                                              resourceFolder.directory()
-                                              );
+    if (!albumCoverUrl.isEmpty()) {
+        KUrl resourceFolder(musicEntry.value(QLatin1String("resourceuri")).toString());
+        localCoverUrl = downloadBanner(albumCoverUrl,
+                                       QString("%1 - %2").arg(albumArtist).arg(albumTitle),
+                                       albumArtist,
+                                       resourceFolder.directory()
+                                      );
 
-        if(!localCoverUrl.isEmpty()) {
+        if (!localCoverUrl.isEmpty()) {
             Nepomuk2::NFO::Image banner(localCoverUrl);
             albumResource.addDepiction(banner.uri());
             graph << banner;
@@ -116,7 +119,7 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
     // now generate all the music pieces
     QVariantList trackList = musicEntry.value(QLatin1String("tracks")).toList();
 
-    foreach( const QVariant &track, trackList) {
+    foreach (const QVariant & track, trackList) {
         QVariantMap trackInfo = track.toMap();
 
         kDebug() << "create new music track from url" << trackInfo.value(QLatin1String("resourceuri")).toString();
@@ -125,11 +128,10 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
         existingUri.setEncodedUrl(resourceUri.toLatin1());
 
         // first remove the old metadata
-        KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << existingUri, Nepomuk2::NoRemovalFlags, KComponentData(componentName().toLatin1()) );
-        if (!job->exec() ) {
+        KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << existingUri, Nepomuk2::NoRemovalFlags, KComponentData(componentName().toLatin1()));
+        if (!job->exec()) {
             kWarning() << job->errorString();
-        }
-        else {
+        } else {
             kDebug() << "Successfully removed old metadata from " << existingUri;
         }
 
@@ -137,19 +139,19 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
         Nepomuk2::NMM::MusicPiece trackResource(existingUri);
 
         // Note: Why album cover as artwork of the track? not of the music album?
-        if(!localCoverUrl.isEmpty()) {
+        if (!localCoverUrl.isEmpty()) {
             Nepomuk2::NFO::Image banner(localCoverUrl);
-            trackResource.addArtwork( banner.uri() );
+            trackResource.addArtwork(banner.uri());
         }
 
         QString title = trackInfo.value(QLatin1String("title")).toString();
-        if(!title.isEmpty()) {
-            trackResource.setTitle( title );
+        if (!title.isEmpty()) {
+            trackResource.setTitle(title);
         }
 
-        if(trackInfo.value(QLatin1String("number")).isValid()) {
+        if (trackInfo.value(QLatin1String("number")).isValid()) {
             int trackNumber = trackInfo.value(QLatin1String("number")).toInt();
-            trackResource.setTrackNumber( trackNumber );
+            trackResource.setTrackNumber(trackNumber);
         }
 
         //BUG: NMM:MusicBrainzTrackID must be string not integer
@@ -158,10 +160,10 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
 
         // all performer of the track
         // TODO: guest artist, lyricswriter and so on?
-        QList<Nepomuk2::NCO::Contact> artistList = createPersonContacts( trackInfo.value(QLatin1String("performer")).toString() );
-        foreach(const Nepomuk2::NCO::Contact &artist, artistList) {
+        QList<Nepomuk2::NCO::Contact> artistList = createPersonContacts(trackInfo.value(QLatin1String("performer")).toString());
+        foreach (const Nepomuk2::NCO::Contact & artist, artistList) {
             graph << artist;
-            trackResource.addPerformer( artist.uri() );
+            trackResource.addPerformer(artist.uri());
             trackResource.addProperty(NAO::hasSubResource(), artist.uri());
         }
 
@@ -170,45 +172,45 @@ void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &mu
         QStringList genres = genreList.split(';');
         QStringList genres2;
 
-        foreach(const QString &genre, genres) {
+        foreach (const QString & genre, genres) {
             QString gen = genre.trimmed();
-            if(!gen.isEmpty())
+            if (!gen.isEmpty())
                 genres2 << gen;
         }
 
-        if(!genres2.isEmpty()) {
-            trackResource.setGenres( genres2 );
+        if (!genres2.isEmpty()) {
+            trackResource.setGenres(genres2);
         }
 
         // release date
-        QDateTime releaseDate = createDateTime( trackInfo.value(QLatin1String("releasedate")).toString() );
-        if(releaseDate.isValid()) {
-            trackResource.setReleaseDate( releaseDate );
+        QDateTime releaseDate = createDateTime(trackInfo.value(QLatin1String("releasedate")).toString());
+        if (releaseDate.isValid()) {
+            trackResource.setReleaseDate(releaseDate);
         }
 
         // FIXME: Add lyrics not as nie:PlainTextContent
         QString lyrics = trackInfo.value(QLatin1String("lyrics")).toString();
-        if(!lyrics.isEmpty()) {
-            trackResource.setPlainTextContent( lyrics );
+        if (!lyrics.isEmpty()) {
+            trackResource.setPlainTextContent(lyrics);
         }
 
         //Add the url where we fetched the data from as SeeAlso
         QString seeAlso = trackInfo.value(QLatin1String("seealso")).toString();
-        if ( !seeAlso.isEmpty() ) {
+        if (!seeAlso.isEmpty()) {
             QUrl saUrl = QUrl(seeAlso);
-            Nepomuk2::NFO::WebDataObject seeAlsoRes( saUrl );
+            Nepomuk2::NFO::WebDataObject seeAlsoRes(saUrl);
             trackResource.addProperty(RDFS::seeAlso(), seeAlsoRes.uri());
             graph << seeAlsoRes;
         }
 
         // now connect music album and track
-        trackResource.setMusicAlbum( albumResource.uri() );
+        trackResource.setMusicAlbum(albumResource.uri());
 
         graph << trackResource;
     }
 
     Nepomuk2::StoreResourcesJob *srj = Nepomuk2::storeResources(graph, Nepomuk2::IdentifyNew, Nepomuk2::OverwriteProperties,
-                                                                QHash<QUrl,QVariant>(),KComponentData(componentName().toLatin1()));
+                                       QHash<QUrl, QVariant>(), KComponentData(componentName().toLatin1()));
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
 }

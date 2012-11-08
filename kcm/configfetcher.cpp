@@ -53,79 +53,79 @@ void ConfigFetcher::updateConfiguration()
 
 void ConfigFetcher::saveConfig()
 {
-    MDESettings::setDownloadBanner( ui->kcfg_DownloadBanner->isChecked() );
-    MDESettings::setDownloadReferences( ui->kcfg_DownloadReferences->isChecked() );
-    MDESettings::setSaveBannerInResourceFolder( ui->kcfg_SaveBannerInResourceFolder->isChecked() );
+    MDESettings::setDownloadBanner(ui->kcfg_DownloadBanner->isChecked());
+    MDESettings::setDownloadReferences(ui->kcfg_DownloadReferences->isChecked());
+    MDESettings::setSaveBannerInResourceFolder(ui->kcfg_SaveBannerInResourceFolder->isChecked());
 
     int curIndex = ui->musicPlugin->currentIndex();
-    MDESettings::setFavoriteMusicPlugin( ui->musicPlugin->itemData(curIndex).toString() );
+    MDESettings::setFavoriteMusicPlugin(ui->musicPlugin->itemData(curIndex).toString());
 
     curIndex = ui->publicationPlugin->currentIndex();
-    MDESettings::setFavoritePublicationPlugin( ui->publicationPlugin->itemData(curIndex).toString() );
+    MDESettings::setFavoritePublicationPlugin(ui->publicationPlugin->itemData(curIndex).toString());
 
     curIndex = ui->moviePlugin->currentIndex();
-    MDESettings::setFavoriteMoviePlugin( ui->moviePlugin->itemData(curIndex).toString() );
+    MDESettings::setFavoriteMoviePlugin(ui->moviePlugin->itemData(curIndex).toString());
 
     curIndex = ui->tvshowPlugin->currentIndex();
-    MDESettings::setFavoriteTvShowPlugin( ui->tvshowPlugin->itemData(curIndex).toString() );
+    MDESettings::setFavoriteTvShowPlugin(ui->tvshowPlugin->itemData(curIndex).toString());
 
-    MDESettings::setCheckNextPlugin( ui->checkOtherPlugins->isChecked() );
+    MDESettings::setCheckNextPlugin(ui->checkOtherPlugins->isChecked());
 
     MDESettings::self()->writeConfig();
 }
 
 void ConfigFetcher::resetConfig()
 {
-    ui->kcfg_DownloadBanner->setChecked( MDESettings::downloadBanner());
-    ui->kcfg_DownloadReferences->setChecked( MDESettings::downloadReferences());
-    ui->kcfg_SaveBannerInResourceFolder->setChecked( MDESettings::saveBannerInResourceFolder());
+    ui->kcfg_DownloadBanner->setChecked(MDESettings::downloadBanner());
+    ui->kcfg_DownloadReferences->setChecked(MDESettings::downloadReferences());
+    ui->kcfg_SaveBannerInResourceFolder->setChecked(MDESettings::saveBannerInResourceFolder());
 
     ui->musicPlugin->setCurrentIndex(ui->musicPlugin->findData(MDESettings::favoriteMusicPlugin()));
     ui->publicationPlugin->setCurrentIndex(ui->publicationPlugin->findData(MDESettings::favoritePublicationPlugin()));
     ui->moviePlugin->setCurrentIndex(ui->moviePlugin->findData(MDESettings::favoriteMoviePlugin()));
     ui->tvshowPlugin->setCurrentIndex(ui->tvshowPlugin->findData(MDESettings::favoriteTvShowPlugin()));
 
-    ui->checkOtherPlugins->setChecked( MDESettings::checkNextPlugin() );
+    ui->checkOtherPlugins->setChecked(MDESettings::checkNextPlugin());
 }
 
 void ConfigFetcher::setupUi()
 {
-    ui->kcfg_DownloadBanner->setChecked( MDESettings::downloadBanner());
-    connect(ui->kcfg_DownloadBanner, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()) );
-    ui->kcfg_DownloadReferences->setChecked( MDESettings::downloadReferences());
-    connect(ui->kcfg_DownloadReferences, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()) );
-    ui->kcfg_SaveBannerInResourceFolder->setChecked( MDESettings::saveBannerInResourceFolder());
-    connect(ui->kcfg_SaveBannerInResourceFolder, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()) );
+    ui->kcfg_DownloadBanner->setChecked(MDESettings::downloadBanner());
+    connect(ui->kcfg_DownloadBanner, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()));
+    ui->kcfg_DownloadReferences->setChecked(MDESettings::downloadReferences());
+    connect(ui->kcfg_DownloadReferences, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()));
+    ui->kcfg_SaveBannerInResourceFolder->setChecked(MDESettings::saveBannerInResourceFolder());
+    connect(ui->kcfg_SaveBannerInResourceFolder, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()));
 
     // music list
-    QList<WebExtractor::Info> engines = extractorFactory->listAvailablePlugins( "music" );
+    QList<WebExtractor::Info> engines = extractorFactory->listAvailablePlugins("music");
 
-    foreach(const WebExtractor::Info &engine, engines) {
-        ui->musicPlugin->addItem(QIcon( engine.icon ),engine.name,engine.identifier);
+    foreach (const WebExtractor::Info & engine, engines) {
+        ui->musicPlugin->addItem(QIcon(engine.icon), engine.name, engine.identifier);
     }
 
     // publication list
     engines.clear();
-    engines = extractorFactory->listAvailablePlugins( "publication" );
+    engines = extractorFactory->listAvailablePlugins("publication");
 
-    foreach(const WebExtractor::Info &engine, engines) {
-        ui->publicationPlugin->addItem(QIcon( engine.icon ),engine.name,engine.identifier);
+    foreach (const WebExtractor::Info & engine, engines) {
+        ui->publicationPlugin->addItem(QIcon(engine.icon), engine.name, engine.identifier);
     }
 
     // movie list
     engines.clear();
-    engines = extractorFactory->listAvailablePlugins( "movie" );
+    engines = extractorFactory->listAvailablePlugins("movie");
 
-    foreach(const WebExtractor::Info &engine, engines) {
-        ui->moviePlugin->addItem(QIcon( engine.icon ),engine.name,engine.identifier);
+    foreach (const WebExtractor::Info & engine, engines) {
+        ui->moviePlugin->addItem(QIcon(engine.icon), engine.name, engine.identifier);
     }
 
     // tvshow list
     engines.clear();
-    engines = extractorFactory->listAvailablePlugins( "tvshow" );
+    engines = extractorFactory->listAvailablePlugins("tvshow");
 
-    foreach(const WebExtractor::Info &engine, engines) {
-        ui->tvshowPlugin->addItem(QIcon( engine.icon ),engine.name,engine.identifier);
+    foreach (const WebExtractor::Info & engine, engines) {
+        ui->tvshowPlugin->addItem(QIcon(engine.icon), engine.name, engine.identifier);
     }
 
     ui->musicPlugin->setCurrentIndex(ui->musicPlugin->findData(MDESettings::favoriteMusicPlugin()));
@@ -133,12 +133,12 @@ void ConfigFetcher::setupUi()
     ui->moviePlugin->setCurrentIndex(ui->moviePlugin->findData(MDESettings::favoriteMoviePlugin()));
     ui->tvshowPlugin->setCurrentIndex(ui->tvshowPlugin->findData(MDESettings::favoriteTvShowPlugin()));
 
-    ui->checkOtherPlugins->setChecked( MDESettings::checkNextPlugin() );
+    ui->checkOtherPlugins->setChecked(MDESettings::checkNextPlugin());
 
-    connect(ui->musicPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()) );
-    connect(ui->publicationPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()) );
-    connect(ui->moviePlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()) );
-    connect(ui->tvshowPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()) );
+    connect(ui->musicPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()));
+    connect(ui->publicationPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()));
+    connect(ui->moviePlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()));
+    connect(ui->tvshowPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()));
 
-    connect(ui->checkOtherPlugins, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()) );
+    connect(ui->checkOtherPlugins, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()));
 }

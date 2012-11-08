@@ -29,13 +29,16 @@
 
 // for the fetcherdialog.ui file
 #include "ui_fetcherdialog.h"
-namespace Ui {
-    class FetcherDialog;
+namespace Ui
+{
+class FetcherDialog;
 }
 
-namespace NepomukMetaDataExtractor {
-namespace UI {
-    class FetcherDialogPrivate;
+namespace NepomukMetaDataExtractor
+{
+namespace UI
+{
+class FetcherDialogPrivate;
 
 /**
   * @brief Dialog to interactively @c search / @c fetch and @c save metadata for a list of resources
@@ -109,7 +112,7 @@ private slots:
      *
      * @param searchResults list of entries that fit the search parameters
      */
-    void searchResultList( QVariantList searchResults );
+    void searchResultList(QVariantList searchResults);
 
     /**
      * @brief Called when the user clicks on a search entry in the list and display its details

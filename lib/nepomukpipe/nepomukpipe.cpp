@@ -32,9 +32,12 @@
 #include <mdesettings.h>
 
 
-namespace NepomukMetaDataExtractor {
-namespace Pipe {
-class NepomukPipePrivate {
+namespace NepomukMetaDataExtractor
+{
+namespace Pipe
+{
+class NepomukPipePrivate
+{
 public:
     QString componentname; /**< Name of the component that will be used for the Nepomuk DMS calls.
                                 Useful if all data that 1 component created should be deleted.
@@ -47,9 +50,9 @@ public:
 
 NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe(QObject *parent)
     : QObject(parent)
-    , d_ptr( new NepomukMetaDataExtractor::Pipe::NepomukPipePrivate )
+    , d_ptr(new NepomukMetaDataExtractor::Pipe::NepomukPipePrivate)
 {
-    Q_D( NepomukPipe );
+    Q_D(NepomukPipe);
     d->componentname = QLatin1String("metadataextractor");
 
 }
@@ -61,31 +64,29 @@ NepomukMetaDataExtractor::Pipe::NepomukPipe::~NepomukPipe()
 
 void NepomukMetaDataExtractor::Pipe::NepomukPipe::slotSaveToNepomukDone(KJob *job) const
 {
-    if(job->error()) {
+    if (job->error()) {
         kDebug() << "Failed to store information in Nepomuk. " << job->errorString();
-    }
-    else {
+    } else {
         kDebug() << "Successfully stored data into Nepomuk";
     }
 }
 
-KUrl NepomukMetaDataExtractor::Pipe::NepomukPipe::downloadBanner(const QUrl &bannerUrl, const QString &filename, const QString& subFolder, const QString &resourceFolder ) const
+KUrl NepomukMetaDataExtractor::Pipe::NepomukPipe::downloadBanner(const QUrl &bannerUrl, const QString &filename, const QString& subFolder, const QString &resourceFolder) const
 {
-    if (!MDESettings::downloadBanner() ) {
+    if (!MDESettings::downloadBanner()) {
         return KUrl();
     }
 
     KUrl localUrl;
-    if( MDESettings::saveBannerInResourceFolder() ) {
+    if (MDESettings::saveBannerInResourceFolder()) {
         localUrl = resourceFolder + QLatin1String("/") + filename + QLatin1String(".") + bannerUrl.toString().split('.').last();
-    }
-    else {
+    } else {
         localUrl = KGlobal::dirs()->locateLocal("appdata", QLatin1String("banners/") + subFolder + QLatin1String("/") + filename +  QLatin1String(".") + bannerUrl.toString().split('.').last(), true);
     }
 
-    if(!QFile::exists(localUrl.toLocalFile())) {
+    if (!QFile::exists(localUrl.toLocalFile())) {
         KIO::CopyJob* job = KIO::copy(bannerUrl, localUrl, KIO::HideProgressInfo | KIO::Overwrite);
-        if(!job->exec()) {
+        if (!job->exec()) {
             return KUrl();
         }
     }
@@ -96,19 +97,54 @@ QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QStr
 {
     QDateTime dateTime;
 
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy-MM-dd"); dateTime.setTimeSpec(Qt::UTC); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "dd-MM-yyy"); dateTime.setTimeSpec(Qt::UTC); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy-MM"); dateTime.setTimeSpec(Qt::UTC); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "MM-yyyy"); dateTime.setTimeSpec(Qt::UTC); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy.MM.dd"); dateTime.setTimeSpec(Qt::UTC); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "dd.MM.yyyy"); dateTime.setTimeSpec(Qt::UTC); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "dd MMMM yyyy"); dateTime.setTimeSpec(Qt::UTC); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "MM.yyyy"); dateTime.setTimeSpec(Qt::UTC); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy.MM"); dateTime.setTimeSpec(Qt::UTC); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yyyy"); dateTime.setTimeSpec(Qt::UTC); }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, "yy"); dateTime.setTimeSpec(Qt::UTC);  }
-    if(!dateTime.isValid()) { dateTime = QDateTime::fromString(dateString, Qt::ISODate); }
-    if(!dateTime.isValid()) {
+    if (!dateTime.isValid()) {
+        dateTime = QDateTime::fromString(dateString, "yyyy-MM-dd");
+        dateTime.setTimeSpec(Qt::UTC);
+    }
+    if (!dateTime.isValid()) {
+        dateTime = QDateTime::fromString(dateString, "dd-MM-yyy");
+        dateTime.setTimeSpec(Qt::UTC);
+    }
+    if (!dateTime.isValid()) {
+        dateTime = QDateTime::fromString(dateString, "yyyy-MM");
+        dateTime.setTimeSpec(Qt::UTC);
+    }
+    if (!dateTime.isValid()) {
+        dateTime = QDateTime::fromString(dateString, "MM-yyyy");
+        dateTime.setTimeSpec(Qt::UTC);
+    }
+    if (!dateTime.isValid()) {
+        dateTime = QDateTime::fromString(dateString, "yyyy.MM.dd");
+        dateTime.setTimeSpec(Qt::UTC);
+    }
+    if (!dateTime.isValid()) {
+        dateTime = QDateTime::fromString(dateString, "dd.MM.yyyy");
+        dateTime.setTimeSpec(Qt::UTC);
+    }
+    if (!dateTime.isValid()) {
+        dateTime = QDateTime::fromString(dateString, "dd MMMM yyyy");
+        dateTime.setTimeSpec(Qt::UTC);
+    }
+    if (!dateTime.isValid()) {
+        dateTime = QDateTime::fromString(dateString, "MM.yyyy");
+        dateTime.setTimeSpec(Qt::UTC);
+    }
+    if (!dateTime.isValid()) {
+        dateTime = QDateTime::fromString(dateString, "yyyy.MM");
+        dateTime.setTimeSpec(Qt::UTC);
+    }
+    if (!dateTime.isValid()) {
+        dateTime = QDateTime::fromString(dateString, "yyyy");
+        dateTime.setTimeSpec(Qt::UTC);
+    }
+    if (!dateTime.isValid()) {
+        dateTime = QDateTime::fromString(dateString, "yy");
+        dateTime.setTimeSpec(Qt::UTC);
+    }
+    if (!dateTime.isValid()) {
+        dateTime = QDateTime::fromString(dateString, Qt::ISODate);
+    }
+    if (!dateTime.isValid()) {
         kWarning() << "Could not determine correct datetime format from:" << dateString;
         return QDateTime();
     }
@@ -118,7 +154,7 @@ QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QStr
 
 void NepomukMetaDataExtractor::Pipe::NepomukPipe::overrideComponentName(const QString &name)
 {
-    Q_D( NepomukPipe );
+    Q_D(NepomukPipe);
     d->componentname = name;
 }
 
@@ -131,15 +167,15 @@ QString NepomukMetaDataExtractor::Pipe::NepomukPipe::componentName() const
 QList<Nepomuk2::NCO::Contact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createPersonContacts(const QString & listOfPersonNames) const
 {
     QList<Nepomuk2::NCO::Contact> resultList;
-    QList<Name> personList = splitPersonList( listOfPersonNames );
+    QList<Name> personList = splitPersonList(listOfPersonNames);
 
-    foreach(const Name &person, personList) {
-        if(person.full.isEmpty()) {
+    foreach (const Name & person, personList) {
+        if (person.full.isEmpty()) {
             continue;
         }
         // create new contact resource, duplicates will be merged by the DMS later on
         Nepomuk2::NCO::Contact personResource;
-        personResource.setFullname( person.full.trimmed() );
+        personResource.setFullname(person.full.trimmed());
         //TODO: reintroduce nco:PersonContact for publication authors? Or change ontology to allow NameGiven/NameFamily etc in the generic nco:Contact
         //personResource.setNameGiven( person.first );
         //personResource.setNameFamily( person.last );
@@ -157,12 +193,12 @@ QList<Nepomuk2::NCO::Contact> NepomukMetaDataExtractor::Pipe::NepomukPipe::creat
 QList<Nepomuk2::NCO::OrganizationContact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createOrganizationContacts(const QString & listOfOrganizations) const
 {
     QList<Nepomuk2::NCO::OrganizationContact> resultList;
-    QList<Name> personList = splitPersonList( listOfOrganizations );
+    QList<Name> personList = splitPersonList(listOfOrganizations);
 
-    foreach(const Name &person, personList) {
+    foreach (const Name & person, personList) {
         // create new contact resource, duplicates will be merged by the DMS later on
         Nepomuk2::NCO::OrganizationContact organizationResource;
-        organizationResource.setFullname( person.full );
+        organizationResource.setFullname(person.full);
 
         resultList << organizationResource;
     }
@@ -184,12 +220,12 @@ QList<NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name> NepomukMet
     // Hans Wurst; Jochen Junker
     personStringList = cleanedPersonString.split(QLatin1String(";"));
 
-    if(personStringList.size() == 1) {
+    if (personStringList.size() == 1) {
         // just in case: Hans Wurst & Jochen Junker
         personStringList = cleanedPersonString.split(QLatin1String("&"));
     }
 
-    if(personStringList.size() == 1) {
+    if (personStringList.size() == 1) {
         // now try bibtex like description: Hans Wurst and Jochen Junker
         personStringList = cleanedPersonString.split(QLatin1String(" and "));
     }
@@ -198,8 +234,8 @@ QList<NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name> NepomukMet
     // Hans Wurst or Wurst, Hans or H. Wurst or Hans W. and so on.
     QList<NepomukPipe::Name> personList;
 
-    foreach(const QString &person, personStringList) {
-        personList.append( splitPersonString(person) );
+    foreach (const QString & person, personStringList) {
+        personList.append(splitPersonString(person));
     }
 
     return personList;
@@ -218,7 +254,7 @@ NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name NepomukMetaDataEx
      */
     QStringList partA, partB, partC;
     int commaCount = 0;
-    foreach(const QString &token, personTokens) {
+    foreach (const QString & token, personTokens) {
 
         // Position where comma was found, or -1 if no comma in token
         int p = -1;
@@ -316,7 +352,7 @@ NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name NepomukMetaDataEx
         if (partB.isEmpty() && (it->toLower().startsWith(QLatin1String("jr")) || it->toLower().startsWith(QLatin1String("sr")) || it->toLower().startsWith(QLatin1String("iii"))))
             // handle name suffices like "Jr" or "III."
             partC.prepend(*it);
-        else if (partB.isEmpty() || (it->size() > 1 && it->at(0).isLower() ))
+        else if (partB.isEmpty() || (it->size() > 1 && it->at(0).isLower()))
             partB.prepend(*it);
         else
             partA.prepend(*it);

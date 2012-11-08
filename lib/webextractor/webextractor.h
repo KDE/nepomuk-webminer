@@ -27,8 +27,10 @@
 #include <QtCore/QVariantList>
 #include <QtCore/QVariantMap>
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
 
 /**
  * @brief Interface for all WebExtractor implementations

@@ -26,11 +26,13 @@
 
 #include "nepomukmetadataextractor_export.h"
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
 
-    class VideoExtractorPrivate;
-    class MetaDataParameters;
+class VideoExtractorPrivate;
+class MetaDataParameters;
 
 /**
   * @brief Extracts some useful search parameters from the video filename or nepomuk resource

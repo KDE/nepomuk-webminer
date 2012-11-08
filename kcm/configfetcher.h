@@ -20,13 +20,16 @@
 
 #include <QtGui/QWidget>
 
-namespace Ui {
-    class ConfigFetcher;
+namespace Ui
+{
+class ConfigFetcher;
 }
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
-    class ExtractorFactory;
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
+class ExtractorFactory;
 }
 
 /**
@@ -38,7 +41,7 @@ namespace Extractor {
 class ConfigFetcher : public QWidget
 {
     Q_OBJECT
-    
+
 public:
     explicit ConfigFetcher(QWidget *parent = 0);
     ~ConfigFetcher();

@@ -22,10 +22,12 @@
 #include <KParts/ReadOnlyPart>
 #include <KDE/KUrlLabel>
 
-namespace NepomukMetaDataExtractor {
-    namespace Extractor {
-        class ExtractorFactory;
-    }
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
+class ExtractorFactory;
+}
 }
 
 /**
@@ -41,22 +43,22 @@ class MetaDataExtractorPlugin: public KParts::Plugin
 public:
     explicit MetaDataExtractorPlugin(QObject *parent = 0, const QVariantList &args = QVariantList());
     virtual ~MetaDataExtractorPlugin();
-	 
+
 protected slots:
     void urlSwitched();
-	void extract();
+    void extract();
 
 private slots:
     void lateInitialization();
     void pushDataToNepomuk(const QString &resourceType, const QVariantMap &entry);
-	
+
 private:
-	KParts::ReadOnlyPart *m_Part;
-	KUrlLabel m_icon;
+    KParts::ReadOnlyPart *m_Part;
+    KUrlLabel m_icon;
 
     NepomukMetaDataExtractor::Extractor::ExtractorFactory *m_ef;
     bool extractionInProgress;
-	
+
 };
 
 #endif // METADATAEXTRACTORPLUGIN_H

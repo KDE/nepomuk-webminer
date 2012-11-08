@@ -38,25 +38,24 @@
 using namespace NepomukMetaDataExtractor;
 using namespace Extractor;
 
-static const KAboutData aboutdata("metadataextractorplugin", 0, ki18n("MetaDataExtractorPlugin Settings") , "0.2" );
+static const KAboutData aboutdata("metadataextractorplugin", 0, ki18n("MetaDataExtractorPlugin Settings") , "0.2");
 
-K_PLUGIN_FACTORY(MetaDataExtractorPluginFactory, registerPlugin<MetaDataExtractorPlugin>(); )
+K_PLUGIN_FACTORY(MetaDataExtractorPluginFactory, registerPlugin<MetaDataExtractorPlugin>();)
 K_EXPORT_PLUGIN(MetaDataExtractorPluginFactory(aboutdata))
 
 MetaDataExtractorPlugin::MetaDataExtractorPlugin(QObject *parent, const QVariantList &args)
-        : KParts::Plugin(parent),
-          extractionInProgress(false)
+    : KParts::Plugin(parent),
+      extractionInProgress(false)
 {
-Q_UNUSED(args);
+    Q_UNUSED(args);
 
-	// Initialize plugin
-	setComponentData(MetaDataExtractorPluginFactory::componentData());
+    // Initialize plugin
+    setComponentData(MetaDataExtractorPluginFactory::componentData());
 
-	m_Part = dynamic_cast<KParts::ReadOnlyPart *>(parent);
-	if (!m_Part)
-	{
-		kDebug() << "Unable to get KHTMLPart" << endl;
-		return;
+    m_Part = dynamic_cast<KParts::ReadOnlyPart *>(parent);
+    if (!m_Part) {
+        kDebug() << "Unable to get KHTMLPart" << endl;
+        return;
     }
     connect(m_Part, SIGNAL(completed()), this, SLOT(lateInitialization()));
 
@@ -80,7 +79,7 @@ void MetaDataExtractorPlugin::lateInitialization()
     KIconLoader *loader = KIconLoader::global();
     m_icon.setPixmap(loader->loadIcon("nepomuk", KIconLoader::Small));
     KParts::StatusBarExtension* barExt = KParts::StatusBarExtension::childObject(m_Part);
-    if( barExt )
+    if (barExt)
         barExt->addStatusBarItem(&m_icon, 0, false);
     m_icon.setVisible(false);
     m_icon.setToolTip(i18n("Import Item into Nepomuk"));
@@ -95,13 +94,12 @@ void MetaDataExtractorPlugin::urlSwitched()
 {
     // check if current url is supported by one of the plugins
     QUrl url = m_Part->url();
-    WebExtractor *we = m_ef->getExtractor( url );
+    WebExtractor *we = m_ef->getExtractor(url);
 
-    if(we) {
+    if (we) {
         kDebug() << "website" << url << "supported";
         m_icon.setVisible(true);
-    }
-    else {
+    } else {
         kDebug() << "website" << url << "NOT supported";
         m_icon.setVisible(false);
     }
@@ -109,7 +107,7 @@ void MetaDataExtractorPlugin::urlSwitched()
 
 void MetaDataExtractorPlugin::extract()
 {
-    if(extractionInProgress) {
+    if (extractionInProgress) {
         kDebug() << "extraction already in progress";
         return;
     }
@@ -119,11 +117,11 @@ void MetaDataExtractorPlugin::extract()
     // extract item data
     QUrl url = m_Part->url();
 
-    WebExtractor *we = m_ef->getExtractor( url );
-    connect(we, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(pushDataToNepomuk(QString,QVariantMap)));
+    WebExtractor *we = m_ef->getExtractor(url);
+    connect(we, SIGNAL(itemResults(QString, QVariantMap)), this, SLOT(pushDataToNepomuk(QString, QVariantMap)));
 
-    if(we) {
-        we->extractItem( url, QVariantMap() );
+    if (we) {
+        we->extractItem(url, QVariantMap());
         extractionInProgress = true;
         m_icon.setEnabled(false);
     }
@@ -134,23 +132,19 @@ void MetaDataExtractorPlugin::pushDataToNepomuk(const QString &resourceType, con
     kDebug() << "finished Item fetching, push to nepomuk";
 
     Pipe::NepomukPipe *nepomukPipe = 0;
-    if(resourceType == QLatin1String("publication")) {
+    if (resourceType == QLatin1String("publication")) {
         nepomukPipe = new Pipe::PublicationPipe;
-    }
-    else if(resourceType == QLatin1String("tvshow")) {
+    } else if (resourceType == QLatin1String("tvshow")) {
         nepomukPipe = new Pipe::TvShowPipe;
-    }
-    else if(resourceType == QLatin1String("movie")) {
+    } else if (resourceType == QLatin1String("movie")) {
         nepomukPipe = new Pipe::MoviePipe;
-    }
-    else if(resourceType == QLatin1String("music")) {
+    } else if (resourceType == QLatin1String("music")) {
         nepomukPipe = new Pipe::MusicPipe;
     }
 
-    if(nepomukPipe) {
-        nepomukPipe->pipeImport( entry );
-    }
-    else {
+    if (nepomukPipe) {
+        nepomukPipe->pipeImport(entry);
+    } else {
         kDebug() << "No nepomuk pipe available for the resource type" << resourceType;
     }
     extractionInProgress = false;

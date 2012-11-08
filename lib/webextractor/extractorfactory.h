@@ -25,8 +25,10 @@
 #include "webextractor.h"
 #include "nepomukmetadataextractor_export.h"
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
 
 class ExtractorFactoryPrivate;
 
@@ -74,7 +76,7 @@ public:
       *
       * @return the WebExtractor for the identifier
       */
-    NepomukMetaDataExtractor::Extractor::WebExtractor *getExtractor( const QString &webEngine );
+    NepomukMetaDataExtractor::Extractor::WebExtractor *getExtractor(const QString &webEngine);
 
     /**
       * @brief Creates a new WebExtractor based in the @c "url" it can fetch data from
@@ -85,7 +87,7 @@ public:
       *
       * @return the WebExtractor that can handle the uri
       */
-    NepomukMetaDataExtractor::Extractor::WebExtractor *getExtractor( const QUrl &uri );
+    NepomukMetaDataExtractor::Extractor::WebExtractor *getExtractor(const QUrl &uri);
 
     /**
       * @brief Returns a list of all available webextractor plugins that fetches data for the resource @c type
@@ -98,7 +100,7 @@ public:
       *
       * @return a list of all WebExtarctor info items
       */
-    QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> listAvailablePlugins( const QString &type );
+    QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> listAvailablePlugins(const QString &type);
 
 private:
     /**

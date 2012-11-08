@@ -22,15 +22,18 @@
 
 #include "nepomukmetadataextractor_export.h"
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
-    class ExtractorFactory;
-    class ResourceExtractor;
-    class MetaDataParameters;
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
+class ExtractorFactory;
+class ResourceExtractor;
+class MetaDataParameters;
 }
 
-namespace UI {
-    class FetcherPrivate;
+namespace UI
+{
+class FetcherPrivate;
 
 /**
  * @brief Base class for all fetcher implementations.
@@ -50,14 +53,14 @@ public:
      *
      * @param url folder path or file name/path
      */
-    void addFetcherPath( const KUrl &url );
+    void addFetcherPath(const KUrl &url);
 
     /**
      * @brief Adds a Nepomuk Resource to the list of items that will be checked
      *
      * @param url nepomuk resource uri
      */
-    void addFetcherResource( const KUrl &url );
+    void addFetcherResource(const KUrl &url);
 
     /**
      * @brief Adds a Nepomuk Resource to the list of items that will be checked
@@ -133,7 +136,7 @@ protected:
      * This allows to use the tvshow pipe with a QVariantMap that adds many episodes conected to many different files at once
      * @param mdp the MetaDataParameters which should be updated
      */
-    void addResourceUriToMetaData( NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp );
+    void addResourceUriToMetaData(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp);
 
     /**
      * @brief Calls the correct NepomukPipe to save the QVariantMap into nepomuk

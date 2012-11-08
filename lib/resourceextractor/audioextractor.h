@@ -23,8 +23,10 @@
 
 #include "nepomukmetadataextractor_export.h"
 
-namespace NepomukMetaDataExtractor {
-namespace Extractor {
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
 
 class AudioExtractorPrivate;
 class MetaDataParameters;
@@ -54,7 +56,7 @@ public:
      * @param fileUrl the url of the file
      */
     void parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl);
-    
+
 private:
     /**
      * @brief Use TagLib to find additional meta data
@@ -63,7 +65,7 @@ private:
      * @return @arg true if something could be found
      *         @arg false otherwise
      */
-    bool findByTag( MetaDataParameters *mdp );
+    bool findByTag(MetaDataParameters *mdp);
 
     /**
      * @brief Analyze the filename to find artist/title information
@@ -72,7 +74,7 @@ private:
      * @return @arg true if something could be found
      *         @arg false otherwise
      */
-    bool findByFileName( MetaDataParameters *mdp );
+    bool findByFileName(MetaDataParameters *mdp);
 
     Q_DECLARE_PRIVATE(AudioExtractor)
     AudioExtractorPrivate *const d_ptr; /**< d-pointer for this class */

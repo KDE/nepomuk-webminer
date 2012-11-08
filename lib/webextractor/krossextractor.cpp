@@ -28,36 +28,39 @@
 
 #include <qjson/parser.h>
 
-namespace NepomukMetaDataExtractor {
-    namespace Extractor {
-        class KrossExtractorPrivate {
-        public:
-            Kross::Action *scriptFile;
-            WebExtractor::Info scriptInfo;
-            QFutureWatcher<QVariant> *futureWatcher;
-        };
-    }
+namespace NepomukMetaDataExtractor
+{
+namespace Extractor
+{
+class KrossExtractorPrivate
+{
+public:
+    Kross::Action *scriptFile;
+    WebExtractor::Info scriptInfo;
+    QFutureWatcher<QVariant> *futureWatcher;
+};
+}
 }
 
 NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QString &scriptFile, QObject *parent)
     : WebExtractor(parent)
-    , d_ptr( new NepomukMetaDataExtractor::Extractor::KrossExtractorPrivate )
+    , d_ptr(new NepomukMetaDataExtractor::Extractor::KrossExtractorPrivate)
 {
-    Q_D( KrossExtractor );
+    Q_D(KrossExtractor);
 
-    connect(this, SIGNAL(itemResultsJSON(QString,QString)), this, SLOT(transformJSONResult(QString,QString)) );
+    connect(this, SIGNAL(itemResultsJSON(QString, QString)), this, SLOT(transformJSONResult(QString, QString)));
 
     // each cross action has its own unique identifier
     d->scriptFile = new Kross::Action(this, QString("WebExtractor-%1").arg(scriptFile));
 
     d->scriptFile->addObject(this, "WebExtractor", Kross::ChildrenInterface::AutoConnectSignals);
 
-    d->scriptFile->setFile( scriptFile );
+    d->scriptFile->setFile(scriptFile);
     d->scriptFile->trigger();
 
     KConfig config("nepomukmetadataextractorrc");
-    if( config.hasGroup( scriptFile ) ) {
-        KConfigGroup pluginGroup( &config, scriptFile );
+    if (config.hasGroup(scriptFile)) {
+        KConfigGroup pluginGroup(&config, scriptFile);
         d->scriptInfo.name = pluginGroup.readEntry("name", QString());
         d->scriptInfo.homepage = pluginGroup.readEntry("homepage", QString());
         d->scriptInfo.identifier = pluginGroup.readEntry("identifier", QString());
@@ -69,14 +72,14 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
         d->scriptInfo.hasConfig = pluginGroup.readEntry("hasConfig", QVariant(false)).toBool();
         d->scriptInfo.resource = pluginGroup.readEntry("resource", QStringList());
         d->scriptInfo.urlregex = pluginGroup.readEntry("urlregex", QStringList());
-    }
-    else {
+    } else {
         // load script info
         QVariantMap result = d->scriptFile->callFunction("info").toMap();
         d->scriptInfo.name = result.value("name").toString();
         d->scriptInfo.homepage = result.value("homepage").toString();
         d->scriptInfo.identifier = result.value("identifier").toString();
         d->scriptInfo.description = result.value("description").toString();
+
         if (result.contains("hasConfig")) {
             d->scriptInfo.hasConfig = result.value("hasConfig").toBool();
         } else {
@@ -92,12 +95,12 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
         d->scriptInfo.file = d->scriptFile->file();
 
         QVariantList resList = result.value("resource").toList();
-        foreach(const QVariant &res, resList) {
+        foreach (const QVariant & res, resList) {
             d->scriptInfo.resource << res.toString();
         }
 
         resList = result.value("urlregex").toList();
-        foreach(const QVariant &res, resList) {
+        foreach (const QVariant & res, resList) {
             d->scriptInfo.urlregex << res.toString();
         }
     }
@@ -105,14 +108,14 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
 
 NepomukMetaDataExtractor::Extractor::KrossExtractor::~KrossExtractor()
 {
-    Q_D( KrossExtractor );
+    Q_D(KrossExtractor);
     delete d->scriptFile;
     delete d->futureWatcher;
 }
 
 NepomukMetaDataExtractor::Extractor::WebExtractor::Info NepomukMetaDataExtractor::Extractor::KrossExtractor::info()
 {
-    Q_D( KrossExtractor );
+    Q_D(KrossExtractor);
     return d->scriptInfo;
 }
 
@@ -123,14 +126,13 @@ static QVariant concurrentSearch(Kross::Action *script, const QString &resourceT
 
 void NepomukMetaDataExtractor::Extractor::KrossExtractor::search(const QString &resourceType, const QVariantMap &parameters)
 {
-    Q_D( KrossExtractor );
+    Q_D(KrossExtractor);
 
-    if( d->scriptInfo.identifier == "imdbmovies") {
+    if (d->scriptInfo.identifier == "imdbmovies") {
         kDebug() << "use workaround for imdb. This once crashes if executed in its own thread";
-        emit searchItems( resourceType, parameters );
-    }
-    else {
-        QFuture<QVariant> future = QtConcurrent::run(concurrentSearch, d->scriptFile,resourceType, parameters);
+        emit searchItems(resourceType, parameters);
+    } else {
+        QFuture<QVariant> future = QtConcurrent::run(concurrentSearch, d->scriptFile, resourceType, parameters);
         d->futureWatcher = new QFutureWatcher<QVariant>();
 
         d->futureWatcher->setFuture(future);
@@ -144,12 +146,11 @@ static QVariant concurrentExtraction(Kross::Action *script, const QUrl &url, con
 
 void NepomukMetaDataExtractor::Extractor::KrossExtractor::extractItem(const QUrl &url, const QVariantMap &options)
 {
-    Q_D( KrossExtractor );
-    if( d->scriptInfo.identifier == "imdbmovies") {
+    Q_D(KrossExtractor);
+    if (d->scriptInfo.identifier == "imdbmovies") {
         kDebug() << "use workaround for imdb. This once crashes if executed in its own thread";
-        emit extractItemFromUri( url, options );
-    }
-    else {
+        emit extractItemFromUri(url, options);
+    } else {
         QFuture<QVariant> future = QtConcurrent::run(concurrentExtraction, d->scriptFile, url, options);
         d->futureWatcher = new QFutureWatcher<QVariant>();
 
@@ -159,7 +160,7 @@ void NepomukMetaDataExtractor::Extractor::KrossExtractor::extractItem(const QUrl
 
 void NepomukMetaDataExtractor::Extractor::KrossExtractor::showConfigDialog()
 {
-    Q_D( KrossExtractor );
+    Q_D(KrossExtractor);
     if (d->scriptInfo.hasConfig) {
         d->scriptFile->callFunction("showConfigDialog");
     }
@@ -170,7 +171,7 @@ void NepomukMetaDataExtractor::Extractor::KrossExtractor::transformJSONResult(co
     QJson::Parser parser;
     bool ok;
 
-    QVariantMap result = parser.parse (jsonMap.toLatin1(), &ok).toMap();
+    QVariantMap result = parser.parse(jsonMap.toLatin1(), &ok).toMap();
     if (!ok) {
         qFatal("KrossExtractor::transformJSONResult :: An error occurred during json parsing");
         return;

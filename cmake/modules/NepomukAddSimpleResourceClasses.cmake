@@ -25,7 +25,7 @@
 macro(NEPOMUK_ADD_SIMPLERESOURCE_CLASSES )
   # extract arguments
   set(_current_arg_type "onto")
-  foreach(_arg ${ARGN})
+  foreach (_arg ${ARGN})
     if(${_arg} STREQUAL "ONTOLOGIES")
       set(_current_arg_type "onto")
     else(${_arg} STREQUAL "ONTOLOGIES")
@@ -35,7 +35,7 @@ macro(NEPOMUK_ADD_SIMPLERESOURCE_CLASSES )
         list(APPEND _ontofilenames ${_filename})
       endif(${_current_arg_type} STREQUAL "onto")
     endif(${_arg} STREQUAL "ONTOLOGIES")
-  endforeach(_arg)
+  endforeach (_arg)
 
   # find our helper program (first in the install dir, then everywhere)
   unset(SRCGEN)
