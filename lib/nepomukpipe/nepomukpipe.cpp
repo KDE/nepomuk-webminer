@@ -26,8 +26,8 @@
 
 #include <QtCore/QFile>
 
-#include "nco/personcontact.h"
-#include "nco/organizationcontact.h"
+#include "ontology/nco/personcontact.h"
+#include "ontology/nco/organizationcontact.h"
 
 #include <mdesettings.h>
 

@@ -22,11 +22,11 @@
 #include <Nepomuk2/DataManagement>
 #include <Nepomuk2/StoreResourcesJob>
 
-#include "sro/nmm/musicpiece.h"
-#include "sro/nmm/musicalbum.h"
-#include "sro/nfo/image.h"
-#include "sro/nfo/webdataobject.h"
-#include "sro/nco/personcontact.h"
+#include "ontology/nmm/musicpiece.h"
+#include "ontology/nmm/musicalbum.h"
+#include "ontology/nfo/image.h"
+#include "ontology/nfo/webdataobject.h"
+#include "ontology/nco/personcontact.h"
 #include <Soprano/Vocabulary/NAO>
 #include <Soprano/Vocabulary/RDFS>
 

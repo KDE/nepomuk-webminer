@@ -24,11 +24,11 @@
 #include <Nepomuk2/SimpleResource>
 #include <Nepomuk2/SimpleResourceGraph>
 
-#include "sro/nbib/publication.h"
-#include "sro/nbib/reference.h"
-#include "sro/nbib/journal.h"
-#include "sro/nbib/journalissue.h"
-#include "sro/nbib/encyclopedia.h"
+#include "ontology/nbib/publication.h"
+#include "ontology/nbib/reference.h"
+#include "ontology/nbib/journal.h"
+#include "ontology/nbib/journalissue.h"
+#include "ontology/nbib/encyclopedia.h"
 
 #include "nepomukmetadataextractor_export.h"
 

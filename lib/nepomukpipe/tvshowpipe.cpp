@@ -24,10 +24,10 @@
 #include <KDE/KJob>
 
 #include <KDE/KUrl>
-#include "sro/nfo/image.h"
-#include "sro/nfo/webdataobject.h"
-#include "sro/nmm/tvseries.h"
-#include "sro/nco/personcontact.h"
+#include "ontology/nfo/image.h"
+#include "ontology/nfo/webdataobject.h"
+#include "ontology/nmm/tvseries.h"
+#include "ontology/nco/personcontact.h"
 
 #include <Soprano/Vocabulary/RDFS>
 #include <Soprano/Vocabulary/NAO>

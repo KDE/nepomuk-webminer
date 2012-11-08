@@ -32,7 +32,7 @@ output_path = os.getcwd()
 verbose = True
 
 # A list of C++ reserved keywords which we need to handle
-cppKeywords = ['class', 'int', 'float', 'double']
+cppKeywords = ['class', 'int', 'float', 'double', 'long']
 
 def normalizeName(name):
     "Normalize a class or property name to be used as a C++ entity."
@@ -458,7 +458,8 @@ def main():
     if args.output :
         output_path = args.output[0]
 
-    verbose = args.verbose
+    #verbose = args.verbose
+    #verbose = true
 
     if verbose:
         print 'Generating from ontology files %s' % ','.join(args.ontologies)

@@ -22,10 +22,10 @@
 #include <Nepomuk2/DataManagement>
 #include <Nepomuk2/StoreResourcesJob>
 
-#include "sro/nmm/movie.h"
-#include "sro/nco/personcontact.h"
-#include "sro/nfo/image.h"
-#include "sro/nfo/webdataobject.h"
+#include "ontology/nmm/movie.h"
+#include "ontology/nco/personcontact.h"
+#include "ontology/nfo/image.h"
+#include "ontology/nfo/webdataobject.h"
 #include <Soprano/Vocabulary/NAO>
 #include <Soprano/Vocabulary/RDFS>
 

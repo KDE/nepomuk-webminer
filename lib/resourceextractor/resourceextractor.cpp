@@ -30,12 +30,12 @@
 #include <Nepomuk2/Vocabulary/NMM>
 #include <Nepomuk2/Vocabulary/NCO>
 #include <Nepomuk2/Vocabulary/NIE>
-#include "sro/nbib.h"
+#include "ontology/nbib/nbib.h"
 
-#include "sro/nbib/publication.h"
-#include "sro/nbib/article.h"
-#include "sro/nco/personcontact.h"
-#include "sro/nmm/movie.h"
+#include "ontology/nbib/publication.h"
+#include "ontology/nbib/article.h"
+#include "ontology/nco/personcontact.h"
+#include "ontology/nmm/movie.h"
 
 #include <KDE/KMimeType>
 #include <KDE/KDebug>

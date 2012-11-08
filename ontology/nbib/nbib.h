@@ -22,7 +22,6 @@
 #define _SOPRANO_NBIB_H_
 
 #include <QtCore/QUrl>
-#include <nepomuk2/nepomuk_export.h>
 
 namespace Nepomuk2 {
     namespace Vocabulary {
@@ -30,61 +29,61 @@ namespace Nepomuk2 {
             /**
              * http://www.example.com/nbib#
              */
-            NEPOMUK_EXPORT QUrl nbibNamespace();
+            QUrl nbibNamespace();
 
             /**
              * http://www.example.com/nbib#
              */
-            NEPOMUK_EXPORT QUrl nrlOntologyGraph();
+            QUrl nrlOntologyGraph();
 
             /**
              * http://www.example.com/nbib#Article 
              * 
              * An article from a journal or magazine. 
              */
-            NEPOMUK_EXPORT QUrl Article();
+            QUrl Article();
 
             /**
              * http://www.example.com/nbib#BachelorThesis 
              * 
              * A Bachelor thesis. 
              */
-            NEPOMUK_EXPORT QUrl BachelorThesis();
+            QUrl BachelorThesis();
 
             /**
              * http://www.example.com/nbib#Bill 
              * 
              * Draft legislation presented for discussion to a legal body. 
              */
-            NEPOMUK_EXPORT QUrl Bill();
+            QUrl Bill();
 
             /**
              * http://www.example.com/nbib#Blog 
              * 
              * Reference the blog in which several BlogPost can be found 
              */
-            NEPOMUK_EXPORT QUrl Blog();
+            QUrl Blog();
 
             /**
              * http://www.example.com/nbib#BlogPost 
              * 
              * Reference the post in a web log (blog) 
              */
-            NEPOMUK_EXPORT QUrl BlogPost();
+            QUrl BlogPost();
 
             /**
              * http://www.example.com/nbib#Book 
              * 
              * A book with an explicit publisher. 
              */
-            NEPOMUK_EXPORT QUrl Book();
+            QUrl Book();
 
             /**
              * http://www.example.com/nbib#BookSeries 
              * 
              * The series of a book. 
              */
-            NEPOMUK_EXPORT QUrl BookSeries();
+            QUrl BookSeries();
 
             /**
              * http://www.example.com/nbib#Booklet 
@@ -92,42 +91,42 @@ namespace Nepomuk2 {
              * A work that is printed and bound, but without a named publisher 
              * or sponsoring institution. 
              */
-            NEPOMUK_EXPORT QUrl Booklet();
+            QUrl Booklet();
 
             /**
              * http://www.example.com/nbib#Brief 
              * 
              * A written argument submitted to a court. 
              */
-            NEPOMUK_EXPORT QUrl Brief();
+            QUrl Brief();
 
             /**
              * http://www.example.com/nbib#Chapter 
              * 
              * A chapter of a publication. 
              */
-            NEPOMUK_EXPORT QUrl Chapter();
+            QUrl Chapter();
 
             /**
              * http://www.example.com/nbib#CodeOfLaw 
              * 
              * A collection of statutes. 
              */
-            NEPOMUK_EXPORT QUrl CodeOfLaw();
+            QUrl CodeOfLaw();
 
             /**
              * http://www.example.com/nbib#Collection 
              * 
              * A collection of different publications. 
              */
-            NEPOMUK_EXPORT QUrl Collection();
+            QUrl Collection();
 
             /**
              * http://www.example.com/nbib#CourtReporter 
              * 
              * A collection of legal cases. 
              */
-            NEPOMUK_EXPORT QUrl CourtReporter();
+            QUrl CourtReporter();
 
             /**
              * http://www.example.com/nbib#Decision 
@@ -135,79 +134,79 @@ namespace Nepomuk2 {
              * A document containing an authoritative determination (as 
              * a decree or judgment) made after consideration of facts or law. 
              */
-            NEPOMUK_EXPORT QUrl Decision();
+            QUrl Decision();
 
             /**
              * http://www.example.com/nbib#Dictionary 
              * 
              * A dictionary 
              */
-            NEPOMUK_EXPORT QUrl Dictionary();
+            QUrl Dictionary();
 
             /**
              * http://www.example.com/nbib#DocumentPart 
              * 
-             * a part of an document, mostly Chapters but alsow quotes etc. 
-             * These don't have to be available as real file extracts but can 
-             * also be linked to a real file, if available 
+             * A part of an document, mostly Chapters but also quotes etc. These 
+             * don't have to be available as real file exrtacts but can also 
+             * be linked to a real file, if available 
              */
-            NEPOMUK_EXPORT QUrl DocumentPart();
+            QUrl DocumentPart();
 
             /**
              * http://www.example.com/nbib#DocumentStatus 
              * 
              * The status of the publication of a document. 
              */
-            NEPOMUK_EXPORT QUrl DocumentStatus();
+            QUrl DocumentStatus();
 
             /**
              * http://www.example.com/nbib#Electronic 
              * 
              * An electronic publication (for example website or presentations) 
              */
-            NEPOMUK_EXPORT QUrl Electronic();
+            QUrl Electronic();
 
             /**
              * http://www.example.com/nbib#Encyclopedia 
              * 
              * A encyclopedia 
              */
-            NEPOMUK_EXPORT QUrl Encyclopedia();
+            QUrl Encyclopedia();
 
             /**
              * http://www.example.com/nbib#Forum 
              * 
              * Reference the forum in which several ForumPost can be found 
              */
-            NEPOMUK_EXPORT QUrl Forum();
+            QUrl Forum();
 
             /**
              * http://www.example.com/nbib#ForumPost 
              * 
              * Reference the post in a forum or other electronic list 
              */
-            NEPOMUK_EXPORT QUrl ForumPost();
+            QUrl ForumPost();
 
             /**
              * http://www.example.com/nbib#Journal 
              * 
              * A Journal which publish single journal issues. 
              */
-            NEPOMUK_EXPORT QUrl Journal();
+            QUrl Journal();
 
             /**
              * http://www.example.com/nbib#JournalIssue 
              * 
              * A journal issue for serious, scholarly publications 
              */
-            NEPOMUK_EXPORT QUrl JournalIssue();
+            QUrl JournalIssue();
 
             /**
              * http://www.example.com/nbib#LegalCaseDocument 
              * 
              * A document accompanying a legal case. 
              */
-            NEPOMUK_EXPORT QUrl LegalCaseDocument();
+            QUrl LegalCaseDocument();
 
             /**
              * http://www.example.com/nbib#LegalDocument 
@@ -215,14 +214,14 @@ namespace Nepomuk2 {
              * A legal document; for example, a court decision, a brief, and 
              * so forth. 
              */
-            NEPOMUK_EXPORT QUrl LegalDocument();
+            QUrl LegalDocument();
 
             /**
              * http://www.example.com/nbib#Legislation 
              * 
              * A legal document proposing or enacting a law or a group of laws. 
              */
-            NEPOMUK_EXPORT QUrl Legislation();
+            QUrl Legislation();
 
             /**
              * http://www.example.com/nbib#Magazin 
@@ -230,7 +229,7 @@ namespace Nepomuk2 {
              * A Magazin which publish several MagazinIssue containing several 
              * articles 
              */
-            NEPOMUK_EXPORT QUrl Magazin();
+            QUrl Magazin();
 
             /**
              * http://www.example.com/nbib#MagazinIssue 
@@ -241,28 +240,28 @@ namespace Nepomuk2 {
              * writers, and often photographs and drawings, frequently specializing 
              * in a particular subject or area, as hobbies, news, or sports. 
              */
-            NEPOMUK_EXPORT QUrl MagazinIssue();
+            QUrl MagazinIssue();
 
             /**
              * http://www.example.com/nbib#Manual 
              * 
              * Technical documentation. 
              */
-            NEPOMUK_EXPORT QUrl Manual();
+            QUrl Manual();
 
             /**
              * http://www.example.com/nbib#Map 
              * 
              * A map with geographical data 
              */
-            NEPOMUK_EXPORT QUrl Map();
+            QUrl Map();
 
             /**
              * http://www.example.com/nbib#MastersThesis 
              * 
              * A Master's thesis. 
              */
-            NEPOMUK_EXPORT QUrl MastersThesis();
+            QUrl MastersThesis();
 
             /**
              * http://www.example.com/nbib#Newspaper 
@@ -270,42 +269,42 @@ namespace Nepomuk2 {
              * A Newspaper which publish several NewspaperIssue containing 
              * several articles 
              */
-            NEPOMUK_EXPORT QUrl Newspaper();
+            QUrl Newspaper();
 
             /**
              * http://www.example.com/nbib#NewspaperIssue 
              * 
              * A single issue of a published Newspaper 
              */
-            NEPOMUK_EXPORT QUrl NewspaperIssue();
+            QUrl NewspaperIssue();
 
             /**
              * http://www.example.com/nbib#Patent 
              * 
              * A patent. 
              */
-            NEPOMUK_EXPORT QUrl Patent();
+            QUrl Patent();
 
             /**
              * http://www.example.com/nbib#PhdThesis 
              * 
              * A PhD thesis. 
              */
-            NEPOMUK_EXPORT QUrl PhdThesis();
+            QUrl PhdThesis();
 
             /**
              * http://www.example.com/nbib#Presentation 
              * 
              * Slides for a presentation 
              */
-            NEPOMUK_EXPORT QUrl Presentation();
+            QUrl Presentation();
 
             /**
              * http://www.example.com/nbib#Proceedings 
              * 
              * The proceedings of a conference. 
              */
-            NEPOMUK_EXPORT QUrl Proceedings();
+            QUrl Proceedings();
 
             /**
              * http://www.example.com/nbib#Publication 
@@ -313,21 +312,21 @@ namespace Nepomuk2 {
              * A bibliographic reference resource type (article, book, paper 
              * and such) 
              */
-            NEPOMUK_EXPORT QUrl Publication();
+            QUrl Publication();
 
             /**
              * http://www.example.com/nbib#Quote 
              * 
              * A quote in a document 
              */
-            NEPOMUK_EXPORT QUrl Quote();
+            QUrl Quote();
 
             /**
              * http://www.example.com/nbib#Reference 
              * 
              * A bibliographic reference 
              */
-            NEPOMUK_EXPORT QUrl Reference();
+            QUrl Reference();
 
             /**
              * http://www.example.com/nbib#Report 
@@ -336,14 +335,14 @@ namespace Nepomuk2 {
              * detail an event, situation, or the like, usually as the result 
              * of observation, inquiry, etc.. 
              */
-            NEPOMUK_EXPORT QUrl Report();
+            QUrl Report();
 
             /**
              * http://www.example.com/nbib#Script 
              * 
-             * The script for something (a lecture for ecxample) 
+             * The script for something (a lecture for example) 
              */
-            NEPOMUK_EXPORT QUrl Script();
+            QUrl Script();
 
             /**
              * http://www.example.com/nbib#Series 
@@ -351,21 +350,21 @@ namespace Nepomuk2 {
              * Superclass to represent a series of some published data. (Book 
              * Series, Journal with several issues etc) 
              */
-            NEPOMUK_EXPORT QUrl Series();
+            QUrl Series();
 
             /**
              * http://www.example.com/nbib#Standard 
              * 
              * A document describing a standard 
              */
-            NEPOMUK_EXPORT QUrl Standard();
+            QUrl Standard();
 
             /**
              * http://www.example.com/nbib#Statute 
              * 
              * A bill enacted into law. 
              */
-            NEPOMUK_EXPORT QUrl Statute();
+            QUrl Statute();
 
             /**
              * http://www.example.com/nbib#Techreport 
@@ -373,21 +372,21 @@ namespace Nepomuk2 {
              * A report published by a school or other institution, usually 
              * numbered within a series. 
              */
-            NEPOMUK_EXPORT QUrl Techreport();
+            QUrl Techreport();
 
             /**
              * http://www.example.com/nbib#Thesis 
              * 
              * A general thesis. 
              */
-            NEPOMUK_EXPORT QUrl Thesis();
+            QUrl Thesis();
 
             /**
              * http://www.example.com/nbib#Unpublished 
              * 
              * A document having an author and title, but not formally published. 
              */
-            NEPOMUK_EXPORT QUrl Unpublished();
+            QUrl Unpublished();
 
             /**
              * http://www.example.com/nbib#Webpage 
@@ -395,7 +394,7 @@ namespace Nepomuk2 {
              * Reference a webpage in general (only one site of the complete 
              * Website) 
              */
-            NEPOMUK_EXPORT QUrl Webpage();
+            QUrl Webpage();
 
             /**
              * http://www.example.com/nbib#Website 
@@ -403,35 +402,35 @@ namespace Nepomuk2 {
              * Reference the complete website in which several webpages can 
              * be found 
              */
-            NEPOMUK_EXPORT QUrl Website();
+            QUrl Website();
 
             /**
              * http://www.example.com/nbib#accepted 
              * 
              * Accepted for publication after peer reviewing. 
              */
-            NEPOMUK_EXPORT QUrl accepted();
+            QUrl accepted();
 
             /**
              * http://www.example.com/nbib#affirmedBy 
              * 
              * A legal decision that affirms a ruling. 
              */
-            NEPOMUK_EXPORT QUrl affirmedBy();
+            QUrl affirmedBy();
 
             /**
              * http://www.example.com/nbib#applicationNumber 
              * 
              * The application number of a patent 
              */
-            NEPOMUK_EXPORT QUrl applicationNumber();
+            QUrl applicationNumber();
 
             /**
              * http://www.example.com/nbib#archive 
              * 
              * The archive where the publication can be found, see also nbib::archivelocation 
              */
-            NEPOMUK_EXPORT QUrl archive();
+            QUrl archive();
 
             /**
              * http://www.example.com/nbib#archiveLocation 
@@ -439,14 +438,14 @@ namespace Nepomuk2 {
              * The location where the publication can be found in the archive 
              * specified via nbib::archive 
              */
-            NEPOMUK_EXPORT QUrl archiveLocation();
+            QUrl archiveLocation();
 
             /**
              * http://www.example.com/nbib#arguedDate 
              * 
              * The date on which a legal case is argued before a court. 
              */
-            NEPOMUK_EXPORT QUrl arguedDate();
+            QUrl arguedDate();
 
             /**
              * http://www.example.com/nbib#article 
@@ -454,35 +453,35 @@ namespace Nepomuk2 {
              * Connects an article to its collection (article in Newspaper, 
              * Proceedings, Journalissue) 
              */
-            NEPOMUK_EXPORT QUrl article();
+            QUrl article();
 
             /**
              * http://www.example.com/nbib#assignee 
              * 
              * The assignee of an patent 
              */
-            NEPOMUK_EXPORT QUrl assignee();
+            QUrl assignee();
 
             /**
              * http://www.example.com/nbib#attorneyAgent 
              * 
              * A attorney agent related to a patent 
              */
-            NEPOMUK_EXPORT QUrl attorneyAgent();
+            QUrl attorneyAgent();
 
             /**
              * http://www.example.com/nbib#chapterNumber 
              * 
              * The number of the Chapter for example 1.2, II etc 
              */
-            NEPOMUK_EXPORT QUrl chapterNumber();
+            QUrl chapterNumber();
 
             /**
              * http://www.example.com/nbib#citeKey 
              * 
              * Used to identify the reference. 
              */
-            NEPOMUK_EXPORT QUrl citeKey();
+            QUrl citeKey();
 
             /**
              * http://www.example.com/nbib#citedReference 
@@ -490,28 +489,28 @@ namespace Nepomuk2 {
              * Links all cited references from one publication. Good way to 
              * find new sources to read 
              */
-            NEPOMUK_EXPORT QUrl citedReference();
+            QUrl citedReference();
 
             /**
              * http://www.example.com/nbib#coSponsor 
              * 
              * The co-sponsor [of a bill] 
              */
-            NEPOMUK_EXPORT QUrl coSponsor();
+            QUrl coSponsor();
 
             /**
              * http://www.example.com/nbib#codeNumber 
              * 
              * The code number of an CodeOfLaw 
              */
-            NEPOMUK_EXPORT QUrl codeNumber();
+            QUrl codeNumber();
 
             /**
              * http://www.example.com/nbib#codeOfLaw 
              * 
              * The code of law the legislation is contained in 
              */
-            NEPOMUK_EXPORT QUrl codeOfLaw();
+            QUrl codeOfLaw();
 
             /**
              * http://www.example.com/nbib#collection 
@@ -519,7 +518,7 @@ namespace Nepomuk2 {
              * The collection this article was published in (for example a 
              * Journalissue, Newspaper or Proceedings 
              */
-            NEPOMUK_EXPORT QUrl collection();
+            QUrl collection();
 
             /**
              * http://www.example.com/nbib#commenter 
@@ -527,21 +526,21 @@ namespace Nepomuk2 {
              * The commenter of a Publication. Mostly used for Blogs, Forum 
              * posts 
              */
-            NEPOMUK_EXPORT QUrl commenter();
+            QUrl commenter();
 
             /**
              * http://www.example.com/nbib#contributor 
              * 
              * The contributor of a Publication 
              */
-            NEPOMUK_EXPORT QUrl contributor();
+            QUrl contributor();
 
             /**
              * http://www.example.com/nbib#counsel 
              * 
              * The counsel related to a Legal document 
              */
-            NEPOMUK_EXPORT QUrl counsel();
+            QUrl counsel();
 
             /**
              * http://www.example.com/nbib#courtReporter 
@@ -549,7 +548,7 @@ namespace Nepomuk2 {
              * Links case document to the collection of legal cases it belongs 
              * to. 
              */
-            NEPOMUK_EXPORT QUrl courtReporter();
+            QUrl courtReporter();
 
             /**
              * http://www.example.com/nbib#documentPart 
@@ -557,35 +556,35 @@ namespace Nepomuk2 {
              * Connects a publication to a part of it (for example a chapter 
              * or quoted passage) 
              */
-            NEPOMUK_EXPORT QUrl documentPart();
+            QUrl documentPart();
 
             /**
              * http://www.example.com/nbib#documentPartOf 
              * 
              * Connects a part of a document to the publication it is from 
              */
-            NEPOMUK_EXPORT QUrl documentPartOf();
+            QUrl documentPartOf();
 
             /**
              * http://www.example.com/nbib#documentStatus 
              * 
              * The status of the publication of a document. 
              */
-            NEPOMUK_EXPORT QUrl documentStatus();
+            QUrl documentStatus();
 
             /**
              * http://www.example.com/nbib#draft 
              * 
              * Document drafted. 
              */
-            NEPOMUK_EXPORT QUrl draft();
+            QUrl draft();
 
             /**
              * http://www.example.com/nbib#edition 
              * 
              * The edition of a book, long form (such as 'first' or 'second'). 
              */
-            NEPOMUK_EXPORT QUrl edition();
+            QUrl edition();
 
             /**
              * http://www.example.com/nbib#eprint 
@@ -593,22 +592,22 @@ namespace Nepomuk2 {
              * A specification of an electronic publication, often a preprint 
              * or a technical report. 
              */
-            NEPOMUK_EXPORT QUrl eprint();
+            QUrl eprint();
 
             /**
              * http://www.example.com/nbib#event 
              * 
-             * The event this publication was shown, represented, published 
+             * The event this publication was shown, presented, published 
              * etc 
              */
-            NEPOMUK_EXPORT QUrl event();
+            QUrl event();
 
             /**
              * http://www.example.com/nbib#eventPublication 
              * 
-             * the publications that fornm the result of an event 
+             * The publications that form the result of an event 
              */
-            NEPOMUK_EXPORT QUrl eventPublication();
+            QUrl eventPublication();
 
             /**
              * http://www.example.com/nbib#filingDate 
@@ -616,43 +615,43 @@ namespace Nepomuk2 {
              * The date when the patent was filed, the issue date is the same 
              * as the publication date 
              */
-            NEPOMUK_EXPORT QUrl filingDate();
+            QUrl filingDate();
 
             /**
              * http://www.example.com/nbib#forthcoming 
              * 
              * Document to be published. 
              */
-            NEPOMUK_EXPORT QUrl forthcoming();
+            QUrl forthcoming();
 
             /**
              * http://www.example.com/nbib#history 
              * 
              * The history of a legal document 
              */
-            NEPOMUK_EXPORT QUrl history();
+            QUrl history();
 
             /**
              * http://www.example.com/nbib#inSeries 
              * 
              * The series the publication was published in. (for example a 
-             * series of books, a series of lecture notes, a journal series 
+             * series of books, a series of lecture notes, a journal series) 
              */
-            NEPOMUK_EXPORT QUrl inSeries();
+            QUrl inSeries();
 
             /**
              * http://www.example.com/nbib#isPublicationOf 
              * 
              * Links a publication to its document. 
              */
-            NEPOMUK_EXPORT QUrl isPublicationOf();
+            QUrl isPublicationOf();
 
             /**
              * http://www.example.com/nbib#isbn 
              * 
              * The International Standard Book Number. 
              */
-            NEPOMUK_EXPORT QUrl isbn();
+            QUrl isbn();
 
             /**
              * http://www.example.com/nbib#issn 
@@ -660,42 +659,42 @@ namespace Nepomuk2 {
              * The International Standard Serial Number. Used to identify 
              * a series of publications. 
              */
-            NEPOMUK_EXPORT QUrl issn();
+            QUrl issn();
 
             /**
              * http://www.example.com/nbib#lccn 
              * 
              * The Library of Congress Call Number. 
              */
-            NEPOMUK_EXPORT QUrl lccn();
+            QUrl lccn();
 
             /**
              * http://www.example.com/nbib#legal 
              * 
              * Legal document. 
              */
-            NEPOMUK_EXPORT QUrl legal();
+            QUrl legal();
 
             /**
              * http://www.example.com/nbib#legalCase 
              * 
              * Backlinks all legal cases from the court reporter it is from 
              */
-            NEPOMUK_EXPORT QUrl legalCase();
+            QUrl legalCase();
 
             /**
              * http://www.example.com/nbib#legalStatus 
              * 
              * The legal status of this patent 
              */
-            NEPOMUK_EXPORT QUrl legalStatus();
+            QUrl legalStatus();
 
             /**
              * http://www.example.com/nbib#legislation 
              * 
-             * links to a legislation (Bill, Statute) in a Code of Law 
+             * Links to a legislation (Bill, Statute) in a Code of Law 
              */
-            NEPOMUK_EXPORT QUrl legislation();
+            QUrl legislation();
 
             /**
              * http://www.example.com/nbib#libraryCatalog 
@@ -703,51 +702,51 @@ namespace Nepomuk2 {
              * The library catalog information where the publication can 
              * be found 
              */
-            NEPOMUK_EXPORT QUrl libraryCatalog();
+            QUrl libraryCatalog();
 
             /**
              * http://www.example.com/nbib#mapScale 
              * 
              * The scale of a map 
              */
-            NEPOMUK_EXPORT QUrl mapScale();
+            QUrl mapScale();
 
             /**
              * http://www.example.com/nbib#mrNumber 
              * 
              * The Mathematical Reviews number. 
              */
-            NEPOMUK_EXPORT QUrl mrNumber();
+            QUrl mrNumber();
 
             /**
              * http://www.example.com/nbib#nonPeerReviewed 
              * 
              * A document that is not peer reviewed. 
              */
-            NEPOMUK_EXPORT QUrl nonPeerReviewed();
+            QUrl nonPeerReviewed();
 
             /**
              * http://www.example.com/nbib#number 
              * 
              * The '(issue) number' of a journal, magazine, or tech-report, 
-             * pr the publicl aw Number of a Statute or the number of a patent 
+             * or the public law Number of a Statute or the number of a patent 
              * etc 
              */
-            NEPOMUK_EXPORT QUrl number();
+            QUrl number();
 
             /**
              * http://www.example.com/nbib#numberOfPages 
              * 
              * The number of pages contained in the publication. 
              */
-            NEPOMUK_EXPORT QUrl numberOfPages();
+            QUrl numberOfPages();
 
             /**
              * http://www.example.com/nbib#numberOfVolumes 
              * 
              * The number of volumes that exists for a publication. 
              */
-            NEPOMUK_EXPORT QUrl numberOfVolumes();
+            QUrl numberOfVolumes();
 
             /**
              * http://www.example.com/nbib#organization 
@@ -755,35 +754,35 @@ namespace Nepomuk2 {
              * The organization that held the conference where the proceedings 
              * comes from or that is otherwise responsible for the publication 
              */
-            NEPOMUK_EXPORT QUrl organization();
+            QUrl organization();
 
             /**
              * http://www.example.com/nbib#pageEnd 
              * 
              * Ending page number of the chapter 
              */
-            NEPOMUK_EXPORT QUrl pageEnd();
+            QUrl pageEnd();
 
             /**
              * http://www.example.com/nbib#pageStart 
              * 
              * Starting page number of the chapter 
              */
-            NEPOMUK_EXPORT QUrl pageStart();
+            QUrl pageStart();
 
             /**
              * http://www.example.com/nbib#pages 
              * 
              * Page numbers, separated either by commas or double-hyphens. 
              */
-            NEPOMUK_EXPORT QUrl pages();
+            QUrl pages();
 
             /**
              * http://www.example.com/nbib#patentReferences 
              * 
              * The references for this patent 
              */
-            NEPOMUK_EXPORT QUrl patentReferences();
+            QUrl patentReferences();
 
             /**
              * http://www.example.com/nbib#peerReviewed 
@@ -793,42 +792,42 @@ namespace Nepomuk2 {
              * field as the author review the article and decide if it is authoritative 
              * enough for publication. 
              */
-            NEPOMUK_EXPORT QUrl peerReviewed();
+            QUrl peerReviewed();
 
             /**
              * http://www.example.com/nbib#priorityNumbers 
              * 
              * The priority number of a patent 
              */
-            NEPOMUK_EXPORT QUrl priorityNumbers();
+            QUrl priorityNumbers();
 
             /**
              * http://www.example.com/nbib#pubMed 
              * 
              * The PubMed ID. 
              */
-            NEPOMUK_EXPORT QUrl pubMed();
+            QUrl pubMed();
 
             /**
              * http://www.example.com/nbib#publicLawNumber 
              * 
              * The public law number of the statute 
              */
-            NEPOMUK_EXPORT QUrl publicLawNumber();
+            QUrl publicLawNumber();
 
             /**
              * http://www.example.com/nbib#publication 
              * 
              * The publication used for this reference 
              */
-            NEPOMUK_EXPORT QUrl publication();
+            QUrl publication();
 
             /**
              * http://www.example.com/nbib#publicationMethod 
              * 
              * How it was published, if the publishing method is nonstandard. 
              */
-            NEPOMUK_EXPORT QUrl publicationMethod();
+            QUrl publicationMethod();
 
             /**
              * http://www.example.com/nbib#publicationType 
@@ -836,21 +835,21 @@ namespace Nepomuk2 {
              * The type of tech-report or other kind of Publication, for example, 
              * 'Research Note'. 
              */
-            NEPOMUK_EXPORT QUrl publicationType();
+            QUrl publicationType();
 
             /**
              * http://www.example.com/nbib#published 
              * 
              * Published document. 
              */
-            NEPOMUK_EXPORT QUrl published();
+            QUrl published();
 
             /**
              * http://www.example.com/nbib#publishedAs 
              * 
              * Links a document to its publication information. 
              */
-            NEPOMUK_EXPORT QUrl publishedAs();
+            QUrl publishedAs();
 
             /**
              * http://www.example.com/nbib#reference 
@@ -858,7 +857,7 @@ namespace Nepomuk2 {
              * All references of a publication. Used to quickly get all different 
              * references (different quotes, chapters etc) 
              */
-            NEPOMUK_EXPORT QUrl reference();
+            QUrl reference();
 
             /**
              * http://www.example.com/nbib#referencedPart 
@@ -866,84 +865,84 @@ namespace Nepomuk2 {
              * The specific part of the document of a reference. Used to reference 
              * a chapter or quote a small portion of a publication 
              */
-            NEPOMUK_EXPORT QUrl referencedPart();
+            QUrl referencedPart();
 
             /**
              * http://www.example.com/nbib#rejected 
              * 
              * Rejected for publication after peer reviewing. 
              */
-            NEPOMUK_EXPORT QUrl rejected();
+            QUrl rejected();
 
             /**
              * http://www.example.com/nbib#reviewedAuthor 
              * 
              * The person who reviewed a Publication 
              */
-            NEPOMUK_EXPORT QUrl reviewedAuthor();
+            QUrl reviewedAuthor();
 
             /**
              * http://www.example.com/nbib#seriesOf 
              * 
              * The publication this series belongs to 
              */
-            NEPOMUK_EXPORT QUrl seriesOf();
+            QUrl seriesOf();
 
             /**
              * http://www.example.com/nbib#shortTitle 
              * 
              * The short version of the title 
              */
-            NEPOMUK_EXPORT QUrl shortTitle();
+            QUrl shortTitle();
 
             /**
              * http://www.example.com/nbib#translationOf 
              * 
              * Relates a translated document to the original document. 
              */
-            NEPOMUK_EXPORT QUrl translationOf();
+            QUrl translationOf();
 
             /**
              * http://www.example.com/nbib#translator 
              * 
              * The translator of a Publication 
              */
-            NEPOMUK_EXPORT QUrl translator();
+            QUrl translator();
 
             /**
              * http://www.example.com/nbib#unpublished 
              * 
              * Unpublished document. 
              */
-            NEPOMUK_EXPORT QUrl unpublished();
+            QUrl unpublished();
 
             /**
              * http://www.example.com/nbib#volume 
              * 
              * The volume of a journal or multi-volume book. 
              */
-            NEPOMUK_EXPORT QUrl volume();
+            QUrl volume();
 
             /**
              * http://www.semanticdesktop.org/ontologies/2007/01/19/nie#abstract 
              * 
              * An abstract of the work. 
              */
-            NEPOMUK_EXPORT QUrl abstract();
+            QUrl abstract();
 
             /**
              * http://www.semanticdesktop.org/ontologies/2007/01/19/nie#publicationDate 
              * 
              * The date of the publication 
              */
-            NEPOMUK_EXPORT QUrl publicationDate();
+            QUrl publicationDate();
 
             /**
              * http://www.semanticdesktop.org/ontologies/2007/03/22/nco#editor 
              * 
              * The name(s) of the editor(s). 
              */
-            NEPOMUK_EXPORT QUrl editor();
+            QUrl editor();
 
             /**
              * http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#doi 
@@ -951,7 +950,7 @@ namespace Nepomuk2 {
              * The Digital object identifier. see http://www.doi.org/ for 
              * more information 
              */
-            NEPOMUK_EXPORT QUrl doi();
+            QUrl doi();
         }
     }
 }

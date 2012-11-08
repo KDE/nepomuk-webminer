@@ -2,10 +2,13 @@ project(metadataextractorservice)
 
 set( metadataextractorservice_SRCS
   metadataextractorservice.cpp
-  ../lib/sro/nbib.cpp
+
+  ../ontology/nbib/nbib.cpp
 )
 
 kde4_add_plugin(metadataextractorservice ${metadataextractorservice_SRCS})
+
+ADD_DEPENDENCIES(metadataextractorservice ontology)
 
 target_link_libraries(metadataextractorservice
   ${KDE4_KDECORE_LIBS}

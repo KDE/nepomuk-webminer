@@ -21,9 +21,12 @@ include(KDE4Defaults)
 find_package(NepomukCore REQUIRED)
 set(SDO_MIN_VERSION "0.10.0")
 find_package(SharedDesktopOntologies)
+find_package(Soprano)
 
 include(MacroLibrary)
 include(MacroOptionalAddSubdirectory)
+include(NepomukAddSimpleResourceClasses)
+include(NepomukAddOntologyClasses)
 
 find_package(QJSON REQUIRED)
 find_package(Poppler REQUIRED)
@@ -32,6 +35,7 @@ find_package(Taglib REQUIRED)
 macro_log_feature(HAVE_POPPLER_0_12_1 "Poppler-Qt4" "A PDF rendering library" "http://poppler.freedesktop.org" TRUE "0.12.1" "Poppler necessary to extract data from pdf files")
 macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" TRUE ${SDO_MIN_VERSION} "Ontologies necessary for the Nepomuk semantic desktop.")
 macro_log_feature(TAGLIB_FOUND "TagLib" "library for reading and editing audio meta data" "http://taglib.github.com/" TRUE "1.4" "TagLib necessary to find music meta data")
+
 
 #--------------------------------------------------------------------------
 # global include diretories for all subdirectories
@@ -49,13 +53,14 @@ include_directories(
   ${CMAKE_CURRENT_BUILD_DIR}/lib
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/lib
+  ${CMAKE_CURRENT_BINARY_DIR}/ontology
 )
 
+add_subdirectory( ontology )
 add_subdirectory( lib )
 add_subdirectory( extractor )
 add_subdirectory( service )
 add_subdirectory( browser/konqueror )
-add_subdirectory( ontology )
 add_subdirectory( kcm )
 add_subdirectory( doc )
 

@@ -24,7 +24,7 @@
 #include <Nepomuk2/Vocabulary/NFO>
 #include <Nepomuk2/File>
 #include <Nepomuk2/Vocabulary/NMM>
-#include "sro/nbib.h"
+#include "ontology/nbib/nbib.h"
 
 #include <KDE/KStandardDirs>
 #include <KDE/KDirNotify>
