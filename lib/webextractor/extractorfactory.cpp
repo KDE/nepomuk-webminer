@@ -46,6 +46,7 @@ class ExtractorFactoryPrivate
 {
 public:
     QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> availableScripts;
+    QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> failedScripts;
     QList<NepomukMetaDataExtractor::Extractor::WebExtractor*> existingExtractors;
 };
 }
@@ -140,6 +141,21 @@ QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> NepomukMetaDataEx
     return pluginList;
 }
 
+QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> NepomukMetaDataExtractor::Extractor::ExtractorFactory::listFailedPlugins(const QString &type)
+{
+    Q_D(ExtractorFactory);
+
+    QList<WebExtractor::Info> pluginList;
+
+    foreach (const WebExtractor::Info i, d->failedScripts) {
+        if (i.resource.contains(type)) {
+            pluginList.append(i);
+        }
+    }
+
+    return pluginList;
+}
+
 void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
 {
     Q_D(ExtractorFactory);
@@ -210,12 +226,6 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
 
             QVariantMap result = action.callFunction("info").toMap();
 
-            if (result.value(QLatin1String("isAvailable")).toBool() == false) {
-                kDebug() << "failed loading the plugin: " << result.value("name").toString() << " from:" << fileInfo.absoluteFilePath()
-                         << " Reason:" << result.value("errorMsg").toString();
-                continue;
-            }
-
             WebExtractor::Info scriptInfo;
             scriptInfo.name = result.value("name").toString();
             scriptInfo.homepage = result.value("homepage").toString();
@@ -244,6 +254,15 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
                 scriptInfo.urlregex << res.toString();
             }
 
+            if (result.value(QLatin1String("isAvailable")).toBool() == false) {
+                kDebug() << "failed loading the plugin: " << result.value("name").toString() << " from:" << fileInfo.absoluteFilePath()
+                         << " Reason:" << result.value("errorMsg").toString();
+                scriptInfo.error = result.value("errorMsg").toString();
+                d->failedScripts.append(scriptInfo);
+                continue;
+            }
+
+            scriptInfo.error = ""; // no error
             kDebug() << "add plugin (" << scriptInfo.name << ") via file: " << scriptInfo.file;
             d->availableScripts.append(scriptInfo);
 

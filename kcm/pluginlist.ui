@@ -49,6 +49,16 @@
      </item>
     </layout>
    </item>
+   <item>
+    <widget class="QLabel" name="interpreterLabel">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>

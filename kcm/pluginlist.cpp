@@ -26,13 +26,17 @@
 
 #include <KDE/KUrlLabel>
 #include <KDE/KDebug>
+#include <KDE/Kross/Manager>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimer>
 #include <QtCore/QPointer>
 #include <QtGui/QDialog>
 #include <QtGui/QLabel>
+#include <QtGui/QTextEdit>
 #include <QtGui/QFormLayout>
+#include <QtGui/QBrush>
+#include <QtGui/QColor>
 
 using namespace NepomukMetaDataExtractor;
 using namespace Extractor;
@@ -42,7 +46,6 @@ PluginList::PluginList(QWidget *parent) :
     ui(new Ui::PluginList)
 {
     extractorFactory = 0;
-    selectedPlugin = 0;
     ui->setupUi(this);
 }
 
@@ -59,11 +62,15 @@ void PluginList::setExtractorFactory(NepomukMetaDataExtractor::Extractor::Extrac
 
 void PluginList::setupUi()
 {
-    // music list
     QList<WebExtractor::Info> engines = extractorFactory->listAvailablePlugins("music");
     engines.append(extractorFactory->listAvailablePlugins("publication"));
     engines.append(extractorFactory->listAvailablePlugins("movie"));
     engines.append(extractorFactory->listAvailablePlugins("tvshow"));
+
+    failedPlugins = extractorFactory->listFailedPlugins("music");
+    failedPlugins.append(extractorFactory->listFailedPlugins("publication"));
+    failedPlugins.append(extractorFactory->listFailedPlugins("movie"));
+    failedPlugins.append(extractorFactory->listFailedPlugins("tvshow"));
 
     foreach (const WebExtractor::Info & engine, engines) {
         if (!ui->pluginList->findItems(engine.name, Qt::MatchExactly).isEmpty()) {
@@ -77,6 +84,23 @@ void PluginList::setupUi()
         ui->pluginList->addItem(item);
     }
 
+    // also show failed plugins, but make it obvious they are erroneous
+    foreach (const WebExtractor::Info & engine, failedPlugins) {
+        if (!ui->pluginList->findItems(engine.name, Qt::MatchExactly).isEmpty()) {
+            continue; // already added
+        }
+
+        QListWidgetItem *item = new QListWidgetItem(KIcon("dialog-error"), engine.name);
+        item->setBackground(QBrush(QColor(255,200,200)));
+        item->setData(5, engine.identifier);
+        ui->pluginList->addItem(item);
+    }
+
+    QString itext = i18n("Available Kross Interpreters : ") + QLatin1String("<b>");
+    itext += Kross::Manager::self().interpreters().join(", ");
+    itext += QLatin1String("</b><br />") + i18n("If you cannot find a plugin that should be here, you may need to install the interpreter for the necessary language first!");
+    ui->interpreterLabel->setText(itext);
+
     connect(ui->pluginList, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(updateButtons(QListWidgetItem*)));
     connect(ui->infoButton, SIGNAL(clicked()), this, SLOT(showInfo()));
     connect(ui->configButton, SIGNAL(clicked()), this, SLOT(showConfig()));
@@ -86,9 +110,18 @@ void PluginList::setupUi()
 
 void PluginList::updateButtons(QListWidgetItem* item)
 {
-    selectedPlugin = extractorFactory->getExtractor(item->data(5).toString()); // the factory automatically reuses existing instances
+    selectedPlugin = item->data(5).toString();
     ui->infoButton->setDisabled(false);
-    if (selectedPlugin->info().hasConfig) {
+    // check and handle failed plugin
+    foreach (const WebExtractor::Info & engine, failedPlugins) {
+        if (engine.identifier == selectedPlugin) {
+            ui->configButton->setDisabled(true);
+            return;
+        }
+    }
+    // handle loaded plugin
+    WebExtractor *thePlugin = extractorFactory->getExtractor(selectedPlugin); // the factory automatically reuses existing instances
+    if (thePlugin->info().hasConfig) {
         ui->configButton->setDisabled(false);
     } else {
         ui->configButton->setDisabled(true);
@@ -97,11 +130,24 @@ void PluginList::updateButtons(QListWidgetItem* item)
 
 void PluginList::showInfo()
 {
-    if (!selectedPlugin) {
+    if (selectedPlugin.isNull()) {
         return; // nothing to show
     }
 
-    WebExtractor::Info info = selectedPlugin->info();
+    WebExtractor::Info info;
+    WebExtractor *thePlugin = 0;
+    // check if it's a failed plugin
+    bool failed = false;
+    foreach (const WebExtractor::Info & engine, failedPlugins) {
+        if (engine.identifier == selectedPlugin) {
+            info = engine;
+            failed = true;
+        }
+    }
+    if (!failed) {
+        thePlugin = extractorFactory->getExtractor(selectedPlugin);
+        info = thePlugin->info();
+    }
     QPointer<QDialog> dlg = new QDialog(this);
 
     dlg->setWindowTitle(i18n("About %1", info.name));
@@ -114,6 +160,11 @@ void PluginList::showInfo()
     formLayout->addRow(QLatin1String("<b>") + i18n("Description:") + QLatin1String("</b>"), desc);
     formLayout->addRow(QLatin1String("<b>") + i18n("Author:") + QLatin1String("</b>"), new QLabel(info.author));
     formLayout->addRow(QLatin1String("<b>") + i18n("Email:") + QLatin1String("</b>"), new QLabel(info.email));
+    if (failed) {
+        QTextEdit *err = new QTextEdit(info.error);
+        err->setReadOnly(true);
+        formLayout->addRow(QLatin1String("<b style='color:#f00'>") + i18n("Error:") + QLatin1String("</b>"), err);
+    }
     dlg->setLayout(formLayout);
 
     dlg->exec();
@@ -122,9 +173,10 @@ void PluginList::showInfo()
 
 void PluginList::showConfig()
 {
-    if (!selectedPlugin) {
+    if (selectedPlugin.isNull()) {
         return; // nothing to show
     }
 
-    QTimer::singleShot(0, selectedPlugin, SLOT(showConfigDialog()));
+    WebExtractor *thePlugin = extractorFactory->getExtractor(selectedPlugin);
+    QTimer::singleShot(0, thePlugin, SLOT(showConfigDialog()));
 }

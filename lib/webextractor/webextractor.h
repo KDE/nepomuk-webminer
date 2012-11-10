@@ -63,6 +63,7 @@ public:
         QString file;           /**< File path and name of the plugin */
         QString icon;           /**< An icon */
         bool hasConfig;         /**< true if plugin can show a gui config dialog */
+        QString error;          /**< store error message if plugin loading failed */
 
         /**
          * @brief operator ==

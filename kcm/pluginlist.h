@@ -22,6 +22,7 @@
 #define PLUGINLIST_H
 
 #include <QWidget>
+#include "webextractor/webextractor.h"
 
 class QListWidgetItem;
 
@@ -35,7 +36,6 @@ namespace NepomukMetaDataExtractor
 namespace Extractor
 {
 class ExtractorFactory;
-class WebExtractor;
 }
 
 /**
@@ -62,7 +62,8 @@ private:
     void setupUi();
     Ui::PluginList *ui;
     NepomukMetaDataExtractor::Extractor::ExtractorFactory  *extractorFactory;
-    NepomukMetaDataExtractor::Extractor::WebExtractor  *selectedPlugin;
+    QString selectedPlugin;
+    QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> failedPlugins;
 
 };
 

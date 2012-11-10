@@ -23,6 +23,7 @@ target_link_libraries(kcm_metadataextractor
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KIO_LIBS}
   ${KDE4_KDECORE_LIBS}
+  ${KDE4_KROSSCORE_LIBS}
   
   nepomukmetadataextractor
   )

@@ -105,6 +105,19 @@ public:
       */
     QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> listAvailablePlugins(const QString &type);
 
+    /**
+      * @brief Returns a list of webextractor plugins for the resource @c type that failed to load
+      *
+      * @p type can be:
+      * @li publication
+      * @li tvshow
+      * @li movie
+      * @li music
+      *
+      * @return a list of all WebExtarctor info items
+      */
+    QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> listFailedPlugins(const QString &type);
+
 private:
     /**
       * @brief Preloads information about all available plugins
