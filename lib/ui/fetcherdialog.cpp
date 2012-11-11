@@ -70,6 +70,7 @@ public:
     SearchResultsModel *resultModel;
     QTextDocument *progressLog;
     KPixmapSequenceOverlayPainter *busySearchWidget;
+    bool saveAutomatically;
 };
 }
 }
@@ -91,6 +92,7 @@ NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
     d->resultModel = new SearchResultsModel(this);
     searchResults->setModel(d->resultModel);
     d->progressLog = new QTextDocument(this);
+    d->saveAutomatically=false;
 
     searchResults->setSelectionMode(QAbstractItemView::SingleSelection);
     searchResults->setItemDelegate(new SearchResultDelegate);
@@ -105,6 +107,7 @@ NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
     connect(buttonSearchDetails, SIGNAL(clicked()), this, SLOT(showSearchParameters()));
 
     connect(buttonFetchMore, SIGNAL(clicked()), this, SLOT(fetchMoreDetails()));
+    connect(buttonFetchAndSave, SIGNAL(clicked()), this, SLOT(fetchMoreAndSave()));
     connect(buttonSave, SIGNAL(clicked()), this, SLOT(saveMetaDataSlot()));
 
     connect(buttonCancel, SIGNAL(clicked()), this, SLOT(cancelClose()));
@@ -125,6 +128,7 @@ NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
     buttonPrevious->setIcon(KIcon("go-previous"));
     buttonLog->setIcon(KIcon("tools-report-bug"));
     buttonFetchMore->setIcon(KIcon("download"));
+    buttonFetchAndSave->setIcon(KIcon("download"));
     buttonHelp->setIcon(KIcon("help-contents"));
 
     d->busySearchWidget = new KPixmapSequenceOverlayPainter(this);
@@ -318,6 +322,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::setupCurrentResourceToLookup()
     }
 
     buttonFetchMore->setEnabled(false);
+    buttonFetchAndSave->setEnabled(false);
 
     // don't show next button if there is no next item
     if (d->currentItemNumber == resourceCount - 1) {
@@ -426,15 +431,17 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::startSearch()
     d->webextractor->search(mdp->resourceType(), searchParameters);
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::searchResultList(QVariantList searchResults)
+void NepomukMetaDataExtractor::UI::FetcherDialog::searchResultList(QVariantList searchResultList)
 {
     Q_D(FetcherDialog);
     finishedFetching();
 
-    d->resultModel->setSearchResults(searchResults);
+    d->resultModel->setSearchResults(searchResultList);
 
     QString searchEngineName = comboBoxSearchEngine->currentText();
-    labelSearchResults->setText(i18ncp("%2 is a search engine", "Found <b>1</b> result via <b>%2</b>", "Found <b>%1</b> results via <b>%2</b>", searchResults.size(), searchEngineName));
+    labelSearchResults->setText(i18ncp("%2 is a search engine", "Found <b>1</b> result via <b>%2</b>", "Found <b>%1</b> results via <b>%2</b>", searchResultList.size(), searchEngineName));
+
+    searchResults->setCurrentIndex(d->resultModel->index(0));
 }
 
 void NepomukMetaDataExtractor::UI::FetcherDialog::searchEntrySelected(const QModelIndex &current, const QModelIndex &previous)
@@ -453,9 +460,11 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::searchEntrySelected(const QMod
 
         detailsUrl->setVisible(true);
         buttonFetchMore->setEnabled(true);
+        buttonFetchAndSave->setEnabled(true);
     } else {
         detailsUrl->setVisible(false);
         buttonFetchMore->setEnabled(false);
+        buttonFetchAndSave->setEnabled(false);
     }
 }
 
@@ -626,6 +635,13 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fetchMoreDetails()
     d->webextractor->extractItem(fetchUrl, options);
 }
 
+void NepomukMetaDataExtractor::UI::FetcherDialog::fetchMoreAndSave()
+{
+    Q_D(FetcherDialog);
+    d->saveAutomatically=true;
+    fetchMoreDetails();
+}
+
 void NepomukMetaDataExtractor::UI::FetcherDialog::fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails)
 {
     Q_D(FetcherDialog);
@@ -642,6 +658,12 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fetchedItemDetails(const QStri
     finishedFetching();
 
     d->currentItemToupdate = 0;
+
+    if(d->saveAutomatically) {
+        saveMetaDataSlot();
+    }
+
+    d->saveAutomatically=false;
 
     //kDebug() << itemDetails;
 }
@@ -718,6 +740,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::busyFetching()
 
     buttonSearch->setEnabled(false);
     buttonFetchMore->setEnabled(false);
+    buttonFetchAndSave->setEnabled(false);
     buttonNext->setEnabled(false);
     buttonPrevious->setEnabled(false);
     buttonSave->setEnabled(false);
@@ -741,6 +764,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::finishedFetching()
 
     if (entry.contains(QLatin1String("url"))) {
         buttonFetchMore->setEnabled(true);
+        buttonFetchAndSave->setEnabled(true);
     }
 
     int resourceCount = resourceExtractor()->resourcesList().size();

@@ -315,6 +315,13 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QPushButton" name="buttonFetchAndSave">
+              <property name="text">
+               <string>Fetch and Save</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
          </layout>

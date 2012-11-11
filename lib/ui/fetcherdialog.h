@@ -115,7 +115,7 @@ private slots:
      *
      * @param searchResults list of entries that fit the search parameters
      */
-    void searchResultList(QVariantList searchResults);
+    void searchResultList(QVariantList searchResultList);
 
     /**
      * @brief Called when the user clicks on a search entry in the list and display its details
@@ -146,6 +146,15 @@ private slots:
      * @see fetchedItemDetails
      */
     void fetchMoreDetails();
+
+    /**
+     * @brief Fetch more details and automatically save them afterwards
+     *
+     * @see fetchMoreDetails
+     * @see fetchedItemDetails
+     * @see saveMetaDataSlot
+     */
+    void fetchMoreAndSave();
 
     /**
      * @brief Called by the WebExtractor to add the fetched @c metadata to the current file
