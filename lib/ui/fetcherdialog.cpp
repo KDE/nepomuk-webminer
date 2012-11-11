@@ -101,7 +101,7 @@ NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
     connect(buttonPrevious, SIGNAL(clicked()), this, SLOT(selectPreviousResourceToLookUp()));
 
     connect(buttonSearch, SIGNAL(clicked()), this, SLOT(startSearch()));
-    connect(searchResults->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), this, SLOT(searchEntrySelected(QModelIndex, QModelIndex)));
+    connect(searchResults->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(searchEntrySelected(QModelIndex,QModelIndex)));
     connect(buttonSearchDetails, SIGNAL(clicked()), this, SLOT(showSearchParameters()));
 
     connect(buttonFetchMore, SIGNAL(clicked()), this, SLOT(fetchMoreDetails()));
@@ -390,7 +390,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::startSearch()
 
     if (!d->webextractor || d->webextractor->info().identifier != engineId) {
         disconnect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(searchResultList(QVariantList)));
-        disconnect(d->webextractor, SIGNAL(itemResults(QString, QVariantMap)), this, SLOT(fetchedItemDetails(QString, QVariantMap)));
+        disconnect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
         disconnect(d->webextractor, SIGNAL(log(QString)), this, SLOT(addToProgressLog(QString)));
         disconnect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
         disconnect(d->webextractor, SIGNAL(error(QString)), this, SLOT(addToProgressLog(QString)));
@@ -402,7 +402,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::startSearch()
             return;
         }
         connect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(searchResultList(QVariantList)));
-        connect(d->webextractor, SIGNAL(itemResults(QString, QVariantMap)), this, SLOT(fetchedItemDetails(QString, QVariantMap)));
+        connect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
         connect(d->webextractor, SIGNAL(log(QString)), this, SLOT(addToProgressLog(QString)));
         connect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
         connect(d->webextractor, SIGNAL(error(QString)), this, SLOT(addToProgressLog(QString)));

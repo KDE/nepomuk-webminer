@@ -92,7 +92,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::startUrlFetcher()
         kWarning() << "could not find webextractor plugin for URL" << d->urlList.first();
     } else {
         d->currentItemToupdate = new MetaDataParameters;
-        connect(d->webextractor, SIGNAL(itemResults(QString, QVariantMap)), this, SLOT(fetchedItemDetails(QString, QVariantMap)));
+        connect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
         connect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
 
         QVariantMap options;
@@ -165,7 +165,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
 
         if (d->webextractor) {
             disconnect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
-            disconnect(d->webextractor, SIGNAL(itemResults(QString, QVariantMap)), this, SLOT(fetchedItemDetails(QString, QVariantMap)));
+            disconnect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
             disconnect(d->webextractor, SIGNAL(log(QString)), this, SLOT(log(QString)));
             disconnect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
         }
@@ -173,7 +173,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
         d->webextractor = extractorFactory()->getExtractor(selectedEngine.identifier);
 
         connect(d->webextractor, SIGNAL(searchResults(QVariantList)), this, SLOT(selectSearchEntry(QVariantList)));
-        connect(d->webextractor, SIGNAL(itemResults(QString, QVariantMap)), this, SLOT(fetchedItemDetails(QString, QVariantMap)));
+        connect(d->webextractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(fetchedItemDetails(QString,QVariantMap)));
         connect(d->webextractor, SIGNAL(log(QString)), this, SLOT(log(QString)));
         connect(d->webextractor, SIGNAL(error(QString)), this, SLOT(errorInScriptExecution(QString)));
     }

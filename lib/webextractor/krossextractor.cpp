@@ -51,7 +51,7 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
 {
     Q_D(KrossExtractor);
 
-    connect(this, SIGNAL(itemResultsJSON(QString, QString)), this, SLOT(transformJSONResult(QString, QString)));
+    connect(this, SIGNAL(itemResultsJSON(QString,QString)), this, SLOT(transformJSONResult(QString,QString)));
 
     // each cross action has its own unique identifier
     d->scriptFile = new Kross::Action(this, QString("WebExtractor-%1").arg(scriptFile));

@@ -121,7 +121,7 @@ void MetaDataExtractorPlugin::extract()
     QUrl url = m_Part->url();
 
     WebExtractor *we = m_ef->getExtractor(url);
-    connect(we, SIGNAL(itemResults(QString, QVariantMap)), this, SLOT(pushDataToNepomuk(QString, QVariantMap)));
+    connect(we, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(pushDataToNepomuk(QString,QVariantMap)));
 
     if (we) {
         we->extractItem(url, QVariantMap());

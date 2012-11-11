@@ -93,8 +93,8 @@ MetaDataExtractorService::MetaDataExtractorService(QObject *parent, const QVaria
     if (videoServiceEnabled) {
         d->videoWatcher = new Nepomuk2::ResourceWatcher(this);
         d->videoWatcher->addType(NFO::Video());
-        connect(d->videoWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource, QList<QUrl>)),
-                this, SLOT(slotVideoResourceCreated(Nepomuk2::Resource, QList<QUrl>)));
+        connect(d->videoWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
+                this, SLOT(slotVideoResourceCreated(Nepomuk2::Resource,QList<QUrl>)));
         d->videoWatcher->start();
     }
 
@@ -102,8 +102,8 @@ MetaDataExtractorService::MetaDataExtractorService(QObject *parent, const QVaria
     if (documentServiceEnabled) {
         d->documentWatcher = new Nepomuk2::ResourceWatcher(this);
         d->documentWatcher->addType(NFO::PaginatedTextDocument());
-        connect(d->documentWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource, QList<QUrl>)),
-                this, SLOT(slotDocumentResourceCreated(Nepomuk2::Resource, QList<QUrl>)));
+        connect(d->documentWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
+                this, SLOT(slotDocumentResourceCreated(Nepomuk2::Resource,QList<QUrl>)));
         d->documentWatcher->start();
     }
 
@@ -111,8 +111,8 @@ MetaDataExtractorService::MetaDataExtractorService(QObject *parent, const QVaria
     if (musicServiceEnabled) {
         d->musicWatcher = new Nepomuk2::ResourceWatcher(this);
         d->musicWatcher->addType(NFO::Audio());
-        connect(d->musicWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource, QList<QUrl>)),
-                this, SLOT(slotMusicResourceCreated(Nepomuk2::Resource, QList<QUrl>)));
+        connect(d->musicWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
+                this, SLOT(slotMusicResourceCreated(Nepomuk2::Resource,QList<QUrl>)));
         d->musicWatcher->start();
     }
 
@@ -246,7 +246,7 @@ void MetaDataExtractorService::startNextProcess()
         connect(p, SIGNAL(readyReadStandardError()), this, SLOT(processOutput()));
         connect(p, SIGNAL(readyReadStandardOutput()), this, SLOT(processOutput()));
 
-        connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished(int, QProcess::ExitStatus)));
+        connect(p, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(processFinished(int,QProcess::ExitStatus)));
         p->start(KStandardDirs::findExe(QLatin1String("metadataextractor")),
                  QStringList() << QLatin1String("-auto") << QLatin1String("-force") << path);
 

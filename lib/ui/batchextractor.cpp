@@ -107,7 +107,7 @@ void NepomukMetaDataExtractor::UI::BatchExtractor::extractNext()
     if (d->currentExtractor) {
         disconnect(d->currentExtractor, SIGNAL(error(QString)), this, SLOT(error(QString)));
         disconnect(d->currentExtractor, SIGNAL(log(QString)), this, SLOT(log(QString)));
-        disconnect(d->currentExtractor, SIGNAL(itemResults(QString, QVariantMap)), this, SLOT(itemResults(QString, QVariantMap)));
+        disconnect(d->currentExtractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(itemResults(QString,QVariantMap)));
     }
 
     d->currentExtractor = d->extractorFactory.getExtractor(nextJob.detailsUrl);
@@ -117,7 +117,7 @@ void NepomukMetaDataExtractor::UI::BatchExtractor::extractNext()
         connect(d->currentExtractor, SIGNAL(error(QString)), this, SLOT(error(QString)));
         connect(d->currentExtractor, SIGNAL(log(QString)), this, SLOT(log(QString)));
 
-        connect(d->currentExtractor, SIGNAL(itemResults(QString, QVariantMap)), this, SLOT(itemResults(QString, QVariantMap)));
+        connect(d->currentExtractor, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(itemResults(QString,QVariantMap)));
 
         d->currentExtractor->extractItem(nextJob.detailsUrl, nextJob.options);
     } else {
