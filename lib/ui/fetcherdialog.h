@@ -74,7 +74,7 @@ public:
     explicit FetcherDialog(QWidget *parent = 0);
     ~FetcherDialog();
 
-private slots:
+private Q_SLOTS:
     /**
      * @brief Starts the KHelpCenter with the metadata extarctor docbook
      */

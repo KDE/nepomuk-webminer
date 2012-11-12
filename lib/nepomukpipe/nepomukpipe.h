@@ -146,7 +146,7 @@ protected:
       */
     QList<Nepomuk2::NCO::OrganizationContact> createOrganizationContacts(const QString & listOfOrganizations) const;
 
-private slots:
+private Q_SLOTS:
     /**
       * @brief Will output the error message of the DMS call if it failed
       *

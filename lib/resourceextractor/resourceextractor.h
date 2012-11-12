@@ -142,7 +142,7 @@ public:
      */
     NepomukMetaDataExtractor::Extractor::MetaDataParameters *takeNext();
 
-signals:
+Q_SIGNALS:
     /**
      * @brief Emits some information whats going on internally
      *

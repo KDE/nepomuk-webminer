@@ -60,7 +60,7 @@ public:
      *
      * @param parent parent object
      */
-    MoviePipe(QObject *parent = 0);
+    explicit MoviePipe(QObject *parent = 0);
 
     void pipeImport(const QVariantMap &movieEntry);
 

@@ -21,8 +21,9 @@
 #ifndef AUTOMATICFETCHER_H
 #define AUTOMATICFETCHER_H
 
-#include <QObject>
 #include "fetcher.h"
+
+#include <QtCore/QObject>
 #include <KDE/KUrl>
 
 #include "nepomukmetadataextractor_export.h"
@@ -85,7 +86,7 @@ public:
      */
     void addFetcherUrl(const KUrl& url);
 
-public slots:
+public Q_SLOTS:
     /**
      * @brief Starts the meta data fetching
      *
@@ -106,13 +107,13 @@ public slots:
      */
     void startUrlFetcher();
 
-signals:
+Q_SIGNALS:
     /**
      * @brief Emitted when all files are handled, no matter if metadata could be found or not
      */
     void finished();
 
-private slots:
+private Q_SLOTS:
     /**
      * @brief Take the next available resoruce and start the meta data search or stop the fetcher here
      */

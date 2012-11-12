@@ -71,7 +71,7 @@ public:
      */
     QString currentExtractionInfo() const;
 
-public slots:
+public Q_SLOTS:
     /**
      * @brief Adds a new extraction job to the queue
      *
@@ -83,7 +83,7 @@ public slots:
     void addJob(const QUrl &detailsUrl, const QVariantMap &options,
                 const QString &name, const QString &resourceUri = QString());
 
-signals:
+Q_SIGNALS:
     /**
      * @brief Emitted when the extarction is in progress and every time a new item is added to the queue
      *
@@ -114,7 +114,7 @@ private:
      */
     void addResourceUriToMetaData(const QString &resourceType, const QString &uri, QVariantMap &metadata);
 
-private slots:
+private Q_SLOTS:
     /**
      * @brief called from the Webextractor
      * @param msg log message

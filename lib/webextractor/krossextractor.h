@@ -67,7 +67,7 @@ public:
     void extractItem(const QUrl &url, const QVariantMap &options);
     void showConfigDialog();
 
-signals:
+Q_SIGNALS:
     void searchItems(const QString &resourceType, const QVariantMap &parameters);
     void extractItemFromUri(const QUrl &url, const QVariantMap &options);
 
@@ -80,7 +80,7 @@ signals:
      */
     void itemResultsJSON(const QString &resourceType, const QString &jsonMap);
 
-private slots:
+private Q_SLOTS:
     /**
      * @brief Little helper function to workaround a small bug with multiple nested dictionaries
      *

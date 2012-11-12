@@ -93,7 +93,7 @@ public:
      *
      * @param parent some parent object
      */
-    TvShowPipe(QObject *parent = 0);
+    explicit TvShowPipe(QObject *parent = 0);
 
     /**
      * @brief Starts the pipe importer for the tvshow metadata

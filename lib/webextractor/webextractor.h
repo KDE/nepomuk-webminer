@@ -94,7 +94,7 @@ public:
      */
     virtual WebExtractor::Info info() = 0;
 
-public slots:
+public Q_SLOTS:
     /**
      * @brief Starts a websearch for all possible items that fit the search parameters
      *
@@ -139,7 +139,7 @@ public slots:
      */
     virtual void showConfigDialog() = 0;
 
-signals:
+Q_SIGNALS:
     /**
      * @brief Emits some log message
      *
