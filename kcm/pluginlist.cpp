@@ -96,9 +96,11 @@ void PluginList::setupUi()
         ui->pluginList->addItem(item);
     }
 
-    QString itext = i18n("Available Kross Interpreters : ") + QLatin1String("<b>");
-    itext += Kross::Manager::self().interpreters().join(", ");
-    itext += QLatin1String("</b><br />") + i18n("If you cannot find a plugin that should be here, you may need to install the interpreter for the necessary language first!");
+    QString itext = i18n("Available Kross interpreters: <b>%1</b><br />"
+                         "If you cannot find a plugin that should be here, "
+                         "you may need to install the interpreter for the "
+                         "necessary language first.",
+                         Kross::Manager::self().interpreters().join(", "));
     ui->interpreterLabel->setText(itext);
 
     connect(ui->pluginList, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(updateButtons(QListWidgetItem*)));
