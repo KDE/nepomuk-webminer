@@ -14,10 +14,11 @@ errorMsg = ""
 try:
     import musicbrainzngs
     from musicbrainzngs import mbxml
+    import urllib2
 
 except:
     isAvailable = False
-    errorMsg = "The python-musicbrainz-ngs python module git master needs to be installed. See https://github.com/alastair/python-musicbrainz-ngs/"
+    errorMsg = "The python-musicbrainz-ngs python module git master needs to be installed. See https://github.com/alastair/python-musicbrainz-ngs/ . The urllib2 lib is necessary to fetch cover art"
 
 # general script settings
 musicbrainzngs.set_rate_limit(False) # set on again to reduce server load?
@@ -178,6 +179,7 @@ def extractItemFromUri( url, options ):
             albumId = ""
             genre = ""
             trackPerformer = ""
+            coverUrl = ""
 
             for person in recording['artist-credit']:
                 if 'artist' in person:
@@ -210,6 +212,18 @@ def extractItemFromUri( url, options ):
                 if albumRelese['medium-list'][0] is not None:
                     if 'track-list' in albumRelese['medium-list'][0]:
                         trackNumber = albumRelese['medium-list'][0]['track-list'][0]['number']
+                        
+            # try to get cover from the coverartarchive
+            url = 'http://coverartarchive.org/release/' + str(albumId)
+            try:
+                data = json.load(urllib2.urlopen(url))
+                for item in data['images']:
+                    if 'Front' in item['types']:
+                        coverUrl = item['image']
+                        break;
+            except Exception as err:
+                WebExtractor.log("Cover could not be retrieved from: \n" + url + "\n Reason: \n" + str(err))          
+            
 
             trackDict = dict (
                                 title = recording['title'],
@@ -228,6 +242,7 @@ def extractItemFromUri( url, options ):
                                 #genre = ';'.join(tag.value for tag in track.tags),
                                 musicbrainz = albumId,
                                 #releasetype = releaseType,
+                                cover = coverUrl,
                                 tracks = [trackDict]
                             )
             # this is a workaround, because multiple nested dictionaries cause some problems with the names of the keys
