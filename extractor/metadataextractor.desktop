@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Service
 X-KDE-ServiceTypes=KonqPopupMenu/Plugin
-MimeType=application/*;video/*;inode/directory;
+MimeType=application/*;video/*;audio/*;inode/directory;
 Actions=mdfetcher;mdfetcher2;mdfetcher3;mdfetcher4;
 X-KDE-Submenu=Desktop Search
 X-KDE-Submenu[cs]=Vyhledávací služby
