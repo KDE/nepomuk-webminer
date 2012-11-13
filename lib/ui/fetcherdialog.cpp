@@ -436,7 +436,10 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::searchResultList(QVariantList 
     Q_D(FetcherDialog);
     finishedFetching();
 
-    d->resultModel->setSearchResults(searchResultList);
+    // every result with a distance bigger than 20 will be removed from the list
+    // this ensures the returned item are atleast similar to the search result.
+    QVariantList sortedList = setLevenshteinDistance(searchResultList, resourceExtractor()->resourcesList().at(d->currentItemNumber), 20);
+    d->resultModel->setSearchResults(sortedList);
 
     QString searchEngineName = comboBoxSearchEngine->currentText();
     labelSearchResults->setText(i18ncp("%2 is a search engine", "Found <b>1</b> result via <b>%2</b>", "Found <b>%1</b> results via <b>%2</b>", searchResultList.size(), searchEngineName));

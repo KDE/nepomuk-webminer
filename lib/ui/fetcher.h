@@ -148,6 +148,34 @@ protected:
      */
     void saveMetaData(Extractor::MetaDataParameters *mdp) const;
 
+    /**
+     * @brief Sets a distance between the returned result and the actual search
+     *
+     * Used to sort/filter the returned search result and help to get a better
+     * automatic detection.
+     *
+     * Items with a distance greater than @p skipValue will be skipped in the returned list
+     *
+     * @param searchResults actual list of returned search results
+     * @param currentItem current item including current search parameters
+     * @param skipValue items with a distance greater than the skipvalue will be removed from the returned list
+     *
+     * @return sorted searchResults, with best result first
+     */
+    QVariantList setLevenshteinDistance(const QVariantList &searchResults, NepomukMetaDataExtractor::Extractor::MetaDataParameters *currentItem, uint skipValue);
+
+    /**
+     * @brief calculates the levenshteinDistance
+     *
+     * @param s1
+     * @param s2
+     *
+     * @see http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance
+     *
+     * @return distance between s1 and s2
+     */
+    uint levenshteinDistance(const QString &s1, const QString & s2);
+
 private:
     Q_DECLARE_PRIVATE(Fetcher)
     FetcherPrivate *const d_ptr; /**< d-pointer for this class */

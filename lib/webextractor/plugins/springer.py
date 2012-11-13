@@ -110,7 +110,8 @@ def searchItems( resourcetype, parameters ):
                                 authors = itemAuthors,
                                 plaintext = abstractString,
                                 publicationtype = str(itemType),
-                                date = ''
+                                date = '',
+                                distanceString = itemTitle
                                 )
 
                 searchResults.append(entryDict)

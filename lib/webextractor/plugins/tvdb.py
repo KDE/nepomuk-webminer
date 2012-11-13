@@ -134,7 +134,8 @@ def getEpisodeDetails(episode):
     return dict(
                 title = episode['episodename'],
                 details = detailString,
-                url = fullUrl
+                url = fullUrl,
+                distanceString = episode.season.show['seriesname'] + episode['seasonnumber'] + episode['episodenumber']
                 )
 
 #------------------------------------------------------------------------------

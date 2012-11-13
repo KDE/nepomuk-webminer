@@ -190,14 +190,16 @@ def extractSearchResults(documentElement, citation=False):
             if citationTag is not None:
                 detailString = detailString + ', ' + citationTag.renderContents()
 
+            titleString = ''.join(BeautifulSoup(entryTitleTag.renderContents(), convertEntities=BeautifulSoup.HTML_ENTITIES).findAll(text=True))
             entryDict = dict(
-                             title = ''.join(BeautifulSoup(entryTitleTag.renderContents(), convertEntities=BeautifulSoup.HTML_ENTITIES).findAll(text=True)),
+                             title = titleString,
                              details = detailString,
                              url = fullUrl,
                              authors = authorString,
                              plaintext = abstractString,
                              date = dateString,
-                             publicationtype = typeString
+                             publicationtype = typeString,
+                             distanceString = titleString
                             )
 
             searchResults.append(entryDict)

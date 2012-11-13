@@ -119,7 +119,8 @@ def searchItems( resourcetype, parameters ):
             entryDict = dict (
                               title = recording["artist-credit-phrase"] + ' - ' + recording["title"],
                               details = detailString,
-                              url = 'http://musicbrainz.org/recording/' + recording['id']
+                              url = 'http://musicbrainz.org/recording/' + recording['id'],
+                              distanceString = recording["artist-credit-phrase"] + recording["title"]
                              )
 
             searchResults.append(entryDict)

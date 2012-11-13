@@ -133,7 +133,8 @@ def searchItems( resourcetype, parameters ):
                             authors = pubAuthors,
                             publicationtype = pubType,
                             date = pubDate,
-                            plaintext = ''
+                            plaintext = '',
+                            distanceString = pubTitle
                             )
 
             searchResults.append(entryDict)

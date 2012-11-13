@@ -225,4 +225,3 @@ bool NepomukMetaDataExtractor::Extractor::MetaDataParameters::metaDataSaved() co
 {
     return d_ptr->metaDataSaved;
 }
-

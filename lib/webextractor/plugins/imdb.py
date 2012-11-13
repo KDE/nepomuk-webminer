@@ -127,7 +127,8 @@ def searchMovieResults(results):
             entryDict = dict(
                             title = item['title'].encode("utf-8"),
                             details = detailString,
-                            url = fullUrl
+                            url = fullUrl,
+                            distanceString = item['title'].encode("utf-8")
                             )
 
             searchResults.append(entryDict)
@@ -147,7 +148,8 @@ def searchTvEpisodeResults(ia, results, showtitle, season, episode):
             entryDict = dict(
                             title = item['title'],
                             details = detailString,
-                            url = fullUrl
+                            url = fullUrl,
+                            distanceString = str(item['series title']) + item['season'] + item['episode']
                             )
 
             searchResults.append(entryDict)

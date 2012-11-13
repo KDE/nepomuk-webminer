@@ -216,11 +216,15 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::selectSearchEntry(QVariantL
         // and start the next round
         searchNextItem();
     } else {
-        //FIXME: Find a good way to determine which search result is the best one to take. Or if none fit skip this to avoid false results
-        kDebug() << "Found " << searchResults.size() << "search results, taking the first entry";
-        kDebug() << searchResults.first();
 
-        QVariantMap selectedSearchResult = searchResults.first().toMap();
+        // every result with a distance bigger than 10 will be removed from the list
+        // this ensures the returned item are atleast similar to the search result.
+        // also this sorts the list and takes the best fit
+        QVariantList sortedList = setLevenshteinDistance(searchResults, d->currentItemToupdate,10);
+        kDebug() << "Found " << sortedList.size() << "search results, taking the first entry";
+        kDebug() << sortedList.first();
+
+        QVariantMap selectedSearchResult = sortedList.first().toMap();
 
         KUrl fetchUrl(selectedSearchResult.value(QLatin1String("url")).toString());
 

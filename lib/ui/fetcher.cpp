@@ -196,3 +196,80 @@ void NepomukMetaDataExtractor::UI::Fetcher::saveMetaData(NepomukMetaDataExtracto
 
     delete nepomukPipe;
 }
+
+bool distanceLessThan(const QVariant &l1, const QVariant &l2)
+{
+    QVariantMap lm1 = l1.toMap();
+    QVariantMap lm2 = l2.toMap();
+    uint d1 = lm1.value(QLatin1String("stringdistance"),500).toUInt();
+    uint d2 = lm2.value(QLatin1String("stringdistance"),500).toUInt();
+
+    return d1 < d2;
+}
+
+QVariantList NepomukMetaDataExtractor::UI::Fetcher::setLevenshteinDistance(const QVariantList &searchResults, NepomukMetaDataExtractor::Extractor::MetaDataParameters *currentItem, uint skipValue)
+{
+    QString type = currentItem->resourceType();
+    QString checkString;
+    if (type == QLatin1String("publication")) {
+        // check only the title
+        checkString = currentItem->searchTitle();
+
+    } else if (type == QLatin1String("tvshow")) {
+        // check tvshow + Season Number + Episode Number
+        checkString = currentItem->searchShowTitle();
+        checkString.append(currentItem->searchSeason());
+        checkString.append(currentItem->searchEpisode());
+
+    } else if (type == QLatin1String("movie")) {
+        // check movie name only
+        checkString = currentItem->searchTitle();
+
+    } else if (type == QLatin1String("music")) {
+        // check artist + track name
+        checkString = currentItem->searchPerson();
+        checkString.append(currentItem->searchTitle());
+    }
+
+    checkString.replace(" ","");
+
+    QVariantList sortedList;
+
+    foreach(const QVariant &v, searchResults) {
+
+        QVariantMap vMap = v.toMap();
+        QString resultString = vMap.value(QLatin1String("distanceString")).toString();
+
+        resultString.replace(" ","");
+
+        uint distance = levenshteinDistance(checkString, resultString);
+
+        if(distance <= skipValue) {
+            vMap.insert(QLatin1String("stringdistance"),distance);
+            sortedList.append(vMap);
+        }
+    }
+
+     qSort(sortedList.begin(), sortedList.end(), distanceLessThan);
+
+     return sortedList;
+}
+
+uint NepomukMetaDataExtractor::UI::Fetcher::levenshteinDistance(const QString &s1, const QString & s2)
+{
+    const uint len1 = s1.size();
+    const uint len2 = s2.size();
+    QVector<uint> col(len2+1);
+    QVector<uint> prevCol(len2+1);
+
+    for (uint i = 0; i < (uint)prevCol.size(); i++)
+        prevCol[i] = i;
+    for (uint i = 0; i < len1; i++) {
+        col[0] = i+1;
+        for (uint j = 0; j < len2; j++)
+            col[j+1] = qMin( qMin( 1 + col[j], 1 + prevCol[1 + j]),
+                            prevCol[j] + (s1[i]==s2[j] ? 0 : 1) );
+        col.swap(prevCol);
+    }
+    return prevCol[len2];
+}
