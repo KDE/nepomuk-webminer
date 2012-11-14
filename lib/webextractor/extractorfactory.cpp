@@ -173,7 +173,9 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
     QStringList pluginDirs;
 
     pluginDirs << KStandardDirs::locate("data", "nepomukmetadataextractor/plugins/");
-    pluginDirs << MDESettings::additionalPluginFolder();;
+    if(!MDESettings::additionalPluginFolder().isEmpty()) {
+        pluginDirs << MDESettings::additionalPluginFolder();
+    }
 
     QFileInfoList pluginList;
     foreach (const QString & folder, pluginDirs) {
