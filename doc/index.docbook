@@ -55,7 +55,7 @@
     <title>&dolphin; Integration</title>
     <para>
         To start a manual extraction you can start the &kappname; from &dolphin; via the context menu.
-        To do right-click a file or folder and select <menuchoice><guimenu>Action</guimenu> <guisubmenu>Desktop Search</guisubmenu> <guimenuitem>...</guimenuitem></menuchoice>
+        To do this right-click a file or a folder and select <menuchoice><guimenu>Action</guimenu> <guisubmenu>Desktop Search</guisubmenu> <guimenuitem>...</guimenuitem></menuchoice>
     </para>
     <para>
         Here you have 4 different options to fetch the metadata:
@@ -67,7 +67,7 @@
             </listitem>
             <listitem>
                 <para><guilabel>Automatically</guilabel>:
-                     This will run the extraction job in the background dialog but skip any file that already has some metadata attached to it.
+                     This will run the extraction job in the background but skip any file that already has some metadata attached to it.
                 </para>
             </listitem>
             <listitem>
