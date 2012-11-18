@@ -44,7 +44,7 @@ class NepomukPipePrivate
 public:
     QString componentname; /**< Name of the component that will be used for the Nepomuk DMS calls.
                                 Useful if all data that 1 component created should be deleted.
-                                This should not always the the metadata extarctor itself
+                                This should not always be the metadata extarctor itself
                                 But might be the application, that reuses this library */
 };
 }

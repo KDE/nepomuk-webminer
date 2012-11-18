@@ -47,37 +47,38 @@
     <title>Introduction</title>
     <para>
         The Nepomuk &kappname; finds additional metadata on the internet <emphasis>(via Python plugins)</emphasis> and adds them to Nepomuk.
-        It can retrieve data for any document/movie/tv-show or music file.
+        It can retrieve data for any document/movie/TV show or music file.
     </para>
     </chapter>
 
     <chapter id="dolphin-integration">
-    <title>Dolphin Integration</title>
+    <title>&dolphin; Integration</title>
     <para>
-        To start a manual extraction you can start the &kappname; from <application>Dolphin</application> via the contex menue.
-        To do right-click a file or folder and select <guimenu>Action</guimenu> -> <guisubmenu>Desktop Search</guisubmenu> -> <guimenuitem>...</guimenuitem>
-
+        To start a manual extraction you can start the &kappname; from &dolphin; via the context menu.
+        To do right-click a file or folder and select <menuchoice><guimenu>Action</guimenu> <guisubmenu>Desktop Search</guisubmenu> <guimenuitem>...</guimenuitem></menuchoice>
+    </para>
+    <para>
         Here you have 4 different options to fetch the metadata:
         <itemizedlist>
             <listitem>
-                <para><guilabel>Normal</guilabel> :
+                <para><guilabel>Normal</guilabel>:
                      This will show the extraction dialog but skip any file that already has some metadata attached to it.
                 </para>
             </listitem>
             <listitem>
-                <para><guilabel>Automatically</guilabel> :
+                <para><guilabel>Automatically</guilabel>:
                      This will run the extraction job in the background dialog but skip any file that already has some metadata attached to it.
                 </para>
             </listitem>
             <listitem>
-                <para><guilabel>Force Download</guilabel> :
+                <para><guilabel>Force Download</guilabel>:
                      Will show the extraction dialog and also include files that already have metadata attached to it.
                      This allows you to manually specify new search parameter and thus correct wrong metadata.
                 </para>
             </listitem>
             <listitem>
-                <para><guilabel>Automatically, Force Download</guilabel> :
-                     This will run the extraction job in the background and also replace already any data from a previous extarction job.
+                <para><guilabel>Automatically, Force Download</guilabel>:
+                     This will run the extraction job in the background and also replace already any data from a previous extraction job.
                 </para>
             </listitem>
         </itemizedlist>
@@ -101,11 +102,16 @@
     </para>
     <para>
         The dialog allows to adjust the search parameter for each file. For each file the automatically extracted metadata can be seen in <command>1</command>.
-        Depending on the file type different search options are available. For a movie its is the title, for a Tv-Show it is the name, season and episode,
-        for publications its the author and title.
+        Depending on the file type different search options are available. For a movie it is the title, for a TV show it is the name, season and episode,
+        for publications it is the author and title.
+    </para>
+    <para>
         Beside the search parameter it is possible to switch the used plugin for the lookup. By default the preferred plugin is selected.
-
+    </para>
+    <para>
         Additional settings are available via the configure buttons as seen in <command>2</command>.
+    </para>
+    <para>
         Once everything is setup correctly the lookup can be started via the <guibutton>Search</guibutton> button.
     </para>
     <para>
@@ -128,13 +134,14 @@
     <title>Service</title>
     <para>
         The background service is responsible for the metadata extraction for each new file on the disk.
-
-        As soon as the <application>Nepomuk fileinder</application> detects a new file the extractor is
+    </para>
+    <para>
+        As soon as the <application>Nepomuk fileindexer</application> detects a new file the extractor is
         started and tries to fetch additional data from the internet.
     </para>
     <note>
         <para>
-            This will cause a lot of traffic especially when nepomuk starts its initial indexing.
+            This will cause a lot of traffic especially when Nepomuk starts its initial indexing.
         </para>
     </note>
     </chapter>
@@ -145,31 +152,31 @@
     <sect1 id="fetcher-settings">
     <title>Fetcher</title>
     <para>
-    The fetcher settings handle the general behaviour of the &kappname;.
+    The fetcher settings handle the general behavior of the &kappname;.
     </para>
     <itemizedlist>
         <listitem>
             <para>
-                <guilabel>Download Banner/Poster/Cover</guilabel> :
+                <guilabel>Download Banner/Poster/Cover</guilabel>:
                  If enabled the extractor looks for the matching poster/banner or cover of the item to fetch.
                  The image will be saved into the application directory and added to the resource via <application>Nepomuk</application>.
             </para>
         </listitem>
         <listitem>
             <para>
-                <guilabel>Save Banner in Resource Folder</guilabel> :
+                <guilabel>Save Banner in Resource Folder</guilabel>:
                  Instead of saving the image into the application directory the image is saved next to the file.
                  <note>
                      <para>
                          Might lead to duplicated images if the same image for two different resources will be saved in different folders.
-                         This can happen for Tv-shows and the season posters, when the episodes are in two different folders.
+                         This can happen for TV shows and the season posters, when the episodes are in two different folders.
                      </para>
                  </note>
             </para>
         </listitem>
         <listitem>
             <para>
-                <guilabel>Download Publication References</guilabel> :
+                <guilabel>Download Publication References</guilabel>:
                  This option allows the publication search to download all cited references of the current publication resource.
                  <note>
                      <para>
@@ -181,7 +188,7 @@
             </para>
         </listitem><listitem>
         <para>
-            <guilabel>Preferred Plugin</guilabel> :
+            <guilabel>Preferred Plugin</guilabel>:
              Defines which plugin will be used first to fetch the metadata from. Only if the first search failed the other plugins are queried
              to get the information.
         </para>
@@ -205,7 +212,7 @@
     The service settings allow to <command>enable/disable</command> the background service.
     If the service is enabled the extractor will be run on each newly indexed file created by the <application>Nepomuk fileindexerservice</application>.
 
-    When the service is disabled the metadata will only be fetched if the user requests it via the <application>Dolphin</application> context menue.
+    When the service is disabled the metadata will only be fetched if the user requests it via the &dolphin; context menu.
 
     The number of <guilabel>Simultaneous calls</guilabel> denotes the number of extractor processes that are executed at the same time.
     </para>
@@ -219,21 +226,23 @@
     <para>
     <itemizedlist>
       <listitem>
-        <para> <guilabel>Fetch document information</guilabel> :
+        <para> <guilabel>Fetch document information</guilabel>:
 	When this option is enabled the Service will automatically fetch additional information about any document that got indexed by Nepomuk.
+	</para>
 	  <important>
             <para>
              This could expose private data to the used plugin search engine. The search will use data from the filename, any given metadata attached to the file and some possible title string from the first page of any pdf file.
              </para>
           </important>
+        <para>
 	  If you are not sure you want this, leave this option disabled and call the metadata extractor manually on any document that should be used.
         </para>
       </listitem><listitem>
-        <para> <guilabel>Fetch music information</guilabel> :
+        <para> <guilabel>Fetch music information</guilabel>:
 	When this option is enabled the Service will automatically fetch additional information about any music file that got indexed by Nepomuk. If disabled you need to start the extractor manually for any music file.
         </para>
       </listitem><listitem>
-        <para> <guilabel>Fetch video information</guilabel> :
+        <para> <guilabel>Fetch video information</guilabel>:
 	When this option is enabled the Service will automatically fetch additional information about any video file that got indexed by Nepomuk. If disabled you need to start the extractor manually for any video file.
         </para>
       </listitem>

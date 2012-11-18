@@ -6,7 +6,7 @@ Idea:
 * take this info and search the internet for more details
 * python plugins (easy to write) handle the actual search.
 * python plugins only create a simple dictionary (transformed into QVariantMap)
-* the c++ part has neopomuk pipe classes, that transform such QVariantMap data into DMS calls
+* the c++ part has nepomuk pipe classes, that transform such QVariantMap data into DMS calls
 
 For more information run:
 
