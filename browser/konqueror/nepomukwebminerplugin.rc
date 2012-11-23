@@ -1,0 +1,9 @@
+<!DOCTYPE kpartgui>
+<kpartplugin name="nepomukwebminerplugin" library="nepomukwebminerplugin" version="3">
+<MenuBar>
+ <Menu name="tools"><Text>&amp;Tools</Text>
+    <separator group="tools_operations" />
+    <Action name="tools_nepomukwebminerplugin" group="tools_operations"/>
+ </Menu>
+</MenuBar>
+</kpartplugin>

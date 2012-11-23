@@ -21,7 +21,7 @@
 #ifndef WEBEXTRACTOR_H
 #define WEBEXTRACTOR_H
 
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -30,7 +30,7 @@
 #include <QtCore/QVariantList>
 #include <QtCore/QVariantMap>
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -43,7 +43,7 @@ namespace Extractor
  *
  * If one wants to create a c++ based extractor it must be derived from this class <i>(not recommended, better write them as KROSS script)</i>
  */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT WebExtractor : public QObject
+class NEPOMUKWEBMINER_EXPORT WebExtractor : public QObject
 {
     Q_OBJECT
 

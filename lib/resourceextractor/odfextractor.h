@@ -24,9 +24,9 @@
 #include <QtCore/QObject>
 #include <KDE/KUrl>
 
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -44,7 +44,7 @@ class MetaDataParameters;
  * @li @c meta:page-count
  * @li @c dc:description for the @c note key
  */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT OdfExtractor : public QObject
+class NEPOMUKWEBMINER_EXPORT OdfExtractor : public QObject
 {
     Q_OBJECT
 public:

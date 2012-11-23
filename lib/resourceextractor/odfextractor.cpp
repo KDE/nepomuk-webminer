@@ -27,7 +27,7 @@
 
 #include <QtXml/QDomDocument>
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -38,13 +38,13 @@ class OdfExtractorPrivate
 }
 }
 
-NepomukMetaDataExtractor::Extractor::OdfExtractor::OdfExtractor(QObject *parent)
+NepomukWebMiner::Extractor::OdfExtractor::OdfExtractor(QObject *parent)
     : QObject(parent)
-    , d_ptr(new NepomukMetaDataExtractor::Extractor::OdfExtractorPrivate)
+    , d_ptr(new NepomukWebMiner::Extractor::OdfExtractorPrivate)
 {
 }
 
-void NepomukMetaDataExtractor::Extractor::OdfExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
+void NepomukWebMiner::Extractor::OdfExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
 {
     KZip zip(fileUrl.toLocalFile());
     if (!zip.open(QIODevice::ReadOnly)) {

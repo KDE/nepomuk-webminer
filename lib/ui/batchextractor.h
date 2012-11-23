@@ -26,9 +26,9 @@
 #include <QtCore/QUrl>
 #include <QtCore/QVariantList>
 
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace UI
 {
@@ -48,7 +48,7 @@ class BatchExtractorPrivate;
  * visual feedback whats happening in the background. Also the user can decide to cancel the job if
  * necessary.
  */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT BatchExtractor : public QObject
+class NEPOMUKWEBMINER_EXPORT BatchExtractor : public QObject
 {
     Q_OBJECT
 public:

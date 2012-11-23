@@ -25,7 +25,7 @@ X-KDE-Submenu[x-test]=xxDesktop Searchxx
 Icon=nepomuk
 
 [Desktop Action mdfetcher]
-Name=Fetch MetaData for this file or folder
+Name=Harvest meta data for this file or folder
 Name[da]=Hent metadata for denne fil eller mappe
 Name[es]=Obtener metadatos para este archivo o carpeta
 Name[et]=Faili või kataloogi metaandmete hankimine
@@ -39,12 +39,12 @@ Name[pt_BR]=Obter metadados para este arquivo ou pasta
 Name[sk]=Natiahnuť metadáta pre tento súbor alebo priečinok
 Name[sv]=Hämta metadata för den här filen eller katalogen
 Name[uk]=Отримати метадані з цього файла або теки
-Name[x-test]=xxFetch MetaData for this file or folderxx
+Name[x-test]=xxHarvest meta data for this file or folderxx
 Icon=nepomuk
-Exec=metadataextractor %f
+Exec=nepomuk-webminer %f
 
 [Desktop Action mdfetcher2]
-Name=Fetch MetaData for this file or folder (automatically)
+Name=Harvest meta data for this file or folder (automatically)
 Name[da]=Hent metadata for denne fil eller mappe (automatisk)
 Name[es]=Obtener metadatos para este archivo o carpeta (automáticamente)
 Name[et]=Faili või kataloogi metaandmete hankimine (automaatne)
@@ -56,12 +56,12 @@ Name[pt_BR]=Obter metadados para este arquivo ou pasta (automaticamente)
 Name[sk]=Natiahnuť metadáta pre tento súbor alebo priečinok (automaticky)
 Name[sv]=Hämta metadata för den här filen eller katalogen (automatiskt)
 Name[uk]=Отримати метадані з цього файла або теки (автоматично)
-Name[x-test]=xxFetch MetaData for this file or folder (automatically)xx
+Name[x-test]=xxHarvest meta data for this file or folder (automatically)xx
 Icon=nepomuk
-Exec=metadataextractor -a %f
+Exec=nepomuk-webminer -a %f
 
 [Desktop Action mdfetcher3]
-Name=Fetch MetaData for this file or folder (force download)
+Name=Harvest meta data for this file or folder (force download)
 Name[da]=Hent metadata for denne fil eller mappe (gennemtving download)
 Name[es]=Obtener metadatos para este archivo o carpeta (descarga forzada)
 Name[et]=Faili või kataloogi metaandmete hankimine (jõuga allalaadimine)
@@ -75,13 +75,13 @@ Name[pt_BR]=Obter metadados para este arquivo ou pasta (forçar download)
 Name[sk]=Natiahnuť metadáta pre tento súbor alebo priečinok (vynútiť stiahnutie)
 Name[sv]=Hämta metadata för den här filen eller katalogen (tvinga nerladdning)
 Name[uk]=Отримати метадані з цього файла або теки (примусове звантаження)
-Name[x-test]=xxFetch MetaData for this file or folder (force download)xx
+Name[x-test]=xxHarvest meta data for this file or folder (force download)xx
 Icon=nepomuk
-Exec=metadataextractor -f %f
+Exec=nepomuk-webminer -f %f
 
 
 [Desktop Action mdfetcher4]
-Name=Fetch MetaData for this file or folder (automatically, force download)
+Name=Harvest meta data for this file or folder (automatically, force download)
 Name[da]=Hent metadata for denne fil eller mappe (automatisk, gennemtving download)
 Name[es]=Obtener metadatos para este archivo o carpeta (automáticamente, descarga forzada)
 Name[et]=Faili või kataloogi metaandmete hankimine (automaatne, jõuga allalaadimine)
@@ -93,6 +93,6 @@ Name[pt_BR]=Obter metadados para este arquivo ou pasta (automaticamente, forçar
 Name[sk]=Natiahnuť metadáta pre tento súbor alebo priečinok (automaticky, vynútiť stiahnutie)
 Name[sv]=Hämta metadata för den här filen eller katalogen (automatiskt, tvinga nerladdning)
 Name[uk]=Отримати метадані з цього файла або теки (автоматично, примусове звантаження)
-Name[x-test]=xxFetch MetaData for this file or folder (automatically, force download)xx
+Name[x-test]=xxHarvest meta data for this file or folder (automatically, force download)xx
 Icon=nepomuk
-Exec=metadataextractor -a -f %f
+Exec=nepomuk-webminer -a -f %f

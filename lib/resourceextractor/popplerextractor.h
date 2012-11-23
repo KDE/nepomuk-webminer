@@ -26,14 +26,14 @@
 
 #include <KDE/KUrl>
 
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
 namespace Poppler
 {
 class Document;
 }
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -49,7 +49,7 @@ class PopplerExtractorPrivate;
   * inserted into the RDF part. It find the text with the biggest font size that has more
   * than 1 character, this is most likely the title.
   */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT PopplerExtractor : public QObject
+class NEPOMUKWEBMINER_EXPORT PopplerExtractor : public QObject
 {
     Q_OBJECT
 

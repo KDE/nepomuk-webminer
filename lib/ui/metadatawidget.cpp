@@ -39,14 +39,14 @@
 
 #include <KDE/KDebug>
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace UI
 {
 class MetaDataWidgetPrivate
 {
 public:
-    const NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp;
+    const NepomukWebMiner::Extractor::MetaDataParameters *mdp;
     KTabWidget *tabWidget;
     QTreeView *newMetaDataWidget;
     QStandardItemModel *newMetaDataModel;
@@ -56,17 +56,17 @@ public:
 }
 }
 
-using namespace NepomukMetaDataExtractor::Extractor;
-using namespace NepomukMetaDataExtractor::UI;
+using namespace NepomukWebMiner::Extractor;
+using namespace NepomukWebMiner::UI;
 
-NepomukMetaDataExtractor::UI::MetaDataWidget::MetaDataWidget(QWidget *parent)
+NepomukWebMiner::UI::MetaDataWidget::MetaDataWidget(QWidget *parent)
     : QWidget(parent)
-    , d_ptr(new NepomukMetaDataExtractor::UI::MetaDataWidgetPrivate)
+    , d_ptr(new NepomukWebMiner::UI::MetaDataWidgetPrivate)
 {
     setupWidget();
 }
 
-void NepomukMetaDataExtractor::UI::MetaDataWidget::setMetaDataParameter(const NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp)
+void NepomukWebMiner::UI::MetaDataWidget::setMetaDataParameter(const NepomukWebMiner::Extractor::MetaDataParameters *mdp)
 {
     Q_D(MetaDataWidget);
     d->mdp = mdp;
@@ -74,7 +74,7 @@ void NepomukMetaDataExtractor::UI::MetaDataWidget::setMetaDataParameter(const Ne
     setUpNewDataWidget();
 }
 
-void NepomukMetaDataExtractor::UI::MetaDataWidget::setBusy(bool busy)
+void NepomukWebMiner::UI::MetaDataWidget::setBusy(bool busy)
 {
     Q_D(MetaDataWidget);
     if (busy) {
@@ -84,7 +84,7 @@ void NepomukMetaDataExtractor::UI::MetaDataWidget::setBusy(bool busy)
     }
 }
 
-void NepomukMetaDataExtractor::UI::MetaDataWidget::setUpNewDataWidget()
+void NepomukWebMiner::UI::MetaDataWidget::setUpNewDataWidget()
 {
     Q_D(MetaDataWidget);
 
@@ -98,7 +98,7 @@ void NepomukMetaDataExtractor::UI::MetaDataWidget::setUpNewDataWidget()
     d->newMetaDataWidget->resizeColumnToContents(0);
 }
 
-void NepomukMetaDataExtractor::UI::MetaDataWidget::insertIntoTree(QStandardItem *root, const QVariantMap &data)
+void NepomukWebMiner::UI::MetaDataWidget::insertIntoTree(QStandardItem *root, const QVariantMap &data)
 {
     Q_D(MetaDataWidget);
 
@@ -163,7 +163,7 @@ void NepomukMetaDataExtractor::UI::MetaDataWidget::insertIntoTree(QStandardItem 
     }
 }
 
-QString NepomukMetaDataExtractor::UI::MetaDataWidget::i18nKey(const QString &key)
+QString NepomukWebMiner::UI::MetaDataWidget::i18nKey(const QString &key)
 {
     if (key == QString("title")) {
         return i18nc("Title of the Show/Publication/Episode/Track", "Title");
@@ -270,7 +270,7 @@ QString NepomukMetaDataExtractor::UI::MetaDataWidget::i18nKey(const QString &key
     return key;
 }
 
-void NepomukMetaDataExtractor::UI::MetaDataWidget::setupWidget()
+void NepomukWebMiner::UI::MetaDataWidget::setupWidget()
 {
     Q_D(MetaDataWidget);
 

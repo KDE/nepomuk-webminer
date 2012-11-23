@@ -23,7 +23,7 @@
 
 #include <QtCore/QAbstractListModel>
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace UI
 {

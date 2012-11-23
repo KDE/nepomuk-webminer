@@ -43,7 +43,7 @@ except:
 
 confFileName = "tvdbrc"
 # possible FIXME:is there a better way than this hardcoding?
-uifileFolder = kdecore.KStandardDirs.locate("data", "nepomukmetadataextractor/plugins/") + "/uifiles";
+uifileFolder = kdecore.KStandardDirs.locate("data", "nepomuk-webminer/plugins/") + "/uifiles";
 
 #------------------------------------------------------------------------------
 # Module options

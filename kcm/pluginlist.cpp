@@ -38,7 +38,7 @@
 #include <QtGui/QBrush>
 #include <QtGui/QColor>
 
-using namespace NepomukMetaDataExtractor;
+using namespace NepomukWebMiner;
 using namespace Extractor;
 
 PluginList::PluginList(QWidget *parent) :
@@ -54,7 +54,7 @@ PluginList::~PluginList()
     delete ui;
 }
 
-void PluginList::setExtractorFactory(NepomukMetaDataExtractor::Extractor::ExtractorFactory  *ef)
+void PluginList::setExtractorFactory(NepomukWebMiner::Extractor::ExtractorFactory  *ef)
 {
     extractorFactory = ef;
     setupUi();

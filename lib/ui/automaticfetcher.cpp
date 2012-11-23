@@ -28,53 +28,53 @@
 
 #include <KDE/KDebug>
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace UI
 {
 class AutomaticFetcherPrivate
 {
 public:
-    NepomukMetaDataExtractor::Extractor::WebExtractor *webextractor;
-    NepomukMetaDataExtractor::Extractor::MetaDataParameters *currentItemToupdate;
+    NepomukWebMiner::Extractor::WebExtractor *webextractor;
+    NepomukWebMiner::Extractor::MetaDataParameters *currentItemToupdate;
     QList<KUrl> urlList;
-    QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> pluginqueue;
+    QList<NepomukWebMiner::Extractor::WebExtractor::Info> pluginqueue;
 };
 }
 }
 
-using namespace NepomukMetaDataExtractor;
+using namespace NepomukWebMiner;
 using namespace Extractor;
 
-NepomukMetaDataExtractor::UI::AutomaticFetcher::AutomaticFetcher(QObject *parent)
+NepomukWebMiner::UI::AutomaticFetcher::AutomaticFetcher(QObject *parent)
     : QObject(parent)
-    , d_ptr(new NepomukMetaDataExtractor::UI::AutomaticFetcherPrivate)
+    , d_ptr(new NepomukWebMiner::UI::AutomaticFetcherPrivate)
 {
     Q_D(AutomaticFetcher);
     d->webextractor = 0;
     d->currentItemToupdate = 0;
 }
 
-NepomukMetaDataExtractor::UI::AutomaticFetcher::~AutomaticFetcher()
+NepomukWebMiner::UI::AutomaticFetcher::~AutomaticFetcher()
 {
     Q_D(AutomaticFetcher);
     delete d->currentItemToupdate;
 }
 
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::addFetcherUrl(const KUrl& url)
+void NepomukWebMiner::UI::AutomaticFetcher::addFetcherUrl(const KUrl& url)
 {
     Q_D(AutomaticFetcher);
     d->urlList.append(url);
 }
 
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::startFetcher()
+void NepomukWebMiner::UI::AutomaticFetcher::startFetcher()
 {
     kDebug() << "Start fetching meta data for" << resourceExtractor()->resourcesList().size() << "items";
 
     searchNextItem();
 }
 
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::startUrlFetcher()
+void NepomukWebMiner::UI::AutomaticFetcher::startUrlFetcher()
 {
     Q_D(AutomaticFetcher);
     if (d->urlList.isEmpty()) {
@@ -103,7 +103,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::startUrlFetcher()
     }
 }
 
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
+void NepomukWebMiner::UI::AutomaticFetcher::searchNextItem()
 {
     Q_D(AutomaticFetcher);
     if (resourceExtractor()->resourcesList().isEmpty()) {
@@ -197,7 +197,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::searchNextItem()
     d->webextractor->search(d->currentItemToupdate->resourceType(), searchParameters);
 }
 
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::selectSearchEntry(QVariantList searchResults)
+void NepomukWebMiner::UI::AutomaticFetcher::selectSearchEntry(QVariantList searchResults)
 {
     Q_D(AutomaticFetcher);
 
@@ -236,7 +236,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::selectSearchEntry(QVariantL
     }
 }
 
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails)
+void NepomukWebMiner::UI::AutomaticFetcher::fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails)
 {
     Q_D(AutomaticFetcher);
 
@@ -267,7 +267,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::fetchedItemDetails(const QS
     searchNextItem();
 }
 
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::errorInScriptExecution(const QString &error)
+void NepomukWebMiner::UI::AutomaticFetcher::errorInScriptExecution(const QString &error)
 {
     kDebug() << error;
 
@@ -275,7 +275,7 @@ void NepomukMetaDataExtractor::UI::AutomaticFetcher::errorInScriptExecution(cons
     // next item will be used as even in error case the plugins return serachresults(just empty ones)
 }
 
-void NepomukMetaDataExtractor::UI::AutomaticFetcher::log(const QString &msg)
+void NepomukWebMiner::UI::AutomaticFetcher::log(const QString &msg)
 {
     kDebug() << msg;
 }

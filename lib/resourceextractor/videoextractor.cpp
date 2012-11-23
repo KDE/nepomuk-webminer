@@ -26,7 +26,7 @@
 #include <QtCore/QDir>
 #include <KDE/KDebug>
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -43,9 +43,9 @@ public:
 }
 }
 
-NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *parent)
+NepomukWebMiner::Extractor::VideoExtractor::VideoExtractor(QObject *parent)
     : QObject(parent)
-    , d_ptr(new NepomukMetaDataExtractor::Extractor::VideoExtractorPrivate)
+    , d_ptr(new NepomukWebMiner::Extractor::VideoExtractorPrivate)
 {
     Q_D(VideoExtractor);
     d->tvshowOnly = false;
@@ -139,7 +139,7 @@ NepomukMetaDataExtractor::Extractor::VideoExtractor::VideoExtractor(QObject *par
                 Qt::CaseInsensitive, QRegExp::RegExp2));
 }
 
-void NepomukMetaDataExtractor::Extractor::VideoExtractor::setTvShowMode(bool tvshowmode)
+void NepomukWebMiner::Extractor::VideoExtractor::setTvShowMode(bool tvshowmode)
 {
     Q_D(VideoExtractor);
     d->tvshowOnly = tvshowmode;
@@ -150,13 +150,13 @@ void NepomukMetaDataExtractor::Extractor::VideoExtractor::setTvShowMode(bool tvs
     }
 }
 
-void NepomukMetaDataExtractor::Extractor::VideoExtractor::setTvShowNamesInFolders(bool useFolderNames)
+void NepomukWebMiner::Extractor::VideoExtractor::setTvShowNamesInFolders(bool useFolderNames)
 {
     Q_D(VideoExtractor);
     d->useFolderNames = useFolderNames;
 }
 
-void NepomukMetaDataExtractor::Extractor::VideoExtractor::setMovieMode(bool moviemode)
+void NepomukWebMiner::Extractor::VideoExtractor::setMovieMode(bool moviemode)
 {
     Q_D(VideoExtractor);
     d->movieOnly = moviemode;
@@ -167,7 +167,7 @@ void NepomukMetaDataExtractor::Extractor::VideoExtractor::setMovieMode(bool movi
     }
 }
 
-void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl)
+void NepomukWebMiner::Extractor::VideoExtractor::parseUrl(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl)
 {
     Q_D(VideoExtractor);
     mdp->setResourceUri(fileUrl);
@@ -226,7 +226,7 @@ void NepomukMetaDataExtractor::Extractor::VideoExtractor::parseUrl(NepomukMetaDa
     mdp->setSearchTitle(fileUrl.fileName().split('.').first());
 }
 
-bool NepomukMetaDataExtractor::Extractor::VideoExtractor::parseTvShowFolder(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl)
+bool NepomukWebMiner::Extractor::VideoExtractor::parseTvShowFolder(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl)
 {
     Q_D(VideoExtractor);
 
@@ -252,7 +252,7 @@ bool NepomukMetaDataExtractor::Extractor::VideoExtractor::parseTvShowFolder(Nepo
     return false;
 }
 
-bool NepomukMetaDataExtractor::Extractor::VideoExtractor::parseTvShowFileName(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const QString &fileName)
+bool NepomukWebMiner::Extractor::VideoExtractor::parseTvShowFileName(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const QString &fileName)
 {
     Q_D(VideoExtractor);
     foreach (const QRegExp & re, d->tvshowFilenameRegExps) {
@@ -297,7 +297,7 @@ bool NepomukMetaDataExtractor::Extractor::VideoExtractor::parseTvShowFileName(Ne
     return false;
 }
 
-bool NepomukMetaDataExtractor::Extractor::VideoExtractor::parseMovieFileName(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const QString &fileName)
+bool NepomukWebMiner::Extractor::VideoExtractor::parseMovieFileName(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const QString &fileName)
 {
     Q_D(VideoExtractor);
     foreach (const QRegExp & re, d->movieFilenameRegExps) {

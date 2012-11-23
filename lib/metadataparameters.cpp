@@ -21,7 +21,7 @@
 #include "metadataparameters.h"
 
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -56,172 +56,172 @@ public:
 }
 }
 
-NepomukMetaDataExtractor::Extractor::MetaDataParameters::MetaDataParameters()
-    : d_ptr(new NepomukMetaDataExtractor::Extractor::MetaDataParametersPrivate)
+NepomukWebMiner::Extractor::MetaDataParameters::MetaDataParameters()
+    : d_ptr(new NepomukWebMiner::Extractor::MetaDataParametersPrivate)
 {
 }
 
-void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchTitle(const QString &title)
+void NepomukWebMiner::Extractor::MetaDataParameters::setSearchTitle(const QString &title)
 {
     Q_D(MetaDataParameters);
     d->searchTitle = title;
 }
 
-QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchTitle() const
+QString NepomukWebMiner::Extractor::MetaDataParameters::searchTitle() const
 {
     return d_ptr->searchTitle;
 }
 
-void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchAltTitle(const QString &alttitle)
+void NepomukWebMiner::Extractor::MetaDataParameters::setSearchAltTitle(const QString &alttitle)
 {
     Q_D(MetaDataParameters);
     d->searchAltTitle = alttitle;
 }
 
-QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchAltTitle() const
+QString NepomukWebMiner::Extractor::MetaDataParameters::searchAltTitle() const
 {
     return d_ptr->searchAltTitle;
 }
 
-void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchYearMin(const QString &minyear)
+void NepomukWebMiner::Extractor::MetaDataParameters::setSearchYearMin(const QString &minyear)
 {
     Q_D(MetaDataParameters);
     d->searchYearMin = minyear;
 }
 
-QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchYearMin() const
+QString NepomukWebMiner::Extractor::MetaDataParameters::searchYearMin() const
 {
     return d_ptr->searchYearMin;
 }
 
-void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchYearMax(const QString &maxyear)
+void NepomukWebMiner::Extractor::MetaDataParameters::setSearchYearMax(const QString &maxyear)
 {
     Q_D(MetaDataParameters);
     d->searchYearMax = maxyear;
 }
 
-QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchYearMax() const
+QString NepomukWebMiner::Extractor::MetaDataParameters::searchYearMax() const
 {
     return d_ptr->searchYearMax;
 }
 
-void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchPerson(const QString &name)
+void NepomukWebMiner::Extractor::MetaDataParameters::setSearchPerson(const QString &name)
 {
     Q_D(MetaDataParameters);
     d->searchPerson = name;
 }
 
-QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchPerson() const
+QString NepomukWebMiner::Extractor::MetaDataParameters::searchPerson() const
 {
     return d_ptr->searchPerson;
 }
 
-void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchShowTitle(const QString &showtitle)
+void NepomukWebMiner::Extractor::MetaDataParameters::setSearchShowTitle(const QString &showtitle)
 {
     Q_D(MetaDataParameters);
     d->searchShowTitle = showtitle;
 }
 
-QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchShowTitle() const
+QString NepomukWebMiner::Extractor::MetaDataParameters::searchShowTitle() const
 {
     return d_ptr->searchShowTitle;
 }
 
-void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchEpisode(const QString &episode)
+void NepomukWebMiner::Extractor::MetaDataParameters::setSearchEpisode(const QString &episode)
 {
     Q_D(MetaDataParameters);
     d->searchEpisode = episode;
 }
 
-QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchEpisode() const
+QString NepomukWebMiner::Extractor::MetaDataParameters::searchEpisode() const
 {
     return d_ptr->searchEpisode;
 }
 
-void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchSeason(const QString &season)
+void NepomukWebMiner::Extractor::MetaDataParameters::setSearchSeason(const QString &season)
 {
     Q_D(MetaDataParameters);
     d->searchSeason = season;
 }
 
-QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchSeason() const
+QString NepomukWebMiner::Extractor::MetaDataParameters::searchSeason() const
 {
     return d_ptr->searchSeason;
 }
 
-void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchAlbum(const QString &album)
+void NepomukWebMiner::Extractor::MetaDataParameters::setSearchAlbum(const QString &album)
 {
     Q_D(MetaDataParameters);
     d->searchAlbum = album;
 }
 
-QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchAlbum() const
+QString NepomukWebMiner::Extractor::MetaDataParameters::searchAlbum() const
 {
     return d_ptr->searchAlbum;
 }
 
-void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchTrack(const QString &track)
+void NepomukWebMiner::Extractor::MetaDataParameters::setSearchTrack(const QString &track)
 {
     Q_D(MetaDataParameters);
     d->searchTrack = track;
 }
 
-QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchTrack() const
+QString NepomukWebMiner::Extractor::MetaDataParameters::searchTrack() const
 {
     return d_ptr->searchTrack;
 }
 
-void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setSearchJournal(const QString &journal)
+void NepomukWebMiner::Extractor::MetaDataParameters::setSearchJournal(const QString &journal)
 {
     Q_D(MetaDataParameters);
     d->searchJournal = journal;
 }
 
-QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::searchJournal() const
+QString NepomukWebMiner::Extractor::MetaDataParameters::searchJournal() const
 {
     return d_ptr->searchJournal;
 }
 
-void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setResourceType(const QString &resourceType)
+void NepomukWebMiner::Extractor::MetaDataParameters::setResourceType(const QString &resourceType)
 {
     Q_D(MetaDataParameters);
     d->resourceType = resourceType;
 }
 
-QString NepomukMetaDataExtractor::Extractor::MetaDataParameters::resourceType() const
+QString NepomukWebMiner::Extractor::MetaDataParameters::resourceType() const
 {
     return d_ptr->resourceType;
 }
 
-void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setResourceUri(const KUrl &resourceUri)
+void NepomukWebMiner::Extractor::MetaDataParameters::setResourceUri(const KUrl &resourceUri)
 {
     Q_D(MetaDataParameters);
     d->resourceUri = resourceUri;
 }
 
-KUrl NepomukMetaDataExtractor::Extractor::MetaDataParameters::resourceUri() const
+KUrl NepomukWebMiner::Extractor::MetaDataParameters::resourceUri() const
 {
     return d_ptr->resourceUri;
 }
 
-void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setMetaData(const QVariantMap &metaData)
+void NepomukWebMiner::Extractor::MetaDataParameters::setMetaData(const QVariantMap &metaData)
 {
     Q_D(MetaDataParameters);
     d->metaData = metaData;
 }
 
-QVariantMap NepomukMetaDataExtractor::Extractor::MetaDataParameters::metaData() const
+QVariantMap NepomukWebMiner::Extractor::MetaDataParameters::metaData() const
 {
     return d_ptr->metaData;
 }
 
-void NepomukMetaDataExtractor::Extractor::MetaDataParameters::setMetaDataSaved(bool metaDataSaved)
+void NepomukWebMiner::Extractor::MetaDataParameters::setMetaDataSaved(bool metaDataSaved)
 {
     Q_D(MetaDataParameters);
     d->metaDataSaved = metaDataSaved;
 }
 
-bool NepomukMetaDataExtractor::Extractor::MetaDataParameters::metaDataSaved() const
+bool NepomukWebMiner::Extractor::MetaDataParameters::metaDataSaved() const
 {
     return d_ptr->metaDataSaved;
 }

@@ -26,9 +26,9 @@
 #include "nmm/tvseason.h"
 #include "nmm/tvshow.h"
 
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Pipe
 {
@@ -85,7 +85,7 @@ class TvShowPipePrivate;
  * The @c poster and @c banner won't be downloaded and added if it disabeld in the metadata KConfig.
  * The location of the @c poster or @c banner can be configured as well, either next to the video file or in the data fodler of the library
   */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT TvShowPipe : public NepomukPipe
+class NEPOMUKWEBMINER_EXPORT TvShowPipe : public NepomukPipe
 {
 public:
     /**

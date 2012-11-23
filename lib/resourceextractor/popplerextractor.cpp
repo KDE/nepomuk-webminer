@@ -26,7 +26,7 @@
 
 #include <KDE/KDebug>
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -39,19 +39,19 @@ public:
 }
 }
 
-NepomukMetaDataExtractor::Extractor::PopplerExtractor::PopplerExtractor(QObject *parent)
+NepomukWebMiner::Extractor::PopplerExtractor::PopplerExtractor(QObject *parent)
     : QObject(parent)
-    , d_ptr(new NepomukMetaDataExtractor::Extractor::PopplerExtractorPrivate)
+    , d_ptr(new NepomukWebMiner::Extractor::PopplerExtractorPrivate)
 {
 }
 
-NepomukMetaDataExtractor::Extractor::PopplerExtractor::~PopplerExtractor()
+NepomukWebMiner::Extractor::PopplerExtractor::~PopplerExtractor()
 {
     Q_D(PopplerExtractor);
     delete d->pdfdoc;
 }
 
-void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseUrl(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl)
+void NepomukWebMiner::Extractor::PopplerExtractor::parseUrl(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl)
 {
     Q_D(PopplerExtractor);
     d->pdfdoc = Poppler::Document::load(fileUrl.toLocalFile(), 0, 0);
@@ -123,7 +123,7 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseUrl(NepomukMeta
     parseFirstpage();
 }
 
-void NepomukMetaDataExtractor::Extractor::PopplerExtractor::tocCreation(const QDomDocument &toc, QDomNode &node)
+void NepomukWebMiner::Extractor::PopplerExtractor::tocCreation(const QDomDocument &toc, QDomNode &node)
 {
     while (!node.isNull()) {
 
@@ -152,7 +152,7 @@ void NepomukMetaDataExtractor::Extractor::PopplerExtractor::tocCreation(const QD
     }
 }
 
-void NepomukMetaDataExtractor::Extractor::PopplerExtractor::parseFirstpage()
+void NepomukWebMiner::Extractor::PopplerExtractor::parseFirstpage()
 {
     Q_D(PopplerExtractor);
     Poppler::Page *p = d->pdfdoc->page(0);

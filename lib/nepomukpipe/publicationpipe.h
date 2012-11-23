@@ -33,7 +33,7 @@
 #include "nbib/journalissue.h"
 #include "nbib/encyclopedia.h"
 
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
 #include <QtCore/QUrl>
 #include <QtCore/QList>
@@ -41,7 +41,7 @@
 
 class KJob;
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Pipe
 {
@@ -74,7 +74,7 @@ class PublicationPipePrivate;
   *
   * @todo TODO: remove the graph from the function parameters and make class member from it?
   */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT PublicationPipe : public NepomukPipe
+class NEPOMUKWEBMINER_EXPORT PublicationPipe : public NepomukPipe
 {
     Q_OBJECT
 

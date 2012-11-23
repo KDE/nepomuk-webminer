@@ -26,9 +26,9 @@
 #include <QtCore/QString>
 #include <QtCore/QVariantMap>
 
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -41,7 +41,7 @@ class MetaDataParametersPrivate;
   * Beside the url of the file location additional search parameters (from @c ResourceExtractor) necessary for the future websearch (@c WebExtractor) are saved in here.
   * The results of this websearch (all item details) are saved as @p metaData @c QVariantMap and precessed by the @c NepomukPipe
   */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT MetaDataParameters
+class NEPOMUKWEBMINER_EXPORT MetaDataParameters
 {
 public:
     /**

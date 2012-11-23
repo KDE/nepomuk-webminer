@@ -39,7 +39,7 @@
 
 using namespace Soprano::Vocabulary;
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Pipe
 {
@@ -50,13 +50,13 @@ class MusicPipePrivate
 }
 }
 
-NepomukMetaDataExtractor::Pipe::MusicPipe::MusicPipe(QObject *parent)
+NepomukWebMiner::Pipe::MusicPipe::MusicPipe(QObject *parent)
     : NepomukPipe(parent)
-    , d_ptr(new NepomukMetaDataExtractor::Pipe::MusicPipePrivate)
+    , d_ptr(new NepomukWebMiner::Pipe::MusicPipePrivate)
 {
 }
 
-void NepomukMetaDataExtractor::Pipe::MusicPipe::pipeImport(const QVariantMap &musicEntry)
+void NepomukWebMiner::Pipe::MusicPipe::pipeImport(const QVariantMap &musicEntry)
 {
     Nepomuk2::SimpleResourceGraph graph;
 

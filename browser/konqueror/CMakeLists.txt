@@ -1,19 +1,19 @@
 
-project(metadataextractorplugin)
+project(nepomukwebminerplugin)
 
-find_package(NepomukMetadataExtractor REQUIRED)
+find_package(NepomukWebMiner REQUIRED)
 
-set(metadataextractorplugin_SRCS metadataextractorplugin.cpp)
+set(nepomukwebminerplugin_SRCS nepomukwebminerplugin.cpp)
 
-kde4_add_plugin(metadataextractorplugin ${metadataextractorplugin_SRCS})
+kde4_add_plugin(nepomukwebminerplugin ${nepomukwebminerplugin_SRCS})
 
-target_link_libraries( metadataextractorplugin
+target_link_libraries( nepomukwebminerplugin
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KHTML_LIBS}
-    nepomukmetadataextractor
+    nepomuk-webminerlib
 )
 
-install(TARGETS metadataextractorplugin  DESTINATION ${PLUGIN_INSTALL_DIR} )
-install(FILES metadataextractorplugin.rc metadataextractorplugin.desktop  DESTINATION  ${DATA_INSTALL_DIR}/khtml/kpartplugins )
-install(FILES metadataextractorplugin.rc metadataextractorplugin.desktop  DESTINATION  ${DATA_INSTALL_DIR}/kwebkitpart/kpartplugins )
+install(TARGETS nepomukwebminerplugin  DESTINATION ${PLUGIN_INSTALL_DIR} )
+install(FILES nepomukwebminerplugin.rc nepomukwebminerplugin.desktop  DESTINATION  ${DATA_INSTALL_DIR}/khtml/kpartplugins )
+install(FILES nepomukwebminerplugin.rc nepomukwebminerplugin.desktop  DESTINATION  ${DATA_INSTALL_DIR}/kwebkitpart/kpartplugins )
 

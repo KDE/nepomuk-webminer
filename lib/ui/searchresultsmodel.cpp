@@ -23,7 +23,7 @@
 #include <QtCore/QRegExp>
 
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace UI
 {
@@ -35,13 +35,13 @@ public:
 }
 }
 
-NepomukMetaDataExtractor::UI::SearchResultsModel::SearchResultsModel(QObject *parent)
+NepomukWebMiner::UI::SearchResultsModel::SearchResultsModel(QObject *parent)
     : QAbstractListModel(parent)
-    , d_ptr(new NepomukMetaDataExtractor::UI::SearchResultsModelPrivate)
+    , d_ptr(new NepomukWebMiner::UI::SearchResultsModelPrivate)
 {
 }
 
-void NepomukMetaDataExtractor::UI::SearchResultsModel::setSearchResults(const QVariantList & searchResults)
+void NepomukWebMiner::UI::SearchResultsModel::setSearchResults(const QVariantList & searchResults)
 {
     Q_D(SearchResultsModel);
     beginInsertRows(QModelIndex(), d->searchResults.size(), d->searchResults.size() + searchResults.size());
@@ -49,7 +49,7 @@ void NepomukMetaDataExtractor::UI::SearchResultsModel::setSearchResults(const QV
     endInsertRows();
 }
 
-QVariantMap NepomukMetaDataExtractor::UI::SearchResultsModel::searchResultEntry(const QModelIndex & index) const
+QVariantMap NepomukWebMiner::UI::SearchResultsModel::searchResultEntry(const QModelIndex & index) const
 {
     if (index.row() >= 0 && index.row() < d_ptr->searchResults.size()) {
         return d_ptr->searchResults.at(index.row()).toMap();
@@ -58,7 +58,7 @@ QVariantMap NepomukMetaDataExtractor::UI::SearchResultsModel::searchResultEntry(
     }
 }
 
-void NepomukMetaDataExtractor::UI::SearchResultsModel::clear()
+void NepomukWebMiner::UI::SearchResultsModel::clear()
 {
     Q_D(SearchResultsModel);
     beginRemoveRows(QModelIndex(), 0, d->searchResults.size());
@@ -66,14 +66,14 @@ void NepomukMetaDataExtractor::UI::SearchResultsModel::clear()
     endRemoveRows();
 }
 
-int NepomukMetaDataExtractor::UI::SearchResultsModel::rowCount(const QModelIndex & parent) const
+int NepomukWebMiner::UI::SearchResultsModel::rowCount(const QModelIndex & parent) const
 {
     Q_UNUSED(parent);
 
     return d_ptr->searchResults.size();
 }
 
-QVariant NepomukMetaDataExtractor::UI::SearchResultsModel::data(const QModelIndex & index, int role) const
+QVariant NepomukWebMiner::UI::SearchResultsModel::data(const QModelIndex & index, int role) const
 {
     if (role == Qt::DisplayRole) {
         QString title = d_ptr->searchResults.at(index.row()).toMap().value("title").toString();

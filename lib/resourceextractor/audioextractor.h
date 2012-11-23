@@ -24,9 +24,9 @@
 #include <QtCore/QObject>
 #include <KDE/KUrl>
 
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -41,7 +41,7 @@ class MetaDataParameters;
  *
  * @todo TODO: Add regular expressions to analyze the filename and get information from there if TagLib didn't find anything
  */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT AudioExtractor : public QObject
+class NEPOMUKWEBMINER_EXPORT AudioExtractor : public QObject
 {
     Q_OBJECT
 public:

@@ -35,7 +35,7 @@
 #include <mdesettings.h>
 
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Pipe
 {
@@ -51,21 +51,21 @@ public:
 }
 
 
-NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe(QObject *parent)
+NepomukWebMiner::Pipe::NepomukPipe::NepomukPipe(QObject *parent)
     : QObject(parent)
-    , d_ptr(new NepomukMetaDataExtractor::Pipe::NepomukPipePrivate)
+    , d_ptr(new NepomukWebMiner::Pipe::NepomukPipePrivate)
 {
     Q_D(NepomukPipe);
     d->componentname = QLatin1String("metadataextractor");
 
 }
 
-NepomukMetaDataExtractor::Pipe::NepomukPipe::~NepomukPipe()
+NepomukWebMiner::Pipe::NepomukPipe::~NepomukPipe()
 {
 
 }
 
-void NepomukMetaDataExtractor::Pipe::NepomukPipe::slotSaveToNepomukDone(KJob *job) const
+void NepomukWebMiner::Pipe::NepomukPipe::slotSaveToNepomukDone(KJob *job) const
 {
     if (job->error()) {
         kDebug() << "Failed to store information in Nepomuk. " << job->errorString();
@@ -74,7 +74,7 @@ void NepomukMetaDataExtractor::Pipe::NepomukPipe::slotSaveToNepomukDone(KJob *jo
     }
 }
 
-KUrl NepomukMetaDataExtractor::Pipe::NepomukPipe::downloadBanner(const QUrl &bannerUrl, const QString &filename, const QString& subFolder, const QString &resourceFolder) const
+KUrl NepomukWebMiner::Pipe::NepomukPipe::downloadBanner(const QUrl &bannerUrl, const QString &filename, const QString& subFolder, const QString &resourceFolder) const
 {
     if (!MDESettings::downloadBanner()) {
         return KUrl();
@@ -96,7 +96,7 @@ KUrl NepomukMetaDataExtractor::Pipe::NepomukPipe::downloadBanner(const QUrl &ban
     return localUrl;
 }
 
-QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QString &dateString)
+QDateTime NepomukWebMiner::Pipe::NepomukPipe::createDateTime(const QString &dateString)
 {
     QDateTime dateTime;
 
@@ -155,19 +155,19 @@ QDateTime NepomukMetaDataExtractor::Pipe::NepomukPipe::createDateTime(const QStr
     return dateTime;
 }
 
-void NepomukMetaDataExtractor::Pipe::NepomukPipe::overrideComponentName(const QString &name)
+void NepomukWebMiner::Pipe::NepomukPipe::overrideComponentName(const QString &name)
 {
     Q_D(NepomukPipe);
     d->componentname = name;
 }
 
-QString NepomukMetaDataExtractor::Pipe::NepomukPipe::componentName() const
+QString NepomukWebMiner::Pipe::NepomukPipe::componentName() const
 {
     //Q_D( NepomukPipe );
     return d_ptr->componentname;
 }
 
-QList<Nepomuk2::NCO::Contact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createPersonContacts(const QString & listOfPersonNames) const
+QList<Nepomuk2::NCO::Contact> NepomukWebMiner::Pipe::NepomukPipe::createPersonContacts(const QString & listOfPersonNames) const
 {
     QList<Nepomuk2::NCO::Contact> resultList;
     QList<Name> personList = splitPersonList(listOfPersonNames);
@@ -193,7 +193,7 @@ QList<Nepomuk2::NCO::Contact> NepomukMetaDataExtractor::Pipe::NepomukPipe::creat
 }
 
 
-QList<Nepomuk2::NCO::OrganizationContact> NepomukMetaDataExtractor::Pipe::NepomukPipe::createOrganizationContacts(const QString & listOfOrganizations) const
+QList<Nepomuk2::NCO::OrganizationContact> NepomukWebMiner::Pipe::NepomukPipe::createOrganizationContacts(const QString & listOfOrganizations) const
 {
     QList<Nepomuk2::NCO::OrganizationContact> resultList;
     QList<Name> personList = splitPersonList(listOfOrganizations);
@@ -209,7 +209,7 @@ QList<Nepomuk2::NCO::OrganizationContact> NepomukMetaDataExtractor::Pipe::Nepomu
     return resultList;
 }
 
-QList<NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name> NepomukMetaDataExtractor::Pipe::NepomukPipe::splitPersonList(const QString & person)
+QList<NepomukWebMiner::Pipe::NepomukPipe::NepomukPipe::Name> NepomukWebMiner::Pipe::NepomukPipe::splitPersonList(const QString & person)
 {
     // split list of names into single Strings
     // first remove any  { } rom the string
@@ -244,7 +244,7 @@ QList<NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name> NepomukMet
     return personList;
 }
 
-NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name NepomukMetaDataExtractor::Pipe::NepomukPipe::splitPersonString(const QString & person)
+NepomukWebMiner::Pipe::NepomukPipe::NepomukPipe::Name NepomukWebMiner::Pipe::NepomukPipe::splitPersonString(const QString & person)
 {
     QStringList personTokens = person.split(' ');
     /**

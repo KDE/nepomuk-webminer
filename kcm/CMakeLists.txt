@@ -1,31 +1,31 @@
-project(kcm_metadataextractor)
+project(kcm_nepomuk-webminer)
 
-# Metadata extractor KCM
+# Nepomuk-WebMiner KCM
 # -----------------------------
 
-set(kcm_metadataextractor_SRCS
-  metadataextractorkcm.cpp
+set(kcm_nepomuk-webminer_SRCS
+  nepomukwebminerkcm.cpp
   configfetcher.cpp
   configservice.cpp
   pluginlist.cpp
 )
 
-kde4_add_ui_files(kcm_metadataextractor_SRCS
+kde4_add_ui_files(kcm_nepomuk-webminer_SRCS
   configfetcher.ui
   configservice.ui
   pluginlist.ui
 )
 
-kde4_add_kcfg_files(kcm_metadataextractor_SRCS ../lib/mdesettings.kcfgc)
-kde4_add_plugin(kcm_metadataextractor ${kcm_metadataextractor_SRCS})
+kde4_add_kcfg_files(kcm_nepomuk-webminer_SRCS ../lib/mdesettings.kcfgc)
+kde4_add_plugin(kcm_nepomuk-webminer ${kcm_nepomuk-webminer_SRCS})
 
-target_link_libraries(kcm_metadataextractor
+target_link_libraries(kcm_nepomuk-webminer
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KIO_LIBS}
   ${KDE4_KDECORE_LIBS}
   ${KDE4_KROSSCORE_LIBS}
   
-  nepomukmetadataextractor
+  nepomuk-webminerlib
   )
 # -----------------------------
 
@@ -33,10 +33,10 @@ target_link_libraries(kcm_metadataextractor
 # Installation
 # -----------------------------
 install(
-  FILES kcm_metadataextractor.desktop
+  FILES kcm_nepomuk-webminer.desktop
   DESTINATION ${SERVICES_INSTALL_DIR})
 
 install(
-  TARGETS kcm_metadataextractor
+  TARGETS kcm_nepomuk-webminer
   DESTINATION ${PLUGIN_INSTALL_DIR})
 # -----------------------------

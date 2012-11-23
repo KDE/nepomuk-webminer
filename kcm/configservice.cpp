@@ -32,7 +32,7 @@
 #include <QtDBus/QDBusInterface>
 #include <QtCore/QProcess>
 
-using namespace NepomukMetaDataExtractor;
+using namespace NepomukWebMiner;
 
 ConfigService::ConfigService(QWidget *parent) :
     QWidget(parent),
@@ -43,14 +43,14 @@ ConfigService::ConfigService(QWidget *parent) :
     connect(ui->enableService, SIGNAL(clicked(bool)), this, SLOT(serviceEnabled(bool)));
 
     m_watcher = new QDBusServiceWatcher(this);
-    m_watcher->addWatchedService(QLatin1String("org.kde.nepomuk.services.metadataextractorservice"));
+    m_watcher->addWatchedService(QLatin1String("org.kde.nepomuk.services.nepomuk-webminerservice"));
     m_watcher->setConnection(QDBusConnection::sessionBus());
     m_watcher->setWatchMode(QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
 
     connect(m_watcher, SIGNAL(serviceRegistered(QString)), this, SLOT(serviceRegistered()));
     connect(m_watcher, SIGNAL(serviceUnregistered(QString)), this, SLOT(serviceUnregistered()));
 
-    if (QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.nepomuk.services.metadataextractorservice")) {
+    if (QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.nepomuk.services.nepomuk-webminerservice")) {
         ui->enableService->setChecked(true);
     }
 
@@ -76,15 +76,15 @@ ConfigService::~ConfigService()
 void ConfigService::serviceEnabled(bool enabled)
 {
     if (enabled) {
-        QProcess::startDetached(QLatin1String("nepomukservicestub metadataextractorservice"));
+        QProcess::startDetached(QLatin1String("nepomukservicestub nepomuk-webminerservice"));
     } else {
-        QDBusInterface service("org.kde.nepomuk.services.metadataextractorservice", "/servicecontrol",
+        QDBusInterface service("org.kde.nepomuk.services.nepomuk-webminerservice", "/servicecontrol",
                                "org.kde.nepomuk.ServiceControl");
         service.call("shutdown");
     }
 
     KConfig config(QLatin1String("nepomukserverrc"));
-    KConfigGroup generalGroup(&config, QLatin1String("Service-metadataextractorservice"));
+    KConfigGroup generalGroup(&config, QLatin1String("Service-nepomuk-webminerservice"));
     generalGroup.writeEntry(QLatin1String("autostart"), enabled);
     generalGroup.sync();
 }

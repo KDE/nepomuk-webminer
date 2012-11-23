@@ -40,7 +40,7 @@
 
 using namespace Soprano::Vocabulary;
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Pipe
 {
@@ -51,13 +51,13 @@ class TvShowPipePrivate
 }
 }
 
-NepomukMetaDataExtractor::Pipe::TvShowPipe::TvShowPipe(QObject *parent)
+NepomukWebMiner::Pipe::TvShowPipe::TvShowPipe(QObject *parent)
     : NepomukPipe(parent)
-    , d_ptr(new NepomukMetaDataExtractor::Pipe::TvShowPipePrivate)
+    , d_ptr(new NepomukWebMiner::Pipe::TvShowPipePrivate)
 {
 }
 
-void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &tvshowEntry)
+void NepomukWebMiner::Pipe::TvShowPipe::pipeImport(const QVariantMap &tvshowEntry)
 {
     Nepomuk2::SimpleResourceGraph graph;
 
@@ -270,7 +270,7 @@ void NepomukMetaDataExtractor::Pipe::TvShowPipe::pipeImport(const QVariantMap &t
     srj->exec();
 }
 
-Nepomuk2::NMM::TVShow NepomukMetaDataExtractor::Pipe::TvShowPipe::createEpisode(const QVariantMap &episodeInfo, const Nepomuk2::NMM::TVSeason &season)
+Nepomuk2::NMM::TVShow NepomukWebMiner::Pipe::TvShowPipe::createEpisode(const QVariantMap &episodeInfo, const Nepomuk2::NMM::TVSeason &season)
 {
     QString resourceUri = episodeInfo.value(QLatin1String("resourceuri")).toString();
     QUrl existingUri;

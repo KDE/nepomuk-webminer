@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "metadataextractorservice.h"
+#include "nepomukwebminerservice.h"
 
 #include <Nepomuk2/ResourceWatcher>
 #include <Nepomuk2/Vocabulary/NFO>
@@ -37,7 +37,7 @@
 
 using namespace Nepomuk2::Vocabulary;
 
-class MetaDataExtractorServicePrivate
+class NepomukWebMinerServicePrivate
 {
 public:
     Nepomuk2::ResourceWatcher* videoWatcher;
@@ -48,18 +48,18 @@ public:
     QStringList processQueue;
 };
 
-MetaDataExtractorService::MetaDataExtractorService(QObject *parent, const QVariantList &)
+NepomukWebMinerService::NepomukWebMinerService(QObject *parent, const QVariantList &)
     : Nepomuk2::Service(parent)
-    , d_ptr(new MetaDataExtractorServicePrivate)
+    , d_ptr(new NepomukWebMinerServicePrivate)
 {
-    Q_D(MetaDataExtractorService);
+    Q_D(NepomukWebMinerService);
 
     d->runningProcesses = 0;
     d->videoWatcher = 0;
     d->documentWatcher = 0;
     d->musicWatcher = 0;
 
-    KConfig config("nepomukmetadataextractorrc");
+    KConfig config("nepomukwebminerrc");
     KConfigGroup serviceGroup(&config, "Service");
 
     bool firstRun = serviceGroup.readEntry("FirstRun", true);
@@ -71,14 +71,14 @@ MetaDataExtractorService::MetaDataExtractorService(QObject *parent, const QVaria
     // explicitly in the KCM config settings
     if (firstRun) {
         KConfig serverConfig(QLatin1String("nepomukserverrc"));
-        KConfigGroup serverGroup(&serverConfig, QLatin1String("Service-metadataextractorservice"));
+        KConfigGroup serverGroup(&serverConfig, QLatin1String("Service-nepomuk-webminerservice"));
         serverGroup.writeEntry(QLatin1String("autostart"), false);
         serverGroup.sync();
 
         serviceGroup.writeEntry("FirstRun", false);
         serviceGroup.sync();
 
-        QDBusInterface service("org.kde.nepomuk.services.metadataextractorservice", "/servicecontrol",
+        QDBusInterface service("org.kde.nepomuk.services.nepomuk-webminerservice", "/servicecontrol",
                                "org.kde.nepomuk.ServiceControl");
         service.call("shutdown");
 
@@ -121,9 +121,9 @@ MetaDataExtractorService::MetaDataExtractorService(QObject *parent, const QVaria
     startNextProcess();
 }
 
-MetaDataExtractorService::~MetaDataExtractorService()
+NepomukWebMinerService::~NepomukWebMinerService()
 {
-    Q_D(MetaDataExtractorService);
+    Q_D(NepomukWebMinerService);
 
     if (d->videoWatcher) {
         d->videoWatcher->stop();
@@ -138,7 +138,7 @@ MetaDataExtractorService::~MetaDataExtractorService()
         delete d->musicWatcher;
     }
 
-    KConfig config("nepomukmetadataextractorrc");
+    KConfig config("nepomukwebminerrc");
     KConfigGroup serviceGroup(&config, "Service");
 
     serviceGroup.writeEntry("notfinishedqueue", d->processQueue);
@@ -146,7 +146,7 @@ MetaDataExtractorService::~MetaDataExtractorService()
     config.sync();
 }
 
-void MetaDataExtractorService::slotVideoResourceCreated(const Nepomuk2::Resource &res, const QList<QUrl> &types)
+void NepomukWebMinerService::slotVideoResourceCreated(const Nepomuk2::Resource &res, const QList<QUrl> &types)
 {
     Q_UNUSED(types);
 
@@ -164,14 +164,14 @@ void MetaDataExtractorService::slotVideoResourceCreated(const Nepomuk2::Resource
 
         const QString path = res.toFile().url().toLocalFile();
         if (QFile::exists(path)) {
-            Q_D(MetaDataExtractorService);
+            Q_D(NepomukWebMinerService);
             d->processQueue.append(path);
             startNextProcess();
         }
     }
 }
 
-void MetaDataExtractorService::slotDocumentResourceCreated(const Nepomuk2::Resource &res, const QList<QUrl> &types)
+void NepomukWebMinerService::slotDocumentResourceCreated(const Nepomuk2::Resource &res, const QList<QUrl> &types)
 {
     Q_UNUSED(types);
 
@@ -189,14 +189,14 @@ void MetaDataExtractorService::slotDocumentResourceCreated(const Nepomuk2::Resou
 
         const QString path = res.toFile().url().toLocalFile();
         if (QFile::exists(path)) {
-            Q_D(MetaDataExtractorService);
+            Q_D(NepomukWebMinerService);
             d->processQueue.append(path);
             startNextProcess();
         }
     }
 }
 
-void MetaDataExtractorService::slotMusicResourceCreated(const Nepomuk2::Resource& res, const QList<QUrl>& types)
+void NepomukWebMinerService::slotMusicResourceCreated(const Nepomuk2::Resource& res, const QList<QUrl>& types)
 {
     Q_UNUSED(types);
 
@@ -204,31 +204,31 @@ void MetaDataExtractorService::slotMusicResourceCreated(const Nepomuk2::Resource
 
         const QString path = res.toFile().url().toLocalFile();
         if (QFile::exists(path)) {
-            Q_D(MetaDataExtractorService);
+            Q_D(NepomukWebMinerService);
             d->processQueue.append(path);
             startNextProcess();
         }
     }
 }
 
-void MetaDataExtractorService::processFinished(int returnCode, QProcess::ExitStatus status)
+void NepomukWebMinerService::processFinished(int returnCode, QProcess::ExitStatus status)
 {
     Q_UNUSED(returnCode);
     Q_UNUSED(status);
 
     sender()->deleteLater(); // delete the calling QProcess again
 
-    Q_D(MetaDataExtractorService);
+    Q_D(NepomukWebMinerService);
 
     d->runningProcesses--;
     startNextProcess();
 }
 
-void MetaDataExtractorService::startNextProcess()
+void NepomukWebMinerService::startNextProcess()
 {
-    Q_D(MetaDataExtractorService);
+    Q_D(NepomukWebMinerService);
 
-    KConfig config("nepomukmetadataextractorrc");
+    KConfig config("nepomukwebminerrc");
     KConfigGroup serviceGroup(&config, "Service");
 
     int maxProcesses = serviceGroup.readEntry("SimultaneousCalls", 3);
@@ -239,7 +239,7 @@ void MetaDataExtractorService::startNextProcess()
     if (d->runningProcesses < maxProcesses && !d->processQueue.isEmpty()) {
         QString path = d->processQueue.takeFirst();
 
-        kDebug() << "Calling" << KStandardDirs::findExe(QLatin1String("metadataextractor")) << path;
+        kDebug() << "Calling" << KStandardDirs::findExe(QLatin1String("nepomuk-webminer")) << path;
         d->runningProcesses++;
 
         QProcess *p = new QProcess();
@@ -247,14 +247,14 @@ void MetaDataExtractorService::startNextProcess()
         connect(p, SIGNAL(readyReadStandardOutput()), this, SLOT(processOutput()));
 
         connect(p, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(processFinished(int,QProcess::ExitStatus)));
-        p->start(KStandardDirs::findExe(QLatin1String("metadataextractor")),
+        p->start(KStandardDirs::findExe(QLatin1String("nepomuk-webminer")),
                  QStringList() << QLatin1String("-auto") << QLatin1String("-force") << path);
 
         startNextProcess();
     }
 }
 
-void MetaDataExtractorService::processOutput()
+void NepomukWebMinerService::processOutput()
 {
     QProcess *p = qobject_cast<QProcess *>(sender());
     kDebug() << p->readAllStandardError();
@@ -263,6 +263,6 @@ void MetaDataExtractorService::processOutput()
 #include <kpluginfactory.h>
 #include <kpluginloader.h>
 
-NEPOMUK_EXPORT_SERVICE(MetaDataExtractorService, "metadataextractorservice")
+NEPOMUK_EXPORT_SERVICE(NepomukWebMinerService, "nepomuk-webminerservice")
 
-#include "metadataextractorservice.moc"
+#include "nepomukwebminerservice.moc"

@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef METADATAEXTRACTORSERVICE_H
-#define METADATAEXTRACTORSERVICE_H
+#ifndef NEPOMUKWEBMINERSERVICE_H
+#define NEPOMUKWEBMINERSERVICE_H
 
 #include <Nepomuk2/Service>
 #include <Nepomuk2/Resource>
@@ -33,20 +33,20 @@ namespace Nepomuk2
 class ResourceWatcher;
 }
 
-class MetaDataExtractorServicePrivate;
+class NepomukWebMinerServicePrivate;
 
 /**
- * @brief This service calls the metadata extarctor every time a new @c nfo:Video, @c nfo:Audio or @c nfo::PaginatedTextDocument resource was created
+ * @brief This service calls the Nepomuk-WebMiner every time a new @c nfo:Video, @c nfo:Audio or @c nfo::PaginatedTextDocument resource was created
  *
  * Extracts the metadata from the web based on the AutomaticFetcher.
  */
-class MetaDataExtractorService : public Nepomuk2::Service
+class NepomukWebMinerService : public Nepomuk2::Service
 {
     Q_OBJECT
 
 public:
-    explicit MetaDataExtractorService(QObject *parent = 0, const QVariantList& args = QVariantList());
-    ~MetaDataExtractorService();
+    explicit NepomukWebMinerService(QObject *parent = 0, const QVariantList& args = QVariantList());
+    ~NepomukWebMinerService();
 
 private Q_SLOTS:
     /**
@@ -90,8 +90,8 @@ private:
      */
     void startNextProcess();
 
-    Q_DECLARE_PRIVATE(MetaDataExtractorService)
-    MetaDataExtractorServicePrivate *const d_ptr; /**< d-pointer for this class */
+    Q_DECLARE_PRIVATE(NepomukWebMinerService)
+    NepomukWebMinerServicePrivate *const d_ptr; /**< d-pointer for this class */
 };
 
-#endif // METADATAEXTRACTORSERVICE_H
+#endif // NEPOMUKWEBMINERSERVICE_H

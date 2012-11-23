@@ -35,28 +35,28 @@
 #include <QtCore/QFutureWatcher>
 #include <QtCore/QtConcurrentRun>
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace UI
 {
 class BatchExtractorPrivate
 {
 public:
-    NepomukMetaDataExtractor::Extractor::ExtractorFactory extractorFactory;
-    NepomukMetaDataExtractor::Extractor::WebExtractor *currentExtractor;
-    QList<NepomukMetaDataExtractor::UI::BatchExtractor::ExtractionJob> jobList;
+    NepomukWebMiner::Extractor::ExtractorFactory extractorFactory;
+    NepomukWebMiner::Extractor::WebExtractor *currentExtractor;
+    QList<NepomukWebMiner::UI::BatchExtractor::ExtractionJob> jobList;
     bool extractionInProgress;
 };
 }
 }
 
-using namespace NepomukMetaDataExtractor::Pipe;
-using namespace NepomukMetaDataExtractor::Extractor;
-using namespace NepomukMetaDataExtractor::UI;
+using namespace NepomukWebMiner::Pipe;
+using namespace NepomukWebMiner::Extractor;
+using namespace NepomukWebMiner::UI;
 
-NepomukMetaDataExtractor::UI::BatchExtractor::BatchExtractor(QObject *parent)
+NepomukWebMiner::UI::BatchExtractor::BatchExtractor(QObject *parent)
     : QObject(parent)
-    , d_ptr(new NepomukMetaDataExtractor::UI::BatchExtractorPrivate)
+    , d_ptr(new NepomukWebMiner::UI::BatchExtractorPrivate)
 {
     Q_D(BatchExtractor);
 
@@ -64,7 +64,7 @@ NepomukMetaDataExtractor::UI::BatchExtractor::BatchExtractor(QObject *parent)
     d->currentExtractor = 0;
 }
 
-QString NepomukMetaDataExtractor::UI::BatchExtractor::currentExtractionInfo() const
+QString NepomukWebMiner::UI::BatchExtractor::currentExtractionInfo() const
 {
     Q_D(const BatchExtractor);
 
@@ -77,7 +77,7 @@ QString NepomukMetaDataExtractor::UI::BatchExtractor::currentExtractionInfo() co
     return currentJob;
 }
 
-void NepomukMetaDataExtractor::UI::BatchExtractor::addJob(const QUrl &detailsUrl, const QVariantMap &options, const QString &name, const QString &resourceUri)
+void NepomukWebMiner::UI::BatchExtractor::addJob(const QUrl &detailsUrl, const QVariantMap &options, const QString &name, const QString &resourceUri)
 {
     Q_D(BatchExtractor);
 
@@ -98,7 +98,7 @@ void NepomukMetaDataExtractor::UI::BatchExtractor::addJob(const QUrl &detailsUrl
     }
 }
 
-void NepomukMetaDataExtractor::UI::BatchExtractor::extractNext()
+void NepomukWebMiner::UI::BatchExtractor::extractNext()
 {
     Q_D(BatchExtractor);
 
@@ -127,12 +127,12 @@ void NepomukMetaDataExtractor::UI::BatchExtractor::extractNext()
     }
 }
 
-void NepomukMetaDataExtractor::UI::BatchExtractor::log(const QString &msg)
+void NepomukWebMiner::UI::BatchExtractor::log(const QString &msg)
 {
     kDebug() << msg;
 }
 
-void NepomukMetaDataExtractor::UI::BatchExtractor::error(const QString &msg)
+void NepomukWebMiner::UI::BatchExtractor::error(const QString &msg)
 {
     kDebug() << msg;
 }
@@ -161,7 +161,7 @@ static void concurrentPipe(const QString &resourceType, const QVariantMap &entry
     delete nepomukPipe;
 }
 
-void NepomukMetaDataExtractor::UI::BatchExtractor::itemResults(const QString &resourceType, const QVariantMap &entry)
+void NepomukWebMiner::UI::BatchExtractor::itemResults(const QString &resourceType, const QVariantMap &entry)
 {
     Q_D(BatchExtractor);
 
@@ -180,7 +180,7 @@ void NepomukMetaDataExtractor::UI::BatchExtractor::itemResults(const QString &re
     futureWatcher->setFuture(future);
 }
 
-void NepomukMetaDataExtractor::UI::BatchExtractor::addResourceUriToMetaData(const QString &resourceType, const QString &uri, QVariantMap &metadata)
+void NepomukWebMiner::UI::BatchExtractor::addResourceUriToMetaData(const QString &resourceType, const QString &uri, QVariantMap &metadata)
 {
     // For tv shows put the resource uri into the Episode part of the MetaData
     // this way around it is possible to use the TvShowPipe with more episode/files at once
@@ -221,7 +221,7 @@ void NepomukMetaDataExtractor::UI::BatchExtractor::addResourceUriToMetaData(cons
     metadata.insert(QLatin1String("resourceuri"), uri);
 }
 
-void NepomukMetaDataExtractor::UI::BatchExtractor::pipeFinished()
+void NepomukWebMiner::UI::BatchExtractor::pipeFinished()
 {
     sender()->deleteLater(); // delete the created future watcher again
 

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "metadataextractorkcm.h"
+#include "nepomukwebminerkcm.h"
 
 #include "webextractor/extractorfactory.h"
 
@@ -38,17 +38,17 @@
 
 #include <QtGui/QVBoxLayout>
 
-using namespace NepomukMetaDataExtractor;
+using namespace NepomukWebMiner;
 
-K_PLUGIN_FACTORY(MetaDataExtractorKCMFactory, registerPlugin<MetaDataExtractorKCM>();)
-K_EXPORT_PLUGIN(MetaDataExtractorKCMFactory("kcm_metadataextractor", "metadataextractor"))
+K_PLUGIN_FACTORY(NepomukWebMinerKCMFactory, registerPlugin<NepomukWebMinerKCM>();)
+K_EXPORT_PLUGIN(NepomukWebMinerKCMFactory("kcm_nepomuk-webminer", "nepomuk-webminer"))
 
-MetaDataExtractorKCM::MetaDataExtractorKCM(QWidget *parent, const QVariantList &list)
-    : KCModule(MetaDataExtractorKCMFactory::componentData(), parent, list)
+NepomukWebMinerKCM::NepomukWebMinerKCM(QWidget *parent, const QVariantList &list)
+    : KCModule(NepomukWebMinerKCMFactory::componentData(), parent, list)
 {
 
     KAboutData *about = new KAboutData(
-        "kcm_metadataextractor", "kcm_metadataextractor", ki18n("Metadata Extractor Configuration Module"),
+        "kcm_nepomuk-webminer", "kcm_nepomuk-webminer", ki18n("Nepomuk-WebMiner Configuration Module"),
         KDE_VERSION_STRING, KLocalizedString(), KAboutData::License_GPL,
         ki18n("Copyright 2012 Jörg Ehrichs"));
     about->addAuthor(ki18n("Jörg Ehrichs"), KLocalizedString(), "Joerg.Ehrichs@gmx.de");
@@ -82,13 +82,13 @@ MetaDataExtractorKCM::MetaDataExtractorKCM(QWidget *parent, const QVariantList &
     layout->addWidget(pageWidget);
 }
 
-void MetaDataExtractorKCM::save()
+void NepomukWebMinerKCM::save()
 {
     cfd->saveConfig();
     csd->saveConfig();
 }
 
-void MetaDataExtractorKCM::load()
+void NepomukWebMinerKCM::load()
 {
     cfd->resetConfig();
     csd->resetConfig();

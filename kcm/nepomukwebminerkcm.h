@@ -18,50 +18,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef METADATAEXTRACTORPLUGIN_H
-#define METADATAEXTRACTORPLUGIN_H
+#ifndef NEPOMUKWEBMINERKCM_H
+#define NEPOMUKWEBMINERKCM_H
 
-#include <KParts/Plugin>
-#include <KParts/ReadOnlyPart>
-#include <KDE/KUrlLabel>
+#include <KDE/KCModule>
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
+
+class ConfigFetcher;
+class PluginList;
+class ConfigService;
+
 namespace Extractor
 {
 class ExtractorFactory;
 }
-}
 
 /**
- * @brief KPart to integrate the meta fetcher into @c Konqueror
- *
- * Shows a little nepomuk icon in the bottom right status par when a supported side is found, left click the
- * icon to start the fetching.
+ * @brief KCM class to show and manage all config widgets for the Nepomuk-WebMiner
  */
-class MetaDataExtractorPlugin: public KParts::Plugin
+class NepomukWebMinerKCM : public KCModule
 {
     Q_OBJECT
-
 public:
-    explicit MetaDataExtractorPlugin(QObject *parent = 0, const QVariantList &args = QVariantList());
-    virtual ~MetaDataExtractorPlugin();
+    explicit NepomukWebMinerKCM(QWidget *parent, const QVariantList &list);
 
-protected slots:
-    void urlSwitched();
-    void extract();
-
-private slots:
-    void lateInitialization();
-    void pushDataToNepomuk(const QString &resourceType, const QVariantMap &entry);
+    void save();
+    void load();
 
 private:
-    KParts::ReadOnlyPart *m_Part;
-    KUrlLabel m_icon;
-
-    NepomukMetaDataExtractor::Extractor::ExtractorFactory *m_ef;
-    bool extractionInProgress;
-
+    Extractor::ExtractorFactory *m_ef;
+    ConfigFetcher *cfd;
+    PluginList *pl;
+    ConfigService *csd;
 };
+}
 
-#endif // METADATAEXTRACTORPLUGIN_H
+#endif // NEPOMUKWEBMINERKCM_H

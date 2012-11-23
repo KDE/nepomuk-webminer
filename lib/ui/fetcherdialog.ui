@@ -379,7 +379,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="NepomukMetaDataExtractor::UI::MetaDataWidget" name="metaDataList" native="true"/>
+               <widget class="NepomukWebMiner::UI::MetaDataWidget" name="metaDataList" native="true"/>
               </item>
              </layout>
             </widget>
@@ -509,7 +509,7 @@
    <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
-   <class>NepomukMetaDataExtractor::UI::MetaDataWidget</class>
+   <class>NepomukWebMiner::UI::MetaDataWidget</class>
    <extends>QWidget</extends>
    <header location="global">metadatawidget.h</header>
    <container>1</container>

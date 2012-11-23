@@ -1,26 +1,26 @@
 
 
-project(metadataextractor)
+project(nepomuk-webminer)
 
-find_package(NepomukMetadataExtractor REQUIRED)
+find_package(NepomukWebMiner REQUIRED)
 
 # -------------------------------------------
 # build the dolphin right click menu
 # bulk extractor from the lib
 # -------------------------------------------
 
-set( metadataextractor_SRCS main.cpp)
+set( nepomukwebminer_SRCS main.cpp)
 
-kde4_add_executable( metadataextractor ${metadataextractor_SRCS})
+kde4_add_executable( nepomuk-webminer ${nepomukwebminer_SRCS})
 
-target_link_libraries( metadataextractor
+target_link_libraries( nepomuk-webminer
   ${KDE4_KDECORE_LIBS}
   ${KDE4_KIO_LIBS}
   ${KDE4_KDEUI_LIBS}
 
-  nepomukmetadataextractor
+  nepomuk-webminerlib
   ${NEPOMUK_CORE_LIBRARY}
 )
 
-install(TARGETS metadataextractor ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS metadataextractor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(TARGETS nepomuk-webminer ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(PROGRAMS nepomuk-webminer.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})

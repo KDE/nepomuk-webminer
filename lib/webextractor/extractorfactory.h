@@ -26,9 +26,9 @@
 #include <QtCore/QList>
 
 #include "webextractor.h"
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -52,7 +52,7 @@ class ExtractorFactoryPrivate;
   * @see KrossExtractor - for the python/ruby/javascript part
   * @see WebExtractor - for the general case and if one wants to create a c++ based plugin
   */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT ExtractorFactory : public QObject
+class NEPOMUKWEBMINER_EXPORT ExtractorFactory : public QObject
 {
     Q_OBJECT
 public:
@@ -79,7 +79,7 @@ public:
       *
       * @return the WebExtractor for the identifier
       */
-    NepomukMetaDataExtractor::Extractor::WebExtractor *getExtractor(const QString &webEngine);
+    NepomukWebMiner::Extractor::WebExtractor *getExtractor(const QString &webEngine);
 
     /**
       * @brief Creates a new WebExtractor based in the @c "url" it can fetch data from
@@ -90,7 +90,7 @@ public:
       *
       * @return the WebExtractor that can handle the uri
       */
-    NepomukMetaDataExtractor::Extractor::WebExtractor *getExtractor(const QUrl &uri);
+    NepomukWebMiner::Extractor::WebExtractor *getExtractor(const QUrl &uri);
 
     /**
       * @brief Returns a list of all available webextractor plugins that fetches data for the resource @c type
@@ -103,7 +103,7 @@ public:
       *
       * @return a list of all WebExtarctor info items
       */
-    QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> listAvailablePlugins(const QString &type);
+    QList<NepomukWebMiner::Extractor::WebExtractor::Info> listAvailablePlugins(const QString &type);
 
     /**
       * @brief Returns a list of webextractor plugins for the resource @c type that failed to load
@@ -116,13 +116,13 @@ public:
       *
       * @return a list of all WebExtarctor info items
       */
-    QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> listFailedPlugins(const QString &type);
+    QList<NepomukWebMiner::Extractor::WebExtractor::Info> listFailedPlugins(const QString &type);
 
 private:
     /**
       * @brief Preloads information about all available plugins
       *
-      * Plugins are scripts in the kde data folder under @c nepomukmetadataextractor/plugins/
+      * Plugins are scripts in the kde data folder under @c nepomukwebminer/plugins/
       */
     void loadScriptInfo();
 

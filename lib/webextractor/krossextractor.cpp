@@ -31,7 +31,7 @@
 
 #include <qjson/parser.h>
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -45,9 +45,9 @@ public:
 }
 }
 
-NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QString &scriptFile, QObject *parent)
+NepomukWebMiner::Extractor::KrossExtractor::KrossExtractor(const QString &scriptFile, QObject *parent)
     : WebExtractor(parent)
-    , d_ptr(new NepomukMetaDataExtractor::Extractor::KrossExtractorPrivate)
+    , d_ptr(new NepomukWebMiner::Extractor::KrossExtractorPrivate)
 {
     Q_D(KrossExtractor);
 
@@ -61,7 +61,7 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
     d->scriptFile->setFile(scriptFile);
     d->scriptFile->trigger();
 
-    KConfig config("nepomukmetadataextractorrc");
+    KConfig config("nepomukwebminerrc");
     if (config.hasGroup(scriptFile)) {
         KConfigGroup pluginGroup(&config, scriptFile);
         d->scriptInfo.name = pluginGroup.readEntry("name", QString());
@@ -109,14 +109,14 @@ NepomukMetaDataExtractor::Extractor::KrossExtractor::KrossExtractor(const QStrin
     }
 }
 
-NepomukMetaDataExtractor::Extractor::KrossExtractor::~KrossExtractor()
+NepomukWebMiner::Extractor::KrossExtractor::~KrossExtractor()
 {
     Q_D(KrossExtractor);
     delete d->scriptFile;
     delete d->futureWatcher;
 }
 
-NepomukMetaDataExtractor::Extractor::WebExtractor::Info NepomukMetaDataExtractor::Extractor::KrossExtractor::info()
+NepomukWebMiner::Extractor::WebExtractor::Info NepomukWebMiner::Extractor::KrossExtractor::info()
 {
     Q_D(KrossExtractor);
     return d->scriptInfo;
@@ -127,7 +127,7 @@ static QVariant concurrentSearch(Kross::Action *script, const QString &resourceT
     return script->callFunction(QString("searchItems"), QVariantList() << resourceType << parameters);
 }
 
-void NepomukMetaDataExtractor::Extractor::KrossExtractor::search(const QString &resourceType, const QVariantMap &parameters)
+void NepomukWebMiner::Extractor::KrossExtractor::search(const QString &resourceType, const QVariantMap &parameters)
 {
     Q_D(KrossExtractor);
 
@@ -147,7 +147,7 @@ static QVariant concurrentExtraction(Kross::Action *script, const QUrl &url, con
     return script->callFunction(QString("extractItemFromUri"), QVariantList() << url << options);
 }
 
-void NepomukMetaDataExtractor::Extractor::KrossExtractor::extractItem(const QUrl &url, const QVariantMap &options)
+void NepomukWebMiner::Extractor::KrossExtractor::extractItem(const QUrl &url, const QVariantMap &options)
 {
     Q_D(KrossExtractor);
     if (d->scriptInfo.identifier == "imdbmovies") {
@@ -161,7 +161,7 @@ void NepomukMetaDataExtractor::Extractor::KrossExtractor::extractItem(const QUrl
     }
 }
 
-void NepomukMetaDataExtractor::Extractor::KrossExtractor::showConfigDialog()
+void NepomukWebMiner::Extractor::KrossExtractor::showConfigDialog()
 {
     Q_D(KrossExtractor);
     if (d->scriptInfo.hasConfig) {
@@ -169,7 +169,7 @@ void NepomukMetaDataExtractor::Extractor::KrossExtractor::showConfigDialog()
     }
 }
 
-void NepomukMetaDataExtractor::Extractor::KrossExtractor::transformJSONResult(const QString &resourceType, const QString &jsonMap)
+void NepomukWebMiner::Extractor::KrossExtractor::transformJSONResult(const QString &resourceType, const QString &jsonMap)
 {
     QJson::Parser parser;
     bool ok;

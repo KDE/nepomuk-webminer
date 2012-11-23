@@ -57,15 +57,15 @@
 #include <QtGui/QMessageBox>
 #include <QtCore/QProcess>
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace UI
 {
 class FetcherDialogPrivate
 {
 public:
-    NepomukMetaDataExtractor::Extractor::WebExtractor *webextractor;
-    NepomukMetaDataExtractor::Extractor::MetaDataParameters *currentItemToupdate;
+    NepomukWebMiner::Extractor::WebExtractor *webextractor;
+    NepomukWebMiner::Extractor::MetaDataParameters *currentItemToupdate;
     int currentItemNumber;
     SearchResultsModel *resultModel;
     QTextDocument *progressLog;
@@ -75,13 +75,13 @@ public:
 }
 }
 
-using namespace NepomukMetaDataExtractor::Pipe;
-using namespace NepomukMetaDataExtractor::Extractor;
-using namespace NepomukMetaDataExtractor::UI;
+using namespace NepomukWebMiner::Pipe;
+using namespace NepomukWebMiner::Extractor;
+using namespace NepomukWebMiner::UI;
 
-NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
+NepomukWebMiner::UI::FetcherDialog::FetcherDialog(QWidget *parent)
     : QDialog(parent)
-    , d_ptr(new NepomukMetaDataExtractor::UI::FetcherDialogPrivate)
+    , d_ptr(new NepomukWebMiner::UI::FetcherDialogPrivate)
 {
     setupUi(this);
 
@@ -137,7 +137,7 @@ NepomukMetaDataExtractor::UI::FetcherDialog::FetcherDialog(QWidget *parent)
     d->busySearchWidget->setWidget(searchResults->viewport());
 }
 
-NepomukMetaDataExtractor::UI::FetcherDialog::~FetcherDialog()
+NepomukWebMiner::UI::FetcherDialog::~FetcherDialog()
 {
     Q_D(FetcherDialog);
     delete d->currentItemToupdate;
@@ -145,7 +145,7 @@ NepomukMetaDataExtractor::UI::FetcherDialog::~FetcherDialog()
     delete d->progressLog;
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::errorInScriptExecution(const QString &error)
+void NepomukWebMiner::UI::FetcherDialog::errorInScriptExecution(const QString &error)
 {
     finishedFetching();
 
@@ -161,7 +161,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::errorInScriptExecution(const Q
     addToProgressLog(error);
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::addToProgressLog(const QString &status)
+void NepomukWebMiner::UI::FetcherDialog::addToProgressLog(const QString &status)
 {
     Q_D(FetcherDialog);
 
@@ -170,7 +170,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::addToProgressLog(const QString
     qtc.insertText(status + QLatin1String("\n"));
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::showProgressLog()
+void NepomukWebMiner::UI::FetcherDialog::showProgressLog()
 {
     Q_D(FetcherDialog);
 
@@ -188,9 +188,9 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showProgressLog()
     delete log;
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::openSettings()
+void NepomukWebMiner::UI::FetcherDialog::openSettings()
 {
-    QProcess::startDetached(QLatin1String("kcmshell4 kcm_metadataextractor"));
+    QProcess::startDetached(QLatin1String("kcmshell4 kcm_nepomuk-webminer"));
     /*
     KCModuleLoader::loadModule(  "kcm_metadataextractor",
                                 KCModuleLoader::Inline, this, QStringList( "message/rfc822" ) ),
@@ -198,12 +198,12 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::openSettings()
     */
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::openHelp()
+void NepomukWebMiner::UI::FetcherDialog::openHelp()
 {
     KToolInvocation::invokeHelp(QString(), QString("kcontrol/metadataextractor"));
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::resourceFetchingDone()
+void NepomukWebMiner::UI::FetcherDialog::resourceFetchingDone()
 {
     Q_D(FetcherDialog);
 
@@ -216,7 +216,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::resourceFetchingDone()
     }
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::selectNextResourceToLookUp()
+void NepomukWebMiner::UI::FetcherDialog::selectNextResourceToLookUp()
 {
     Q_D(FetcherDialog);
 
@@ -225,7 +225,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::selectNextResourceToLookUp()
     setupCurrentResourceToLookup();
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::selectPreviousResourceToLookUp()
+void NepomukWebMiner::UI::FetcherDialog::selectPreviousResourceToLookUp()
 {
     Q_D(FetcherDialog);
 
@@ -234,7 +234,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::selectPreviousResourceToLookUp
     setupCurrentResourceToLookup();
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::setupCurrentResourceToLookup()
+void NepomukWebMiner::UI::FetcherDialog::setupCurrentResourceToLookup()
 {
     Q_D(FetcherDialog);
 
@@ -343,7 +343,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::setupCurrentResourceToLookup()
     showItemDetails();
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::resourceTypeSelectionChanged(int selection)
+void NepomukWebMiner::UI::FetcherDialog::resourceTypeSelectionChanged(int selection)
 {
     Q_D(FetcherDialog);
     MetaDataParameters *mdp = resourceExtractor()->resourcesList().at(d->currentItemNumber);
@@ -369,7 +369,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::resourceTypeSelectionChanged(i
     fillEngineList(mdp->resourceType());
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::startSearch()
+void NepomukWebMiner::UI::FetcherDialog::startSearch()
 {
     Q_D(FetcherDialog);
     d->resultModel->clear();
@@ -431,7 +431,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::startSearch()
     d->webextractor->search(mdp->resourceType(), searchParameters);
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::searchResultList(QVariantList searchResultList)
+void NepomukWebMiner::UI::FetcherDialog::searchResultList(QVariantList searchResultList)
 {
     Q_D(FetcherDialog);
     finishedFetching();
@@ -447,7 +447,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::searchResultList(QVariantList 
     searchResults->setCurrentIndex(d->resultModel->index(0));
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::searchEntrySelected(const QModelIndex &current, const QModelIndex &previous)
+void NepomukWebMiner::UI::FetcherDialog::searchEntrySelected(const QModelIndex &current, const QModelIndex &previous)
 {
     Q_UNUSED(previous)
     Q_D(FetcherDialog);
@@ -471,7 +471,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::searchEntrySelected(const QMod
     }
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::showSearchParameters()
+void NepomukWebMiner::UI::FetcherDialog::showSearchParameters()
 {
     Q_D(FetcherDialog);
     QPointer<KDialog> spd = new KDialog;
@@ -610,14 +610,14 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showSearchParameters()
     delete spd;
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::openDetailsLink(const QString &url)
+void NepomukWebMiner::UI::FetcherDialog::openDetailsLink(const QString &url)
 {
     QString mimeTypeName = QLatin1String("text/html");
     /// Ask KDE subsystem to open url in viewer matching mime type
     KRun::runUrl(url, mimeTypeName, this, false, false);
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::fetchMoreDetails()
+void NepomukWebMiner::UI::FetcherDialog::fetchMoreDetails()
 {
     Q_D(FetcherDialog);
     metaDataList->setBusy(true);
@@ -638,14 +638,14 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fetchMoreDetails()
     d->webextractor->extractItem(fetchUrl, options);
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::fetchMoreAndSave()
+void NepomukWebMiner::UI::FetcherDialog::fetchMoreAndSave()
 {
     Q_D(FetcherDialog);
     d->saveAutomatically=true;
     fetchMoreDetails();
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails)
+void NepomukWebMiner::UI::FetcherDialog::fetchedItemDetails(const QString &resourceType, QVariantMap itemDetails)
 {
     Q_D(FetcherDialog);
     QVariantMap curMetaData = d->currentItemToupdate->metaData();
@@ -671,7 +671,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fetchedItemDetails(const QStri
     //kDebug() << itemDetails;
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::saveMetaDataSlot()
+void NepomukWebMiner::UI::FetcherDialog::saveMetaDataSlot()
 {
     Q_D(FetcherDialog);
     MetaDataParameters *mdp = resourceExtractor()->resourcesList().at(d->currentItemNumber);
@@ -687,12 +687,12 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::saveMetaDataSlot()
     finishedFetching();
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::cancelClose()
+void NepomukWebMiner::UI::FetcherDialog::cancelClose()
 {
     close();
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::fillEngineList(const QString &category)
+void NepomukWebMiner::UI::FetcherDialog::fillEngineList(const QString &category)
 {
     // don't fetch information we already have
     if (comboBoxSearchEngine->property("currentListCategory").toString() == category) {
@@ -721,7 +721,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::fillEngineList(const QString &
     }
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::showItemDetails()
+void NepomukWebMiner::UI::FetcherDialog::showItemDetails()
 {
     Q_D(FetcherDialog);
     // current Item metadata
@@ -737,7 +737,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::showItemDetails()
     }
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::busyFetching()
+void NepomukWebMiner::UI::FetcherDialog::busyFetching()
 {
     QWidget::setCursor(Qt::BusyCursor);
 
@@ -749,7 +749,7 @@ void NepomukMetaDataExtractor::UI::FetcherDialog::busyFetching()
     buttonSave->setEnabled(false);
 }
 
-void NepomukMetaDataExtractor::UI::FetcherDialog::finishedFetching()
+void NepomukWebMiner::UI::FetcherDialog::finishedFetching()
 {
     Q_D(FetcherDialog);
     d->busySearchWidget->stop();

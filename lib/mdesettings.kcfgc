@@ -1,4 +1,4 @@
-File=nepomukmetadataextractor.kcfg
+File=nepomuk-webminer.kcfg
 ClassName=MDESettings 
 Singleton=true 
 Mutators=true 

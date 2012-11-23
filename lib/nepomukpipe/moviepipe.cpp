@@ -38,7 +38,7 @@
 
 using namespace Soprano::Vocabulary;
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Pipe
 {
@@ -50,13 +50,13 @@ class MoviePipePrivate
 }
 
 
-NepomukMetaDataExtractor::Pipe::MoviePipe::MoviePipe(QObject *parent)
+NepomukWebMiner::Pipe::MoviePipe::MoviePipe(QObject *parent)
     : NepomukPipe(parent)
-    , d_ptr(new NepomukMetaDataExtractor::Pipe::MoviePipePrivate)
+    , d_ptr(new NepomukWebMiner::Pipe::MoviePipePrivate)
 {
 }
 
-void NepomukMetaDataExtractor::Pipe::MoviePipe::pipeImport(const QVariantMap &movieEntry)
+void NepomukWebMiner::Pipe::MoviePipe::pipeImport(const QVariantMap &movieEntry)
 {
     //TODO: do not use local file url here, this will double type the resource for now this is the best way to deal with this
     QString resourceUri = movieEntry.value(QLatin1String("resourceuri"), QString()).toString();

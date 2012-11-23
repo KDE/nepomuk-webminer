@@ -28,7 +28,7 @@
 
 #include <KDE/KUrl>
 
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
 namespace Nepomuk2
 {
@@ -41,7 +41,7 @@ class OrganizationContact;
 
 class KJob;
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Pipe
 {
@@ -59,7 +59,7 @@ class NepomukPipePrivate;
   * from the internet. It can also be reused by any other application that simply wants to stay away from nepomuks ontology
   * and rather likes to push a simple QVariantMap into the database
   */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT NepomukPipe : public QObject
+class NEPOMUKWEBMINER_EXPORT NepomukPipe : public QObject
 {
     Q_OBJECT
 public:
@@ -113,7 +113,7 @@ public:
      * @param persons person list
      * @return a list of @c Name structures
      */
-    static QList<NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name> splitPersonList(const QString & persons);
+    static QList<NepomukWebMiner::Pipe::NepomukPipe::NepomukPipe::Name> splitPersonList(const QString & persons);
 
 protected:
     /**
@@ -157,7 +157,7 @@ private Q_SLOTS:
 private:
     // taken from KBibtex, so
     // @author Thomas Fischer <fischer@unix-ag.uni-kl.de> with some modifications
-    static NepomukMetaDataExtractor::Pipe::NepomukPipe::NepomukPipe::Name splitPersonString(const QString & persos);
+    static NepomukWebMiner::Pipe::NepomukPipe::NepomukPipe::Name splitPersonString(const QString & persos);
 
     Q_DECLARE_PRIVATE(NepomukPipe)
     NepomukPipePrivate *const d_ptr; /**< d-pointer for this class */

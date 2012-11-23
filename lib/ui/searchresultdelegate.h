@@ -23,7 +23,7 @@
 
 #include <QtGui/QStyledItemDelegate>
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace UI
 {

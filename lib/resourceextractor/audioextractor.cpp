@@ -31,7 +31,7 @@
 
 #include <KDE/KDebug>
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -42,13 +42,13 @@ class AudioExtractorPrivate
 }
 }
 
-NepomukMetaDataExtractor::Extractor::AudioExtractor::AudioExtractor(QObject *parent)
+NepomukWebMiner::Extractor::AudioExtractor::AudioExtractor(QObject *parent)
     : QObject(parent)
-    , d_ptr(new NepomukMetaDataExtractor::Extractor::AudioExtractorPrivate)
+    , d_ptr(new NepomukWebMiner::Extractor::AudioExtractorPrivate)
 {
 }
 
-void NepomukMetaDataExtractor::Extractor::AudioExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
+void NepomukWebMiner::Extractor::AudioExtractor::parseUrl(MetaDataParameters *mdp, const KUrl &fileUrl)
 {
     mdp->setResourceUri(fileUrl);
     mdp->setResourceType(QLatin1String("music"));
@@ -58,7 +58,7 @@ void NepomukMetaDataExtractor::Extractor::AudioExtractor::parseUrl(MetaDataParam
     }
 }
 
-bool NepomukMetaDataExtractor::Extractor::AudioExtractor::findByTag(MetaDataParameters *mdp)
+bool NepomukWebMiner::Extractor::AudioExtractor::findByTag(MetaDataParameters *mdp)
 {
     TagLib::FileRef f(mdp->resourceUri().toLocalFile().toUtf8().data(), false);
 
@@ -96,7 +96,7 @@ bool NepomukMetaDataExtractor::Extractor::AudioExtractor::findByTag(MetaDataPara
     }
 }
 
-bool NepomukMetaDataExtractor::Extractor::AudioExtractor::findByFileName(MetaDataParameters *mdp)
+bool NepomukWebMiner::Extractor::AudioExtractor::findByFileName(MetaDataParameters *mdp)
 {
     return false;
 }

@@ -30,7 +30,7 @@ class ConfigService;
 
 class QDBusServiceWatcher;
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 
 /**

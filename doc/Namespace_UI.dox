@@ -1,17 +1,17 @@
-/** \namespace NepomukMetaDataExtractor::UI
+/** \namespace NepomukWebMiner::UI
 
 \brief The UI namespace holds all classes that implement the full set of metadata classes as an easy to use frontend
 
 The namespace contains 3 different frontends to fetch metadata
 
-@li NepomukMetaDataExtractor::UI::AutomaticFetcher - fetches metadata without user interaction
-@li NepomukMetaDataExtractor::UI::FetcherDialog - Displays a Dialog to allow user interaction
-@li NepomukMetaDataExtractor::UI::BulkExtractor - Download queue for a set of downloads
+@li NepomukWebMiner::UI::AutomaticFetcher - fetches metadata without user interaction
+@li NepomukWebMiner::UI::FetcherDialog - Displays a Dialog to allow user interaction
+@li NepomukWebMiner::UI::BulkExtractor - Download queue for a set of downloads
 
 \section nepomuk_example Example usage
 
 \code
-NepomukMetaDataExtractor::UI::AutomaticFetcher af;
+NepomukWebMiner::UI::AutomaticFetcher af;
 
 if( args->isSet("url") ) {
 	af.addFetcherUrl( args->url( 0 ) );
@@ -20,7 +20,7 @@ if( args->isSet("url") ) {
 \endcode
 
 \code
-NepomukMetaDataExtractor::UI::FetcherDialog fd;
+NepomukWebMiner::UI::FetcherDialog fd;
 
 fd.setForceUpdate( args->isSet("f") );
 fd.setTvShowMode( args->isSet("tvshow") );

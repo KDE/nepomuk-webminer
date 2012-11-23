@@ -1,12 +1,12 @@
-project(metadataextractorservice)
+project(nepomuk-webminerservice)
 
-set( metadataextractorservice_SRCS
-  metadataextractorservice.cpp
+set( nepomuk-webminerservice_SRCS
+  nepomukwebminerservice.cpp
 )
 
-kde4_add_plugin(metadataextractorservice ${metadataextractorservice_SRCS})
+kde4_add_plugin(nepomuk-webminerservice ${nepomuk-webminerservice_SRCS})
 
-target_link_libraries(metadataextractorservice
+target_link_libraries(nepomuk-webminerservice
   nbibontology
 
   ${KDE4_KDECORE_LIBS}
@@ -18,10 +18,10 @@ target_link_libraries(metadataextractorservice
   )
 
 install(
-  FILES metadataextractorservice.desktop
+  FILES nepomuk-webminerservice.desktop
   DESTINATION ${SERVICES_INSTALL_DIR})
 
 install(
-  TARGETS metadataextractorservice
+  TARGETS nepomuk-webminerservice
   DESTINATION ${PLUGIN_INSTALL_DIR})
 # -----------------------------

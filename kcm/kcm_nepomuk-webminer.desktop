@@ -1,16 +1,16 @@
 [Desktop Entry]
-Exec=kcmshell4 kcm_metadataextractor
+Exec=kcmshell4 kcm_nepomuk-webminer
 Icon=nepomuk
 Type=Service
 
-X-DocPath=kcontrol/metadataextractor/index.html
+X-DocPath=kcontrol/nepomuk-webminer/index.html
 
 X-KDE-ServiceTypes=KCModule
-X-KDE-Library=kcm_metadataextractor
+X-KDE-Library=kcm_nepomuk-webminer
 X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=workspace-appearance-and-behavior
 
-Name=Metadata Extractor
+Name=Nepomuk-WebMiner
 Name[da]=Metadata-udtrækker
 Name[es]=Extractor de metadatos
 Name[et]=Metaandmete ekstraktija
@@ -21,8 +21,8 @@ Name[pt_BR]=Extrator de metadados
 Name[sk]=Extraktor metadát
 Name[sv]=Extrahering av metadata
 Name[uk]=Видобування метаданих
-Name[x-test]=xxMetadata Extractorxx
-Comment=Nepomuk Metadata Extractor Configuration
+Name[x-test]=xxNepomuk-WebMinerxx
+Comment=Nepomuk-WebMiner Configuration
 Comment[da]=Konfiguration af Nepomuk metadata-udtrækker
 Comment[es]=Configuración del extractor de metadatos de Nepomuk
 Comment[et]=Nepomuki metaandmete ekstraktimise seadistus
@@ -33,7 +33,7 @@ Comment[pt_BR]=Configuração do extrator de metadados do Nepomuk
 Comment[sk]=Nastavenie extraktora metadát Nepomuk
 Comment[sv]=Inställning av extrahering av Nepomuk metadata
 Comment[uk]=Налаштування видобування метаданих Nepomuk
-Comment[x-test]=xxNepomuk Metadata Extractor Configurationxx
+Comment[x-test]=xxNepomuk-WebMiner Configurationxx
 X-KDE-Keywords=Nepomuk,Metadata
 X-KDE-Keywords[cs]=Nepomuk,Metadata
 X-KDE-Keywords[da]=Nepomuk,Metadata

@@ -31,11 +31,11 @@
 
 int main(int argc, char *argv[])
 {
-    KAboutData aboutData("metadataextractor",
-                         "metadataextractor",
-                         ki18n("Metadata Extractor"),
-                         "0.2",
-                         ki18n("Metadata Extractor - Find and add metadata for files and resources on the internet"),
+    KAboutData aboutData("nepomuk-webminer",
+                         "nepomuk-webminer",
+                         ki18n("Nepomuk-WebMiner"),
+                         "0.3",
+                         ki18n("Nepomuk-WebMiner - Harvest and add metadata for files and resources on the internet"),
                          KAboutData::License_GPL,
                          ki18n("(c) 2012, Jörg Ehrichs"),
                          KLocalizedString(),
@@ -60,25 +60,25 @@ int main(int argc, char *argv[])
     options.add("+url", ki18n("The input url to the file/folder, website or nepomuk resource."));
 
     options.add("", ki18n("Some Examples:\n"
-                          "\tmetadataextractor ~/Documents\n"
-                          "\tmetadataextractor -a -u http://www.imdb.com/title/tt1254207/\n"
-                          "\tmetadataextractor -a -t ~/Videos\n"
-                          "\tmetadataextractor -r nepomuk:/res/eb9bc9e1-707d-47af-952c-d7381480fbcc"));
+                          "\tnepomuk-webminer\" ~/Documents\n"
+                          "\tnepomuk-webminer\" -a -u http://www.imdb.com/title/tt1254207/\n"
+                          "\tnepomuk-webminer\" -a -t ~/Videos\n"
+                          "\tnepomuk-webminer\" -r nepomuk:/res/eb9bc9e1-707d-47af-952c-d7381480fbcc"));
 
     KCmdLineArgs::addCmdLineOptions(options);
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     KApplication app;
 
     if (!args->count() || !args->url(0).isValid()) {
-        KCmdLineArgs::usageError(i18n("No url specified.\nPlease start it with metadataextractor &lt;url&gt;.\n"
-                                      "For example: metadataextractor ~/Documents\n"
-                                      "Or: metadataextractor -tvshow -auto ~/Videos\n"));
+        KCmdLineArgs::usageError(i18n("No url specified.\nPlease start it with nepomuk-webminer\" &lt;url&gt;.\n"
+                                      "For example: nepomuk-webminer\" ~/Documents\n"
+                                      "Or: nepomuk-webminer\" -tvshow -auto ~/Videos\n"));
         return 0;
     }
 
 
     if (args->isSet("auto")) {
-        NepomukMetaDataExtractor::UI::AutomaticFetcher af;
+        NepomukWebMiner::UI::AutomaticFetcher af;
 
         QObject::connect(&af, SIGNAL(finished()), &app, SLOT(quit()));
 
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 
         return app.exec();
     } else {
-        NepomukMetaDataExtractor::UI::FetcherDialog fd;
+        NepomukWebMiner::UI::FetcherDialog fd;
         fd.setForceUpdate(args->isSet("f"));
         fd.setTvShowMode(args->isSet("tvshow"));
         fd.setTvShowNamesInFolders(args->isSet("usefoldernames"));

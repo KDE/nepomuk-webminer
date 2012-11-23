@@ -33,7 +33,7 @@
 
 #include <KDE/KDebug>
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace UI
 {
@@ -46,8 +46,8 @@ public:
 }
 }
 
-NepomukMetaDataExtractor::UI::Fetcher::Fetcher()
-    : d_ptr(new NepomukMetaDataExtractor::UI::FetcherPrivate)
+NepomukWebMiner::UI::Fetcher::Fetcher()
+    : d_ptr(new NepomukWebMiner::UI::FetcherPrivate)
 
 {
     Q_D(Fetcher);
@@ -55,20 +55,20 @@ NepomukMetaDataExtractor::UI::Fetcher::Fetcher()
     d->m_ef = new Extractor::ExtractorFactory;
 }
 
-NepomukMetaDataExtractor::UI::Fetcher::~Fetcher()
+NepomukWebMiner::UI::Fetcher::~Fetcher()
 {
     Q_D(Fetcher);
     delete d->m_re;
     delete d->m_ef;
 }
 
-void NepomukMetaDataExtractor::UI::Fetcher::addFetcherPath(const KUrl &url)
+void NepomukWebMiner::UI::Fetcher::addFetcherPath(const KUrl &url)
 {
     Q_D(Fetcher);
     d->m_re->lookupFiles(url);
 }
 
-void NepomukMetaDataExtractor::UI::Fetcher::addFetcherResource(const KUrl &url)
+void NepomukWebMiner::UI::Fetcher::addFetcherResource(const KUrl &url)
 {
     Nepomuk2::Resource r = Nepomuk2::Resource::fromResourceUri(url);
 
@@ -77,55 +77,55 @@ void NepomukMetaDataExtractor::UI::Fetcher::addFetcherResource(const KUrl &url)
     }
 }
 
-void NepomukMetaDataExtractor::UI::Fetcher::addFetcherResource(const Nepomuk2::Resource &resource)
+void NepomukWebMiner::UI::Fetcher::addFetcherResource(const Nepomuk2::Resource &resource)
 {
     Q_D(Fetcher);
     d->m_re->lookupResource(resource);
 }
 
-void NepomukMetaDataExtractor::UI::Fetcher::addFetcherResource(const QList<Nepomuk2::Resource> &resources)
+void NepomukWebMiner::UI::Fetcher::addFetcherResource(const QList<Nepomuk2::Resource> &resources)
 {
     Q_D(Fetcher);
     d->m_re->lookupResource(resources);
 }
 
-void NepomukMetaDataExtractor::UI::Fetcher::setForceUpdate(bool update)
+void NepomukWebMiner::UI::Fetcher::setForceUpdate(bool update)
 {
     Q_D(Fetcher);
     d->m_re->setForceUpdate(update);
 }
 
-void NepomukMetaDataExtractor::UI::Fetcher::setTvShowMode(bool tvshowMode)
+void NepomukWebMiner::UI::Fetcher::setTvShowMode(bool tvshowMode)
 {
     Q_D(Fetcher);
     d->m_re->setTvShowMode(tvshowMode);
 }
 
-void NepomukMetaDataExtractor::UI::Fetcher::setTvShowNamesInFolders(bool useFolderNames)
+void NepomukWebMiner::UI::Fetcher::setTvShowNamesInFolders(bool useFolderNames)
 {
     Q_D(Fetcher);
     d->m_re->setTvShowNamesInFolders(useFolderNames);
 }
 
-void NepomukMetaDataExtractor::UI::Fetcher::setMovieMode(bool movieMode)
+void NepomukWebMiner::UI::Fetcher::setMovieMode(bool movieMode)
 {
     Q_D(Fetcher);
     d->m_re->setMovieMode(movieMode);
 }
 
-NepomukMetaDataExtractor::Extractor::ResourceExtractor *NepomukMetaDataExtractor::UI::Fetcher::resourceExtractor()
+NepomukWebMiner::Extractor::ResourceExtractor *NepomukWebMiner::UI::Fetcher::resourceExtractor()
 {
     Q_D(Fetcher);
     return d->m_re;
 }
 
-NepomukMetaDataExtractor::Extractor::ExtractorFactory* NepomukMetaDataExtractor::UI::Fetcher::extractorFactory()
+NepomukWebMiner::Extractor::ExtractorFactory* NepomukWebMiner::UI::Fetcher::extractorFactory()
 {
     Q_D(Fetcher);
     return d->m_ef;
 }
 
-void NepomukMetaDataExtractor::UI::Fetcher::addResourceUriToMetaData(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp)
+void NepomukWebMiner::UI::Fetcher::addResourceUriToMetaData(NepomukWebMiner::Extractor::MetaDataParameters *mdp)
 {
     // For tv shows put the resource uri into the Episode part of the MetaData
     // this way around it is possible to use the TvShowPipe with more episode/files at once
@@ -172,7 +172,7 @@ void NepomukMetaDataExtractor::UI::Fetcher::addResourceUriToMetaData(NepomukMeta
     mdp->setMetaData(savedMetaData);
 }
 
-void NepomukMetaDataExtractor::UI::Fetcher::saveMetaData(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp) const
+void NepomukWebMiner::UI::Fetcher::saveMetaData(NepomukWebMiner::Extractor::MetaDataParameters *mdp) const
 {
     QString type = mdp->resourceType();
 
@@ -207,7 +207,7 @@ bool distanceLessThan(const QVariant &l1, const QVariant &l2)
     return d1 < d2;
 }
 
-QVariantList NepomukMetaDataExtractor::UI::Fetcher::setLevenshteinDistance(const QVariantList &searchResults, NepomukMetaDataExtractor::Extractor::MetaDataParameters *currentItem, uint skipValue)
+QVariantList NepomukWebMiner::UI::Fetcher::setLevenshteinDistance(const QVariantList &searchResults, NepomukWebMiner::Extractor::MetaDataParameters *currentItem, uint skipValue)
 {
     QString type = currentItem->resourceType();
     QString checkString;
@@ -255,7 +255,7 @@ QVariantList NepomukMetaDataExtractor::UI::Fetcher::setLevenshteinDistance(const
      return sortedList;
 }
 
-uint NepomukMetaDataExtractor::UI::Fetcher::levenshteinDistance(const QString &s1, const QString & s2)
+uint NepomukWebMiner::UI::Fetcher::levenshteinDistance(const QString &s1, const QString & s2)
 {
     const uint len1 = s1.size();
     const uint len2 = s2.size();

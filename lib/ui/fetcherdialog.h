@@ -27,7 +27,7 @@
 #include <QtCore/QModelIndex>
 
 #include <KDE/KUrl>
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
 
 // for the fetcherdialog.ui file
@@ -37,7 +37,7 @@ namespace Ui
 class FetcherDialog;
 }
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace UI
 {
@@ -49,7 +49,7 @@ class FetcherDialogPrivate;
  * Some examples how to use this class:
 @code
 QUrl someFolder = ...
-NepomukMetaDataExtractor::UI::FetcherDialog fd;
+NepomukWebMiner::UI::FetcherDialog fd;
 
 fd.setTvShowMode( true );
 fd.setTvShowNamesInFolders( true );
@@ -59,14 +59,14 @@ fd.exec();
 
 @code
 QList<Nepomuk2::Resource> resources = ...
-NepomukMetaDataExtractor::UI::FetcherDialog fd;
+NepomukWebMiner::UI::FetcherDialog fd;
 
 fd.setForceUpdate( true );
 fd.addFetcherResource( someFolder );
 fd.exec();
 @endcode
   */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT FetcherDialog : public QDialog, public Fetcher, private Ui::FetcherDialog
+class NEPOMUKWEBMINER_EXPORT FetcherDialog : public QDialog, public Fetcher, private Ui::FetcherDialog
 {
     Q_OBJECT
 

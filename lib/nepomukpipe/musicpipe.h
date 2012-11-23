@@ -22,9 +22,9 @@
 #define MUSICPIPE_H
 
 #include "nepomukpipe.h"
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Pipe
 {
@@ -59,7 +59,7 @@ class MusicPipePrivate;
  * The @c cover won't be downloaded and added if it disabeld in the metadata KConfig.
  * The location of the cover can be configured as well, either next to the music file or in the data fodler of the library
  */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT MusicPipe : public NepomukPipe
+class NEPOMUKWEBMINER_EXPORT MusicPipe : public NepomukPipe
 {
 public:
     /**

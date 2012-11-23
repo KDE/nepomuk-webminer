@@ -24,14 +24,14 @@
 #include <QtCore/QObject>
 #include <KDE/KUrl>
 
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
 namespace Nepomuk2
 {
 class Resource;
 }
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -52,7 +52,7 @@ class ResourceExtractorPrivate;
   * This Extractor keeps a list of all files that must be processed.
   * You can get the list via resourcesList() and pop the next entry from takeNext()
   */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT ResourceExtractor : public QObject
+class NEPOMUKWEBMINER_EXPORT ResourceExtractor : public QObject
 {
     Q_OBJECT
 public:
@@ -132,7 +132,7 @@ public:
       *
       * To get the type of resource check the resourceType parameter
       */
-    QList<NepomukMetaDataExtractor::Extractor::MetaDataParameters *> resourcesList();
+    QList<NepomukWebMiner::Extractor::MetaDataParameters *> resourcesList();
 
     /**
      * @brief Removes the first element in the lookup list and returns it
@@ -140,7 +140,7 @@ public:
      * The caller needs to delete the object if it is not needed anymore
      * @return next file to process
      */
-    NepomukMetaDataExtractor::Extractor::MetaDataParameters *takeNext();
+    NepomukWebMiner::Extractor::MetaDataParameters *takeNext();
 
 Q_SIGNALS:
     /**
@@ -173,7 +173,7 @@ private:
      * @return @arg true if the file mimetype is supported
      *         @arg false if the mimetype is not supported
      */
-    bool fileChecker(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl);
+    bool fileChecker(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl);
 
     /**
      * @brief Checks the Ontology Type <i>(Movie/Publication etc)</i> and calls the correct extractor for further processing
@@ -182,7 +182,7 @@ private:
      * @return @arg true if the file mimetype is supported
      *         @arg false if the mimetype is not supported
      */
-    bool resourceChecker(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const Nepomuk2::Resource &resource);
+    bool resourceChecker(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const Nepomuk2::Resource &resource);
 
     Q_DECLARE_PRIVATE(ResourceExtractor)
     ResourceExtractorPrivate *const d_ptr; /**< d-pointer for this class */

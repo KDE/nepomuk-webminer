@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "metadataextractorplugin.h"
+#include "nepomukwebminerplugin.h"
 
 #include <KDE/KPluginFactory>
 #include <KDE/KPluginLoader>
@@ -38,22 +38,22 @@
 
 #include <KDE/KDebug>
 
-using namespace NepomukMetaDataExtractor;
+using namespace NepomukWebMiner;
 using namespace Extractor;
 
-static const KAboutData aboutdata("metadataextractorplugin", 0, ki18n("MetaDataExtractorPlugin Settings") , "0.2");
+static const KAboutData aboutdata("nepomukwebminerplugin", 0, ki18n("NepomukWebMiner Settings") , "0.3");
 
-K_PLUGIN_FACTORY(MetaDataExtractorPluginFactory, registerPlugin<MetaDataExtractorPlugin>();)
-K_EXPORT_PLUGIN(MetaDataExtractorPluginFactory(aboutdata))
+K_PLUGIN_FACTORY(NepomukWebMinerPluginFactory, registerPlugin<NepomukWebMinerPlugin>();)
+K_EXPORT_PLUGIN(NepomukWebMinerPluginFactory(aboutdata))
 
-MetaDataExtractorPlugin::MetaDataExtractorPlugin(QObject *parent, const QVariantList &args)
+NepomukWebMinerPlugin::NepomukWebMinerPlugin(QObject *parent, const QVariantList &args)
     : KParts::Plugin(parent),
       extractionInProgress(false)
 {
     Q_UNUSED(args);
 
     // Initialize plugin
-    setComponentData(MetaDataExtractorPluginFactory::componentData());
+    setComponentData(NepomukWebMinerPluginFactory::componentData());
 
     m_Part = dynamic_cast<KParts::ReadOnlyPart *>(parent);
     if (!m_Part) {
@@ -67,12 +67,12 @@ MetaDataExtractorPlugin::MetaDataExtractorPlugin(QObject *parent, const QVariant
 
 }
 
-MetaDataExtractorPlugin::~MetaDataExtractorPlugin()
+NepomukWebMinerPlugin::~NepomukWebMinerPlugin()
 {
     delete m_ef;
 }
 
-void MetaDataExtractorPlugin::lateInitialization()
+void NepomukWebMinerPlugin::lateInitialization()
 {
     kDebug() << "late initialization";
     disconnect(m_Part, SIGNAL(completed()), this, SLOT(lateInitialization()));
@@ -93,7 +93,7 @@ void MetaDataExtractorPlugin::lateInitialization()
     urlSwitched();
 }
 
-void MetaDataExtractorPlugin::urlSwitched()
+void NepomukWebMinerPlugin::urlSwitched()
 {
     // check if current url is supported by one of the plugins
     QUrl url = m_Part->url();
@@ -108,7 +108,7 @@ void MetaDataExtractorPlugin::urlSwitched()
     }
 }
 
-void MetaDataExtractorPlugin::extract()
+void NepomukWebMinerPlugin::extract()
 {
     if (extractionInProgress) {
         kDebug() << "extraction already in progress";
@@ -130,7 +130,7 @@ void MetaDataExtractorPlugin::extract()
     }
 }
 
-void MetaDataExtractorPlugin::pushDataToNepomuk(const QString &resourceType, const QVariantMap &entry)
+void NepomukWebMinerPlugin::pushDataToNepomuk(const QString &resourceType, const QVariantMap &entry)
 {
     kDebug() << "finished Item fetching, push to nepomuk";
 

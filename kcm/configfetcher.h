@@ -28,7 +28,7 @@ namespace Ui
 class ConfigFetcher;
 }
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -49,7 +49,7 @@ public:
     explicit ConfigFetcher(QWidget *parent = 0);
     ~ConfigFetcher();
 
-    void setExtractorFactory(NepomukMetaDataExtractor::Extractor::ExtractorFactory  *ef);
+    void setExtractorFactory(NepomukWebMiner::Extractor::ExtractorFactory  *ef);
 
 signals:
     void configChanged(bool changed);
@@ -62,7 +62,7 @@ public slots:
 private:
     void setupUi();
     Ui::ConfigFetcher *ui;
-    NepomukMetaDataExtractor::Extractor::ExtractorFactory  *extractorFactory;
+    NepomukWebMiner::Extractor::ExtractorFactory  *extractorFactory;
 };
 
 }

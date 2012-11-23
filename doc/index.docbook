@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
-  <!ENTITY kappname "<application>Metadata Extractor</application>">
+  <!ENTITY kappname "<application>Nepomuk-WebMiner</application>">
   <!ENTITY package "kcontrol">
   <!ENTITY kappversion "0.3"><!--Application version. Use this variable everywhere it's needed.-->
   <!ENTITY % addindex "IGNORE">
@@ -46,7 +46,7 @@
     <chapter id="introduction">
     <title>Introduction</title>
     <para>
-        The Nepomuk &kappname; finds additional metadata on the internet <emphasis>(via Python plugins)</emphasis> and adds them to Nepomuk.
+        The &kappname; finds additional metadata on the internet <emphasis>(via Python plugins)</emphasis> and adds them to Nepomuk.
         It can retrieve data for any document/movie/TV show or music file.
     </para>
     </chapter>

@@ -1,9 +1,9 @@
 [Desktop Entry]
 Type=Service
 X-KDE-ServiceTypes=NepomukService
-X-KDE-Library=metadataextractorservice
+X-KDE-Library=nepomuk-webminerservice
 X-KDE-Nepomuk-autostart=true
-Name=Nepomuk Meta Data Extractor Service
+Name=Nepomuk-WebMiner Service
 Name[da]=Nepomuk-tjeneste til udtræk af metadata
 Name[es]=Servicio extractor de metadatos de Nepomuk
 Name[et]=Nepomuki metaandmete ekstraktimise teenus
@@ -15,5 +15,5 @@ Name[pt_BR]=Serviço de extração de metadados do Nepomuk
 Name[sk]=Služba extraktora metadát Nepomuk
 Name[sv]=Tjänst för extrahering av Nepomuk metadata
 Name[uk]=Служба видобування метаданих Nepomuk
-Name[x-test]=xxNepomuk Meta Data Extractor Servicexx
+Name[x-test]=xxNepomuk-WebMiner Servicexx
 

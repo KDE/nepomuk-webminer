@@ -23,9 +23,9 @@
 
 #include <Nepomuk2/Resource>
 
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -45,7 +45,7 @@ class FetcherPrivate;
  * Calls the resource extractor to get additional information.
  * Keeps a list of all items that have to be checked.
  */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT Fetcher
+class NEPOMUKWEBMINER_EXPORT Fetcher
 {
 public:
     explicit Fetcher();
@@ -121,14 +121,14 @@ protected:
      *
      * @return the ResourceExtractor
      */
-    NepomukMetaDataExtractor::Extractor::ResourceExtractor *resourceExtractor();
+    NepomukWebMiner::Extractor::ResourceExtractor *resourceExtractor();
 
     /**
      * @brief Returns the ExtractorFactory that handles all available plugins which can be used to fetch metadata from the web
      *
      * @return the ExtractorFactory
      */
-    NepomukMetaDataExtractor::Extractor::ExtractorFactory  *extractorFactory();
+    NepomukWebMiner::Extractor::ExtractorFactory  *extractorFactory();
 
     /**
      * @brief Little helper function for the correct resourceuri handling of tvshows
@@ -139,7 +139,7 @@ protected:
      * This allows to use the tvshow pipe with a QVariantMap that adds many episodes conected to many different files at once
      * @param mdp the MetaDataParameters which should be updated
      */
-    void addResourceUriToMetaData(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp);
+    void addResourceUriToMetaData(NepomukWebMiner::Extractor::MetaDataParameters *mdp);
 
     /**
      * @brief Calls the correct NepomukPipe to save the QVariantMap into nepomuk
@@ -162,7 +162,7 @@ protected:
      *
      * @return sorted searchResults, with best result first
      */
-    QVariantList setLevenshteinDistance(const QVariantList &searchResults, NepomukMetaDataExtractor::Extractor::MetaDataParameters *currentItem, uint skipValue);
+    QVariantList setLevenshteinDistance(const QVariantList &searchResults, NepomukWebMiner::Extractor::MetaDataParameters *currentItem, uint skipValue);
 
     /**
      * @brief calculates the levenshteinDistance

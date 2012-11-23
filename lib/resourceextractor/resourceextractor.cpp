@@ -47,7 +47,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QFileInfoList>
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -64,37 +64,37 @@ public:
 }
 }
 
-NepomukMetaDataExtractor::Extractor::ResourceExtractor::ResourceExtractor(QObject *parent)
+NepomukWebMiner::Extractor::ResourceExtractor::ResourceExtractor(QObject *parent)
     : QObject(parent)
-    , d_ptr(new NepomukMetaDataExtractor::Extractor::ResourceExtractorPrivate)
+    , d_ptr(new NepomukWebMiner::Extractor::ResourceExtractorPrivate)
 {
 }
 
-void NepomukMetaDataExtractor::Extractor::ResourceExtractor::setForceUpdate(bool update)
+void NepomukWebMiner::Extractor::ResourceExtractor::setForceUpdate(bool update)
 {
     Q_D(ResourceExtractor);
     d->forceUpdate = update;
 }
 
-void NepomukMetaDataExtractor::Extractor::ResourceExtractor::setTvShowMode(bool tvshowmode)
+void NepomukWebMiner::Extractor::ResourceExtractor::setTvShowMode(bool tvshowmode)
 {
     Q_D(ResourceExtractor);
     d->tvShowMode = tvshowmode;
 }
 
-void NepomukMetaDataExtractor::Extractor::ResourceExtractor::setTvShowNamesInFolders(bool useFolderNames)
+void NepomukWebMiner::Extractor::ResourceExtractor::setTvShowNamesInFolders(bool useFolderNames)
 {
     Q_D(ResourceExtractor);
     d->useTvShowFolderNames = useFolderNames;
 }
 
-void NepomukMetaDataExtractor::Extractor::ResourceExtractor::setMovieMode(bool moviemode)
+void NepomukWebMiner::Extractor::ResourceExtractor::setMovieMode(bool moviemode)
 {
     Q_D(ResourceExtractor);
     d->movieShowMode = moviemode;
 }
 
-void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupFiles(const KUrl &fileOrFolder)
+void NepomukWebMiner::Extractor::ResourceExtractor::lookupFiles(const KUrl &fileOrFolder)
 {
     Q_D(ResourceExtractor);
     if (!d->baseCallUrl.isValid()) {
@@ -132,7 +132,7 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupFiles(const K
     emit resourceExtarctionDone();
 }
 
-void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(const Nepomuk2::Resource &resource)
+void NepomukWebMiner::Extractor::ResourceExtractor::lookupResource(const Nepomuk2::Resource &resource)
 {
     Q_D(ResourceExtractor);
 
@@ -165,7 +165,7 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(cons
     emit resourceExtarctionDone();
 }
 
-void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(const QList<Nepomuk2::Resource> &resources)
+void NepomukWebMiner::Extractor::ResourceExtractor::lookupResource(const QList<Nepomuk2::Resource> &resources)
 {
     foreach (const Nepomuk2::Resource & nr, resources) {
         lookupResource(nr);
@@ -174,14 +174,14 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::lookupResource(cons
     emit resourceExtarctionDone();
 }
 
-QList<NepomukMetaDataExtractor::Extractor::MetaDataParameters *> NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourcesList()
+QList<NepomukWebMiner::Extractor::MetaDataParameters *> NepomukWebMiner::Extractor::ResourceExtractor::resourcesList()
 {
     Q_D(ResourceExtractor);
 
     return d->resourcesToLookup;
 }
 
-NepomukMetaDataExtractor::Extractor::MetaDataParameters *NepomukMetaDataExtractor::Extractor::ResourceExtractor::takeNext()
+NepomukWebMiner::Extractor::MetaDataParameters *NepomukWebMiner::Extractor::ResourceExtractor::takeNext()
 {
     Q_D(ResourceExtractor);
 
@@ -191,7 +191,7 @@ NepomukMetaDataExtractor::Extractor::MetaDataParameters *NepomukMetaDataExtracto
         return d->resourcesToLookup.takeFirst();
 }
 
-void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(const KUrl &fileUrl)
+void NepomukWebMiner::Extractor::ResourceExtractor::addFilesToList(const KUrl &fileUrl)
 {
     Q_D(ResourceExtractor);
     Nepomuk2::File fileResource(fileUrl);
@@ -221,7 +221,7 @@ void NepomukMetaDataExtractor::Extractor::ResourceExtractor::addFilesToList(cons
     d->resourcesToLookup.append(metaDataParameters);
 }
 
-bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::fileChecker(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl)
+bool NepomukWebMiner::Extractor::ResourceExtractor::fileChecker(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl)
 {
     Q_D(ResourceExtractor);
     KSharedPtr<KMimeType> kmt = KMimeType::findByUrl(fileUrl);
@@ -246,7 +246,7 @@ bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::fileChecker(Nepomuk
     return true;
 }
 
-bool NepomukMetaDataExtractor::Extractor::ResourceExtractor::resourceChecker(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const Nepomuk2::Resource &resource)
+bool NepomukWebMiner::Extractor::ResourceExtractor::resourceChecker(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const Nepomuk2::Resource &resource)
 {
     Nepomuk2::Resource queryResource;
 

@@ -36,31 +36,31 @@
 
 #include <KDE/KDebug>
 
-using namespace NepomukMetaDataExtractor::Extractor;
+using namespace NepomukWebMiner::Extractor;
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
 class ExtractorFactoryPrivate
 {
 public:
-    QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> availableScripts;
-    QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> failedScripts;
-    QList<NepomukMetaDataExtractor::Extractor::WebExtractor*> existingExtractors;
+    QList<NepomukWebMiner::Extractor::WebExtractor::Info> availableScripts;
+    QList<NepomukWebMiner::Extractor::WebExtractor::Info> failedScripts;
+    QList<NepomukWebMiner::Extractor::WebExtractor*> existingExtractors;
 };
 }
 }
 
-NepomukMetaDataExtractor::Extractor::ExtractorFactory::ExtractorFactory(QObject *parent)
+NepomukWebMiner::Extractor::ExtractorFactory::ExtractorFactory(QObject *parent)
     : QObject(parent)
-    , d_ptr(new NepomukMetaDataExtractor::Extractor::ExtractorFactoryPrivate)
+    , d_ptr(new NepomukWebMiner::Extractor::ExtractorFactoryPrivate)
 
 {
     loadScriptInfo();
 }
 
-NepomukMetaDataExtractor::Extractor::ExtractorFactory::~ExtractorFactory()
+NepomukWebMiner::Extractor::ExtractorFactory::~ExtractorFactory()
 {
     Q_D(ExtractorFactory);
     while (!d->existingExtractors.isEmpty()) {
@@ -69,7 +69,7 @@ NepomukMetaDataExtractor::Extractor::ExtractorFactory::~ExtractorFactory()
     }
 }
 
-NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::getExtractor(const QString &webEngine)
+NepomukWebMiner::Extractor::WebExtractor *NepomukWebMiner::Extractor::ExtractorFactory::getExtractor(const QString &webEngine)
 {
     Q_D(ExtractorFactory);
 
@@ -96,7 +96,7 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
     return 0;
 }
 
-NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Extractor::ExtractorFactory::getExtractor(const QUrl &uri)
+NepomukWebMiner::Extractor::WebExtractor *NepomukWebMiner::Extractor::ExtractorFactory::getExtractor(const QUrl &uri)
 {
     Q_D(ExtractorFactory);
 
@@ -126,7 +126,7 @@ NepomukMetaDataExtractor::Extractor::WebExtractor *NepomukMetaDataExtractor::Ext
     return 0;
 }
 
-QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> NepomukMetaDataExtractor::Extractor::ExtractorFactory::listAvailablePlugins(const QString &type)
+QList<NepomukWebMiner::Extractor::WebExtractor::Info> NepomukWebMiner::Extractor::ExtractorFactory::listAvailablePlugins(const QString &type)
 {
     Q_D(ExtractorFactory);
 
@@ -141,7 +141,7 @@ QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> NepomukMetaDataEx
     return pluginList;
 }
 
-QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> NepomukMetaDataExtractor::Extractor::ExtractorFactory::listFailedPlugins(const QString &type)
+QList<NepomukWebMiner::Extractor::WebExtractor::Info> NepomukWebMiner::Extractor::ExtractorFactory::listFailedPlugins(const QString &type)
 {
     Q_D(ExtractorFactory);
 
@@ -156,7 +156,7 @@ QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> NepomukMetaDataEx
     return pluginList;
 }
 
-void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
+void NepomukWebMiner::Extractor::ExtractorFactory::loadScriptInfo()
 {
     Q_D(ExtractorFactory);
 
@@ -172,7 +172,7 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
     Kross::Action action(this, "ExtractorFactory");
     QStringList pluginDirs;
 
-    pluginDirs << KStandardDirs::locate("data", "nepomukmetadataextractor/plugins/");
+    pluginDirs << KStandardDirs::locate("data", "nepomuk-webminer/plugins/");
     if(!MDESettings::additionalPluginFolder().isEmpty()) {
         pluginDirs << MDESettings::additionalPluginFolder();
     }
@@ -187,7 +187,7 @@ void NepomukMetaDataExtractor::Extractor::ExtractorFactory::loadScriptInfo()
         }
     }
 
-    KConfig config("nepomukmetadataextractorrc");
+    KConfig config("nepomuk-webminerrc");
 
     foreach (const QFileInfo & fileInfo, pluginList) {
 

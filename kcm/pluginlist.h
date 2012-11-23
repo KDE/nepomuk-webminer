@@ -31,7 +31,7 @@ namespace Ui
 class PluginList;
 }
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -51,7 +51,7 @@ public:
     explicit PluginList(QWidget *parent = 0);
     ~PluginList();
 
-    void setExtractorFactory(NepomukMetaDataExtractor::Extractor::ExtractorFactory  *ef);
+    void setExtractorFactory(NepomukWebMiner::Extractor::ExtractorFactory  *ef);
 
 private slots:
     void updateButtons(QListWidgetItem*);
@@ -61,9 +61,9 @@ private slots:
 private:
     void setupUi();
     Ui::PluginList *ui;
-    NepomukMetaDataExtractor::Extractor::ExtractorFactory  *extractorFactory;
+    NepomukWebMiner::Extractor::ExtractorFactory  *extractorFactory;
     QString selectedPlugin;
-    QList<NepomukMetaDataExtractor::Extractor::WebExtractor::Info> failedPlugins;
+    QList<NepomukWebMiner::Extractor::WebExtractor::Info> failedPlugins;
 
 };
 

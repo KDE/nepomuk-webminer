@@ -26,9 +26,9 @@
 #include <QtCore/QObject>
 #include <KDE/KUrl>
 
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -52,7 +52,7 @@ class AutomaticFetcherPrivate;
  * Some examples how to use this class:
 @code
 QUrl someFolder = ...
-NepomukMetaDataExtractor::UI::AutomaticFetcher af;
+NepomukWebMiner::UI::AutomaticFetcher af;
 
 af.addFetcherPath( someFolder );
 af.startUrlFetcher();
@@ -60,13 +60,13 @@ af.startUrlFetcher();
 
 @code
 QList<Nepomuk2::Resource> resources = ...
-NepomukMetaDataExtractor::UI::AutomaticFetcher af;
+NepomukWebMiner::UI::AutomaticFetcher af;
 
 af.addFetcherResource( someFolder );
 af.startUrlFetcher();
 @endcode
  */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT AutomaticFetcher : public QObject, public Fetcher
+class NEPOMUKWEBMINER_EXPORT AutomaticFetcher : public QObject, public Fetcher
 {
     Q_OBJECT
 public:

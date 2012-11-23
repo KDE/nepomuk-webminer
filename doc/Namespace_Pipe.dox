@@ -1,4 +1,4 @@
-/** \namespace NepomukMetaDataExtractor::Pipe
+/** \namespace NepomukWebMiner::Pipe
 
 \brief The Pipe namespace contains all classes relevant to pipe @c QVariant data into @c Nepomuk
 

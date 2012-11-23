@@ -27,9 +27,9 @@
 
 #include <KDE/KUrl>
 
-#include "nepomukmetadataextractor_export.h"
+#include "nepomukwebminer_export.h"
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -55,7 +55,7 @@ class MetaDataParameters;
   * @todo TODO: parse also file meta data not only the filename (does there exist something like ID3 tags?)
   * @todo TODO: the regexp mechanism is likely to fail, needs some better checks in here
   */
-class NEPOMUKMETADATAEXTRACTOR_EXPORT VideoExtractor : public QObject
+class NEPOMUKWEBMINER_EXPORT VideoExtractor : public QObject
 {
     Q_OBJECT
 public:
@@ -97,7 +97,7 @@ public:
      * @param baseUrl the base folder url. Helps to identify tvshow names of upper level folders
      * @param fileUrl the url of the file on the harddrive
      */
-    void parseUrl(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl = KUrl());
+    void parseUrl(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl = KUrl());
 
 private:
     /**
@@ -109,7 +109,7 @@ private:
      * @return @arg true if regexp matched some case
      *         @arg false if nothing matched
      */
-    bool parseTvShowFolder(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl = KUrl());
+    bool parseTvShowFolder(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl, const KUrl &baseUrl = KUrl());
 
     /**
      * @brief Parse a TvShow at a given fileurl
@@ -119,7 +119,7 @@ private:
      * @return @arg true if regexp matched some case
      *         @arg false if nothing matched
      */
-    bool parseTvShowFileName(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const QString &fileName);
+    bool parseTvShowFileName(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const QString &fileName);
 
     /**
      * @brief Parse a Movie at a given fileurl
@@ -129,7 +129,7 @@ private:
      * @return @arg true if regexp matched some case
      *         @arg false if nothing matched
      */
-    bool parseMovieFileName(NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp, const QString &fileName);
+    bool parseMovieFileName(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const QString &fileName);
 
     Q_DECLARE_PRIVATE(VideoExtractor)
     VideoExtractorPrivate *const d_ptr; /**< d-pointer for this class */

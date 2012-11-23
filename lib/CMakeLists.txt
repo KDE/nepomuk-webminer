@@ -2,7 +2,7 @@
 # -------------------------------------------
 # create the extractor library part
 # -------------------------------------------
-set( nepomukextractor_LIB_SRCS
+set( nepomuk-webminer_LIB_SRCS
 
   metadataparameters.cpp
 
@@ -31,16 +31,16 @@ set( nepomukextractor_LIB_SRCS
   ui/metadatawidget.cpp
 )
 
-kde4_add_ui_files( nepomukextractor_LIB_SRCS
+kde4_add_ui_files( nepomuk-webminer_LIB_SRCS
                    ui/fetcherdialog.ui
 )
 
-kde4_add_kcfg_files(nepomukextractor_LIB_SRCS mdesettings.kcfgc)
-install(FILES nepomukmetadataextractor.kcfg DESTINATION ${KCFG_INSTALL_DIR})
+kde4_add_kcfg_files(nepomuk-webminer_LIB_SRCS mdesettings.kcfgc)
+install(FILES nepomuk-webminer.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 
-kde4_add_library( nepomukmetadataextractor SHARED ${nepomukextractor_LIB_SRCS} )
+kde4_add_library( nepomuk-webminerlib SHARED ${nepomuk-webminer_LIB_SRCS} )
 
-target_link_libraries( nepomukmetadataextractor
+target_link_libraries( nepomuk-webminerlib
 
   nbibontology
 
@@ -62,14 +62,14 @@ target_link_libraries( nepomukmetadataextractor
   ${qjson_LIBRARIES}
 )
 
-set_target_properties( nepomukmetadataextractor
+set_target_properties( nepomuk-webminerlib
   PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 
-install( TARGETS nepomukmetadataextractor ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install( TARGETS nepomuk-webminerlib ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-set( nepomukmetadataextractor_LIB_HDRS
-  nepomukmetadataextractor_export.h
+set( nepomuk-webminer_LIB_HDRS
+  nepomukwebminer_export.h
   metadataparameters.h
 
   resourceextractor/resourceextractor.h
@@ -96,10 +96,10 @@ set( nepomukmetadataextractor_LIB_HDRS
   ${CMAKE_CURRENT_BINARY_DIR}/ui_fetcherdialog.h
 )
 
-install( FILES ${nepomukmetadataextractor_LIB_HDRS}
-  DESTINATION ${INCLUDE_INSTALL_DIR}/nepomukmetadataextractor
+install( FILES ${nepomuk-webminer_LIB_HDRS}
+  DESTINATION ${INCLUDE_INSTALL_DIR}/nepomuk-webminer
   COMPONENT Devel
 )
 
-install(DIRECTORY webextractor/plugins DESTINATION ${DATA_INSTALL_DIR}/nepomukmetadataextractor)
+install(DIRECTORY webextractor/plugins DESTINATION ${DATA_INSTALL_DIR}/nepomuk-webminer)
 

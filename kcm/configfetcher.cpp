@@ -28,7 +28,7 @@
 
 #include <KDE/KDebug>
 
-using namespace NepomukMetaDataExtractor;
+using namespace NepomukWebMiner;
 using namespace Extractor;
 
 ConfigFetcher::ConfigFetcher(QWidget *parent) :
@@ -43,7 +43,7 @@ ConfigFetcher::~ConfigFetcher()
     delete ui;
 }
 
-void ConfigFetcher::setExtractorFactory(NepomukMetaDataExtractor::Extractor::ExtractorFactory  *ef)
+void ConfigFetcher::setExtractorFactory(NepomukWebMiner::Extractor::ExtractorFactory  *ef)
 {
     extractorFactory = ef;
     setupUi();

@@ -28,7 +28,7 @@
 
 class QStandardItem;
 
-namespace NepomukMetaDataExtractor
+namespace NepomukWebMiner
 {
 namespace Extractor
 {
@@ -59,7 +59,7 @@ public:
      *
      * @param mdp the object that will be shown
      */
-    void setMetaDataParameter(const NepomukMetaDataExtractor::Extractor::MetaDataParameters *mdp);
+    void setMetaDataParameter(const NepomukWebMiner::Extractor::MetaDataParameters *mdp);
 
     /**
      * @brief Shows a spinner icon to indicate that the data fetching is in progress
