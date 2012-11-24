@@ -4,16 +4,4 @@ X-KDE-ServiceTypes=NepomukService
 X-KDE-Library=nepomuk-webminerservice
 X-KDE-Nepomuk-autostart=true
 Name=Nepomuk-WebMiner Service
-Name[da]=Nepomuk-tjeneste til udtræk af metadata
-Name[es]=Servicio extractor de metadatos de Nepomuk
-Name[et]=Nepomuki metaandmete ekstraktimise teenus
-Name[fr]=Service d'extraction de métadonnées pour Nepomuk
-Name[hu]=Nepomuk metaadat kinyerő szolgáltatás
-Name[nl]=Service van Nepomuk voor Extraheren van metagegevens
-Name[pt]=Serviço de Extracção de Meta-Dados do Nepomuk
-Name[pt_BR]=Serviço de extração de metadados do Nepomuk
-Name[sk]=Služba extraktora metadát Nepomuk
-Name[sv]=Tjänst för extrahering av Nepomuk metadata
-Name[uk]=Служба видобування метаданих Nepomuk
-Name[x-test]=xxNepomuk-WebMiner Servicexx
 
