@@ -26,21 +26,45 @@ Icon=nepomuk
 
 [Desktop Action mdfetcher]
 Name=Harvest meta data for this file or folder
+Name[da]=Høst metadata for denne fil eller mappe
+Name[hu]=Metaadat begyűjtése ehhez a fájlhoz vagy mappához
+Name[nl]=Metagegevens voor dit bestand of map oogsten
+Name[sk]=Zbierať metadáta pre tento súbor alebo priečinok
+Name[uk]=Зібрати метадані для цього файла або теки
+Name[x-test]=xxHarvest meta data for this file or folderxx
 Icon=nepomuk
 Exec=nepomuk-webminer %f
 
 [Desktop Action mdfetcher2]
 Name=Harvest meta data for this file or folder (automatically)
+Name[da]=Høst metadata for denne fil eller mappe (automatisk)
+Name[hu]=Metaadat begyűjtése ehhez a fájlhoz vagy mappához (automatikusan)
+Name[nl]=Metagegevens voor dit bestand of map oogsten (automatisch)
+Name[sk]=Zbierať metadáta pre tento súbor alebo priečinok (automaticky)
+Name[uk]=Зібрати метадані для цього файла або теки (автоматично)
+Name[x-test]=xxHarvest meta data for this file or folder (automatically)xx
 Icon=nepomuk
 Exec=nepomuk-webminer -a %f
 
 [Desktop Action mdfetcher3]
 Name=Harvest meta data for this file or folder (force download)
+Name[da]=Høst metadata for denne fil eller mappe (gennemtving download)
+Name[hu]=Metaadat begyűjtése ehhez a fájlhoz vagy mappához (letöltés kényszerítése)
+Name[nl]=Metagegevens voor dit bestand of map oogsten (downloaden forceren)
+Name[sk]=Zbierať metadáta pre tento súbor alebo priečinok (vynútiť stiahnutie)
+Name[uk]=Зібрати для цього файла або теки (примусове звантаження)
+Name[x-test]=xxHarvest meta data for this file or folder (force download)xx
 Icon=nepomuk
 Exec=nepomuk-webminer -f %f
 
 
 [Desktop Action mdfetcher4]
 Name=Harvest meta data for this file or folder (automatically, force download)
+Name[da]=Høst metadata for denne fil eller mappe (automatisk, gennemtving download)
+Name[hu]=Metaadat begyűjtése ehhez a fájlhoz vagy mappához (automatikusan, letöltés kényszerítése)
+Name[nl]=Metagegevens voor dit bestand of map oogsten (automatisch, downloaden forceren)
+Name[sk]=Zbierať metadáta pre tento súbor alebo priečinok (automaticky, vynútiť stiahnutie)
+Name[uk]=Зібрати метадані для цього файла або теки (автоматично, примусове звантаження)
+Name[x-test]=xxHarvest meta data for this file or folder (automatically, force download)xx
 Icon=nepomuk
 Exec=nepomuk-webminer -a -f %f
