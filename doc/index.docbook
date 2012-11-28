@@ -92,7 +92,7 @@
       <screeninfo>Screenshot of &kappname;</screeninfo>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="dialog.jpg" format="JPG" />
+                <imagedata fileref="dialog.png" format="PNG" />
               </imageobject>
               <textobject>
                 <phrase>Screenshot of &kappname;</phrase>
