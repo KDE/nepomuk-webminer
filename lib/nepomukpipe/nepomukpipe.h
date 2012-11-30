@@ -86,7 +86,7 @@ public:
     /**
      * @brief Override the KComponentData name used to import the nepomuk data.
      *
-     * This is "metadataextractor" by default always.
+     * This is "nepomuk-webminer" by default always.
      * This could be changed if the NepomukPipe classes are used outside the scope of the automatic data extarction.
      *
      * Helps if all data from one program should be removed (as @c name is the name of the application which data will be removed)

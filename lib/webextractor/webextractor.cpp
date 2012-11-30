@@ -22,7 +22,7 @@
 
 #include <KDE/KGlobal>
 
-static const KCatalogLoader loader("metadataextractor");
+static const KCatalogLoader loader("nepomuk-webminer");
 
 NepomukWebMiner::Extractor::WebExtractor::WebExtractor(QObject *parent)
     : QObject(parent)

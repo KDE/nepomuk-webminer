@@ -56,7 +56,7 @@ NepomukWebMiner::Pipe::NepomukPipe::NepomukPipe(QObject *parent)
     , d_ptr(new NepomukWebMiner::Pipe::NepomukPipePrivate)
 {
     Q_D(NepomukPipe);
-    d->componentname = QLatin1String("metadataextractor");
+    d->componentname = QLatin1String("nepomuk-webminer");
 
 }
 
