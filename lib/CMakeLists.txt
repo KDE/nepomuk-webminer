@@ -29,10 +29,12 @@ set( nepomuk-webminer_LIB_SRCS
   ui/searchresultdelegate.cpp
   ui/automaticfetcher.cpp
   ui/metadatawidget.cpp
+  ui/startupdialog.cpp
 )
 
 kde4_add_ui_files( nepomuk-webminer_LIB_SRCS
                    ui/fetcherdialog.ui
+                   ui/startupdialog.ui
 )
 
 kde4_add_kcfg_files(nepomuk-webminer_LIB_SRCS mdesettings.kcfgc)
@@ -93,6 +95,7 @@ set( nepomuk-webminer_LIB_HDRS
   ui/automaticfetcher.h
   ui/fetcherdialog.h
   ui/metadatawidget.h
+  ui/startupdialog.h
   ${CMAKE_CURRENT_BINARY_DIR}/ui_fetcherdialog.h
 )
 

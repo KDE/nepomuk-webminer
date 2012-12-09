@@ -74,6 +74,8 @@ public:
     explicit FetcherDialog(QWidget *parent = 0);
     ~FetcherDialog();
 
+    bool startFetching(const KUrl url);
+
 private Q_SLOTS:
     /**
      * @brief Starts the KHelpCenter with the metadata extarctor docbook

@@ -42,6 +42,7 @@ class FetcherPrivate
 public:
     Extractor::ResourceExtractor *m_re;
     Extractor::ExtractorFactory *m_ef;
+    bool m_cancel;
 };
 }
 }
@@ -53,6 +54,7 @@ NepomukWebMiner::UI::Fetcher::Fetcher()
     Q_D(Fetcher);
     d->m_re = new Extractor::ResourceExtractor;
     d->m_ef = new Extractor::ExtractorFactory;
+    d->m_cancel = false;
 }
 
 NepomukWebMiner::UI::Fetcher::~Fetcher()

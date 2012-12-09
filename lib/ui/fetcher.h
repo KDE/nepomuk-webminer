@@ -115,7 +115,6 @@ public:
      */
     void setMovieMode(bool movieMode);
 
-protected:
     /**
      * @brief Returns the ResourceExtractor that keeps a list of all resource which need to be checked
      *
@@ -130,6 +129,7 @@ protected:
      */
     NepomukWebMiner::Extractor::ExtractorFactory  *extractorFactory();
 
+protected:
     /**
      * @brief Little helper function for the correct resourceuri handling of tvshows
      *

@@ -24,6 +24,7 @@
 #include <KDE/KUrl>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
+#include <QtCore/QFileInfo>
 
 #include "ui/fetcher.h"
 #include "ui/fetcherdialog.h"
@@ -110,9 +111,19 @@ int main(int argc, char *argv[])
         } else if (args->isSet("resource")) {
             fd.addFetcherResource(Nepomuk2::Resource::fromResourceUri(args->url(0)));
         } else {
-            fd.addFetcherPath(args->url(0));
+            QFileInfo fi(args->url(0).prettyUrl());
+            if(fi.isFile()) {
+                fd.addFetcherPath(args->url(0));
+            }
+            else {
+                // show a dialog with the status of teh current file fetching
+                // thsi can be canceled and closes the dialog again
+                if (!fd.startFetching(args->url(0)))
+                    return 0;
+            }
         }
 
+        QObject::connect(&fd, SIGNAL(finished(int)), &app, SLOT(quit()));
         fd.show();
 
         return app.exec();

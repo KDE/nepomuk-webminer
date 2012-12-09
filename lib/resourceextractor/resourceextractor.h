@@ -63,6 +63,8 @@ public:
      */
     explicit ResourceExtractor(QObject *parent = 0);
 
+    void cancel();
+
     /**
       * @brief If force update is @c true metadata is also fetched for files that already have data attached to them.
       *
@@ -109,7 +111,7 @@ public:
       * @see PopplerExtractor
       * @see VideoExtractor
       */
-    void lookupFiles(const KUrl &fileOrFolder);
+    void lookupFiles(const KUrl &fileOrFolder, bool nested = false);
 
     /**
       * @brief Prepare a nepomuk resource for the lookup.

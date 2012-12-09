@@ -58,6 +58,7 @@ public:
     bool tvShowMode;
     bool useTvShowFolderNames;
     bool movieShowMode;
+    bool cancel;
     KUrl baseCallUrl; //TODO: remove this parameter? helps in the video extractor in folder name detection
     QList<MetaDataParameters *> resourcesToLookup;
 };
@@ -68,6 +69,14 @@ NepomukWebMiner::Extractor::ResourceExtractor::ResourceExtractor(QObject *parent
     : QObject(parent)
     , d_ptr(new NepomukWebMiner::Extractor::ResourceExtractorPrivate)
 {
+    Q_D(ResourceExtractor);
+    d->cancel = false;
+}
+
+void NepomukWebMiner::Extractor::ResourceExtractor::cancel()
+{
+    Q_D(ResourceExtractor);
+    d->cancel = true;
 }
 
 void NepomukWebMiner::Extractor::ResourceExtractor::setForceUpdate(bool update)
@@ -94,7 +103,7 @@ void NepomukWebMiner::Extractor::ResourceExtractor::setMovieMode(bool moviemode)
     d->movieShowMode = moviemode;
 }
 
-void NepomukWebMiner::Extractor::ResourceExtractor::lookupFiles(const KUrl &fileOrFolder)
+void NepomukWebMiner::Extractor::ResourceExtractor::lookupFiles(const KUrl &fileOrFolder, bool nested)
 {
     Q_D(ResourceExtractor);
     if (!d->baseCallUrl.isValid()) {
@@ -107,13 +116,18 @@ void NepomukWebMiner::Extractor::ResourceExtractor::lookupFiles(const KUrl &file
     if (dir.exists()) {
         QFileInfoList list = dir.entryInfoList();
         foreach (const QFileInfo & fileInfo, list) {
+            if(d->cancel) {
+                break;
+            }
             if (fileInfo.fileName() == QString(".") || fileInfo.fileName() == QString("..")) {
                 continue;
             }
             KUrl url(fileInfo.absoluteFilePath());
             if (fileInfo.isDir()) {
-                lookupFiles(url);
+                emit progressStatus(i18n("Check folder %1", url.prettyUrl()));
+                lookupFiles(url, true);
             } else {
+                emit progressStatus(i18n("Check file %1", url.prettyUrl()));
                 addFilesToList(url);
             }
         }
@@ -121,15 +135,17 @@ void NepomukWebMiner::Extractor::ResourceExtractor::lookupFiles(const KUrl &file
         addFilesToList(fileOrFolder.toLocalFile());
     }
 
-    int resourceSize = d->resourcesToLookup.size();
+    if(!nested) {
+        int resourceSize = d->resourcesToLookup.size();
 
-    if (resourceSize != 0) {
-        emit progressStatus(i18n("Found %1 files for the metadata fetching", resourceSize));
-    } else {
-        emit progressStatus(i18n("No files for meta data fetching found"));
+        if (resourceSize != 0) {
+            emit progressStatus(i18n("Found %1 files for the metadata fetching", resourceSize));
+        } else {
+            emit progressStatus(i18n("No files for meta data fetching found"));
+        }
+
+        emit resourceExtarctionDone();
     }
-
-    emit resourceExtarctionDone();
 }
 
 void NepomukWebMiner::Extractor::ResourceExtractor::lookupResource(const Nepomuk2::Resource &resource)

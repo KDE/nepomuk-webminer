@@ -37,6 +37,8 @@
 #include "nepomukpipe/publicationpipe.h"
 #include "nepomukpipe/tvshowpipe.h"
 
+#include "startupdialog.h"
+
 #include <KDE/KStandardDirs>
 #include <KDE/KDialog>
 
@@ -56,6 +58,8 @@
 #include <QtGui/QTextDocument>
 #include <QtGui/QMessageBox>
 #include <QtCore/QProcess>
+
+#include <QDebug>
 
 namespace NepomukWebMiner
 {
@@ -143,6 +147,24 @@ NepomukWebMiner::UI::FetcherDialog::~FetcherDialog()
     delete d->currentItemToupdate;
     delete d->resultModel;
     delete d->progressLog;
+}
+
+bool NepomukWebMiner::UI::FetcherDialog::startFetching(const KUrl url)
+{
+    StartupDialog sud(this);
+
+    sud.setFetchingUrl(url);
+
+    QTimer::singleShot(0, &sud, SLOT(startFetching()));
+    int ret = sud.exec();
+
+    if(ret == QDialog::Rejected) {
+        sud.cancel();
+        return false;
+    }
+    else {
+        return true;
+    }
 }
 
 void NepomukWebMiner::UI::FetcherDialog::errorInScriptExecution(const QString &error)
