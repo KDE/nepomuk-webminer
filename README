@@ -1,8 +1,8 @@
 
-Nepomuk Metadata extractor
+Nepomuk-WebMiner
 
 Idea:
-* extract meta data from files (or existing Nepomuk::Resources)
+* harvest meta data from files (or existing Nepomuk::Resources)
 * take this info and search the internet for more details
 * python plugins (easy to write) handle the actual search.
 * python plugins only create a simple dictionary (transformed into QVariantMap)
@@ -14,50 +14,18 @@ For more information run:
 
 and check the doxygen documentation
 
-#################################################################
-# Dependencies:
-* Nepomuk
-** SDO 0.10.0
-
-* poppler (for pdf parsing)
-* TagLib (for music parsing)
-* Kross framework with working python interpreters
-* For the python plugins:
-  + imdbpy 4.9 - http://imdbpy.sourceforge.net/
-  + Musicbrainz NGS (master) - https://github.com/alastair/python-musicbrainz-ngs/
-  + tvdb_api module (master) - https://github.com/dbr/tvdb_api
-  + json
-  + BeautifulSoup
-  + httplib2
-  + urllib2
-  + requests (for tvdbmal)
 
 #################################################################
-# install to the system
+# Usage
 
-mkdir build
-cd build
-cmake ../ -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=release
-make
-make install
+See INSTALL for more information on how to build/install the webminer.
 
-and start via metadatafetcher <url to file or folder>
+start it via nepomuk-webminer <url to file or folder>
 or via right click service menu in dolphin
 
-see metadatafetcher --help for more info
+see nepomuk-webminer --help for more info
 
-################################################################
-# If you need to run cmake more often you can speed it up
+#################################################################
+# Settings
 
-Be sure to remove the cmake build directory otherwise this entry will be cached and can lead
-to problems
-
-add -DNOONTOLOGY=1 to the cmake call, to disable the long ontology class generation
-
-Example:
-
-mkdir build
-cd build
-cmake ../ -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=release -DNOONTOLOGY=1
-make
-make install
+There is an additional Systemsettings module for the configuration

@@ -1,0 +1,49 @@
+
+Here are some important information for the build/runtime dependencies
+
+The first time you build this can take a very long time due to header generation
+of the Shared Desktop Ontology classes.
+
+You can skip this generation in future build by adding
+-DNOONTOLOGY=1
+to the cmake call.
+
+#################################################################
+# Build Dependencies:
+* Nepomuk
+** SDO 0.10.0
+
+* poppler (for pdf parsing)
+* TagLib (for music parsing)
+* Python for the header generation via nepomuk-simpleresource-rcgen.py
+* Kross framework with working python interpreters
+
+#################################################################
+# Runtime Dependencies:
+
+* For the python plugins:
+  + imdbpy 4.9 - http://imdbpy.sourceforge.net/
+  + Musicbrainz NGS (master) - https://github.com/alastair/python-musicbrainz-ngs/
+  + tvdb_api module (master) - https://github.com/dbr/tvdb_api
+  + json
+  + BeautifulSoup
+  + httplib2
+  + urllib2
+  
+  To use the extended tvdb (augmented with MyAnimeList support)
+  + PyQt4
+  + PyKDE
+
+#################################################################
+# install to the system
+
+mkdir build
+cd build
+cmake ../ -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=release
+make
+make install
+
+and start via nepomuk-webminer <url to file or folder>
+or via right click service menu in dolphin
+
+see nepomuk-webminer --help for more info
