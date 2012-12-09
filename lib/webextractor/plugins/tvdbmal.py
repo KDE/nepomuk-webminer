@@ -20,10 +20,10 @@ except:
     errorMsg = "The tvdb python module 1.6.2 needs to be installed. See https://github.com/dbr/tvdb_api"
 
 try:
-    import requests
+    import httplib2
 except:
     isAvailable = False
-    errorMsg = "The python 'requests' module is a requirement. See http://docs.python-requests.org/en/latest/user/install/"
+    errorMsg = "The python 'httplib2' module is a requirement. See http://code.google.com/p/httplib2/"
 
 try:
     import PyQt4.QtGui as QtGui
@@ -375,18 +375,19 @@ def extractItemFromUri( url, options ):
 malapiurl = 'http://mal-api.com'
 
 def raw_search_anime(query):
-    response = requests.get(malapiurl + '/anime/search?q=' + urllib2.quote(query))
-    if response.status_code != 200:
+    h = httplib2.Http("/tmp/httplib2")
+    resp, content = h.request(malapiurl + '/anime/search?q=' + urllib2.quote(query))
+    if int(resp['status']) != 200:
         return None
-    return response.content
+    return content
 
 def raw_get_anime_details(anime_id):
-    response = requests.get(
-        malapiurl + '/anime/' + str(anime_id) + '?mine=0')
+    h = httplib2.Http("/tmp/httplib2")
+    resp, content = h.request(malapiurl + '/anime/' + str(anime_id) + '?mine=0')
 
-    if response.status_code == 404:
+    if int(resp['status']) == 404:
         return None
-    return response.content
+    return content
 
 # TODO: search results aren't sorted by relevance, need to workaround that
 def get_other_titles(query):
