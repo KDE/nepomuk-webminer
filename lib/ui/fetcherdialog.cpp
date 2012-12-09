@@ -191,11 +191,6 @@ void NepomukWebMiner::UI::FetcherDialog::showProgressLog()
 void NepomukWebMiner::UI::FetcherDialog::openSettings()
 {
     QProcess::startDetached(QLatin1String("kcmshell4 kcm_nepomuk-webminer"));
-    /*
-    KCModuleLoader::loadModule(  "kcm_metadataextractor",
-                                KCModuleLoader::Inline, this, QStringList( "message/rfc822" ) ),
-                                i18n(  "Mail Servers" );
-    */
 }
 
 void NepomukWebMiner::UI::FetcherDialog::openHelp()

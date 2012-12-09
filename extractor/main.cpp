@@ -84,11 +84,9 @@ int main(int argc, char *argv[])
 
         if (args->isSet("url")) {
             af.addFetcherUrl(args->url(0));
-            //af.startUrlFetcher();
             QTimer::singleShot(0, &af, SLOT(startUrlFetcher()));
         } else if (args->isSet("resource")) {
             af.addFetcherResource(args->url(0));
-            //af.startFetcher();
             QTimer::singleShot(0, &af, SLOT(startFetcher()));
         } else {
             af.setForceUpdate(args->isSet("force"));
@@ -97,7 +95,6 @@ int main(int argc, char *argv[])
             af.setMovieMode(args->isSet("movie"));
 
             af.addFetcherPath(args->url(0));
-            //af.startFetcher();
             QTimer::singleShot(0, &af, SLOT(startFetcher()));
         }
 
@@ -110,7 +107,6 @@ int main(int argc, char *argv[])
         fd.setMovieMode(args->isSet("movie"));
 
         if (args->isSet("url")) {
-            //fd.addFetcherUrl( args->url( 0 ) );
         } else if (args->isSet("resource")) {
             fd.addFetcherResource(Nepomuk2::Resource::fromResourceUri(args->url(0)));
         } else {
