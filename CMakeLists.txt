@@ -64,6 +64,9 @@ add_subdirectory( kcm )
 add_subdirectory( doc )
 
 macro_display_feature_log()
+MESSAGE("###############################################################################################")
+MESSAGE("See INSTALL file for the python runtime dependencies that are necessary for the plugins to work")
+MESSAGE("###############################################################################################")
 
 #--------------------------------------------------------------------------
 # add a target to generate API documentation with Doxygen
