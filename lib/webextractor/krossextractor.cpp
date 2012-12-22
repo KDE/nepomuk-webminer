@@ -122,43 +122,50 @@ NepomukWebMiner::Extractor::WebExtractor::Info NepomukWebMiner::Extractor::Kross
     return d->scriptInfo;
 }
 
-static QVariant concurrentSearch(Kross::Action *script, const QString &resourceType, const QVariantMap &parameters)
-{
-    return script->callFunction(QString("searchItems"), QVariantList() << resourceType << parameters);
-}
+//static QVariant concurrentSearch(Kross::Action *script, const QString &resourceType, const QVariantMap &parameters)
+//{
+//    return script->callFunction(QString("searchItems"), QVariantList() << resourceType << parameters);
+//}
 
 void NepomukWebMiner::Extractor::KrossExtractor::search(const QString &resourceType, const QVariantMap &parameters)
 {
-    Q_D(KrossExtractor);
+    //BUG: concurrent execution crashes with 4.10, needs a better solution to not block the ui
+    emit searchItems(resourceType, parameters);
 
-    if (d->scriptInfo.identifier == "imdbmovies") {
-        kDebug() << "use workaround for imdb. This once crashes if executed in its own thread";
-        emit searchItems(resourceType, parameters);
-    } else {
-        QFuture<QVariant> future = QtConcurrent::run(concurrentSearch, d->scriptFile, resourceType, parameters);
-        d->futureWatcher = new QFutureWatcher<QVariant>();
+//    Q_D(KrossExstractor);
 
-        d->futureWatcher->setFuture(future);
-    }
+//    if (d->scriptInfo.identifier == "imdbmovies") {
+//        kDebug() << "use workaround for imdb. This once crashes if executed in its own thread";
+//        emit searchItems(resourceType, parameters);
+//    } else {
+//        QFuture<QVariant> future = QtConcurrent::run(concurrentSearch, d->scriptFile, resourceType, parameters);
+//        d->futureWatcher = new QFutureWatcher<QVariant>();
+
+//        d->futureWatcher->setFuture(future);
+//    }
 }
 
-static QVariant concurrentExtraction(Kross::Action *script, const QUrl &url, const QVariantMap &options)
-{
-    return script->callFunction(QString("extractItemFromUri"), QVariantList() << url << options);
-}
+//static QVariant concurrentExtraction(Kross::Action *script, const QUrl &url, const QVariantMap &options)
+//{
+//    return script->callFunction(QString("extractItemFromUri"), QVariantList() << url << options);
+//}
 
 void NepomukWebMiner::Extractor::KrossExtractor::extractItem(const QUrl &url, const QVariantMap &options)
 {
-    Q_D(KrossExtractor);
-    if (d->scriptInfo.identifier == "imdbmovies") {
-        kDebug() << "use workaround for imdb. This once crashes if executed in its own thread";
-        emit extractItemFromUri(url, options);
-    } else {
-        QFuture<QVariant> future = QtConcurrent::run(concurrentExtraction, d->scriptFile, url, options);
-        d->futureWatcher = new QFutureWatcher<QVariant>();
+    //BUG: concurrent execution crashes with 4.10, needs a better solution to not block the ui
+    emit extractItemFromUri(url, options);
 
-        d->futureWatcher->setFuture(future);
-    }
+//    Q_D(KrossExtractor);
+//    emit extractItemFromUri(url, options);
+//    if (d->scriptInfo.identifier == "imdbmovies" || true) {
+//        kDebug() << "use workaround for imdb. This once crashes if executed in its own thread";
+//        emit extractItemFromUri(url, options);
+//    } else {
+//        QFuture<QVariant> future = QtConcurrent::run(concurrentExtraction, d->scriptFile, url, options);
+//        d->futureWatcher = new QFutureWatcher<QVariant>();
+
+//        d->futureWatcher->setFuture(future);
+//    }
 }
 
 void NepomukWebMiner::Extractor::KrossExtractor::showConfigDialog()
