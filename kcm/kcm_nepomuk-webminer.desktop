@@ -11,6 +11,21 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=workspace-appearance-and-behavior
 
 Name=Nepomuk-WebMiner
+Name[nl]=Nepomuk-WebMiner
+Name[pt]=Nepomuk-WebMiner
+Name[pt_BR]=Nepomuk-WebMiner
+Name[uk]=Nepomuk-WebMiner
+Name[x-test]=xxNepomuk-WebMinerxx
 Comment=Nepomuk-WebMiner Configuration
+Comment[nl]=Nepomuk configuratie van WebMiner
+Comment[pt]=Configuração do Nepomuk-WebMiner
+Comment[pt_BR]=Configuração do Nepomuk-WebMiner
+Comment[uk]=Модуль налаштовування Nepomuk-WebMiner
+Comment[x-test]=xxNepomuk-WebMiner Configurationxx
 X-KDE-Keywords=Nepomuk,Metadata
+X-KDE-Keywords[nl]=Nepomuk,metagegevens
+X-KDE-Keywords[pt]=Nepomuk,Meta-dados
+X-KDE-Keywords[pt_BR]=Nepomuk,Metadados
+X-KDE-Keywords[uk]=Nepomuk,Metadata,немомук,непом’юк,метадані
+X-KDE-Keywords[x-test]=xxNepomuk,Metadataxx
 
