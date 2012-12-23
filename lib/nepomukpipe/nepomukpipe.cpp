@@ -84,7 +84,7 @@ KUrl NepomukWebMiner::Pipe::NepomukPipe::downloadBanner(const QUrl &bannerUrl, c
     if (MDESettings::saveBannerInResourceFolder()) {
         localUrl = resourceFolder + QLatin1String("/") + filename + QLatin1String(".") + bannerUrl.toString().split('.').last();
     } else {
-        localUrl = KGlobal::dirs()->locateLocal("appdata", QLatin1String("banners/") + subFolder + QLatin1String("/") + filename +  QLatin1String(".") + bannerUrl.toString().split('.').last(), true);
+        localUrl = KGlobal::dirs()->locateLocal("data", QLatin1String("nepomuk/data/banners/") + subFolder + QLatin1String("/") + filename +  QLatin1String(".") + bannerUrl.toString().split('.').last(), true);
     }
 
     if (!QFile::exists(localUrl.toLocalFile())) {
