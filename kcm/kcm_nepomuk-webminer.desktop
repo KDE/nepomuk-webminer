@@ -8,7 +8,7 @@ X-DocPath=kcontrol/nepomuk-webminer/index.html
 X-KDE-ServiceTypes=KCModule
 X-KDE-Library=kcm_nepomuk-webminer
 X-KDE-ParentApp=kcontrol
-X-KDE-System-Settings-Parent-Category=workspace-appearance-and-behavior
+X-KDE-System-Settings-Parent-Category=desktop-search
 
 Name=Nepomuk-WebMiner
 Name[nl]=Nepomuk-WebMiner
