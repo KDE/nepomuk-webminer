@@ -129,6 +129,8 @@ public:
      */
     NepomukWebMiner::Extractor::ExtractorFactory  *extractorFactory();
 
+    void updateIndexingLevel( const QUrl& uri, int level );
+
 protected:
     /**
      * @brief Little helper function for the correct resourceuri handling of tvshows

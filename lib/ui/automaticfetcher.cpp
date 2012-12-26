@@ -213,6 +213,7 @@ void NepomukWebMiner::UI::AutomaticFetcher::selectSearchEntry(QVariantList searc
             // the pluginqueue will be refilled in searchNextItem since it's now empty
         }
 
+        updateIndexingLevel(d->currentItemToupdate->resourceUri(), 3);
         // and start the next round
         searchNextItem();
     } else {
@@ -255,6 +256,8 @@ void NepomukWebMiner::UI::AutomaticFetcher::fetchedItemDetails(const QString &re
 
     // clear the pluginqueue so it will be initialized for the next item
     d->pluginqueue.clear();
+
+    updateIndexingLevel(d->currentItemToupdate->resourceUri(), 3);
 
     // delete the current item, we do not need it anymore
     if (!resourceExtractor()->resourcesList().isEmpty()) {

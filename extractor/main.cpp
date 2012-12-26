@@ -85,6 +85,7 @@ int main(int argc, char *argv[])
 
         if (args->isSet("url")) {
             af.addFetcherUrl(args->url(0));
+            af.updateIndexingLevel(args->url(0), 3);
             QTimer::singleShot(0, &af, SLOT(startUrlFetcher()));
         } else if (args->isSet("resource")) {
             af.addFetcherResource(args->url(0));
