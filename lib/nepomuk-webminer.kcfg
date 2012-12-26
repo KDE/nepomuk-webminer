@@ -17,7 +17,7 @@
     </entry>
     <entry name="DownloadReferences" type="Bool">
       <label>Download publication references (might take a while for some publications).</label>
-      <default>true</default>
+      <default>false</default>
     </entry>
     <entry name="FavoriteMusicPlugin" type="String">
       <label>Favorite plugin to for the music download.</label>
@@ -25,7 +25,7 @@
     </entry>
     <entry name="FavoriteMoviePlugin" type="String">
       <label>Favorite plugin for the movie download.</label>
-      <default>imdbmovies</default>
+      <default>tmdb</default>
     </entry>
     <entry name="FavoriteTvShowPlugin" type="String">
       <label>Favorite plugin for the tv show download.</label>
