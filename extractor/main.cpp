@@ -114,6 +114,7 @@ int main(int argc, char *argv[])
         } else {
             QFileInfo fi(args->url(0).prettyUrl());
             if(fi.isFile()) {
+                fd.updateIndexingLevel(args->url(0), 3);
                 fd.addFetcherPath(args->url(0));
             }
             else {

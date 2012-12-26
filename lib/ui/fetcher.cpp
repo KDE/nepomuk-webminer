@@ -44,6 +44,9 @@
 #include <Soprano/Vocabulary/NRL>
 #include <Soprano/Vocabulary/RDF>
 
+#include <Nepomuk2/File>
+#include <Nepomuk2/Variant>
+
 namespace NepomukWebMiner
 {
 namespace UI
