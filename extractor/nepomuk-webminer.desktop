@@ -25,6 +25,7 @@ X-KDE-Submenu[sk]=Hľadanie na ploche
 X-KDE-Submenu[sv]=Skrivbordssökning
 X-KDE-Submenu[uk]=Стільничний пошук
 X-KDE-Submenu[x-test]=xxDesktop Searchxx
+X-KDE-Submenu[zh_TW]=桌面搜尋
 Icon=nepomuk
 
 [Desktop Action mdfetcher]
@@ -42,6 +43,7 @@ Name[sk]=Zbierať metadáta pre tento súbor alebo priečinok
 Name[sv]=Samla in metadata för den här filen eller katalogen
 Name[uk]=Зібрати метадані для цього файла або теки
 Name[x-test]=xxHarvest meta data for this file or folderxx
+Name[zh_TW]=取得此檔案與資料夾的中繼資料
 Icon=nepomuk
 Exec=nepomuk-webminer %f
 
@@ -60,6 +62,7 @@ Name[sk]=Zbierať metadáta pre tento súbor alebo priečinok (automaticky)
 Name[sv]=Samla in metadata för den här filen eller katalogen (automatiskt)
 Name[uk]=Зібрати метадані для цього файла або теки (автоматично)
 Name[x-test]=xxHarvest meta data for this file or folder (automatically)xx
+Name[zh_TW]=取得此檔案與資料夾的中繼資料（自動）
 Icon=nepomuk
 Exec=nepomuk-webminer -a %f
 
@@ -78,6 +81,7 @@ Name[sk]=Zbierať metadáta pre tento súbor alebo priečinok (vynútiť stiahnu
 Name[sv]=Samla in metadata för den här filen eller katalogen (tvinga nerladdning)
 Name[uk]=Зібрати для цього файла або теки (примусове звантаження)
 Name[x-test]=xxHarvest meta data for this file or folder (force download)xx
+Name[zh_TW]=取得此檔案與資料夾的中繼資料（強制下載）
 Icon=nepomuk
 Exec=nepomuk-webminer -f %f
 
@@ -97,5 +101,6 @@ Name[sk]=Zbierať metadáta pre tento súbor alebo priečinok (automaticky, vyn�
 Name[sv]=Samla in metadata för den här filen eller katalogen (automatiskt, tvinga nerladdning)
 Name[uk]=Зібрати метадані для цього файла або теки (автоматично, примусове звантаження)
 Name[x-test]=xxHarvest meta data for this file or folder (automatically, force download)xx
+Name[zh_TW]=取得此檔案與資料夾的中繼資料（自動，強制下載）
 Icon=nepomuk
 Exec=nepomuk-webminer -a -f %f
