@@ -88,13 +88,18 @@ def searchItems( resourcetype, parameters ):
     logMsg = 'start search query at: ' + query 
     WebExtractor.log( logMsg )
 
-    h = httplib2.Http("/tmp/httplib2")
-    resp, content = h.request(query)
+    searchResults = []
+    try:
+        h = httplib2.Http("/tmp/httplib2")
+        resp, content = h.request(query)
 
-    documentElement = BeautifulSoup( content )
+        documentElement = BeautifulSoup( content )
 
-    # parse page to retrive all item data
-    searchResults = extractSearchResults(documentElement, False)
+        # parse page to retrive all item data
+        searchResults = extractSearchResults(documentElement, False)
+    except Exception as err:
+        WebExtractor.log("Script error timeout: \n" + str(err))
+      
     WebExtractor.searchResults( searchResults )
 
 #------------------------------------------------------------------------------
