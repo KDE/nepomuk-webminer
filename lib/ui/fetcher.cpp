@@ -47,6 +47,8 @@
 #include <Nepomuk2/File>
 #include <Nepomuk2/Variant>
 
+#include <Solid/Networking>
+
 namespace NepomukWebMiner
 {
 namespace UI
@@ -295,6 +297,13 @@ uint NepomukWebMiner::UI::Fetcher::levenshteinDistance(const QString &s1, const 
 //
 void NepomukWebMiner::UI::Fetcher::updateIndexingLevel(const QUrl& url, int level)
 {
+    // do not set kext:indexingLevel == 3 if no internet connection was available
+    // otherwise no matter if something was found or not, set the level to 3
+    if( Solid::Networking::status() != Solid::Networking::Connected) {
+        kDebug() << "ignore updateIndexingLevel(3) due to missing network connection";
+        return;
+    }
+
     //first get the nepomuk uri from the file url
 
     QString query = QString::fromLatin1("select ?r where { ?r nie:url %1 }").arg( Soprano::Node::resourceToN3( url ) );

@@ -51,6 +51,7 @@ target_link_libraries( nepomuk-webminerlib
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KROSSUI_LIBS}
   ${KDE4_KROSSCORE_LIBS}
+  ${KDE4_SOLID_LIBS}
 
 # include nepomuk stuff
   ${SOPRANO_LIBRARIES}
