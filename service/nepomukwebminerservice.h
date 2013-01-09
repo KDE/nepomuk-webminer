@@ -24,19 +24,13 @@
 #include <Nepomuk2/Service>
 #include <Nepomuk2/Resource>
 
-#include <QtCore/QList>
 #include <QtCore/QUrl>
-#include <QtCore/QProcess>
-
-namespace Nepomuk2
-{
-class ResourceWatcher;
-}
+#include <QtCore/QVariantList>
 
 class NepomukWebMinerServicePrivate;
 
 /**
- * @brief This service calls the Nepomuk-WebMiner every time a new @c nfo:Video, @c nfo:Audio or @c nfo::PaginatedTextDocument resource was created
+ * @brief This service calls the Nepomuk-WebMiner for all audio/video/pdf resource with kext:indexingLevel == 2
  *
  * Extracts the metadata from the web based on the AutomaticFetcher.
  */
@@ -48,48 +42,26 @@ public:
     explicit NepomukWebMinerService(QObject *parent = 0, const QVariantList& args = QVariantList());
     ~NepomukWebMinerService();
 
-private Q_SLOTS:
-    /**
-     * @brief Fetch tv show or movie meta data if the resource is an existing file and does not already have TvShow or Movie meta data
-     *
-     * @param res the file resource that will be checked
-     * @param types list of types for this resource
-     */
-    void slotVideoResourceCreated(const Nepomuk2::Resource& res, const QList<QUrl>& types);
+    bool isSuspended() const;
+    bool isIndexing() const;
 
     /**
-     * @brief Fetch publication data if the resource is an existing file and does not already have a @c nbib:Publication connected
-     *
-     * @param res the file resource that will be checked
-     * @param types list of types for this resource
+     * @brief A user readable description of the scheduler's status
      */
-    void slotDocumentResourceCreated(const Nepomuk2::Resource& res, const QList<QUrl>& types);
+    QString userStatusString() const;
 
     /**
-     * @brief Fetch music data if the resource is an existing file
+     * @brief The current uri being indexed. It is empty if no file is being indexed.
      *
-     * @param res the file resource that will be checked
-     * @param types list of types for this resource
-     */
-    void slotMusicResourceCreated(const Nepomuk2::Resource& res, const QList<QUrl>& types);
-
-    /**
-     * @brief Called when the QProcess finished calling the metadataextractor
+     * The url being empty does not indicate that the indexer isn't running,
+     * just that it hasn't found a file to index.
      *
-     * @param returnCode the return code
-     * @param status Normal or crashed exit status
+     * @sa indexingStarted
+     * @sa indexingStopped
      */
-    void processFinished(int returnCode, QProcess::ExitStatus status);
-    void processOutput();
+    QUrl currentUrl() const;
 
 private:
-    /**
-     * @brief Starts the next Process call
-     *
-     * Starts only a call if the max queue size is not reached and there are still items on the queue left
-     */
-    void startNextProcess();
-
     Q_DECLARE_PRIVATE(NepomukWebMinerService)
     NepomukWebMinerServicePrivate *const d_ptr; /**< d-pointer for this class */
 };
