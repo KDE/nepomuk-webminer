@@ -2,6 +2,11 @@ project(nepomuk-webminerservice)
 
 set( nepomuk-webminerservice_SRCS
   nepomukwebminerservice.cpp
+  eventmonitor.cpp
+  indexingqueue.cpp
+  indexscheduler.cpp
+  webminerindexingjob.cpp
+  webminerindexingqueue.cpp
 )
 
 kde4_add_plugin(nepomuk-webminerservice ${nepomuk-webminerservice_SRCS})
@@ -11,6 +16,8 @@ target_link_libraries(nepomuk-webminerservice
 
   ${KDE4_KDECORE_LIBS}
   ${KDE4_KIO_LIBS}
+  ${KDE4_SOLID_LIBS}
+  ${KDE4_KIDLETIME_LIBS}
 
 # include nepomuk stuff
   ${SOPRANO_LIBRARIES}

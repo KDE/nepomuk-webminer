@@ -117,6 +117,11 @@ void NepomukWebMiner::UI::AutomaticFetcher::searchNextItem()
     // don't takenext so we can try another plugin on this resource next
     d->currentItemToupdate = resourceExtractor()->resourcesList().first();
 
+    // update kext:indexingLevel to 3
+    // this ensures we are not going to check this file again in the
+    // background servcie no matter if we found something or not
+    updateIndexingLevel(d->currentItemToupdate->resourceUri(), 3);
+
     if (d->pluginqueue.isEmpty()) {
         d->pluginqueue.append(extractorFactory()->listAvailablePlugins(d->currentItemToupdate->resourceType()));
     }
@@ -206,8 +211,6 @@ void NepomukWebMiner::UI::AutomaticFetcher::selectSearchEntry(QVariantList searc
     if (searchResults.isEmpty()) {
         kDebug() << "Could not find any search results for the item" << d->currentItemToupdate->resourceUri();
 
-        updateIndexingLevel(d->currentItemToupdate->resourceUri(), 3);
-
         if (d->pluginqueue.isEmpty()) {
             // we're out of plugins
             // delete the current item, we do not need it anymore
@@ -253,8 +256,6 @@ void NepomukWebMiner::UI::AutomaticFetcher::fetchedItemDetails(const QString &re
         kWarning() << "tried to add fetched item data to non existing item";
         return;
     }
-
-    updateIndexingLevel(d->currentItemToupdate->resourceUri(), 3);
 
     // copy the fetched meta data into the current item details
     d->currentItemToupdate->setMetaData(itemDetails);

@@ -445,6 +445,12 @@ void NepomukWebMiner::UI::FetcherDialog::startSearch()
 
     //kDebug() << "webextractor->search :: " << searchParameters;
 
+    // update kext:indexingLevel to 3
+    // this ensures we are not going to check this file again in the
+    // background servcie no matter if we found something or not
+    updateIndexingLevel(mdp->resourceUri(), 3);
+
+
     d->webextractor->search(mdp->resourceType(), searchParameters);
 }
 

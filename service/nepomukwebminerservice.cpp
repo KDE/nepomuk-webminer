@@ -20,32 +20,18 @@
 
 #include "nepomukwebminerservice.h"
 
-#include <Nepomuk2/ResourceWatcher>
-#include <Nepomuk2/Vocabulary/NFO>
-#include <Nepomuk2/File>
-#include <Nepomuk2/Vocabulary/NMM>
-#include "ontology/nbib.h"
+#include "indexscheduler.h"
 
-#include <KDE/KStandardDirs>
-#include <KDE/KDirNotify>
+#include <QtDBus/QDBusInterface>
+
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
 #include <KDE/KDebug>
 
-#include <QtCore/QProcess>
-#include <QtCore/QFile>
-
-using namespace Nepomuk2::Vocabulary;
-
 class NepomukWebMinerServicePrivate
 {
 public:
-    Nepomuk2::ResourceWatcher* videoWatcher;
-    Nepomuk2::ResourceWatcher* documentWatcher;
-    Nepomuk2::ResourceWatcher* musicWatcher;
-
-    int runningProcesses;
-    QStringList processQueue;
+    IndexScheduler *indexScheduler;
 };
 
 NepomukWebMinerService::NepomukWebMinerService(QObject *parent, const QVariantList &)
@@ -53,11 +39,6 @@ NepomukWebMinerService::NepomukWebMinerService(QObject *parent, const QVariantLi
     , d_ptr(new NepomukWebMinerServicePrivate)
 {
     Q_D(NepomukWebMinerService);
-
-    d->runningProcesses = 0;
-    d->videoWatcher = 0;
-    d->documentWatcher = 0;
-    d->musicWatcher = 0;
 
     KConfig config("nepomukwebminerrc");
     KConfigGroup serviceGroup(&config, "Service");
@@ -85,180 +66,52 @@ NepomukWebMinerService::NepomukWebMinerService(QObject *parent, const QVariantLi
         return;
     }
 
-    bool videoServiceEnabled = serviceGroup.readEntry("VideoServiceEnabled", true);
-    bool musicServiceEnabled = serviceGroup.readEntry("MusicServiceEnabled", true);
-    bool documentServiceEnabled = serviceGroup.readEntry("DocumentServiceEnabled", false);
+    d->indexScheduler = new IndexScheduler( this );
 
-    // set up the watcher for newly created nfo:Video resources
-    if (videoServiceEnabled) {
-        d->videoWatcher = new Nepomuk2::ResourceWatcher(this);
-        d->videoWatcher->addType(NFO::Video());
-        connect(d->videoWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
-                this, SLOT(slotVideoResourceCreated(Nepomuk2::Resource,QList<QUrl>)));
-        d->videoWatcher->start();
-    }
+    connect( d->indexScheduler, SIGNAL(statusStringChanged()), this, SIGNAL(statusStringChanged()) );
 
-    // set up the watcher for newly created documents
-    if (documentServiceEnabled) {
-        d->documentWatcher = new Nepomuk2::ResourceWatcher(this);
-        d->documentWatcher->addType(NFO::PaginatedTextDocument());
-        connect(d->documentWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
-                this, SLOT(slotDocumentResourceCreated(Nepomuk2::Resource,QList<QUrl>)));
-        d->documentWatcher->start();
-    }
-
-    // set up the watcher for newly created music files
-    if (musicServiceEnabled) {
-        d->musicWatcher = new Nepomuk2::ResourceWatcher(this);
-        d->musicWatcher->addType(NFO::Audio());
-        connect(d->musicWatcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
-                this, SLOT(slotMusicResourceCreated(Nepomuk2::Resource,QList<QUrl>)));
-        d->musicWatcher->start();
-    }
-
-    d->processQueue = serviceGroup.readEntry("notfinishedqueue", QStringList());
-
-    startNextProcess();
+    connect( this, SIGNAL( statusStringChanged() ), this, SIGNAL( statusChanged() ) );
+    connect( d->indexScheduler, SIGNAL( indexingStarted() ), this, SIGNAL( indexingStarted() ) );
+    connect( d->indexScheduler, SIGNAL( indexingStopped() ), this, SIGNAL( indexingStopped() ) );
+    connect( d->indexScheduler, SIGNAL( indexingFolder(QString) ), this, SIGNAL( indexingFolder(QString) ) );
 }
 
 NepomukWebMinerService::~NepomukWebMinerService()
 {
     Q_D(NepomukWebMinerService);
 
-    if (d->videoWatcher) {
-        d->videoWatcher->stop();
-        delete d->videoWatcher;
-    }
-    if (d->documentWatcher) {
-        d->documentWatcher->stop();
-        delete d->documentWatcher;
-    }
-    if (d->musicWatcher) {
-        d->musicWatcher->stop();
-        delete d->musicWatcher;
-    }
-
-    KConfig config("nepomukwebminerrc");
-    KConfigGroup serviceGroup(&config, "Service");
-
-    serviceGroup.writeEntry("notfinishedqueue", d->processQueue);
-    serviceGroup.sync();
-    config.sync();
+    delete d->indexScheduler;
 }
 
-void NepomukWebMinerService::slotVideoResourceCreated(const Nepomuk2::Resource &res, const QList<QUrl> &types)
+bool NepomukWebMinerService::isSuspended() const
 {
-    Q_UNUSED(types);
+    Q_D(const NepomukWebMinerService);
 
-    // here we check if the resource we added is actually a file
-    // and that it does not already have tvshow / movie information
-    // if it already has such information, it is very likely, that the resource was created via
-    // the metadata extractor or other program with full information
-    // no need to fetch more than necessary to reduce the work load
-
-    if (res.isFile()) {
-
-        if (res.hasType(Nepomuk2::Vocabulary::NMM::Movie()) || res.hasType(Nepomuk2::Vocabulary::NMM::TVShow())) {
-            return;
-        }
-
-        const QString path = res.toFile().url().toLocalFile();
-        if (QFile::exists(path)) {
-            Q_D(NepomukWebMinerService);
-            d->processQueue.append(path);
-            startNextProcess();
-        }
-    }
+    return d->indexScheduler->isSuspended();
 }
 
-void NepomukWebMinerService::slotDocumentResourceCreated(const Nepomuk2::Resource &res, const QList<QUrl> &types)
+bool NepomukWebMinerService::isIndexing() const
 {
-    Q_UNUSED(types);
+    Q_D(const NepomukWebMinerService);
 
-    // here we check if the resource we added is actually a file
-    // and that it does not already have publication information
-    // if it already has such information, it is very likely, that the resource was created via
-    // the metadata extractor or other program with full information
-    // no need to fetch more than necessary to reduce the work load
-
-    if (res.isFile()) {
-
-        if (res.hasProperty(Nepomuk2::Vocabulary::NBIB::publishedAs())) {
-            return;
-        }
-
-        const QString path = res.toFile().url().toLocalFile();
-        if (QFile::exists(path)) {
-            Q_D(NepomukWebMinerService);
-            d->processQueue.append(path);
-            startNextProcess();
-        }
-    }
+    return d->indexScheduler->isIndexing();
 }
 
-void NepomukWebMinerService::slotMusicResourceCreated(const Nepomuk2::Resource& res, const QList<QUrl>& types)
+QString NepomukWebMinerService::userStatusString() const
 {
-    Q_UNUSED(types);
+    Q_D(const NepomukWebMinerService);
 
-    if (res.isFile()) {
-
-        const QString path = res.toFile().url().toLocalFile();
-        if (QFile::exists(path)) {
-            Q_D(NepomukWebMinerService);
-            d->processQueue.append(path);
-            startNextProcess();
-        }
-    }
+    return d->indexScheduler->userStatusString();
 }
 
-void NepomukWebMinerService::processFinished(int returnCode, QProcess::ExitStatus status)
+QUrl NepomukWebMinerService::currentUrl() const
 {
-    Q_UNUSED(returnCode);
-    Q_UNUSED(status);
+    Q_D(const NepomukWebMinerService);
 
-    sender()->deleteLater(); // delete the calling QProcess again
-
-    Q_D(NepomukWebMinerService);
-
-    d->runningProcesses--;
-    startNextProcess();
+    return d->indexScheduler->currentUrl();
 }
 
-void NepomukWebMinerService::startNextProcess()
-{
-    Q_D(NepomukWebMinerService);
 
-    KConfig config("nepomukwebminerrc");
-    KConfigGroup serviceGroup(&config, "Service");
-
-    int maxProcesses = serviceGroup.readEntry("SimultaneousCalls", 3);
-
-    kDebug() << "Current running Processes:" << d->runningProcesses << " || Process Queue: " << d->processQueue.size();
-
-    // only start the process if we haven't reached the maximum queue number and there are still entries in the queue left
-    if (d->runningProcesses < maxProcesses && !d->processQueue.isEmpty()) {
-        QString path = d->processQueue.takeFirst();
-
-        kDebug() << "Calling" << KStandardDirs::findExe(QLatin1String("nepomuk-webminer")) << path;
-        d->runningProcesses++;
-
-        QProcess *p = new QProcess();
-        connect(p, SIGNAL(readyReadStandardError()), this, SLOT(processOutput()));
-        connect(p, SIGNAL(readyReadStandardOutput()), this, SLOT(processOutput()));
-
-        connect(p, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(processFinished(int,QProcess::ExitStatus)));
-        p->start(KStandardDirs::findExe(QLatin1String("nepomuk-webminer")),
-                 QStringList() << QLatin1String("-auto") << QLatin1String("-force") << path);
-
-        startNextProcess();
-    }
-}
-
-void NepomukWebMinerService::processOutput()
-{
-    QProcess *p = qobject_cast<QProcess *>(sender());
-    kDebug() << p->readAllStandardError();
-}
 
 #include <kpluginfactory.h>
 #include <kpluginloader.h>
