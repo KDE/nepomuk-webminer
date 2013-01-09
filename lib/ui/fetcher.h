@@ -129,7 +129,7 @@ public:
      */
     NepomukWebMiner::Extractor::ExtractorFactory  *extractorFactory();
 
-    void updateIndexingLevel( const QUrl& uri, int level );
+    void updateIndexingLevel(const QUrl& url, int level );
 
 protected:
     /**

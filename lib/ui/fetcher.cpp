@@ -293,14 +293,30 @@ uint NepomukWebMiner::UI::Fetcher::levenshteinDistance(const QString &s1, const 
 //
 // We don't really care if the indexing level is in the incorrect graph
 //
-void NepomukWebMiner::UI::Fetcher::updateIndexingLevel(const QUrl& uri, int level)
+void NepomukWebMiner::UI::Fetcher::updateIndexingLevel(const QUrl& url, int level)
 {
+    //first get the nepomuk uri from the file url
+
+    QString query = QString::fromLatin1("select ?r where { ?r nie:url %1 }").arg( Soprano::Node::resourceToN3( url ) );
+    Soprano::Model* model = Nepomuk2::ResourceManager::instance()->mainModel();
+
+    Soprano::QueryResultIterator it = model->executeQuery( query, Soprano::Query::QueryLanguageSparqlNoInference );
+
+    QUrl uri;
+    if( it.next() ) {
+        uri = it[0].uri();
+    }
+    else {
+        kError() << "could not update indexing level for the file" << url << " via: " << query;
+        return;
+    }
+
+    // now update the indexing level
     QString uriN3 = Soprano::Node::resourceToN3( uri );
 
-    QString query = QString::fromLatin1("select ?g ?l where { graph ?g { %1 kext:indexingLevel ?l . } }")
+    query = QString::fromLatin1("select ?g ?l where { graph ?g { %1 kext:indexingLevel ?l . } }")
                     .arg ( uriN3 );
-    Soprano::Model* model = Nepomuk2::ResourceManager::instance()->mainModel();
-    Soprano::QueryResultIterator it = model->executeQuery( query, Soprano::Query::QueryLanguageSparqlNoInference );
+    it = model->executeQuery( query, Soprano::Query::QueryLanguageSparqlNoInference );
 
     QUrl graph;
     Soprano::Node prevLevel;
