@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     KAboutData aboutData("nepomuk-webminer",
                          "nepomuk-webminer",
                          ki18n("Nepomuk-WebMiner"),
-                         "0.3",
+                         "0.4",
                          ki18n("Nepomuk-WebMiner - Harvest and add metadata for files and resources on the internet"),
                          KAboutData::License_GPL,
                          ki18n("(c) 2012, Jörg Ehrichs"),
