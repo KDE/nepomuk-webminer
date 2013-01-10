@@ -9,6 +9,7 @@ set( nepomuk-webminerservice_SRCS
   webminerindexingqueue.cpp
 )
 
+kde4_add_kcfg_files(nepomuk-webminerservice_SRCS ../lib/mdesettings.kcfgc)
 kde4_add_plugin(nepomuk-webminerservice ${nepomuk-webminerservice_SRCS})
 
 target_link_libraries(nepomuk-webminerservice

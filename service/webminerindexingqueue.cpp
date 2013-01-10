@@ -20,13 +20,17 @@
 #include "webminerindexingqueue.h"
 
 #include "webminerindexingjob.h"
+#include "mdesettings.h"
 
 #include <Nepomuk2/ResourceManager>
 #include <Soprano/Model>
 #include <Soprano/QueryResultIterator>
 
-#include <KDebug>
-#include <QTimer>
+#include <KDE/KConfig>
+#include <KDE/KConfigGroup>
+#include <KDE/KDebug>
+
+#include <QtCore/QTimer>
 
 WebMinerIndexingQueue::WebMinerIndexingQueue(QObject *parent)
     : IndexingQueue(parent)
@@ -51,10 +55,25 @@ void WebMinerIndexingQueue::fillQueue()
         return;
     }
 
-    //FIXME: add resource selection here (documents, video, music)
-    QString query = QString::fromLatin1("select ?url where { ?r nie:url ?url ; kext:indexingLevel ?l ; nie:mimeType ?mime"
-                                        " Filter regex(?mime , \"audio|video|pdf\", \"i\")"
-                                        " FILTER(?l = 2  ). } LIMIT 10");
+    QStringList mimeSelection;
+    if( MDESettings::documentServiceEnabled() ) {
+        mimeSelection << QLatin1String("pdf");
+    }
+    if( MDESettings::musicServiceEnabled() ) {
+        mimeSelection << QLatin1String("audio");
+    }
+    if( MDESettings::videoServiceEnabled() ) {
+        mimeSelection << QLatin1String("video");
+    }
+
+    if( mimeSelection.isEmpty() ) {
+        kDebug() << "no mimetype selected for the background service";
+        return;
+    }
+
+    QString query = QString("select ?url where { ?r nie:url ?url ; kext:indexingLevel ?l ; nie:mimeType ?mime"
+                            " Filter regex(?mime , \"%1\", \"i\")"
+                            " FILTER(?l = 2  ). } LIMIT 10").arg(mimeSelection.join(QLatin1String("|")));
 
     Soprano::Model* model = Nepomuk2::ResourceManager::instance()->mainModel();
     Soprano::QueryResultIterator it = model->executeQuery( query, Soprano::Query::QueryLanguageSparql );

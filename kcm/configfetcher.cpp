@@ -61,6 +61,12 @@ void ConfigFetcher::setExtractorFactory(NepomukWebMiner::Extractor::ExtractorFac
 void ConfigFetcher::serviceEnabled(bool enabled)
 {
     if (enabled) {
+        //if we check it here, we can be sure this is not the first run
+        // as we only disable the service again on first run (to not fetch metdata behidn the users back after
+        // installation, this is not needed here)
+        MDESettings::setFirstRun(false);
+        MDESettings::self()->writeConfig();
+
         QProcess::startDetached(QLatin1String("nepomukservicestub nepomuk-webminerservice"));
     } else {
         QDBusInterface service("org.kde.nepomuk.services.nepomuk-webminerservice", "/servicecontrol",
