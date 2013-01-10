@@ -4,6 +4,7 @@ X-KDE-ServiceTypes=KonqPopupMenu/Plugin
 MimeType=application/*;video/*;audio/*;inode/directory;
 Actions=mdfetcher;mdfetcher2;mdfetcher3;mdfetcher4;
 X-KDE-Submenu=Desktop Search
+X-KDE-Submenu[bs]=Pretraga na radnoj površi
 X-KDE-Submenu[cs]=Vyhledávací služby
 X-KDE-Submenu[da]=Skrivebordssøgning
 X-KDE-Submenu[de]=Desktop-Suche
@@ -31,6 +32,7 @@ Icon=nepomuk
 
 [Desktop Action mdfetcher]
 Name=Harvest meta data for this file or folder
+Name[bs]=Žetva metapodataka za ovu datoteku ili direktorij
 Name[da]=Høst metadata for denne fil eller mappe
 Name[el]=Συλλογή μετα δεδομένων για αυτό το αρχείο ή το φάκελο
 Name[es]=Recolectar metadatos para este archivo o carpeta
@@ -53,6 +55,7 @@ Exec=nepomuk-webminer %f
 
 [Desktop Action mdfetcher2]
 Name=Harvest meta data for this file or folder (automatically)
+Name[bs]=Žetva metapodataka za ovu datoteku ili direktorij (automatski)
 Name[da]=Høst metadata for denne fil eller mappe (automatisk)
 Name[el]=Συλλογή μετα δεδομένων για αυτό το αρχείο ή το φάκελο (αυτόματα)
 Name[es]=Recolectar metadatos para este archivo o carpeta (automáticamente)
@@ -75,6 +78,7 @@ Exec=nepomuk-webminer -a %f
 
 [Desktop Action mdfetcher3]
 Name=Harvest meta data for this file or folder (force download)
+Name[bs]=Žetva metapodataka za ovu datoteku ili direktorij (forsiraj preuzimanje)
 Name[da]=Høst metadata for denne fil eller mappe (gennemtving download)
 Name[el]=Συλλογή μετα δεδομένων για αυτό το αρχείο ή το φάκελο (με εξαναγκασμό λήψης)
 Name[es]=Recolectar metadatos para este archivo o carpeta (descarga forzada)
@@ -98,6 +102,7 @@ Exec=nepomuk-webminer -f %f
 
 [Desktop Action mdfetcher4]
 Name=Harvest meta data for this file or folder (automatically, force download)
+Name[bs]=Žetva metapodataka za ovu datoteku ili direktorij (automatski, forsiraj preuzimanje)
 Name[da]=Høst metadata for denne fil eller mappe (automatisk, gennemtving download)
 Name[el]=Συλλογή μετα δεδομένων για αυτό το αρχείο ή το φάκελο (αυτόματα, με εξαναγκασμό λήψης)
 Name[es]=Recolectar metadatos para este archivo o carpeta (automáticamente, descarga forzada)
