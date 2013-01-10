@@ -4,6 +4,7 @@ X-KDE-ServiceTypes=NepomukService
 X-KDE-Library=nepomuk-webminerservice
 X-KDE-Nepomuk-autostart=true
 Name=Nepomuk-WebMiner Service
+Name[bs]=Nepomuk-WebMiner usliga
 Name[da]=Nepomuk-WebMiner-tjeneste
 Name[el]=Υπηρεσία Nepomuk-WebMiner
 Name[es]=Servicio Nepomuk-WebMiner
