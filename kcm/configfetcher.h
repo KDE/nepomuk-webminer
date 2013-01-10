@@ -28,6 +28,8 @@ namespace Ui
 class ConfigFetcher;
 }
 
+class QDBusServiceWatcher;
+
 namespace NepomukWebMiner
 {
 namespace Extractor
@@ -40,6 +42,8 @@ class ExtractorFactory;
  *
  * Shows the list of available completers and lets the user select its favorite.
  * Allows to set some other options to alter the fetching of citations, poster/banners.
+ *
+ * Manages the Nepomuk2::Service (enable/disable) and what kind of data should be fetched
  */
 class ConfigFetcher : public QWidget
 {
@@ -55,6 +59,11 @@ signals:
     void configChanged(bool changed);
 
 public slots:
+    void serviceEnabled(bool enabled);
+
+    void serviceRegistered();
+    void serviceUnregistered();
+
     void updateConfiguration();
     void saveConfig();
     void resetConfig();
@@ -62,6 +71,7 @@ public slots:
 private:
     void setupUi();
     Ui::ConfigFetcher *ui;
+    QDBusServiceWatcher *m_watcher;
     NepomukWebMiner::Extractor::ExtractorFactory  *extractorFactory;
 };
 

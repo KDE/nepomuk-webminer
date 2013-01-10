@@ -28,7 +28,6 @@ namespace NepomukWebMiner
 
 class ConfigFetcher;
 class PluginList;
-class ConfigService;
 
 namespace Extractor
 {
@@ -51,7 +50,6 @@ private:
     Extractor::ExtractorFactory *m_ef;
     ConfigFetcher *cfd;
     PluginList *pl;
-    ConfigService *csd;
 };
 }
 

@@ -26,6 +26,15 @@
 #include "webextractor/extractorfactory.h"
 #include "webextractor/webextractor.h"
 
+#include <KDE/KConfig>
+#include <KDE/KConfigGroup>
+
+#include <QtDBus/QDBusServiceWatcher>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusConnectionInterface>
+#include <QtDBus/QDBusInterface>
+#include <QtCore/QProcess>
+
 #include <KDE/KDebug>
 
 using namespace NepomukWebMiner;
@@ -47,6 +56,32 @@ void ConfigFetcher::setExtractorFactory(NepomukWebMiner::Extractor::ExtractorFac
 {
     extractorFactory = ef;
     setupUi();
+}
+
+void ConfigFetcher::serviceEnabled(bool enabled)
+{
+    if (enabled) {
+        QProcess::startDetached(QLatin1String("nepomukservicestub nepomuk-webminerservice"));
+    } else {
+        QDBusInterface service("org.kde.nepomuk.services.nepomuk-webminerservice", "/servicecontrol",
+                               "org.kde.nepomuk.ServiceControl");
+        service.call("shutdown");
+    }
+
+    KConfig config(QLatin1String("nepomukserverrc"));
+    KConfigGroup generalGroup(&config, QLatin1String("Service-nepomuk-webminerservice"));
+    generalGroup.writeEntry(QLatin1String("autostart"), enabled);
+    generalGroup.sync();
+}
+
+void ConfigFetcher::serviceRegistered()
+{
+    ui->enableService->setChecked(true);
+}
+
+void ConfigFetcher::serviceUnregistered()
+{
+    ui->enableService->setChecked(false);
 }
 
 void ConfigFetcher::updateConfiguration()
@@ -72,7 +107,9 @@ void ConfigFetcher::saveConfig()
     curIndex = ui->tvshowPlugin->currentIndex();
     MDESettings::setFavoriteTvShowPlugin(ui->tvshowPlugin->itemData(curIndex).toString());
 
-    MDESettings::setCheckNextPlugin(ui->checkOtherPlugins->isChecked());
+    MDESettings::setDocumentServiceEnabled(ui->kcfg_FetchDocuments->isChecked());
+    MDESettings::setVideoServiceEnabled(ui->kcfg_FetchVideos->isChecked());
+    MDESettings::setMusicServiceEnabled(ui->kcfg_FetchMusic->isChecked());
 
     MDESettings::self()->writeConfig();
 }
@@ -88,11 +125,15 @@ void ConfigFetcher::resetConfig()
     ui->moviePlugin->setCurrentIndex(ui->moviePlugin->findData(MDESettings::favoriteMoviePlugin()));
     ui->tvshowPlugin->setCurrentIndex(ui->tvshowPlugin->findData(MDESettings::favoriteTvShowPlugin()));
 
-    ui->checkOtherPlugins->setChecked(MDESettings::checkNextPlugin());
+    ui->kcfg_FetchDocuments->setChecked( MDESettings::documentServiceEnabled());
+    ui->kcfg_FetchVideos->setChecked( MDESettings::videoServiceEnabled());
+    ui->kcfg_FetchMusic->setChecked( MDESettings::musicServiceEnabled());
 }
 
 void ConfigFetcher::setupUi()
 {
+    //######################
+    //# general settings
     ui->kcfg_DownloadBanner->setChecked(MDESettings::downloadBanner());
     connect(ui->kcfg_DownloadBanner, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()));
     ui->kcfg_DownloadReferences->setChecked(MDESettings::downloadReferences());
@@ -100,6 +141,8 @@ void ConfigFetcher::setupUi()
     ui->kcfg_SaveBannerInResourceFolder->setChecked(MDESettings::saveBannerInResourceFolder());
     connect(ui->kcfg_SaveBannerInResourceFolder, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()));
 
+    //######################
+    //# Plugin selection
     // music list
     QList<WebExtractor::Info> engines = extractorFactory->listAvailablePlugins("music");
 
@@ -136,12 +179,32 @@ void ConfigFetcher::setupUi()
     ui->moviePlugin->setCurrentIndex(ui->moviePlugin->findData(MDESettings::favoriteMoviePlugin()));
     ui->tvshowPlugin->setCurrentIndex(ui->tvshowPlugin->findData(MDESettings::favoriteTvShowPlugin()));
 
-    ui->checkOtherPlugins->setChecked(MDESettings::checkNextPlugin());
-
     connect(ui->musicPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()));
     connect(ui->publicationPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()));
     connect(ui->moviePlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()));
     connect(ui->tvshowPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()));
 
-    connect(ui->checkOtherPlugins, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()));
+    //######################
+    //# Background service
+    connect(ui->enableService, SIGNAL(clicked(bool)), this, SLOT(serviceEnabled(bool)));
+
+    m_watcher = new QDBusServiceWatcher(this);
+    m_watcher->addWatchedService(QLatin1String("org.kde.nepomuk.services.nepomuk-webminerservice"));
+    m_watcher->setConnection(QDBusConnection::sessionBus());
+    m_watcher->setWatchMode(QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
+
+    connect(m_watcher, SIGNAL(serviceRegistered(QString)), this, SLOT(serviceRegistered()));
+    connect(m_watcher, SIGNAL(serviceUnregistered(QString)), this, SLOT(serviceUnregistered()));
+
+    if (QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.nepomuk.services.nepomuk-webminerservice")) {
+        ui->enableService->setChecked(true);
+    }
+
+    ui->kcfg_FetchDocuments->setChecked( MDESettings::documentServiceEnabled());
+    ui->kcfg_FetchVideos->setChecked( MDESettings::videoServiceEnabled());
+    ui->kcfg_FetchMusic->setChecked( MDESettings::musicServiceEnabled());
+
+    connect(ui->kcfg_FetchDocuments, SIGNAL(clicked(bool)), this, SLOT(updateConfiguration()));
+    connect(ui->kcfg_FetchVideos, SIGNAL(clicked(bool)), this, SLOT(updateConfiguration()));
+    connect(ui->kcfg_FetchMusic, SIGNAL(clicked(bool)), this, SLOT(updateConfiguration()));
 }

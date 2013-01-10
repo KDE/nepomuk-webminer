@@ -6,135 +6,221 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>502</width>
-    <height>275</height>
+    <width>645</width>
+    <height>430</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>WebExtractor Configuration</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
-    <widget class="QCheckBox" name="kcfg_DownloadBanner">
-     <property name="text">
-      <string>Download Banner/Poster/Cover</string>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="font">
+      <font>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
      </property>
+     <property name="title">
+      <string>General Settings</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QCheckBox" name="kcfg_DownloadBanner">
+        <property name="text">
+         <string>Download Banner/Poster/Cover</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_DownloadReferences">
+        <property name="text">
+         <string>Download Publication References</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_SaveBannerInResourceFolder">
+        <property name="text">
+         <string>Save Image in Resource Folder</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="kcfg_SaveBannerInResourceFolder">
-     <property name="text">
-      <string>Save Banner in Resource Folder</string>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Plugin Selection</string>
      </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_music">
+          <property name="text">
+           <string>Preferred Music Plugin:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="KComboBox" name="musicPlugin">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_documents">
+          <property name="text">
+           <string>Preferred Publication Plugin:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="KComboBox" name="publicationPlugin">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_tvshows">
+          <property name="text">
+           <string>Preferred Tv Show Plugin:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="KComboBox" name="tvshowPlugin">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_movie">
+          <property name="text">
+           <string>Preferred Movie Plugin:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="KComboBox" name="moviePlugin">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="kcfg_DownloadReferences">
-     <property name="text">
-      <string>Download Publication References</string>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string>Background Service</string>
      </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QCheckBox" name="enableService">
+        <property name="toolTip">
+         <string>If enabled the metadata extractor is called on newly indexed files.</string>
+        </property>
+        <property name="text">
+         <string>Enable Service</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_FetchDocuments">
+        <property name="toolTip">
+         <string>Service needs to be restarted to take effect.</string>
+        </property>
+        <property name="text">
+         <string>Fetch document information</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_FetchMusic">
+        <property name="toolTip">
+         <string>Service needs to be restarted to take effect.</string>
+        </property>
+        <property name="text">
+         <string>Fetch music information</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_FetchVideos">
+        <property name="toolTip">
+         <string>Service needs to be restarted to take effect.</string>
+        </property>
+        <property name="text">
+         <string>Fetch video information</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
-    <spacer name="verticalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Fixed</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item>
-    <layout class="QFormLayout" name="formLayout">
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Preferred Music Plugin:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="KComboBox" name="musicPlugin">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Preferred Publication Plugin:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="KComboBox" name="publicationPlugin">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Preferred Tv Show Plugin:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="KComboBox" name="tvshowPlugin">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Preferred Movie Plugin:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="KComboBox" name="moviePlugin">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="QCheckBox" name="checkOtherPlugins">
-     <property name="toolTip">
-      <string>If the preferred plugin did not return any results, this will try the all other plugins until a result could be found.</string>
-     </property>
-     <property name="text">
-      <string>Check next plugin if preferred failed</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
+    <spacer name="verticalSpacer_4">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>

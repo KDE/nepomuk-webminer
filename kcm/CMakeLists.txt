@@ -6,13 +6,11 @@ project(kcm_nepomuk-webminer)
 set(kcm_nepomuk-webminer_SRCS
   nepomukwebminerkcm.cpp
   configfetcher.cpp
-  configservice.cpp
   pluginlist.cpp
 )
 
 kde4_add_ui_files(kcm_nepomuk-webminer_SRCS
   configfetcher.ui
-  configservice.ui
   pluginlist.ui
 )
 

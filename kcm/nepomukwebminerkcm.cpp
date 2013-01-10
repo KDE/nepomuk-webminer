@@ -24,7 +24,6 @@
 
 #include <mdesettings.h>
 #include "configfetcher.h"
-#include "configservice.h"
 #include "pluginlist.h"
 
 // KDE includes
@@ -72,12 +71,6 @@ NepomukWebMinerKCM::NepomukWebMinerKCM(QWidget *parent, const QVariantList &list
     pluginPage->setIcon(KIcon(QLatin1String("run-build-configure")));
     pageWidget->addPage(pluginPage);
 
-    csd = new ConfigService();
-    KPageWidgetItem *servicePage =  new KPageWidgetItem(csd, i18n("Service"));
-    servicePage->setIcon(KIcon(QLatin1String("services")));
-    pageWidget->addPage(servicePage);
-    connect(csd, SIGNAL(configChanged(bool)), this, SLOT(changed()));
-
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(pageWidget);
 }
@@ -85,11 +78,9 @@ NepomukWebMinerKCM::NepomukWebMinerKCM(QWidget *parent, const QVariantList &list
 void NepomukWebMinerKCM::save()
 {
     cfd->saveConfig();
-    csd->saveConfig();
 }
 
 void NepomukWebMinerKCM::load()
 {
     cfd->resetConfig();
-    csd->resetConfig();
 }
