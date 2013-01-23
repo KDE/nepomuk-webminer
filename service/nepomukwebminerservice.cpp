@@ -22,6 +22,7 @@
 
 #include "indexscheduler.h"
 #include "mdesettings.h"
+#include "webmineradaptor.h"
 
 #include <QtDBus/QDBusInterface>
 
@@ -33,6 +34,7 @@ class NepomukWebMinerServicePrivate
 {
 public:
     IndexScheduler *indexScheduler;
+    WebMinerAdaptor *dBusAdaptor;
 };
 
 NepomukWebMinerService::NepomukWebMinerService(QObject *parent, const QVariantList &)
@@ -64,26 +66,37 @@ NepomukWebMinerService::NepomukWebMinerService(QObject *parent, const QVariantLi
 
     d->indexScheduler = new IndexScheduler( this );
 
-    connect( d->indexScheduler, SIGNAL(statusStringChanged()), this, SIGNAL(statusStringChanged()) );
+    connect( d->indexScheduler, SIGNAL(statusStringChanged()), this, SLOT(generateStatus()) );
 
-    connect( this, SIGNAL( statusStringChanged() ), this, SIGNAL( statusChanged() ) );
     connect( d->indexScheduler, SIGNAL( indexingStarted() ), this, SIGNAL( indexingStarted() ) );
     connect( d->indexScheduler, SIGNAL( indexingStopped() ), this, SIGNAL( indexingStopped() ) );
-    connect( d->indexScheduler, SIGNAL( indexingFolder(QString) ), this, SIGNAL( indexingFolder(QString) ) );
+
+    // export on dbus
+    d->dBusAdaptor = new WebMinerAdaptor( this );
+    QDBusConnection::sessionBus().registerObject( QLatin1String( "/WebMiner" ), this );
 }
 
 NepomukWebMinerService::~NepomukWebMinerService()
 {
     Q_D(NepomukWebMinerService);
 
+    QDBusConnection::sessionBus().unregisterObject( QLatin1String( "/WebMiner" ) );
+
     delete d->indexScheduler;
+    delete d->dBusAdaptor;
 }
 
-bool NepomukWebMinerService::isSuspended() const
+int NepomukWebMinerService::status() const
 {
-    Q_D(const NepomukWebMinerService);
+    int state = 0; // default idle
+    if(isIndexing()) {
+        state = 1;
+    }
+    else if(isSuspended()) {
+        state = 2;
+    }
 
-    return d->indexScheduler->isSuspended();
+    return state;
 }
 
 bool NepomukWebMinerService::isIndexing() const
@@ -93,21 +106,55 @@ bool NepomukWebMinerService::isIndexing() const
     return d->indexScheduler->isIndexing();
 }
 
-QString NepomukWebMinerService::userStatusString() const
+bool NepomukWebMinerService::isSuspended() const
+{
+    Q_D(const NepomukWebMinerService);
+
+    return d->indexScheduler->isSuspended();
+}
+
+void NepomukWebMinerService::suspend() const
+{
+    Q_D(const NepomukWebMinerService);
+
+    return d->indexScheduler->suspend();
+}
+
+void NepomukWebMinerService::resume() const
+{
+    Q_D(const NepomukWebMinerService);
+
+    return d->indexScheduler->resume();
+}
+
+QString NepomukWebMinerService::currentFile() const
+{
+    Q_D(const NepomukWebMinerService);
+
+    return d->indexScheduler->currentUrl().toString();
+}
+
+QString NepomukWebMinerService::statusMessage() const
 {
     Q_D(const NepomukWebMinerService);
 
     return d->indexScheduler->userStatusString();
 }
 
-QUrl NepomukWebMinerService::currentUrl() const
+void NepomukWebMinerService::generateStatus()
 {
-    Q_D(const NepomukWebMinerService);
+    int state = 0;
+    if(isIndexing()) {
+        state = 1;
+    }
+    else if(isSuspended()) {
+        state = 2;
+    }
 
-    return d->indexScheduler->currentUrl();
+    QString msg = statusMessage();
+
+    emit status(state, msg);
 }
-
-
 
 #include <kpluginfactory.h>
 #include <kpluginloader.h>

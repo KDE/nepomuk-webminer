@@ -80,6 +80,7 @@ IndexScheduler::IndexScheduler( QObject* parent )
     connect( d->webIQ, SIGNAL(finishedIndexing()), this, SLOT(slotFinishedIndexing()) );
 
     connect( d->webIQ, SIGNAL(startedIndexing()), this, SIGNAL(statusStringChanged()) );
+    connect( d->webIQ, SIGNAL(beginIndexingFile(QUrl)), this, SLOT(statusStringChanged()) );
     connect( d->webIQ, SIGNAL(finishedIndexing()), this, SIGNAL(statusStringChanged()) );
 
     d->eventMonitor = new Nepomuk2::EventMonitor( this );
@@ -245,8 +246,10 @@ void IndexScheduler::slotScheduleIndexing()
 {
     Q_D(IndexScheduler);
 
-    if( d->state == IndexSchedulerPrivate::State_Suspended )
+    if( d->state == IndexSchedulerPrivate::State_Suspended ) {
+        emit statusStringChanged();
         return;
+    }
 
     if( d->eventMonitor->isDiskSpaceLow() ) {
         kDebug() << "Disk Space Low";
@@ -289,6 +292,8 @@ void IndexScheduler::slotScheduleIndexing()
             d->webIQ->resume();
         }
     }
+
+    emit statusStringChanged();
 }
 
 QString IndexScheduler::userStatusString() const
@@ -297,7 +302,7 @@ QString IndexScheduler::userStatusString() const
     bool suspended = isSuspended();
 
     if ( suspended ) {
-        return i18nc( "@info:status", "WebMiner indexer is suspended." );
+        return i18nc( "@info:status", "WebMiner service is suspended." );
     }
     else if ( indexing ) {
         QUrl url = currentUrl();
@@ -310,7 +315,7 @@ QString IndexScheduler::userStatusString() const
         }
     }
     else {
-        return i18nc( "@info:status", "WebMiner indexer is idle." );
+        return i18nc( "@info:status", "WebMiner service is idle." );
     }
 }
 

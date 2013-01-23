@@ -10,7 +10,10 @@ set( nepomuk-webminerservice_SRCS
 )
 
 kde4_add_kcfg_files(nepomuk-webminerservice_SRCS ../lib/mdesettings.kcfgc)
+qt4_add_dbus_adaptor(nepomuk-webminerservice_SRCS org.kde.nepomuk.WebMiner.xml nepomukwebminerservice.h NepomukWebMinerService )
+
 kde4_add_plugin(nepomuk-webminerservice ${nepomuk-webminerservice_SRCS})
+
 
 target_link_libraries(nepomuk-webminerservice
   nbibontology
@@ -32,4 +35,11 @@ install(
 install(
   TARGETS nepomuk-webminerservice
   DESTINATION ${PLUGIN_INSTALL_DIR})
+  
+  
+install(
+  FILES org.kde.nepomuk.WebMiner.xml
+  DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
+  )
+
 # -----------------------------

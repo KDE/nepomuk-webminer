@@ -37,18 +37,36 @@ class NepomukWebMinerServicePrivate;
 class NepomukWebMinerService : public Nepomuk2::Service
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.nepomuk.WebMiner")
 
 public:
     explicit NepomukWebMinerService(QObject *parent = 0, const QVariantList& args = QVariantList());
     ~NepomukWebMinerService();
 
-    bool isSuspended() const;
-    bool isIndexing() const;
 
+Q_SIGNALS:
     /**
-     * @brief A user readable description of the scheduler's status
+     * @brief sends a changed status via dbus
+     *
+     * @p state current state of the service
+     *    @arg 0 idle
+     *    @arg 1 indexing
+     *    @arg 2 suspended
+     * @p msg translated string telling whats going on currently
      */
-    QString userStatusString() const;
+    Q_SCRIPTABLE void status(int state, QString msg);
+    Q_SCRIPTABLE void indexingStarted();
+    Q_SCRIPTABLE void indexingStopped();
+    Q_SCRIPTABLE void percent(int progress);
+
+
+public Q_SLOTS:
+    Q_SCRIPTABLE int status() const;
+    Q_SCRIPTABLE bool isIndexing() const;
+    Q_SCRIPTABLE bool isSuspended() const;
+
+    Q_SCRIPTABLE void suspend() const;
+    Q_SCRIPTABLE void resume() const;
 
     /**
      * @brief The current uri being indexed. It is empty if no file is being indexed.
@@ -59,7 +77,15 @@ public:
      * @sa indexingStarted
      * @sa indexingStopped
      */
-    QUrl currentUrl() const;
+    Q_SCRIPTABLE QString currentFile() const;
+
+    /**
+     * @brief A user readable description of the scheduler's status
+     */
+    Q_SCRIPTABLE QString statusMessage() const;
+
+private Q_SLOTS:
+    void generateStatus();
 
 private:
     Q_DECLARE_PRIVATE(NepomukWebMinerService)
