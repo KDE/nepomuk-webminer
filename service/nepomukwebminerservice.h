@@ -87,6 +87,11 @@ public Q_SLOTS:
 private Q_SLOTS:
     void generateStatus();
 
+    void fileIndexerEnabled();
+    void fileIndexerDisabled();
+
+    void startIndexing();
+
 private:
     Q_DECLARE_PRIVATE(NepomukWebMinerService)
     NepomukWebMinerServicePrivate *const d_ptr; /**< d-pointer for this class */

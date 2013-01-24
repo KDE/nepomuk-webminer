@@ -35,6 +35,10 @@ class NepomukWebMinerServicePrivate
 public:
     IndexScheduler *indexScheduler;
     WebMinerAdaptor *dBusAdaptor;
+
+    // watch for the fileindexer going up/down send fileIndexingDone
+    QDBusServiceWatcher* fileIndexerWatcher;
+    QDBusInterface *dBusFileIndexer;
 };
 
 NepomukWebMinerService::NepomukWebMinerService(QObject *parent, const QVariantList &)
@@ -74,6 +78,21 @@ NepomukWebMinerService::NepomukWebMinerService(QObject *parent, const QVariantLi
     // export on dbus
     d->dBusAdaptor = new WebMinerAdaptor( this );
     QDBusConnection::sessionBus().registerObject( QLatin1String( "/WebMiner" ), this );
+
+    d->dBusFileIndexer = 0;
+    // watch for the file indexer service to come up and go down
+    d->fileIndexerWatcher = new QDBusServiceWatcher( "org.kde.nepomuk.services.nepomukfileindexer", QDBusConnection::sessionBus(),
+                                                     QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration,
+                                                     this );
+    connect( d->fileIndexerWatcher, SIGNAL( serviceRegistered( QString ) ), this, SLOT( fileIndexerEnabled()) );
+    connect( d->fileIndexerWatcher, SIGNAL( serviceUnregistered( QString ) ), this, SLOT( fileIndexerDisabled()) );
+
+     if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.nepomuk.services.nepomukfileindexer" ) ) {
+        fileIndexerEnabled();
+     }
+     else {
+         fileIndexerDisabled();
+     }
 }
 
 NepomukWebMinerService::~NepomukWebMinerService()
@@ -154,6 +173,33 @@ void NepomukWebMinerService::generateStatus()
     QString msg = statusMessage();
 
     emit status(state, msg);
+}
+
+void NepomukWebMinerService::fileIndexerEnabled()
+{
+    Q_D(NepomukWebMinerService);
+
+    d->dBusFileIndexer = new QDBusInterface(QLatin1String("org.kde.nepomuk.services.nepomukfileindexer"),
+                                           QLatin1String("/nepomukfileindexer"),
+                                           QLatin1String("org.kde.nepomuk.FileIndexer"),
+                                           QDBusConnection::sessionBus());
+
+    connect( d->dBusFileIndexer, SIGNAL( fileIndexingDone() ), this, SLOT( startIndexing() ) );
+}
+
+void NepomukWebMinerService::fileIndexerDisabled()
+{
+    Q_D(NepomukWebMinerService);
+
+    delete d->dBusFileIndexer;
+    d->dBusFileIndexer = 0;
+}
+
+void NepomukWebMinerService::startIndexing()
+{
+    Q_D(NepomukWebMinerService);
+
+    d->indexScheduler->slotScheduleIndexing();
 }
 
 #include <kpluginfactory.h>

@@ -80,7 +80,7 @@ IndexScheduler::IndexScheduler( QObject* parent )
     connect( d->webIQ, SIGNAL(finishedIndexing()), this, SLOT(slotFinishedIndexing()) );
 
     connect( d->webIQ, SIGNAL(startedIndexing()), this, SIGNAL(statusStringChanged()) );
-    connect( d->webIQ, SIGNAL(beginIndexingFile(QUrl)), this, SLOT(statusStringChanged()) );
+    connect( d->webIQ, SIGNAL(beginIndexingFile(QUrl)), this, SIGNAL(statusStringChanged()) );
     connect( d->webIQ, SIGNAL(finishedIndexing()), this, SIGNAL(statusStringChanged()) );
 
     d->eventMonitor = new Nepomuk2::EventMonitor( this );

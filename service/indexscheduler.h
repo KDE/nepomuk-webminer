@@ -31,11 +31,11 @@ class WebMinerIndexingQueue;
 class EventMonitor;
 
 /**
-     * @brief The IndexScheduler is responsible for controlling the indexing queue and reacting to events.
-     *
-     * It contains an EventMonitor and listens for events such as power management, battery,
-     * disk space and network availability
-     */
+  * @brief The IndexScheduler is responsible for controlling the indexing queue and reacting to events.
+  *
+  * It contains an EventMonitor and listens for events such as power management, battery,
+  * disk space and network availability
+  */
 class IndexScheduler : public QObject
 {
     Q_OBJECT
@@ -48,19 +48,19 @@ public:
     bool isIndexing() const;
 
     /**
-         * @brief A user readable description of the scheduler's status
-         */
+      * @brief A user readable description of the scheduler's status
+      */
     QString userStatusString() const;
 
     /**
-         * @brief The current uri being indexed. It is empty if no file is being indexed.
-         *
-         * The url being empty does not indicate that the indexer isn't running,
-         * just that it hasn't found a file to index.
-         *
-         * @sa indexingStarted
-         * @sa indexingStopped
-         */
+      * @brief The current uri being indexed. It is empty if no file is being indexed.
+      *
+      * The url being empty does not indicate that the indexer isn't running,
+      * just that it hasn't found a file to index.
+      *
+      * @sa indexingStarted
+      * @sa indexingStopped
+      */
     QUrl currentUrl() const;
 
 public Q_SLOTS:
@@ -70,9 +70,12 @@ public Q_SLOTS:
     void setSuspended( bool );
 
     /**
-         * @brief Updates all configured folders.
-         */
+      * @brief Updates all configured folders.
+      */
     void updateAll( bool forceUpdate = false );
+
+    // Event Monitor integration
+    void slotScheduleIndexing();
 
 Q_SIGNALS:
     // Indexing State
@@ -96,9 +99,6 @@ private Q_SLOTS:
 
     void slotStartedIndexing();
     void slotFinishedIndexing();
-
-    // Event Monitor integration
-    void slotScheduleIndexing();
 
 private:
     // emits indexingStarted or indexingStopped based on parameter. Makes sure
