@@ -19,6 +19,9 @@
     <method name="statusMessage">
       <arg type="s" direction="out" />
     </method>
+    <method name="indexManually">
+      <arg type="s" name="path" direction="in" />
+    </method>
 
     <signal name="status" >
       <arg name="state" type="i" />

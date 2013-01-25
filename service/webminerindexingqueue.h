@@ -32,6 +32,7 @@ public:
     explicit WebMinerIndexingQueue(QObject *parent = 0);
     virtual bool isEmpty();
     virtual void fillQueue();
+    virtual void fillQueue(const QUrl &selection);
 
     void clear();
     QUrl currentUrl();

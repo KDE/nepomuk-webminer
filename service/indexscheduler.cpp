@@ -119,20 +119,27 @@ void IndexScheduler::suspend()
 {
     Q_D(IndexScheduler);
 
+    kDebug() << "suspend indexer";
+
     if ( d->state != IndexSchedulerPrivate::State_Suspended ) {
         d->state = IndexSchedulerPrivate::State_Suspended;
-        slotScheduleIndexing();
+        d->webIQ->suspend();
+        d->webIQ->clear();
 
         d->eventMonitor->disable();
 
         emit indexingSuspended( true );
+        emit indexingStopped();
     }
+
+    emit statusStringChanged();
 }
 
 void IndexScheduler::resume()
 {
     Q_D(IndexScheduler);
 
+    kDebug() << "resume indexer";
     if( d->state == IndexSchedulerPrivate::State_Suspended ) {
         d->state = IndexSchedulerPrivate::State_Normal;
         slotScheduleIndexing();
@@ -141,6 +148,8 @@ void IndexScheduler::resume()
 
         emit indexingSuspended( false );
     }
+
+    emit statusStringChanged();
 }
 
 void IndexScheduler::setSuspended( bool suspended )
@@ -163,6 +172,24 @@ bool IndexScheduler::isIndexing() const
     Q_D(const IndexScheduler);
 
     return d->indexing;
+}
+
+void IndexScheduler::indexManually(const QUrl &fileOrFolder)
+{
+    Q_D(IndexScheduler);
+
+    if( d->state == IndexSchedulerPrivate::State_UserIdle ||
+        d->state == IndexSchedulerPrivate::State_Normal ||
+        d->state == IndexSchedulerPrivate::State_OnBattery ) {
+        kDebug() << "start indexing a file/fodler manually:: " << fileOrFolder;
+
+        d->webIQ->fillQueue(fileOrFolder);
+
+        emit statusStringChanged();
+    }
+    else {
+        kDebug() << "can't start manual indexing, service is neither in 'idle' nor normal 'state'";
+    }
 }
 
 QUrl IndexScheduler::currentUrl() const

@@ -82,6 +82,44 @@ void WebMinerIndexingQueue::fillQueue()
     }
 }
 
+void WebMinerIndexingQueue::fillQueue(const QUrl &selection)
+{
+    // resume the webminingqueue as we force indexing, no matter what
+    resumeNoAction();
+
+    // if the url is a simple fle, just add it to the queue
+    // if we have a folder, add all files in it to the queue
+    // for eac hsubfodler call fillQueue(selection) recursive
+    QDir dir(selection.toLocalFile());
+
+    if (dir.exists()) {
+        QFileInfoList list = dir.entryInfoList();
+        foreach (const QFileInfo & fileInfo, list) {
+            if(isSuspended()) { // if we suspended the service in the meatime, we break here
+                break;        // in case we index a full usb drive this will run for a long time otherwise
+                              // before this would freally suspend the service
+            }
+            if (fileInfo.fileName() == QString(".") || fileInfo.fileName() == QString("..")) {
+                continue;
+            }
+            QUrl url(fileInfo.absoluteFilePath());
+            if (fileInfo.isDir()) {
+                fillQueue(url);
+            } else {
+                kDebug() << "add file" << url;
+                m_fileQueue.enqueue(url);
+            }
+        }
+    } else {
+        kDebug() << "add file" << selection;
+        m_fileQueue.enqueue(selection);
+    }
+
+    emit startedIndexing();
+
+    callForNextIteration();
+}
+
 bool WebMinerIndexingQueue::isEmpty()
 {
     return m_fileQueue.isEmpty();

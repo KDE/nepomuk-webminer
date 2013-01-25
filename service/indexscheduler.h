@@ -48,6 +48,12 @@ public:
     bool isIndexing() const;
 
     /**
+     * @brief Fills the WebminerIndexingQueue manually with teh selected url
+     * @param fileOrFolder url of the file or the fodler to be indexed
+     */
+    void indexManually(const QUrl &fileOrFolder);
+
+    /**
       * @brief A user readable description of the scheduler's status
       */
     QString userStatusString() const;

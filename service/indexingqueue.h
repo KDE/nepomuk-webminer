@@ -58,7 +58,9 @@ namespace Nepomuk2 {
 
     public slots:
         void suspend();
+        bool isSuspended();
         void resume();
+        void resumeNoAction();
 
     signals:
         /**

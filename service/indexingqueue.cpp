@@ -56,9 +56,20 @@ void IndexingQueue::resume()
     callForNextIteration();
 }
 
+void IndexingQueue::resumeNoAction()
+{
+    m_suspended = false;
+}
+
 void IndexingQueue::suspend()
 {
+    kDebug() << "suspend indexer";
     m_suspended = true;
+}
+
+bool IndexingQueue::isSuspended()
+{
+   return m_suspended;
 }
 
 void IndexingQueue::callForNextIteration()

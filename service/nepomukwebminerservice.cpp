@@ -146,6 +146,13 @@ void NepomukWebMinerService::resume() const
     return d->indexScheduler->resume();
 }
 
+void NepomukWebMinerService::indexManually(const QString &fileOrFolder )
+{
+    Q_D(NepomukWebMinerService);
+
+    return d->indexScheduler->indexManually(QUrl(fileOrFolder));
+}
+
 QString NepomukWebMinerService::currentFile() const
 {
     Q_D(const NepomukWebMinerService);
@@ -163,14 +170,16 @@ QString NepomukWebMinerService::statusMessage() const
 void NepomukWebMinerService::generateStatus()
 {
     int state = 0;
-    if(isIndexing()) {
-        state = 1;
-    }
-    else if(isSuspended()) {
+    if(isSuspended()) {
         state = 2;
+    }
+    else if(isIndexing()) {
+        state = 1;
     }
 
     QString msg = statusMessage();
+
+    kDebug() << "send message" << state << msg;
 
     emit status(state, msg);
 }

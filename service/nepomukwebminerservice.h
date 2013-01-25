@@ -68,6 +68,8 @@ public Q_SLOTS:
     Q_SCRIPTABLE void suspend() const;
     Q_SCRIPTABLE void resume() const;
 
+    Q_SCRIPTABLE void indexManually(const QString &fileOrFolder );
+
     /**
      * @brief The current uri being indexed. It is empty if no file is being indexed.
      *
