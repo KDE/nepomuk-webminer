@@ -110,9 +110,6 @@ void WebMinerIndexingQueue::fillQueue(const QUrl &selection)
                 m_fileQueue.enqueue(url);
             }
         }
-    } else {
-        kDebug() << "add file" << selection;
-        m_fileQueue.enqueue(selection);
     }
 
     emit startedIndexing();

@@ -26,9 +26,15 @@
 #include <QtCore/QTimer>
 #include <QtCore/QFileInfo>
 
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusConnectionInterface>
+
 #include "ui/fetcher.h"
 #include "ui/fetcherdialog.h"
 #include "ui/automaticfetcher.h"
+
+#include <KDE/KDebug>
 
 int main(int argc, char *argv[])
 {
@@ -52,6 +58,8 @@ int main(int argc, char *argv[])
     options.add("r").add("resource", ki18n("Fetch data for a Nepomuk Resource information"));
 
     options.add("", ki18n("If no --url or --resource is used, the given url argument will be treated as local file/folder"));
+
+    options.add("s").add("standalone", ki18n("When set the automatic fetcher does not use the nepomuk service for execution"));
 
     options.add(":", ki18n("Extra options to help filename parsing:"));
     options.add("t").add("tvshow", ki18n("Defines that the folder we are working on contains only one or more tvshow."));
@@ -79,6 +87,37 @@ int main(int argc, char *argv[])
 
 
     if (args->isSet("auto")) {
+
+        if( !args->isSet("standalone")) {
+            //TODO check if service is available and call the indexManually dbus method
+
+            if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.nepomuk.services.nepomuk-webminerservice" ) ) {
+
+                // connect to the dbus interface
+                QDBusInterface dBusWebMiner(QLatin1String("org.kde.nepomuk.services.nepomuk-webminerservice"),
+                                            QLatin1String("/WebMiner"),
+                                            QLatin1String("org.kde.nepomuk.WebMiner"),
+                                            QDBusConnection::sessionBus());
+
+
+                if(dBusWebMiner.isValid())
+                    kDebug() << "send request to the webminer service";
+                else
+                    kDebug() << "dbus interface not valid";
+
+                dBusWebMiner.call( "indexManually", args->url(0).toLocalFile());
+
+                // stop execution here if we use the service for execution
+                return 0;
+            }
+            else {
+                kDebug() << "service not available, fallback to no service execution";
+            }
+        }
+
+        //normal execution if no service is used for automativ extraction
+        // or the service was not available
+
         NepomukWebMiner::UI::AutomaticFetcher af;
 
         QObject::connect(&af, SIGNAL(finished()), &app, SLOT(quit()));

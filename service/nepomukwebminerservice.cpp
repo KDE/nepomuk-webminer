@@ -150,6 +150,7 @@ void NepomukWebMinerService::indexManually(const QString &fileOrFolder )
 {
     Q_D(NepomukWebMinerService);
 
+    kDebug() << "index manually";
     return d->indexScheduler->indexManually(QUrl(fileOrFolder));
 }
 

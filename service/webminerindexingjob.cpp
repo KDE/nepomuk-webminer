@@ -47,7 +47,7 @@ void WebMinerIndexingJob::start()
     m_process = new KProcess( this );
 
     QStringList args;
-    args << "-auto" << "-force";
+    args << "-auto" << "-force" << "-standalone";
     args << m_url.toLocalFile();
 
     kDebug() << "Running" << exe << args;
