@@ -54,11 +54,11 @@ public:
     void setFetchingUrl(const KUrl url);
     void cancel();
 
-public slots:
+public Q_SLOTS:
     void addStatusOutput(const QString &message);
     void startFetching();
 
-private slots:
+private Q_SLOTS:
     void fetchingDone();
 
 private:

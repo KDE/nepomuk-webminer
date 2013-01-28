@@ -152,17 +152,21 @@ NepomukWebMiner::UI::FetcherDialog::~FetcherDialog()
 bool NepomukWebMiner::UI::FetcherDialog::startFetching(const KUrl url)
 {
     //FIXME: tell user that no plugins/the krosspython plugin is missing
-    StartupDialog sud(this);
+    QPointer<StartupDialog> sud = new StartupDialog(this);
 
-    sud.setFetchingUrl(url);
+    sud->setFetchingUrl(url);
 
-    QTimer::singleShot(0, &sud, SLOT(startFetching()));
-    int ret = sud.exec();
+    QTimer::singleShot(0, sud, SLOT(startFetching()));
+    int ret = sud->exec();
+
 
     if(ret == QDialog::Rejected) {
-        sud.cancel();
+        sud->cancel();
+        delete sud;
         return false;
     }
+
+    delete sud;
 
     // check if we have files for the webextraction
     if( resourceExtractor()->resourcesList().isEmpty() ) {

@@ -72,8 +72,8 @@ NepomukWebMinerService::NepomukWebMinerService(QObject *parent, const QVariantLi
 
     connect( d->indexScheduler, SIGNAL(statusStringChanged()), this, SLOT(generateStatus()) );
 
-    connect( d->indexScheduler, SIGNAL( indexingStarted() ), this, SIGNAL( indexingStarted() ) );
-    connect( d->indexScheduler, SIGNAL( indexingStopped() ), this, SIGNAL( indexingStopped() ) );
+    connect( d->indexScheduler, SIGNAL(indexingStarted()), this, SIGNAL(indexingStarted()) );
+    connect( d->indexScheduler, SIGNAL(indexingStopped()), this, SIGNAL(indexingStopped()) );
 
     // export on dbus
     d->dBusAdaptor = new WebMinerAdaptor( this );
@@ -84,8 +84,8 @@ NepomukWebMinerService::NepomukWebMinerService(QObject *parent, const QVariantLi
     d->fileIndexerWatcher = new QDBusServiceWatcher( "org.kde.nepomuk.services.nepomukfileindexer", QDBusConnection::sessionBus(),
                                                      QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration,
                                                      this );
-    connect( d->fileIndexerWatcher, SIGNAL( serviceRegistered( QString ) ), this, SLOT( fileIndexerEnabled()) );
-    connect( d->fileIndexerWatcher, SIGNAL( serviceUnregistered( QString ) ), this, SLOT( fileIndexerDisabled()) );
+    connect( d->fileIndexerWatcher, SIGNAL(serviceRegistered(QString)), this, SLOT(fileIndexerEnabled()) );
+    connect( d->fileIndexerWatcher, SIGNAL(serviceUnregistered(QString)), this, SLOT(fileIndexerDisabled()) );
 
      if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.nepomuk.services.nepomukfileindexer" ) ) {
         fileIndexerEnabled();
@@ -194,7 +194,7 @@ void NepomukWebMinerService::fileIndexerEnabled()
                                            QLatin1String("org.kde.nepomuk.FileIndexer"),
                                            QDBusConnection::sessionBus());
 
-    connect( d->dBusFileIndexer, SIGNAL( fileIndexingDone() ), this, SLOT( startIndexing() ) );
+    connect( d->dBusFileIndexer, SIGNAL(fileIndexingDone()), this, SLOT(startIndexing()) );
 }
 
 void NepomukWebMinerService::fileIndexerDisabled()

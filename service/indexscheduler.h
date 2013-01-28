@@ -41,7 +41,7 @@ class IndexScheduler : public QObject
     Q_OBJECT
 
 public:
-    IndexScheduler( QObject* parent=0 );
+    explicit IndexScheduler( QObject* parent=0 );
     ~IndexScheduler();
 
     bool isSuspended() const;

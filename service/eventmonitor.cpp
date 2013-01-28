@@ -40,14 +40,14 @@ Nepomuk2::EventMonitor::EventMonitor( QObject* parent )
     : QObject( parent )
 {
     // monitor the powermanagement to not drain the battery
-    connect( Solid::PowerManagement::notifier(), SIGNAL( appShouldConserveResourcesChanged( bool ) ),
+    connect( Solid::PowerManagement::notifier(), SIGNAL(appShouldConserveResourcesChanged(bool)),
              this, SLOT(slotPowerManagementStatusChanged(bool)) );
 
     connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
             this, SLOT(slotNetworkgStatusChanged(Solid::Networking::Status)) );
 
     // setup the avail disk usage monitor
-    connect( &m_availSpaceTimer, SIGNAL( timeout() ), this, SLOT( slotCheckAvailableSpace() ) );
+    connect( &m_availSpaceTimer, SIGNAL(timeout()), this, SLOT(slotCheckAvailableSpace()) );
 
     // setup idle time
     KIdleTime* idleTime = KIdleTime::instance();

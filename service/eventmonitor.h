@@ -35,7 +35,7 @@ namespace Nepomuk2 {
         Q_OBJECT
 
     public:
-        EventMonitor( QObject* parent = 0 );
+        explicit EventMonitor( QObject* parent = 0 );
         ~EventMonitor();
 
         bool isIdle()         const   { return m_isIdle; }
