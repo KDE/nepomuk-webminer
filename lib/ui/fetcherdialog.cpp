@@ -151,7 +151,6 @@ NepomukWebMiner::UI::FetcherDialog::~FetcherDialog()
 
 bool NepomukWebMiner::UI::FetcherDialog::startFetching(const KUrl url)
 {
-    //FIXME: tell user if no files are found (because of the missing --force option)
     //FIXME: tell user that no plugins/the krosspython plugin is missing
     StartupDialog sud(this);
 
@@ -164,9 +163,24 @@ bool NepomukWebMiner::UI::FetcherDialog::startFetching(const KUrl url)
         sud.cancel();
         return false;
     }
-    else {
-        return true;
+
+    // check if we have files for the webextraction
+    if( resourceExtractor()->resourcesList().isEmpty() ) {
+
+        QMessageBox::warning(this, i18n("Nepomuk-WebMiner"),
+                                   i18n("No files without metadata could be found.\n"
+                                        "Try starting the WebMiner with forced updates to use all available files"),
+                                       QMessageBox::Close, QMessageBox::Close);
+
+        return false;
+
     }
+
+    // check if plugins are available
+    // so check for krosspython and if some plugins exist
+
+    return true;
+
 }
 
 void NepomukWebMiner::UI::FetcherDialog::errorInScriptExecution(const QString &error)
