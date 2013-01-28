@@ -151,6 +151,8 @@ NepomukWebMiner::UI::FetcherDialog::~FetcherDialog()
 
 bool NepomukWebMiner::UI::FetcherDialog::startFetching(const KUrl url)
 {
+    //FIXME: tell user if no files are found (because of the missing --force option)
+    //FIXME: tell user that no plugins/the krosspython plugin is missing
     StartupDialog sud(this);
 
     sud.setFetchingUrl(url);
@@ -217,7 +219,7 @@ void NepomukWebMiner::UI::FetcherDialog::openSettings()
 
 void NepomukWebMiner::UI::FetcherDialog::openHelp()
 {
-    KToolInvocation::invokeHelp(QString(), QString("kcontrol/metadataextractor"));
+    KToolInvocation::invokeHelp(QString(), QString("kcontrol/nepomuk-webminer"));
 }
 
 void NepomukWebMiner::UI::FetcherDialog::resourceFetchingDone()

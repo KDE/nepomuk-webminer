@@ -146,7 +146,7 @@ NepomukWebMiner::Extractor::ExtractorFactory* NepomukWebMiner::UI::Fetcher::extr
 void NepomukWebMiner::UI::Fetcher::addResourceUriToMetaData(NepomukWebMiner::Extractor::MetaDataParameters *mdp)
 {
     // For tv shows put the resource uri into the Episode part of the MetaData
-    // this way around it is possible to use the TvShowPipe with more episode/files at once
+    // this way around it is possible to use the TvShowPipe with more episodes/files at once
     if (mdp->resourceType() == QLatin1String("tvshow")) {
         QVariantList seasons = mdp->metaData().value(QLatin1String("seasons")).toList();
         if (!seasons.isEmpty()) {

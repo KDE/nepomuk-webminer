@@ -89,8 +89,6 @@ int main(int argc, char *argv[])
     if (args->isSet("auto")) {
 
         if( !args->isSet("standalone")) {
-            //TODO check if service is available and call the indexManually dbus method
-
             if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.nepomuk.services.nepomuk-webminerservice" ) ) {
 
                 // connect to the dbus interface
@@ -98,12 +96,6 @@ int main(int argc, char *argv[])
                                             QLatin1String("/WebMiner"),
                                             QLatin1String("org.kde.nepomuk.WebMiner"),
                                             QDBusConnection::sessionBus());
-
-
-                if(dBusWebMiner.isValid())
-                    kDebug() << "send request to the webminer service";
-                else
-                    kDebug() << "dbus interface not valid";
 
                 dBusWebMiner.call( "indexManually", args->url(0).toLocalFile());
 

@@ -38,7 +38,7 @@ namespace UI {
 }
 
 /**
- * @brief Simple dialog that shows teh status of the ile extarction on startup
+ * @brief Simple dialog that shows the status of the file extarction on startup
  *
  * Tells the user that something is going one, when a large collection of files is
  * parsed.

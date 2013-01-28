@@ -46,7 +46,7 @@ class FetcherDialogPrivate;
 /**
   * @brief Dialog to interactively @c search / @c fetch and @c save metadata for a list of resources
   *
- * Some examples how to use this class:
+  * Some examples how to use this class:
 @code
 QUrl someFolder = ...
 NepomukWebMiner::UI::FetcherDialog fd;

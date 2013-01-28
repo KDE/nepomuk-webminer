@@ -61,7 +61,7 @@ NepomukWebMiner::Extractor::KrossExtractor::KrossExtractor(const QString &script
     d->scriptFile->setFile(scriptFile);
     d->scriptFile->trigger();
 
-    KConfig config("nepomukwebminerrc");
+    KConfig config("nepomuk-webminerrc");
     if (config.hasGroup(scriptFile)) {
         KConfigGroup pluginGroup(&config, scriptFile);
         d->scriptInfo.name = pluginGroup.readEntry("name", QString());

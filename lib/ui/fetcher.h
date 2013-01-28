@@ -129,6 +129,18 @@ public:
      */
     NepomukWebMiner::Extractor::ExtractorFactory  *extractorFactory();
 
+    /**
+     * @brief updates the @c kext:indexingLevel from 2 to 3
+     *
+     * The indexingLevel decides if a resource has been used by the webminer lookup, the background service
+     * is looking for each audio/music/video resource that has an indexing level < 3 and fetches the data for it.
+     *
+     * Here we set the indexing level for each file that has been used in the webminer no matter if a result
+     * was found or not. Only if no valid internet connection is available, the indexing level will be skipped
+     *
+     * @param url the url of the file
+     * @param level the level that will be set
+     */
     void updateIndexingLevel(const QUrl& url, int level );
 
 protected:
