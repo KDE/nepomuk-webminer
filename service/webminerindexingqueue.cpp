@@ -91,6 +91,7 @@ void WebMinerIndexingQueue::fillQueue(const QUrl &selection)
     // if we have a folder, add all files in it to the queue
     // for eac hsubfodler call fillQueue(selection) recursive
     QDir dir(selection.toLocalFile());
+    QUrl fileurl(selection.toLocalFile());
 
     if (dir.exists()) {
         QFileInfoList list = dir.entryInfoList();
@@ -110,6 +111,10 @@ void WebMinerIndexingQueue::fillQueue(const QUrl &selection)
                 m_fileQueue.enqueue(url);
             }
         }
+    }
+    else  {
+        kDebug() << "add file" << fileurl;
+        m_fileQueue.enqueue(fileurl);
     }
 
     emit startedIndexing();

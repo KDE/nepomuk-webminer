@@ -75,8 +75,9 @@ bool IndexingQueue::isSuspended()
 void IndexingQueue::callForNextIteration()
 {
     // If already called callForNextIteration
-    if( m_sentEvent )
+    if( m_sentEvent ) {
         return;
+    }
 
     if( isEmpty() ) {
         emit finishedIndexing();
