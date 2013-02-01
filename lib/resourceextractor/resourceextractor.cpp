@@ -155,9 +155,6 @@ void NepomukWebMiner::Extractor::ResourceExtractor::lookupResource(const Nepomuk
     // Step1 get the file resource of this nepomuk resource
     Nepomuk2::File fileResource;
 
-    // BUG: the hasType() is bugged without the call to types() first. Fixed in 4.9.1
-    resource.types();
-
     if (resource.hasType(Nepomuk2::Vocabulary::NBIB::Publication())) {
         // in this case the file is not double typed
         fileResource = Nepomuk2::File(fileResource.property(Nepomuk2::Vocabulary::NBIB::isPublicationOf()).toResource());
@@ -273,9 +270,6 @@ bool NepomukWebMiner::Extractor::ResourceExtractor::resourceChecker(NepomukWebMi
         // if this is not the case we do not have such a Publication resource. All other resources (TvShow/Movie etc are double typed with the file resource)
         queryResource = resource;
     }
-
-    // BUG: the hasType() is bugged without the call to types() first. Fixed in 4.9.1
-    queryResource.types();
 
     // Now get some values from the resource for the search parameters
 
