@@ -130,17 +130,18 @@ void NepomukWebMiner::UI::AutomaticFetcher::searchNextItem()
         return;
     }
 
+    //TODO: maybe enum for resourcetype should be used...
     QString favPlugin;
     if (d->currentItemToupdate->resourceType() == QString("movie")) {
         favPlugin = MDESettings::favoriteMoviePlugin();
     }
-    if (d->currentItemToupdate->resourceType() == QString("tvshow")) {
+    else if (d->currentItemToupdate->resourceType() == QString("tvshow")) {
         favPlugin = MDESettings::favoriteTvShowPlugin();
     }
-    if (d->currentItemToupdate->resourceType() == QString("publication")) {
+    else if (d->currentItemToupdate->resourceType() == QString("publication")) {
         favPlugin = MDESettings::favoritePublicationPlugin();
     }
-    if (d->currentItemToupdate->resourceType() == QString("music")) {
+    else if (d->currentItemToupdate->resourceType() == QString("music")) {
         favPlugin = MDESettings::favoriteMusicPlugin();
     }
 

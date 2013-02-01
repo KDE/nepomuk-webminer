@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        //normal execution if no service is used for automativ extraction
+        // normal execution if no service is used for automatic extraction
         // or the service was not available
 
         NepomukWebMiner::UI::AutomaticFetcher af;
@@ -117,10 +117,12 @@ int main(int argc, char *argv[])
         if (args->isSet("url")) {
             af.addFetcherUrl(args->url(0));
             QTimer::singleShot(0, &af, SLOT(startUrlFetcher()));
-        } else if (args->isSet("resource")) {
+        }
+        else if (args->isSet("resource")) {
             af.addFetcherResource(args->url(0));
             QTimer::singleShot(0, &af, SLOT(startFetcher()));
-        } else {
+        }
+        else {
             af.setForceUpdate(args->isSet("force"));
             af.setTvShowMode(args->isSet("tvshow"));
             af.setTvShowNamesInFolders(args->isSet("usefoldernames"));
@@ -139,16 +141,18 @@ int main(int argc, char *argv[])
         fd.setMovieMode(args->isSet("movie"));
 
         if (args->isSet("url")) {
-        } else if (args->isSet("resource")) {
+        }
+        else if (args->isSet("resource")) {
             fd.addFetcherResource(Nepomuk2::Resource::fromResourceUri(args->url(0)));
-        } else {
+        }
+        else {
             QFileInfo fi(args->url(0).prettyUrl());
             if(fi.isFile()) {
                 fd.addFetcherPath(args->url(0));
             }
             else {
-                // show a dialog with the status of teh current file fetching
-                // thsi can be canceled and closes the dialog again
+                // show a dialog with the status of the current file fetching
+                // this can be canceled and closes the dialog again
                 if (!fd.startFetching(args->url(0)))
                     return 0;
             }

@@ -49,6 +49,9 @@ class AutomaticFetcherPrivate;
  *
  * It always takes the first found search result and the first available search engine as the meta data for the resource
  *
+ * Searchresults are prefiltered to avoid completely wrong results
+ * @see levenshteinDistance
+ *
  * Some examples how to use this class:
 @code
 QUrl someFolder = ...
