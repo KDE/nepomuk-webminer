@@ -33,7 +33,7 @@ set(nbibontology_LIB_SRCS)
 # -DFPIC -fPIC are needed to compile and use the nbib ontology
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DFPIC -fPIC")
 
-soprano_add_ontology(nbibontology_LIB_SRCS ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/kde/kext.trig "KExt" "Nepomuk2::Vocabulary" "trig")
+soprano_add_ontology(nbibontology_LIB_SRCS ${NEPOMUK_CORE_ONTOLOGY_DIR}/kde/kext.trig "KExt" "Nepomuk2::Vocabulary" "trig")
 soprano_add_ontology(nbibontology_LIB_SRCS ${CMAKE_SOURCE_DIR}/ontology/nbib/nbib.trig "NBIB" "Nepomuk2::Vocabulary" "trig")
 kde4_add_library( nbibontology STATIC ${nbibontology_LIB_SRCS} )
 
