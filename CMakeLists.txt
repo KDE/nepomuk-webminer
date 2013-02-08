@@ -47,7 +47,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/kcm
   ${CMAKE_SOURCE_DIR}/lib
-  ${CMAKE_SOURCE_DIR}/lib/sro
   ${CMAKE_SOURCE_DIR}/lib/ui
   ${CMAKE_CURRENT_BUILD_DIR}/lib
   ${CMAKE_CURRENT_BINARY_DIR}
