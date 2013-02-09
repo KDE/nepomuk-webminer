@@ -57,6 +57,7 @@ NepomukWebMinerKCM::NepomukWebMinerKCM(QWidget *parent, const QVariantList &list
     m_ef = new Extractor::ExtractorFactory;
 
     KPageWidget* pageWidget = new KPageWidget();
+    pageWidget->setFaceType(KPageWidget::Tabbed);
 
     cfd = new ConfigFetcher();
     cfd->setExtractorFactory(m_ef);
