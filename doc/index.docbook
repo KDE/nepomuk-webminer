@@ -46,7 +46,7 @@
     <chapter id="introduction">
     <title>Introduction</title>
     <para>
-        The &kappname; finds additional metadata on the internet <emphasis>(via Python plugins)</emphasis> and adds them to Nepomuk.
+        The &kappname; finds additional metadata on the Internet <emphasis>(via Python plugins)</emphasis> and adds them to Nepomuk.
         It can retrieve data for any document/movie/TV show or music file.
     </para>
     </chapter>
@@ -119,7 +119,7 @@
         Select the right entry you want fetch here.
     </para>
     <para>
-        Some more details about the currently selected entry is shown in <command>4</command>. The show online link will open the webbrowser with the website
+        Some more details about the currently selected entry is shown in <command>4</command>. The show online link will open the web browser with the website
         that will be used for the data extraction. To start the extraction click on the <guibutton>Fetch Metadata</guibutton> button.
     </para>
     <para>
@@ -159,13 +159,13 @@
             <para>
                 <guilabel>Download Banner/Poster/Cover</guilabel>:
                  If enabled the extractor looks for the matching poster/banner or cover of the item to fetch.
-                 The image will be saved into the application directory and added to the resource via <application>Nepomuk</application>.
+                 The image will be saved into the application folder and added to the resource via <application>Nepomuk</application>.
             </para>
         </listitem>
         <listitem>
             <para>
                 <guilabel>Save Banner in Resource Folder</guilabel>:
-                 Instead of saving the image into the application directory the image is saved next to the file.
+                 Instead of saving the image into the application folder the image is saved next to the file.
                  <note>
                      <para>
                          Might lead to duplicated images if the same image for two different resources will be saved in different folders.
