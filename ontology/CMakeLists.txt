@@ -4,29 +4,20 @@
 # ontologies used in the library
 # -------------------------------------------
 
-if(DEFINED NOONTOLOGY)
-    message(STATUS "#####################################################################################################")
-    message(STATUS "Skip ontology class generation. Reuse old generated files.")
-    message(STATUS "#####################################################################################################")
-else(DEFINED NOONTOLOGY)
-    message(STATUS "#####################################################################################################")
-    message(STATUS "Generating ontology classes")
-    message(STATUS "This will take a long time! (~20-30 minutes)")
-    message(STATUS "All warnings can be ignored")
-    message(STATUS "This can be skipped with the \"-DNOONTOLOGY=1\" cmake option")
-    message(STATUS "#####################################################################################################")
+message(STATUS "#####################################################################################################")
+message(STATUS "Generating ontology classes")
+message(STATUS "#####################################################################################################")
 
-    NEPOMUK_ADD_SIMPLERESOURCE_CLASSES( ONTOLOGIES
-                                       ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nfo.trig
-                                       ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nco.trig
-                                       ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nmm.trig
-                                       ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/pimo/pimo.trig
-                                       ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nie.trig
-                                       ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nepomuk/nao.trig
-                                       ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/ncal.trig
-                                       ${CMAKE_SOURCE_DIR}/ontology/nbib/nbib.trig
-                                       )
-endif(DEFINED NOONTOLOGY)
+NEPOMUK_ADD_SIMPLERESOURCE_CLASSES(ONTOLOGIES
+                                   ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nfo.trig
+                                   ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nco.trig
+                                   ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nmm.trig
+                                   ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/pimo/pimo.trig
+                                   ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nie.trig
+                                   ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nepomuk/nao.trig
+                                   ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/ncal.trig
+                                   ${CMAKE_SOURCE_DIR}/ontology/nbib/nbib.trig
+                                   )
 
 set(nbibontology_LIB_SRCS)
 

@@ -1,13 +1,6 @@
 
 Here are some important information for the build/runtime dependencies
 
-The first time you build this can take a very long time due to header generation
-of the Shared Desktop Ontology classes.
-
-You can skip this generation in future build by adding
--DNOONTOLOGY=1
-to the cmake call.
-
 #################################################################
 # Build Dependencies:
 * Nepomuk
