@@ -16,7 +16,7 @@ else(DEFINED NOONTOLOGY)
     message(STATUS "This can be skipped with the \"-DNOONTOLOGY=1\" cmake option")
     message(STATUS "#####################################################################################################")
 
-    NEPOMUK_ADD_SIMPLERESOURCE_CLASSES(metadata_extractor_HEADERS ONTOLOGIES
+    NEPOMUK_ADD_SIMPLERESOURCE_CLASSES( ONTOLOGIES
                                        ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nfo.trig
                                        ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nco.trig
                                        ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nmm.trig
