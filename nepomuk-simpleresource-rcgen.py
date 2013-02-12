@@ -210,15 +210,14 @@ class OntologyParser():
         propertyList = []
 
         # first get the general information for the class
-        #FIXME: why define the names again?
         if u'context' in classData:
             classDict[u'context'] = classData[u'context'] # what ontology it belongs to
         if RDFS_subClassOf in classData:
-            classDict[u'parent'] = classData[RDFS_subClassOf] # the parent class if it exist
+            classDict[RDFS_subClassOf] = classData[RDFS_subClassOf] # the parent class if it exist
         if RDFS_comment in classData:
-            classDict[u'comment'] = classData[RDFS_comment] # the class comment
+            classDict[RDFS_comment] = classData[RDFS_comment] # the class comment
         if RDFS_label in classData:
-            classDict[u'label'] = classData[RDFS_label] # the class name
+            classDict[RDFS_label] = classData[RDFS_label] # the class name
 
         #---------------------
         # Now get all properties of this class from the parsedData dictionary
@@ -440,8 +439,8 @@ class OntologyParser():
 
             # get all base classes which we require due to the virtual base class constructor ordering in C++
             parentClassNames = []
-            if u'parent' in classDict:
-                for parent in classDict[u'parent']:
+            if RDFS_subClassOf in classDict:
+                for parent in classDict[RDFS_subClassOf]:
                     if not parent.contains(u'http://www.w3.org/2000/01/rdf-schema#Resource'):
                         parentInfo = self.classDetails(parent)
                         if len(parentInfo) > 0:
@@ -458,8 +457,8 @@ class OntologyParser():
             header.write('namespace %s {\n' % nsAbbr.toUpper())
 
             # write the header comment
-            if u'comment' in classDict:
-                self.writeComment(header, classDict[u'comment'], 0)
+            if RDFS_comment in classDict:
+                self.writeComment(header, classDict[RDFS_comment], 0)
 
             # write the class + parent classes
             # We use virtual inheritance when deriving from SimpleResource since our ontologies
