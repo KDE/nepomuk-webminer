@@ -27,6 +27,8 @@ import sys
 import os, errno
 from PyKDE4.soprano import Soprano
 from PyQt4 import QtCore
+import sip
+sip.setapi("QString", 1)
 
 # A list of C++ reserved keywords which we need to handle
 cppKeywords = ['class', 'int', 'float', 'double', 'long']
@@ -92,26 +94,26 @@ class OntologyParser():
         self.specialProperties = []
         self.output_path = ''
         self.verbose = False
-    
-    '''
-    @brief sets the path where all header files are written to
-    '''
+
     def setOutputPath(self, path):
+        """
+        Sets the path where all header files are written to
+        """
         self.output_path = path
-    
-    '''
-    @brief sets if more than the usual output should be shown
-    '''
+
     def setVerbose(self, verbose):
+        """
+        Sets if more than the usual output should be shown
+        """
         self.verbose = verbose
 
-    '''
-    @brief Read the trig file for the ontology at 'path' via the Soprano parser and save the content in a dictionary
-
-    @return @arg @c true if reading was sucessfull
-            @arg @c false if file could not be parsed
-    '''
     def parseFile(self, path):
+        """
+        Read the trig file for the ontology at 'path' via the Soprano parser and save the content in a dictionary
+
+        @return @arg @c true if reading was sucessfull
+        @arg @c false if file could not be parsed
+        """
         parser = Soprano.PluginManager.instance().discoverParserForSerialization(Soprano.SerializationTrig)
         if not parser:
             return False
@@ -148,14 +150,14 @@ class OntologyParser():
 
         return True
 
-    '''
-    @brief Sort the parsed ontology dictionary
-
-    split data so we end up with
-    * one dictionary per class with all properties. combined in self.classes
-    * one dictionary for each general ontology data. combined in self.ontologies
-    '''
     def sortData(self):
+        """
+        Sort the parsed ontology dictionary
+
+        split data so we end up with
+        * one dictionary per class with all properties. combined in self.classes
+        * one dictionary for each general ontology data. combined in self.ontologies
+        """
         # iterate of all parsed entries
         for key in self.parsedData:
             # check what kind of entry we have here
@@ -195,14 +197,14 @@ class OntologyParser():
                 specialDict[u'uri'] = key
                 self.specialProperties.append(specialDict)
 
-    '''
-    @brief Takes the dictionary that is used for the class and creates a new dictionary with all properties
-
-    In order to do this, all entries that have rdf-schema#domain with this class are taken and combined
-
-    @return a new dictionary with all data necessary for this class construct
-    '''
     def buildClassDictionary(self, className, classData):
+        """
+        Takes the dictionary that is used for the class and creates a new dictionary with all properties
+
+        In order to do this, all entries that have rdf-schema#domain with this class are taken and combined
+
+        @return a new dictionary with all data necessary for this class construct
+        """
 
         classDict = {}
         propertyList = []
@@ -238,25 +240,25 @@ class OntologyParser():
 
         return classDict
 
-    '''
-    @brief iterates over all classes and generates the header files
-    '''
     def generateClasses(self):
+        """
+        Iterates over all classes and generates the header files
+        """
         for key in self.classes:
             self.writeHeader(key, self.classes[key])
 
-    '''
-    @brief Normalize a class or property name to be used as a C++ entity.
-    '''
     def normalizeName(self, name):
+        """
+        Normalize a class or property name to be used as a C++ entity.
+        """
         name.replace('-', '_')
         name.replace('.', '_')
         return name
 
-    '''
-    @brief Extract the class or property name from an entity URI. This is the last section of the URI
-    '''
     def extractNameFromUri(self, uri):
+        """
+        Extract the class or property name from an entity URI. This is the last section of the URI
+        """
         if duplicateProperties.get(uri) is None: # handle case when it's not in
             name = uri.mid(uri.lastIndexOf(QtCore.QRegExp('[#/:]'))+1)
         else:
@@ -264,10 +266,10 @@ class OntologyParser():
 
         return self.normalizeName(name)
 
-    '''
-    @brief Create a folder and all its missing parent folders
-    '''
     def mkdir_p(self, path):
+        """
+        Create a folder and all its missing parent folders
+        """
         try:
             os.makedirs(path)
         except OSError as exc: # Python >2.5
@@ -275,11 +277,11 @@ class OntologyParser():
                 pass
             else: raise
 
-    '''
-    @brief Construct the C++/Qt type to be used for the given type and cardinality.
-           Uses QUrl for all non-literal types
-    '''
     def typeString(self, rdfType, cardinality):
+        """
+        Construct the C++/Qt type to be used for the given type and cardinality.
+        Uses QUrl for all non-literal types
+        """
         if (rdfType in rdfTypeQStringList) and cardinality != 1:
             return 'QStringList'
 
@@ -290,10 +292,10 @@ class OntologyParser():
         else:
             return simpleType
 
-    '''
-    @brief adds some additional adjectives to class getter/setter names
-    '''
     def makeFancy(self, name, cardinality):
+        """
+        Adds some additional adjectives to class getter/setter names
+        """
         if name.startsWith("has"):
             name = name[3].toLower() + name.mid(4)
         if cardinality != 1:
@@ -304,12 +306,12 @@ class OntologyParser():
 
         return self.normalizeName(name)
 
-    '''
-    @brief Extracts some class generic details
-
-    @return list with className and nameSpace Abbriviation
-    '''
     def classDetails(self, classUri):
+        """
+        Extracts some class generic details
+
+        @return list with className and nameSpace Abbriviation
+        """
         className = self.extractNameFromUri(classUri)
         nsAbbr = None
         classDetails = []
@@ -332,10 +334,10 @@ class OntologyParser():
 
         return classDetails;
 
-    '''
-    @brief writes a comment for a class/getter/setter/adder methods
-    '''
     def writeComment(self, theFile, text, indent):
+        """
+        Writes a comment for a class/getter/setter/adder methods
+        """
         maxLine = 50;
 
         theFile.write(' ' * indent*4)
@@ -359,10 +361,10 @@ class OntologyParser():
         theFile.write(' ' * (indent*4+1))
         theFile.write("*/\n")
 
-    '''
-    @brief Writes the getter method for any given ontology class property
-    '''
     def writeGetter(self, theFile, propUri, name, propRange, cardinality):
+        """
+        Writes the getter method for any given ontology class property
+        """
         fancyName = self.makeFancy(name, cardinality)
         if fancyName in cppKeywords:
             fancyName = 'get' + fancyName[0].toUpper() + fancyName.mid(1)
@@ -395,10 +397,10 @@ class OntologyParser():
         theFile.write('        addProperty(QUrl::fromEncoded("%s", QUrl::StrictMode), value);\n' % propUri)
         theFile.write('    }\n')
 
-    '''
-    @brief Writes the header file for the current class
-    '''
     def writeHeader(self, classUri, classDict):
+        """
+        Writes the header file for the current class
+        """
 
         classInfo = self.classDetails(classUri)
         className = classInfo[0]
@@ -624,13 +626,13 @@ def main():
     optparser.add_argument("ontologies", nargs='+', metavar="ONTOLOGY", help="Ontology files to use")
 
     args = optparser.parse_args()
-    
+
     output_path = ''
-    if args.output :
+    if args.output is not None:
         output_path = args.output[0]
     else:
         output_path = os.getcwd()
-    
+
     if args.verbose:
         print 'Generating from ontology files %s' % ','.join(args.ontologies)
         print 'Writing files to %s.' % output_path
@@ -639,8 +641,8 @@ def main():
     ontoParser = OntologyParser()
     ontoParser.setVerbose(args.verbose)
     ontoParser.setOutputPath(output_path)
-    
-    
+
+
     # Parse all ontology files
     for f in args.ontologies:
         if args.verbose:
