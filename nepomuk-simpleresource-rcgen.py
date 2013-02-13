@@ -333,6 +333,36 @@ class OntologyParser():
 
         return classDetails;
 
+    def getFullParentHierarchy(self, uri, currentParents, result):
+        """
+        Returns a list of all parent urls
+
+        currentParents is a running variable used to avoid endless loops when recursing. It should
+        always be set to the empty list [].
+        result is another running variable which stores the final result set. It should also be set
+        to the empty list [].
+        """
+
+        # check if the current uri has a parent and one that exist
+        # here we ignore rdf:Resource as direct parent
+
+        directParents = []
+        if uri in self.classes and RDFS_subClassOf in self.classes[uri]:
+            directParents = self.classes[uri][RDFS_subClassOf]
+        else:
+            return directParents
+
+        # iterate over all parents and get their parents
+        # avoid duplicates
+        for p in directParents:
+            if not p in currentParents:
+                if p in self.classes:
+                    currentParents.append(p)
+                    self.getFullParentHierarchy(p, currentParents, result)
+                    result.append(p)
+
+                return result
+
     def writeComment(self, theFile, text, indent):
         """
         Writes a comment for a class/getter/setter/adder methods
@@ -449,6 +479,14 @@ class OntologyParser():
 
             header.write('\n')
 
+            # generate a list with all parents
+            fullParentHierarchyNames = []
+            for parent in self.getFullParentHierarchy(classUri, [], []):
+                parentInfo = self.classDetails(parent)
+                parentName = parentInfo[0]
+                parntNsAbbr = parentInfo[1]
+                fullParentHierarchyNames.append("%s::%s" %(parntNsAbbr.toUpper(), parentName))
+
             # We inverse the order to match the virtual inheritance constructor calling order
             parentClassNames.reverse()
 
@@ -486,7 +524,7 @@ class OntologyParser():
             header.write('SimpleResource(uri)')
             if parentClassNames:
                 header.write(', ')
-                header.write(', '.join([('%s(uri, QUrl::fromEncoded("' + classUri.toUtf8().data() + '", QUrl::StrictMode))') % p for p in parentClassNames]))
+                header.write(', '.join([('%s(uri, QUrl::fromEncoded("' + classUri.toUtf8().data() + '", QUrl::StrictMode))') % p for p in fullParentHierarchyNames]))
             header.write(' {\n')
             if not parentClassNames:
                 header.write('        addType(QUrl::fromEncoded("%s", QUrl::StrictMode));\n' % classUri.toUtf8().data())
@@ -498,7 +536,7 @@ class OntologyParser():
             header.write('SimpleResource(res)')
             if parentClassNames:
                 header.write(', ')
-                header.write(', '.join([('%s(res, QUrl::fromEncoded("' + classUri.toUtf8().data() + '", QUrl::StrictMode))') % p for p in parentClassNames]))
+                header.write(', '.join([('%s(res, QUrl::fromEncoded("' + classUri.toUtf8().data() + '", QUrl::StrictMode))') % p for p in fullParentHierarchyNames]))
             header.write(' {\n')
             if not parentClassNames:
                 header.write('        addType(QUrl::fromEncoded("%s", QUrl::StrictMode));\n' % classUri.toUtf8().data())
@@ -589,7 +627,7 @@ class OntologyParser():
             header.write('SimpleResource(uri)')
             if parentClassNames:
                 header.write(', ')
-                header.write(', '.join(['%s(uri, type)' % p for p in parentClassNames]))
+                header.write(', '.join(['%s(uri, type)' % p for p in fullParentHierarchyNames]))
             header.write(' {\n')
             if not parentClassNames:
                 header.write('        addType(type);\n')
@@ -600,7 +638,7 @@ class OntologyParser():
             header.write('SimpleResource(res)')
             if parentClassNames:
                 header.write(', ')
-                header.write(', '.join(['%s(res, type)' % p for p in parentClassNames]))
+                header.write(', '.join(['%s(res, type)' % p for p in fullParentHierarchyNames]))
             header.write(' {\n')
             if not parentClassNames:
                 header.write('        addType(type);\n')
@@ -638,9 +676,8 @@ def main():
 
 
     ontoParser = OntologyParser()
-    ontoParser.setVerbose(args.verbose)
-    ontoParser.setOutputPath(output_path)
-
+    ontoParser.verbose = args.verbose
+    ontoParser.output_path = output_path
 
     # Parse all ontology files
     for f in args.ontologies:
