@@ -112,10 +112,10 @@ void Nepomuk2::EventMonitor::slotCheckAvailableSpace()
 void Nepomuk2::EventMonitor::slotNetworkgStatusChanged(Solid::Networking::Status status)
 {
     if(status == Solid::Networking::Connected) {
-        m_isNetworkDisabled = true;
+        m_isNetworkDisabled = false;
     }
     else {
-        m_isNetworkDisabled = false;
+        m_isNetworkDisabled = true;
     }
 }
 
