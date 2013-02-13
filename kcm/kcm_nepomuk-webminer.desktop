@@ -11,8 +11,12 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=desktop-search
 
 Name=WebMiner
+Name[de]=WebMiner
 Name[pt]=WebMiner
+Name[pt_BR]=WebMiner
 Name[sk]=WebMiner
+Name[sv]=Webbinsamling
+Name[uk]=WebMiner
 Name[x-test]=xxWebMinerxx
 Comment=Nepomuk-WebMiner Configuration
 Comment[bs]=Konfiguracija Nepomuk-WebMiner
