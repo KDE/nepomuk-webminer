@@ -178,18 +178,10 @@ void IndexScheduler::indexManually(const QUrl &fileOrFolder)
 {
     Q_D(IndexScheduler);
 
-    if( d->state == IndexSchedulerPrivate::State_UserIdle ||
-        d->state == IndexSchedulerPrivate::State_Normal ||
-        d->state == IndexSchedulerPrivate::State_OnBattery ) {
-        kDebug() << "start indexing a file/fodler manually:: " << fileOrFolder;
+    kDebug() << "start indexing a file/fodler manually:: " << fileOrFolder;
+    d->webIQ->fillQueue(fileOrFolder);
 
-        d->webIQ->fillQueue(fileOrFolder);
-
-        emit statusStringChanged();
-    }
-    else {
-        kDebug() << "can't start manual indexing, service is neither in 'idle' nor normal 'state'";
-    }
+    emit statusStringChanged();
 }
 
 QUrl IndexScheduler::currentUrl() const
