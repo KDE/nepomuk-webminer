@@ -87,7 +87,7 @@ RDFS_range = Soprano.Vocabulary.RDFS.range().toString()
 NAO_hasDefaultNsAbbr = Soprano.Vocabulary.NAO.hasDefaultNamespaceAbbreviation().toString()
 
 class OntologyParser():
-    def __init__(self):
+    def __init__(self, verbose=False):
         self.parsedData = {}
         self.classes = {}
         self.ontologies = {}
@@ -466,7 +466,7 @@ class OntologyParser():
                 for parent in classDict[RDFS_subClassOf]:
                     if not parent.contains(u'http://www.w3.org/2000/01/rdf-schema#Resource'):
                         parentInfo = self.classDetails(parent)
-                        if len(parentInfo) > 0:
+                        if parentInfo:
                             header.write('#include "%s/%s.h"\n' % (parentInfo[1], parentInfo[0].toLower()))
                             parentClassNames.append("%s::%s" %(parentInfo[1].toUpper(), parentInfo[0]))
 
@@ -668,8 +668,7 @@ def main():
         print 'Writing files to %s.' % output_path
 
 
-    ontoParser = OntologyParser()
-    ontoParser.verbose = args.verbose
+    ontoParser = OntologyParser(verbose=args.verbose)
     ontoParser.output_path = output_path
 
     # Parse all ontology files
@@ -688,4 +687,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
