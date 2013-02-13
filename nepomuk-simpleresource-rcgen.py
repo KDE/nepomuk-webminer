@@ -95,18 +95,6 @@ class OntologyParser():
         self.output_path = ''
         self.verbose = False
 
-    def setOutputPath(self, path):
-        """
-        Sets the path where all header files are written to
-        """
-        self.output_path = path
-
-    def setVerbose(self, verbose):
-        """
-        Sets if more than the usual output should be shown
-        """
-        self.verbose = verbose
-
     def parseFile(self, path):
         """
         Read the trig file for the ontology at 'path' via the Soprano parser and save the content in a dictionary
@@ -409,8 +397,10 @@ class OntologyParser():
         theFile.write('        return value;\n')
         theFile.write('    }\n')
 
-
     def writeSetter(self, theFile, propUri, name, propRange, cardinality):
+        """
+        Writes the setter method for any given ontology class property
+        """
         theFile.write('    void set%s%s(const %s& value) {\n' % (self.makeFancy(name, cardinality)[0].toUpper(), self.makeFancy(name, cardinality).mid(1), self.typeString(propRange, cardinality)))
         theFile.write('        QVariantList values;\n')
         if cardinality == 1:
@@ -422,6 +412,9 @@ class OntologyParser():
         theFile.write('    }\n')
 
     def writeAdder(self, theFile, propUri, name, propRange, cardinality):
+        """
+        Writes the adder method for any given ontology class property
+        """
         theFile.write('    void add%s%s(const %s& value) {\n' % (self.makeFancy(name, 1)[0].toUpper(), self.makeFancy(name, 1).mid(1), self.typeString(propRange, 1)))
         theFile.write('        addProperty(QUrl::fromEncoded("%s", QUrl::StrictMode), value);\n' % propUri)
         theFile.write('    }\n')
