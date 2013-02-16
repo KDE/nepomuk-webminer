@@ -93,7 +93,7 @@ class OntologyParser():
         self.ontologies = {}
         self.specialProperties = []
         self.output_path = ''
-        self.verbose = False
+        self.verbose = verbose
 
     def parseFile(self, path):
         """
