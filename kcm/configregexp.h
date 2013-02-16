@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Jörg Ehrichs <joerg.ehrichs@gmx.de>
+ * Copyright 2013 Jörg Ehrichs <joerg.ehrichs@gmx.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -18,62 +18,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CONFIGFETCHER_H
-#define CONFIGFETCHER_H
+#ifndef CONFIGREGEXP_H
+#define CONFIGREGEXP_H
 
 #include <QtGui/QWidget>
 
-namespace Ui
-{
-class ConfigFetcher;
+namespace Ui {
+class ConfigRegExp;
 }
-
-class QDBusServiceWatcher;
 
 namespace NepomukWebMiner
 {
-namespace Extractor
-{
-class ExtractorFactory;
-}
 
 /**
- * @brief Simple Widget to control the KConfig parameters for the fetcher
+ * @brief Lists all configuration for the filename analyzing.
  *
- * Shows the list of available completers and lets the user select its favorite.
- * Allows to set some other options to alter the fetching of citations, poster/banners.
- *
- * Manages the Nepomuk2::Service (enable/disable) and what kind of data should be fetched
+ * Here the user can change the list of strings that will be removed from any filename and
+ * all the regular expressions that will try to extract additional data from a filename for
+ * movies, tvshows, documents or music files.
  */
-class ConfigFetcher : public QWidget
+class ConfigRegExp : public QWidget
 {
     Q_OBJECT
-
+    
 public:
-    explicit ConfigFetcher(QWidget *parent = 0);
-    ~ConfigFetcher();
-
-    void setExtractorFactory(NepomukWebMiner::Extractor::ExtractorFactory  *ef);
+    explicit ConfigRegExp(QWidget *parent = 0);
+    ~ConfigRegExp();
 
 signals:
     void configChanged();
 
 public slots:
-    void serviceEnabled(bool enabled);
-
-    void serviceRegistered();
-    void serviceUnregistered();
-
     void saveConfig();
     void loadConfig();
 
 private:
     void setupUi();
-    Ui::ConfigFetcher *ui;
-    QDBusServiceWatcher *m_watcher;
-    NepomukWebMiner::Extractor::ExtractorFactory  *extractorFactory;
-};
 
+    Ui::ConfigRegExp *ui;
+};
 }
 
-#endif // CONFIGFETCHER_H
+#endif // CONFIGREGEXP_H

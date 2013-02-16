@@ -11,10 +11,7 @@ set( nepomuk-webminer_LIB_SRCS
   webextractor/krossextractor.cpp
 
   resourceextractor/resourceextractor.cpp
-  resourceextractor/popplerextractor.cpp
-  resourceextractor/odfextractor.cpp
-  resourceextractor/videoextractor.cpp
-  resourceextractor/audioextractor.cpp
+  resourceextractor/filenameanalyzer.cpp
 
   nepomukpipe/nepomukpipe.cpp
   nepomukpipe/publicationpipe.cpp
@@ -58,9 +55,6 @@ target_link_libraries( nepomuk-webminerlib
   ${NEPOMUK_CORE_LIBRARY}
 
 # other parts
-  ${POPPLER_LIBRARY}
-  ${TAGLIB_LIBRARIES}
-
   ${QJSON_LIBRARIES} # added because the macro seems to exist with upper and lowercase depending on the distribution
   ${qjson_LIBRARIES}
 )
@@ -76,10 +70,7 @@ set( nepomuk-webminer_LIB_HDRS
   metadataparameters.h
 
   resourceextractor/resourceextractor.h
-  resourceextractor/videoextractor.h
-  resourceextractor/audioextractor.h
-  resourceextractor/popplerextractor.h
-  resourceextractor/odfextractor.h
+  resourceextractor/filenameanalyzer.h
 
   webextractor/krossextractor.h
   webextractor/extractorfactory.h

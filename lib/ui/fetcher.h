@@ -102,14 +102,6 @@ public:
     /**
      * @brief Adds a hint to the VideoExtractor filename parser to improve name detection
      *
-     * @param useFolderNames @arg true check folder names for tvshows too
-     *                       @arg false only check filename for tvshows (default)
-     */
-    void setTvShowNamesInFolders(bool useFolderNames);
-
-    /**
-     * @brief Adds a hint to the VideoExtractor filename parser to improve name detection
-     *
      * @param tvshowMode @arg true video files are all movies not tvshows
      *                   @arg false video files are movies and/or tvshows (default)
      */

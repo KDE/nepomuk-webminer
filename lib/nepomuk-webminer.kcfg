@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="2.0" encoding="UTF-8"?>
 <kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
@@ -40,15 +40,11 @@
     </entry>
     <entry name="CheckNextPlugin" type="Bool">
       <label>If the preferred plugin did not return any results, this will try the all other plugins until a result could be found.</label>
-      <default>false</default>
+      <default>true</default>
     </entry>
   </group>
 
   <group name="Service">
-    <entry name="SimultaneousCalls" type="Int">
-      <label>Number of simultaneous extractor calls.</label>
-      <default>1</default>
-    </entry>
     <entry name="DocumentServiceEnabled" type="Bool">
       <label>Automatic document fetcher enabled.</label>
       <default>false</default>
@@ -62,20 +58,30 @@
       <default>true</default>
     </entry>
     <entry name="FirstRun" type="Bool">
-      <label>Used to disable the service on the first run after installation for privacy reasons</label>
+      <label>Used to disable the service on the first run after installation for privacy reasons.</label>
       <default>true</default>
     </entry>
   </group>
 
-  <group name="ResourceExtractor">
-    <entry name="TvShowRegExp" type="StringList">
-      <label>Regular expressions that will detect and extract a tv show. Valid placeholders are %n (show name), %t (episode title), %s (season), %e (episode) </label>
+  <group name="FilenameAnalyzer">
+    <entry name="StripNames" type="StringList">
+      <label>Regular expressions that remove the matched text from any filename.</label>
     </entry>
-    <entry name="MovieRegExp" type="StringList">
-      <label>Regular expressions that will detect and extract a movie. Valid placeholders are %n (movie name), %y (year) </label>
+    <entry name="RegExpTvShow" type="String">
+      <label>Regular expressions that will detect and extract parts of a a tv show filename.</label>
+      <default>(.+)[\\s\\-]?\\[s([0-9]+)\\]\\s?\\[e([0-9]+)\\].*#,#false#,#2,3,4#,#foo [s01][e01]#|#(.+)[\\s\\-]+([0-9]{1,2})x([0-9]+).*#,#false#,#0,3,4#,#foo 1x03#|#(.+)[\\s\\-]?s([0-9]+)[\\s\\-]?e([0-9]+).*#,#false#,#2,3,4#,#foo s01e01#|#(.*)\\s?\\-\\s?(?:e|Episode)+[\\s\\-]?([0-9]{1,2})\\s?\\-?\\s?.*#,#false#,#2,4#,#foo - e01#|#(.+)[\\s\\-]s([0-9]{1,2})[\\s\\-]+([0-9]+).*#,#false#,#2,3,4#,#foo-s1-1#|#(.*)\\s?\\-\\s?([0-9]{2})+.*#,#false#,#2,4#,#foo - 01 - [01293]#|#(.+)[\\s\\-]([0-9]{1})([0-9]{2})(?:[^\\d][^/]*)?#,#false#,#2,3,4#,#foo 103#|#(.+)[\\s\\-]?([0-9]{2})([0-9]{2,3})(?:[^\\d][^/]*)?#,#false#,#2,3,4#,#foo 0103#|#.*([^/]*)/(?:[^/]*)([0-9]+)/(?:Episode|e)?\\s?([0-9]+).*#,#true#,#2,3,4#,#~/Videos/Show/Season 1/e01 - title#|#(.*)/(?:Episode|e)+[\\s\\-]?([0-9]{1,2}).*#,#true#,#2,4#,#Show/Episode 01#|#(.*)/(?:Episode|e)+([0-9]{1,2})\\s?\\-(.*)#,#true#,#2,4,0#,#Show/e01 - title</default>
     </entry>
-    <entry name="MusicRegExp" type="StringList">
-      <label>Regular expressions that will detect and extract a music file. Valid placeholders are ??? </label>
+    <entry name="RegExpMovie" type="String">
+      <label>Regular expressions that will detect and extract parts of a movie filename.</label>
+      <default>(.*)[\\s\\(\\[]+([0-9]{4})[\\)\\]]?.*#,#false#,#0,1#,#Foo bar [2013]#|#(.*)\\s[\\-]+[\\s(\\[]+([0-9]{4})[\\)\\]]?.*#,#false#,#0,1#,#Foo bar - (2013)</default>
+    </entry>
+    <entry name="RegExpMusic" type="String">
+      <label>Regular expressions that will detect and extract  parts of a music filename.</label>
+      <default>(.*)[\\s\\-]+\\s([0-9]+)\\s[\\-]+(.*)#,#false#,#5,7,0#,#Artist - 04 - Track#|#.*([^/]*)/([^/]*)/([0-9]+)\\s?\\-+(.*)#,#true#,#5,6,7,0#,#~/Music/Artist/Album/04 - Track#|#.*([^/]*)/([^/]*)/([^/]*)#,#true#,#5,6,7#,#~/Music/Artist/Album/track#|#(.*)\\s?[\\-]+\\s?(.*)#,#false#,#5,0#,#Artist - Track</default>
+    </entry>
+    <entry name="RegExpDocument" type="String">
+      <label>Regular expressions that will detect and extract parts of a document filename.</label>
+      <default></default>
     </entry>
   </group>
 

@@ -21,11 +21,7 @@
 #include "resourceextractor.h"
 
 #include "metadataparameters.h"
-
-#include "popplerextractor.h"
-#include "odfextractor.h"
-#include "videoextractor.h"
-#include "audioextractor.h"
+#include "filenameanalyzer.h"
 
 #include <Nepomuk2/Resource>
 #include <Nepomuk2/Variant>
@@ -54,10 +50,8 @@ namespace Extractor
 class ResourceExtractorPrivate
 {
 public:
+    NepomukWebMiner::Extractor::FilenameAnalyzer *filenameAnalyzer;
     bool forceUpdate;
-    bool tvShowMode;
-    bool useTvShowFolderNames;
-    bool movieShowMode;
     bool cancel;
     KUrl baseCallUrl; //TODO: remove this parameter? helps in the video extractor in folder name detection
     QList<MetaDataParameters *> resourcesToLookup;
@@ -71,6 +65,7 @@ NepomukWebMiner::Extractor::ResourceExtractor::ResourceExtractor(QObject *parent
 {
     Q_D(ResourceExtractor);
     d->cancel = false;
+    d->filenameAnalyzer = new NepomukWebMiner::Extractor::FilenameAnalyzer;
 }
 
 void NepomukWebMiner::Extractor::ResourceExtractor::cancel()
@@ -88,19 +83,13 @@ void NepomukWebMiner::Extractor::ResourceExtractor::setForceUpdate(bool update)
 void NepomukWebMiner::Extractor::ResourceExtractor::setTvShowMode(bool tvshowmode)
 {
     Q_D(ResourceExtractor);
-    d->tvShowMode = tvshowmode;
-}
-
-void NepomukWebMiner::Extractor::ResourceExtractor::setTvShowNamesInFolders(bool useFolderNames)
-{
-    Q_D(ResourceExtractor);
-    d->useTvShowFolderNames = useFolderNames;
+    d->filenameAnalyzer->setTvShowMode(tvshowmode);
 }
 
 void NepomukWebMiner::Extractor::ResourceExtractor::setMovieMode(bool moviemode)
 {
     Q_D(ResourceExtractor);
-    d->movieShowMode = moviemode;
+    d->filenameAnalyzer->setMovieMode(moviemode);
 }
 
 void NepomukWebMiner::Extractor::ResourceExtractor::lookupFiles(const KUrl &fileOrFolder, bool nested)
@@ -166,12 +155,13 @@ void NepomukWebMiner::Extractor::ResourceExtractor::lookupResource(const Nepomuk
     Extractor::MetaDataParameters *metaDataParameters = new Extractor::MetaDataParameters;
     metaDataParameters->setResourceType(QLatin1String("publication")); // default to publication just in case we can't find anything else
     metaDataParameters->setMetaDataSaved(true);
-
-    if (fileResource.url().isLocalFile()) {
-        fileChecker(metaDataParameters, fileResource.url());
-    }
+    metaDataParameters->setResourceUri(resource.uri());
 
     resourceChecker(metaDataParameters, resource);
+
+    if (fileResource.url().isLocalFile()) {
+        filenameAnalyzer(metaDataParameters, fileResource.url());
+    }
 
     d->resourcesToLookup.append(metaDataParameters);
 
@@ -207,60 +197,90 @@ NepomukWebMiner::Extractor::MetaDataParameters *NepomukWebMiner::Extractor::Reso
 void NepomukWebMiner::Extractor::ResourceExtractor::addFilesToList(const KUrl &fileUrl)
 {
     Q_D(ResourceExtractor);
+
+    // if it is a file we do not support, so skip (not pdf, opendocument, music or video files)
+    if( !mimeTypeChecker(fileUrl) ) {
+        return;
+    }
+
     Nepomuk2::File fileResource(fileUrl);
 
+    // skip file if we have already some information and do not use force update
     if (!d->forceUpdate && (
                 fileResource.hasProperty(Nepomuk2::Vocabulary::NBIB::publishedAs()) ||
                 fileResource.hasType(Nepomuk2::Vocabulary::NMM::TVShow()) ||
                 fileResource.hasType(Nepomuk2::Vocabulary::NMM::Movie()) ||
                 fileResource.hasType(Nepomuk2::Vocabulary::NMM::MusicPiece()))) {
+        emit progressStatus(i18n("Skip file %1 because it already has some meta data that would be overwritten use force update to fetch meta data anyway", fileUrl.prettyUrl()));
         kDebug() << "skip file " << fileUrl << "because it already has some meta data that would be overwritten use force update to fetch meta data anyway";
         return;
     }
 
     Extractor::MetaDataParameters *metaDataParameters = new Extractor::MetaDataParameters;
     metaDataParameters->setMetaDataSaved(true);
-
-    bool fileSupported = fileChecker(metaDataParameters, fileUrl);
-
-    // we skip files that are not supported (not pdf, opendocument, music or video files)
-    if (!fileSupported) {
-        delete metaDataParameters;
-        return;
-    }
+    metaDataParameters->setResourceUri(fileUrl);
 
     resourceChecker(metaDataParameters, fileResource);
+
+    filenameAnalyzer( metaDataParameters, fileUrl );
+
+    if(metaDataParameters->resourceType().isEmpty()) {
+        QString resourceType = selectPlugin(fileUrl);
+        if(resourceType.isEmpty()) {
+            kDebug() << "could not determine resource type for " << fileUrl;
+            delete metaDataParameters;
+            return;
+        }
+        else {
+            metaDataParameters->setResourceType(resourceType);
+        }
+    }
 
     d->resourcesToLookup.append(metaDataParameters);
 }
 
-bool NepomukWebMiner::Extractor::ResourceExtractor::fileChecker(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl)
+bool NepomukWebMiner::Extractor::ResourceExtractor::mimeTypeChecker(const KUrl &fileUrl)
 {
-    Q_D(ResourceExtractor);
     KSharedPtr<KMimeType> kmt = KMimeType::findByUrl(fileUrl);
+    QString mimetype = kmt.data()->name();
 
-    if (kmt.data()->name().contains(QLatin1String("application/vnd.oasis.opendocument.text"))) {
-        Extractor::OdfExtractor odfExtractor;
-        odfExtractor.parseUrl(mdp, fileUrl);
-    } else if (kmt.data()->name().contains(QLatin1String("application/pdf"))) {
-        Extractor::PopplerExtractor pdfExtractor;
-        pdfExtractor.parseUrl(mdp, fileUrl);
-    } else if (kmt.data()->name().contains(QLatin1String("video/"))) {
-        Extractor::VideoExtractor videoExtractor;
-        videoExtractor.parseUrl(mdp, fileUrl, d->baseCallUrl);
-    } else if (kmt.data()->name().contains(QLatin1String("audio/"))) {
-        Extractor::AudioExtractor audioExtractor;
-        audioExtractor.parseUrl(mdp, fileUrl);
-    } else {
-        kDebug() << "unsupportet mimetype" << kmt.data()->name();
+    if ( !mimetype.contains(QLatin1String("application/vnd.oasis.opendocument.text")) &&
+         !mimetype.contains(QLatin1String("application/pdf")) &&
+         !mimetype.contains(QLatin1String("video/")) &&
+         !mimetype.contains(QLatin1String("audio/")) ) {
+
+        kDebug() << "unsupportet mimetype" << mimetype;
         return false;
     }
 
     return true;
 }
 
+QString NepomukWebMiner::Extractor::ResourceExtractor::selectPlugin(const KUrl fileUrl)
+{
+    KSharedPtr<KMimeType> kmt = KMimeType::findByUrl(fileUrl);
+    QString mimetype = kmt.data()->name();
+
+    if ( mimetype.contains(QLatin1String("application/vnd.oasis.opendocument.text")) ) {
+        return QLatin1String("document");
+    }
+    else if( mimetype.contains(QLatin1String("application/pdf")) ) {
+        return QLatin1String("document");
+    }
+    else if ( mimetype.contains(QLatin1String("video/")) ) {
+        return QLatin1String("tvshow");
+    }
+    else if( mimetype.contains(QLatin1String("audio/")) ) {
+        return QLatin1String("music");
+    }
+
+    return QString();
+}
+
 bool NepomukWebMiner::Extractor::ResourceExtractor::resourceChecker(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const Nepomuk2::Resource &resource)
 {
+    bool foundData = false;
+
     Nepomuk2::Resource queryResource;
 
     // first check if the real nepomuk resource can be reached via "publishedAs"
@@ -274,7 +294,10 @@ bool NepomukWebMiner::Extractor::ResourceExtractor::resourceChecker(NepomukWebMi
     // Now get some values from the resource for the search parameters
 
     if (queryResource.hasType(Nepomuk2::Vocabulary::NBIB::Publication())) {
+        foundData = true;
         mdp->setResourceType(QLatin1String("publication"));
+
+        //TODO: check if we can reuse SimpleResource here
         //Nepomuk2::NBIB::Publication publication( fileResource.uri() ); seems this only works for new resources
 
         QString title = queryResource.property(Nepomuk2::Vocabulary::NIE::title()).toString();
@@ -292,7 +315,9 @@ bool NepomukWebMiner::Extractor::ResourceExtractor::resourceChecker(NepomukWebMi
             mdp->setSearchYearMax(releaseDate.toString(QLatin1String("yyyy")));
             mdp->setSearchYearMin(releaseDate.toString(QLatin1String("yyyy")));
         }
-    } else if (resource.hasType(Nepomuk2::Vocabulary::NMM::TVShow())) {
+    }
+    else if (resource.hasType(Nepomuk2::Vocabulary::NMM::TVShow())) {
+        foundData = true;
         mdp->setResourceType(QLatin1String("tvshow"));
 
         QString title = queryResource.property(Nepomuk2::Vocabulary::NIE::title()).toString();
@@ -317,11 +342,12 @@ bool NepomukWebMiner::Extractor::ResourceExtractor::resourceChecker(NepomukWebMi
             mdp->setSearchShowTitle(seriesTitle);
         }
 
-    } else if (resource.hasType(Nepomuk2::Vocabulary::NMM::Movie())) {
+    }
+    else if (resource.hasType(Nepomuk2::Vocabulary::NMM::Movie())) {
+        foundData = true;
         mdp->setResourceType(QLatin1String("movie"));
         //Nepomuk2::NMM::Movie movie(queryResource.uri()); seems this only works for new resources
 
-        kDebug() << "title" << queryResource.property(Nepomuk2::Vocabulary::NIE::title());
         QString title = queryResource.property(Nepomuk2::Vocabulary::NIE::title()).toString();
         if (!title.isEmpty()) {
             mdp->setSearchTitle(title);
@@ -333,7 +359,9 @@ bool NepomukWebMiner::Extractor::ResourceExtractor::resourceChecker(NepomukWebMi
             mdp->setSearchYearMax(releaseDate.toString(QLatin1String("yyyy")));
             mdp->setSearchYearMin(releaseDate.toString(QLatin1String("yyyy")));
         }
-    } else if (resource.hasType(Nepomuk2::Vocabulary::NMM::MusicPiece())) {
+    }
+    else if (resource.hasType(Nepomuk2::Vocabulary::NMM::MusicPiece())) {
+        foundData = true;
         mdp->setResourceType(QLatin1String("music"));
 
         QString title = queryResource.property(Nepomuk2::Vocabulary::NIE::title()).toString();
@@ -356,12 +384,20 @@ bool NepomukWebMiner::Extractor::ResourceExtractor::resourceChecker(NepomukWebMi
         if (!albumName.isEmpty()) {
             mdp->setSearchAlbum(albumName);
         }
-    } else {
+    }
+    else {
         // try to get some general info
         if (mdp->searchTitle().isEmpty() && !queryResource.genericLabel().isEmpty()) {
+            foundData = true;
             mdp->setSearchTitle(queryResource.genericLabel());
         }
     }
 
-    return true;
+    return foundData;
+}
+
+void NepomukWebMiner::Extractor::ResourceExtractor::filenameAnalyzer(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl)
+{
+    Q_D(ResourceExtractor);
+    d->filenameAnalyzer->analyze(mdp, fileUrl);
 }

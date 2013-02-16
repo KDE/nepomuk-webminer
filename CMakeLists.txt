@@ -29,12 +29,9 @@ include(NepomukAddSimpleResourceClasses)
 include(NepomukAddOntologyClasses)
 
 find_package(QJSON REQUIRED)
-find_package(Poppler REQUIRED)
-find_package(Taglib REQUIRED)
 
-macro_log_feature(HAVE_POPPLER_0_12_1 "Poppler-Qt4" "A PDF rendering library" "http://poppler.freedesktop.org" TRUE "0.12.1" "Poppler necessary to extract data from pdf files")
 macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" TRUE ${SDO_MIN_VERSION} "Ontologies necessary for the Nepomuk semantic desktop.")
-macro_log_feature(TAGLIB_FOUND "TagLib" "library for reading and editing audio meta data" "http://taglib.github.com/" TRUE "1.4" "TagLib necessary to find music meta data")
+
 
 #--------------------------------------------------------------------------
 # global include diretories for all subdirectories

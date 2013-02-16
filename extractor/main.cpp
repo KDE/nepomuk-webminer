@@ -63,7 +63,6 @@ int main(int argc, char *argv[])
 
     options.add(":", ki18n("Extra options to help filename parsing:"));
     options.add("t").add("tvshow", ki18n("Defines that the folder we are working on contains only one or more tvshow."));
-    options.add("u").add("usefoldernames", ki18n("Defines that for tvshows the folder names have necessary name info."));
     options.add("m").add("movie", ki18n("Defines that the folder we are working on contains only one or more movies."));
 
     options.add("+url", ki18n("The input url to the file/folder, website or nepomuk resource."));
@@ -125,7 +124,6 @@ int main(int argc, char *argv[])
         else {
             af.setForceUpdate(args->isSet("force"));
             af.setTvShowMode(args->isSet("tvshow"));
-            af.setTvShowNamesInFolders(args->isSet("usefoldernames"));
             af.setMovieMode(args->isSet("movie"));
 
             af.addFetcherPath(args->url(0));
@@ -137,7 +135,6 @@ int main(int argc, char *argv[])
         NepomukWebMiner::UI::FetcherDialog fd;
         fd.setForceUpdate(args->isSet("f"));
         fd.setTvShowMode(args->isSet("tvshow"));
-        fd.setTvShowNamesInFolders(args->isSet("usefoldernames"));
         fd.setMovieMode(args->isSet("movie"));
 
         if (args->isSet("url")) {

@@ -109,7 +109,7 @@ NepomukWebMiner::Extractor::WebExtractor *NepomukWebMiner::Extractor::ExtractorF
         }
     }
 
-    // other wise create a new one
+    // otherwise create a new one
     foreach (const WebExtractor::Info i, d->availableScripts) {
         foreach (const QString & urlregex, i.urlregex) {
             if (uri.toString().contains(QRegExp(urlregex))) {

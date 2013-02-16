@@ -7,11 +7,18 @@ set(kcm_nepomuk-webminer_SRCS
   nepomukwebminerkcm.cpp
   configfetcher.cpp
   pluginlist.cpp
+  regexpbox.cpp
+  configregexp.cpp
+  regexpmodel.cpp
+  regexpdialog.cpp
 )
 
 kde4_add_ui_files(kcm_nepomuk-webminer_SRCS
   configfetcher.ui
   pluginlist.ui
+  regexpbox.ui
+  configregexp.ui
+  regexpdialog.ui
 )
 
 kde4_add_kcfg_files(kcm_nepomuk-webminer_SRCS ../lib/mdesettings.kcfgc)

@@ -119,12 +119,6 @@ void NepomukWebMiner::UI::Fetcher::setTvShowMode(bool tvshowMode)
     d->m_re->setTvShowMode(tvshowMode);
 }
 
-void NepomukWebMiner::UI::Fetcher::setTvShowNamesInFolders(bool useFolderNames)
-{
-    Q_D(Fetcher);
-    d->m_re->setTvShowNamesInFolders(useFolderNames);
-}
-
 void NepomukWebMiner::UI::Fetcher::setMovieMode(bool movieMode)
 {
     Q_D(Fetcher);

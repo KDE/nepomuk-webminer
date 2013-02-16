@@ -90,11 +90,6 @@ void ConfigFetcher::serviceUnregistered()
     ui->enableService->setChecked(false);
 }
 
-void ConfigFetcher::updateConfiguration()
-{
-    emit configChanged(true);
-}
-
 void ConfigFetcher::saveConfig()
 {
     MDESettings::setDownloadBanner(ui->kcfg_DownloadBanner->isChecked());
@@ -120,7 +115,7 @@ void ConfigFetcher::saveConfig()
     MDESettings::self()->writeConfig();
 }
 
-void ConfigFetcher::resetConfig()
+void ConfigFetcher::loadConfig()
 {
     ui->kcfg_DownloadBanner->setChecked(MDESettings::downloadBanner());
     ui->kcfg_DownloadReferences->setChecked(MDESettings::downloadReferences());
@@ -141,11 +136,11 @@ void ConfigFetcher::setupUi()
     //######################
     //# general settings
     ui->kcfg_DownloadBanner->setChecked(MDESettings::downloadBanner());
-    connect(ui->kcfg_DownloadBanner, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()));
+    connect(ui->kcfg_DownloadBanner, SIGNAL(toggled(bool)), this, SIGNAL(configChanged()));
     ui->kcfg_DownloadReferences->setChecked(MDESettings::downloadReferences());
-    connect(ui->kcfg_DownloadReferences, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()));
+    connect(ui->kcfg_DownloadReferences, SIGNAL(toggled(bool)), this, SIGNAL(configChanged()));
     ui->kcfg_SaveBannerInResourceFolder->setChecked(MDESettings::saveBannerInResourceFolder());
-    connect(ui->kcfg_SaveBannerInResourceFolder, SIGNAL(toggled(bool)), this, SLOT(updateConfiguration()));
+    connect(ui->kcfg_SaveBannerInResourceFolder, SIGNAL(toggled(bool)), this, SIGNAL(configChanged()));
 
     //######################
     //# Plugin selection
@@ -185,10 +180,10 @@ void ConfigFetcher::setupUi()
     ui->moviePlugin->setCurrentIndex(ui->moviePlugin->findData(MDESettings::favoriteMoviePlugin()));
     ui->tvshowPlugin->setCurrentIndex(ui->tvshowPlugin->findData(MDESettings::favoriteTvShowPlugin()));
 
-    connect(ui->musicPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()));
-    connect(ui->publicationPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()));
-    connect(ui->moviePlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()));
-    connect(ui->tvshowPlugin, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfiguration()));
+    connect(ui->musicPlugin, SIGNAL(currentIndexChanged(int)), this, SIGNAL(configChanged()));
+    connect(ui->publicationPlugin, SIGNAL(currentIndexChanged(int)), this, SIGNAL(configChanged()));
+    connect(ui->moviePlugin, SIGNAL(currentIndexChanged(int)), this, SIGNAL(configChanged()));
+    connect(ui->tvshowPlugin, SIGNAL(currentIndexChanged(int)), this, SIGNAL(configChanged()));
 
     //######################
     //# Background service
@@ -210,7 +205,7 @@ void ConfigFetcher::setupUi()
     ui->kcfg_FetchVideos->setChecked( MDESettings::videoServiceEnabled());
     ui->kcfg_FetchMusic->setChecked( MDESettings::musicServiceEnabled());
 
-    connect(ui->kcfg_FetchDocuments, SIGNAL(clicked(bool)), this, SLOT(updateConfiguration()));
-    connect(ui->kcfg_FetchVideos, SIGNAL(clicked(bool)), this, SLOT(updateConfiguration()));
-    connect(ui->kcfg_FetchMusic, SIGNAL(clicked(bool)), this, SLOT(updateConfiguration()));
+    connect(ui->kcfg_FetchDocuments, SIGNAL(clicked(bool)), this, SIGNAL(configChanged()));
+    connect(ui->kcfg_FetchVideos, SIGNAL(clicked(bool)), this, SIGNAL(configChanged()));
+    connect(ui->kcfg_FetchMusic, SIGNAL(clicked(bool)), this, SIGNAL(configChanged()));
 }

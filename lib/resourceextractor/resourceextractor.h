@@ -43,9 +43,9 @@ class ResourceExtractorPrivate;
   * @brief The resource extractor is used to retrieve some basic information from files and resources
   *
   * Here we check the file or the Nepomuk resource and extract values from it that can be used for the @c WebExtractor search.
-  * Usually it would be enough to check only Nepomuk for this info and when some files are given as input the right nepomuk
-  * resource can be looked up and used for the retrival. As the @c libstreamanalyzer might fail on several pdf files this class
-  * uses its own pdf parsing to get the right details. Also the filename will be analyzed to get some additional information
+  *
+  * Here we rely on the Nepomuk FileIndexer for the basic resource extraction and combine it with additional
+  * filename analyzing to get more information if necessary.
   *
   * Each file/resource is represented by its @c MetaDataParameters that is used for the actual search
   *
@@ -63,6 +63,9 @@ public:
      */
     explicit ResourceExtractor(QObject *parent = 0);
 
+    /**
+     * @brief Cancel resource/file lookup
+     */
     void cancel();
 
     /**
@@ -84,18 +87,10 @@ public:
     void setTvShowMode(bool tvshowmode);
 
     /**
-     * @brief sets a hint for tvshow resources to check also folder names for title/season/episode
-     *
-     * @param useFolderNames @arg true check fodler names
-     *                       @arg false do not check fodler names (default)
-     */
-    void setTvShowNamesInFolders(bool useFolderNames);
-
-    /**
      * @brief Sets a hint, that the given file is a movie
      *
      * @param moviemode @arg true resource is a movie
-     *                   @arg false resource is either a tvshow or movie (default)
+     *                  @arg false resource is either a tvshow or movie (default)
      */
     void setMovieMode(bool moviemode);
 
@@ -107,9 +102,6 @@ public:
       * @p fileOrFolder the local url of the file or folder
       *
       * @see addFilesToList()
-      * @see OdfExtractor
-      * @see PopplerExtractor
-      * @see VideoExtractor
       */
     void lookupFiles(const KUrl &fileOrFolder, bool nested = false);
 
@@ -140,6 +132,7 @@ public:
      * @brief Removes the first element in the lookup list and returns it
      *
      * The caller needs to delete the object if it is not needed anymore
+     *
      * @return next file to process
      */
     NepomukWebMiner::Extractor::MetaDataParameters *takeNext();
@@ -168,23 +161,35 @@ private:
     void addFilesToList(const KUrl &fileUrl);
 
     /**
-     * @brief Checks the mimetype of the file and calls the correct extractor for further processing
+     * @brief Checks the mimetype of the file if we have one of the supported files
+     *
+     * @param fileUrl the url of the file on the disk
+     *
+     * @return @arg true if the file mimetype is supported
+     *         @arg false if the mimetype is not supported
+     */
+    bool mimeTypeChecker(const KUrl &fileUrl);
+
+    QString selectPlugin(const KUrl fileUrl);
+
+    /**
+     * @brief Checks the Ontology Type <i>(nmm::Movie/nbib::Publication etc)</i> and extracts some basic information
+     *
+     * @param mdp the MetaDataParameters object where the data will added to
+     * @param resource the resource that will be checked
+     *
+     * @return @arg true some data could be extracted
+     *         @arg false if no data was found
+     */
+    bool resourceChecker(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const Nepomuk2::Resource &resource);
+
+    /**
+     * @brief Starts the FileNameAnalyzer to extract more information from the filename via regexp
      *
      * @param mdp the MetaDataParameters object where the data will added to
      * @param fileUrl the url of the file on the disk
-     * @return @arg true if the file mimetype is supported
-     *         @arg false if the mimetype is not supported
      */
-    bool fileChecker(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl);
-
-    /**
-     * @brief Checks the Ontology Type <i>(Movie/Publication etc)</i> and calls the correct extractor for further processing
-     * @param mdp the MetaDataParameters object where the data will added to
-     * @param resource the resource that will be checked
-     * @return @arg true if the file mimetype is supported
-     *         @arg false if the mimetype is not supported
-     */
-    bool resourceChecker(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const Nepomuk2::Resource &resource);
+    void filenameAnalyzer(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl);
 
     Q_DECLARE_PRIVATE(ResourceExtractor)
     ResourceExtractorPrivate *const d_ptr; /**< d-pointer for this class */

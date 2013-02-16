@@ -28,6 +28,7 @@ namespace NepomukWebMiner
 
 class ConfigFetcher;
 class PluginList;
+class ConfigRegExp;
 
 namespace Extractor
 {
@@ -42,14 +43,17 @@ class NepomukWebMinerKCM : public KCModule
     Q_OBJECT
 public:
     explicit NepomukWebMinerKCM(QWidget *parent, const QVariantList &list);
+    ~NepomukWebMinerKCM();
 
     void save();
     void load();
+    void defaults();
 
 private:
     Extractor::ExtractorFactory *m_ef;
     ConfigFetcher *cfd;
     PluginList *pl;
+    ConfigRegExp *cregexp;
 };
 }
 
