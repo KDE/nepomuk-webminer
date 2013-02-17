@@ -27,13 +27,13 @@
 #include <KDE/KUrlLabel>
 #include <KDE/KDebug>
 #include <KDE/Kross/Manager>
+#include <KDE/KTextEdit>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimer>
 #include <QtCore/QPointer>
 #include <QtGui/QDialog>
 #include <QtGui/QLabel>
-#include <QtGui/QTextEdit>
 #include <QtGui/QFormLayout>
 #include <QtGui/QBrush>
 #include <QtGui/QColor>
@@ -163,7 +163,7 @@ void PluginList::showInfo()
     formLayout->addRow(QLatin1String("<b>") + i18n("Author:") + QLatin1String("</b>"), new QLabel(info.author));
     formLayout->addRow(QLatin1String("<b>") + i18n("Email:") + QLatin1String("</b>"), new QLabel(info.email));
     if (failed) {
-        QTextEdit *err = new QTextEdit(info.error);
+        KTextEdit *err = new KTextEdit(info.error);
         err->setReadOnly(true);
         formLayout->addRow(QLatin1String("<b style='color:#f00'>") + i18n("Error:") + QLatin1String("</b>"), err);
     }

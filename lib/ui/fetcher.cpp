@@ -243,7 +243,7 @@ QVariantList NepomukWebMiner::UI::Fetcher::setLevenshteinDistance(const QVariant
         checkString.append(currentItem->searchTitle());
     }
 
-    checkString.replace(' ',"");
+    checkString.replace(QChar(' '),"");
 
     QVariantList sortedList;
 
@@ -252,7 +252,7 @@ QVariantList NepomukWebMiner::UI::Fetcher::setLevenshteinDistance(const QVariant
         QVariantMap vMap = v.toMap();
         QString resultString = vMap.value(QLatin1String("distanceString")).toString();
 
-        resultString.replace(' ',"");
+        resultString.replace(QChar(' '),"");
 
         uint distance = levenshteinDistance(checkString, resultString);
 

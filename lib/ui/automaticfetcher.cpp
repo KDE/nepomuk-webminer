@@ -226,7 +226,7 @@ void NepomukWebMiner::UI::AutomaticFetcher::selectSearchEntry(QVariantList searc
     } else {
 
         // every result with a distance bigger than 10 will be removed from the list
-        // this ensures the returned item are atleast similar to the search result.
+        // this ensures the returned item are at least similar to the search result.
         // also this sorts the list and takes the best fit
         QVariantList sortedList = setLevenshteinDistance(searchResults, d->currentItemToupdate,10);
         if(sortedList.isEmpty()) {

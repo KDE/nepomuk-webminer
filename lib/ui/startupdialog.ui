@@ -23,7 +23,7 @@ Load the list of files that will be used for the WebMiner</string>
     </widget>
    </item>
    <item>
-    <widget class="QTextBrowser" name="textBrowser"/>
+    <widget class="KTextBrowser" name="textBrowser"/>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
@@ -37,6 +37,13 @@ Load the list of files that will be used for the WebMiner</string>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KTextBrowser</class>
+   <extends>QTextBrowser</extends>
+   <header>ktextbrowser.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

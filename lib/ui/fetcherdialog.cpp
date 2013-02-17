@@ -50,6 +50,7 @@
 #include <KDE/KConfigDialog>
 #include <KDE/KTextEdit>
 #include <KDE/KToolInvocation>
+#include <KDE/KMessageBox>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QPointer>
@@ -171,10 +172,9 @@ bool NepomukWebMiner::UI::FetcherDialog::startFetching(const KUrl url)
     // check if we have files for the webextraction
     if( resourceExtractor()->resourcesList().isEmpty() ) {
 
-        QMessageBox::warning(this, i18n("Nepomuk-WebMiner"),
-                                   i18n("No files without metadata could be found.\n"
-                                        "Try starting the WebMiner with forced updates to use all available files"),
-                                       QMessageBox::Close, QMessageBox::Close);
+        KMessageBox::error(this, i18n("No files without metadata could be found.\n\n"
+                                      "Try starting the WebMiner with forced updates to use all available files"),
+                                       i18n("Nepomuk-WebMiner") );
 
         return false;
 
@@ -191,12 +191,9 @@ void NepomukWebMiner::UI::FetcherDialog::errorInScriptExecution(const QString &e
 {
     finishedFetching();
 
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::critical(this, i18n("Critical script error"),
-                                  error,
-                                  QMessageBox::Abort | QMessageBox::Retry);
+    int reply = KMessageBox::warningContinueCancel(this, error, i18n("Critical script error"));
 
-    if (reply == QMessageBox::Retry) {
+    if (reply == KMessageBox::Continue) {
         startSearch();
     }
 
@@ -480,7 +477,7 @@ void NepomukWebMiner::UI::FetcherDialog::searchResultList(QVariantList searchRes
     finishedFetching();
 
     // every result with a distance bigger than 20 will be removed from the list
-    // this ensures the returned item are atleast similar to the search result.
+    // this ensures the returned item are at least similar to the search result.
     QVariantList sortedList = setLevenshteinDistance(searchResultList, resourceExtractor()->resourcesList().at(d->currentItemNumber), 20);
     d->resultModel->setSearchResults(sortedList);
 
