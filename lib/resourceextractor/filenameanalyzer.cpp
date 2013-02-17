@@ -79,28 +79,34 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::analyze(NepomukWebMiner::Extr
     KSharedPtr<KMimeType> kmt = KMimeType::findByUrl(fileUrl);
     QString mimetype = kmt.data()->name();
 
+    // we do not use the original fileUrl even for regular expressions that want path+ filename
+    // instead we use the cleaned filename and construct a new kurl
+    QString cleanedFileUrl = fileUrl.prettyUrl();
+    cleanedFileUrl.remove(fileUrl.fileName());
+    cleanedFileUrl.append(filenName);
+
     bool extractionWorked = false;
     // select the right set of regexp for a specific mimetype
     if ( mimetype.contains(QLatin1String("application/vnd.oasis.opendocument.text")) ) {
-        extractionWorked = analyzeFileName(d->regexpDocuments, mdp, filenName, fileUrl );
+        extractionWorked = analyzeFileName(d->regexpDocuments, mdp, filenName, cleanedFileUrl );
     }
     else if( mimetype.contains(QLatin1String("application/pdf")) ) {
-        extractionWorked = analyzeFileName(d->regexpDocuments, mdp, filenName, fileUrl );
+        extractionWorked = analyzeFileName(d->regexpDocuments, mdp, filenName, cleanedFileUrl );
     }
     else if ( mimetype.contains(QLatin1String("video/")) ) {
         if(d->movieShowMode) {
-            extractionWorked = analyzeFileName(d->regexpMovies, mdp, filenName, fileUrl );
+            extractionWorked = analyzeFileName(d->regexpMovies, mdp, filenName, cleanedFileUrl );
         }
         else if(d->tvShowMode) {
-            extractionWorked = analyzeFileName(d->regexpTvShows, mdp, filenName, fileUrl );
+            extractionWorked = analyzeFileName(d->regexpTvShows, mdp, filenName, cleanedFileUrl );
         }
         else {
             // we did not specify directly if thsi was a tvshow or movie
             // so try tvshow first, it it fails try movie afterwards
-            extractionWorked = analyzeFileName(d->regexpTvShows, mdp, filenName, fileUrl );
+            extractionWorked = analyzeFileName(d->regexpTvShows, mdp, filenName, cleanedFileUrl );
 
             if(!extractionWorked) {
-                extractionWorked = analyzeFileName(d->regexpMovies, mdp, filenName, fileUrl );
+                extractionWorked = analyzeFileName(d->regexpMovies, mdp, filenName, cleanedFileUrl );
 
                 if(extractionWorked) {
                     mdp->setResourceType(QLatin1String("movie"));
@@ -112,7 +118,7 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::analyze(NepomukWebMiner::Extr
         }
     }
     else if( mimetype.contains(QLatin1String("audio/")) ) {
-        extractionWorked = analyzeFileName(d->regexpMusic, mdp, filenName, fileUrl );
+        extractionWorked = analyzeFileName(d->regexpMusic, mdp, filenName, cleanedFileUrl );
     }
 
 
@@ -145,14 +151,14 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::cleanFileName(QString &fileNa
     fileName.replace('_', ' ');
 }
 
-bool NepomukWebMiner::Extractor::FilenameAnalyzer::analyzeFileName(QList<Extractor::RegExpData> regExpList, NepomukWebMiner::Extractor::MetaDataParameters *mdp, const QString &filename, const KUrl &fileUrl)
+bool NepomukWebMiner::Extractor::FilenameAnalyzer::analyzeFileName(QList<Extractor::RegExpData> regExpList, NepomukWebMiner::Extractor::MetaDataParameters *mdp, const QString &filename, const QString &fileUrl)
 {
     bool foundMatch = false;
 
     foreach(const RegExpData &red, regExpList) {
         QString searchString;
         if(red.useFolder) {
-            searchString = fileUrl.prettyUrl();
+            searchString = fileUrl;
         }
         else {
             searchString = filename;
@@ -186,36 +192,36 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::saveResult(NepomukWebMiner::E
 {
     switch(type) {
     case Extractor::MATCH_TITLE:
-        mdp->setSearchTitle(text);
+        mdp->setSearchTitle(text.simplified());
         kDebug() << "set title name to: " << text;
         break;
     case Extractor::MATCH_SHOW:
-        mdp->setSearchShowTitle(text);
+        mdp->setSearchShowTitle(text.simplified());
         kDebug() << "set tvshow to: " << text;
         break;
     case Extractor::MATCH_SEASON:
-        mdp->setSearchSeason(text);
+        mdp->setSearchSeason(text.simplified());
         kDebug() << "set season to: " << text;
         break;
     case Extractor::MATCH_EPISODE:
-        mdp->setSearchEpisode(text);
+        mdp->setSearchEpisode(text.simplified());
         kDebug() << "set episode to: " << text;
         break;
     case Extractor::MATCH_PERSON:
-        mdp->setSearchPerson(text);
+        mdp->setSearchPerson(text.simplified());
         kDebug() << "set person to: " << text;
         break;
     case Extractor::MATCH_ALBUM:
-        mdp->setSearchAlbum(text);
+        mdp->setSearchAlbum(text.simplified());
         kDebug() << "set album to: " << text;
         break;
     case Extractor::MATCH_YEAR:
-        mdp->setSearchYearMax(text);
+        mdp->setSearchYearMax(text.simplified());
         mdp->setSearchYearMin(text);
         kDebug() << "set year to: " << text;
         break;
     case Extractor::MATCH_TRACK:
-        mdp->setSearchTrack(text);
+        mdp->setSearchTrack(text.simplified());
         kDebug() << "set track to: " << text;
         break;
     }
@@ -277,7 +283,7 @@ QString NepomukWebMiner::Extractor::FilenameAnalyzer::writeRegExpConfig(const QL
 {
     QString configString;
 
-    // Each entry is looks like this
+    // Each entry looks like this
     // #|# splits the RegExpData
     // #,# splits the data within RegExpData
     // regexp#,#useFolder#,#1,2,3#|#regexp#,#useFolder#,#1,2,3

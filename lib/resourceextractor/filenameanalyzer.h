@@ -129,13 +129,13 @@ private:
      *
      * @param regExpList the list of RegExpData that should be used
      * @param mdp the MetaDataParameters that will be altered
-     * @param filename the filename that should checked
-     * @param fileUrl the filename + path that should be used
+     * @param filename the cleaned filename that should checked
+     * @param fileUrl the cleaned filename + path that should be used
      *
      * @return @arg @c true if the one of the regexp matched
      *         @ar g@c false if no regexp matched
      */
-    bool analyzeFileName(QList<Extractor::RegExpData> regExpList, NepomukWebMiner::Extractor::MetaDataParameters *mdp, const QString &filename, const KUrl &fileUrl);
+    bool analyzeFileName(QList<Extractor::RegExpData> regExpList, NepomukWebMiner::Extractor::MetaDataParameters *mdp, const QString &filename, const QString &fileUrl);
 
     /**
      * @brief Saves the parsed data
@@ -143,7 +143,7 @@ private:
      * @param text the found text
      * @param type the interpretation of what this text represents
      */
-    void saveResult(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const QString &text, MatchTypes type);
+    void saveResult(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const QString &text, Extractor::MatchTypes type);
 
     Q_DECLARE_PRIVATE(FilenameAnalyzer)
     FilenameAnalyzerPrivate *const d_ptr; /**< d-pointer for this class */
