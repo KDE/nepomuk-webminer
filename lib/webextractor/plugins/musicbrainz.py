@@ -96,8 +96,6 @@ def searchItems( resourcetype, parameters ):
 
         if not result['recording-list']:
             WebExtractor.log( 'No results found for: ' + luceneQuery )
-            WebExtractor.searchResults( searchResults )
-
 
         # iterate over all available results
         for recording in result['recording-list']:
@@ -213,7 +211,7 @@ def extractItemFromUri( url, options ):
                 if albumRelese['medium-list'][0] is not None:
                     if 'track-list' in albumRelese['medium-list'][0]:
                         trackNumber = albumRelese['medium-list'][0]['track-list'][0]['number']
-                        
+
             # try to get cover from the coverartarchive
             url = 'http://coverartarchive.org/release/' + str(albumId)
             try:
@@ -223,8 +221,8 @@ def extractItemFromUri( url, options ):
                         coverUrl = item['image']
                         break;
             except Exception as err:
-                WebExtractor.log("Cover could not be retrieved from: \n" + url + "\n Reason: \n" + str(err))          
-            
+                WebExtractor.log("Cover could not be retrieved from: \n" + url + "\n Reason: \n" + str(err))
+
 
             trackDict = dict (
                                 title = recording['title'],
