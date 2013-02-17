@@ -100,9 +100,6 @@ NepomukWebMinerService::~NepomukWebMinerService()
     Q_D(NepomukWebMinerService);
 
     QDBusConnection::sessionBus().unregisterObject( QLatin1String( "/WebMiner" ) );
-
-    delete d->indexScheduler;
-    delete d->dBusAdaptor;
 }
 
 int NepomukWebMinerService::status() const
