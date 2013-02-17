@@ -97,8 +97,6 @@ NepomukWebMinerService::NepomukWebMinerService(QObject *parent, const QVariantLi
 
 NepomukWebMinerService::~NepomukWebMinerService()
 {
-    Q_D(NepomukWebMinerService);
-
     QDBusConnection::sessionBus().unregisterObject( QLatin1String( "/WebMiner" ) );
 }
 
