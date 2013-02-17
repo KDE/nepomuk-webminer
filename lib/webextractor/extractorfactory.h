@@ -93,6 +93,17 @@ public:
     NepomukWebMiner::Extractor::WebExtractor *getExtractor(const QUrl &uri);
 
     /**
+     * @brief Checks the already parsed WebExtractor::Info objects if the given url is supported
+     *
+     * Used for the NPAPI plugin to check if we can use the webminer
+     *
+     * @param uri  web url that should be parsed
+     * @return @arg @c true if there exist a plugin that supports the url
+     *         @arg @c false if no plugin could parse the url
+     */
+    bool urlSupported(const QUrl &uri);
+
+    /**
       * @brief Returns a list of all available webextractor plugins that fetches data for the resource @c type
       *
       * @p type can be:

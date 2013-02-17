@@ -25,37 +25,28 @@
 #include "DOM/Document.h"
 #include "global/config.h"
 
-#include <nepomukmetadataextractor/webextractor.h>
+#include <nepomuk-webminer/webextractor.h>
 
 #include <QtCore/QString>
 #include <QtCore/QVariantMap>
 #include <QtCore/QUrl>
 
-using namespace NepomukMetaDataExtractor;
+using namespace NepomukWebMiner;
 using namespace Extractor;
-using namespace UI;
 
 FB::variant MetaDataFetcherPluginAPI::checkUrl(const FB::variant& inputUrl)
 {
     std::string inputString   = inputUrl.cast<std::string>();
     QString urlString = QString::fromUtf8(inputString.data(), inputString.size());
     QUrl url = QUrl(urlString);
-    WebExtractor *we = m_ef->createExtractor(url);
-
-    if (we) {
-        delete we;
-        return true;
-    } else {
-        delete we;
-        return false;
-    }
+    return m_ef->urlSupported(url);
 }
 
 FB::variant MetaDataFetcherPluginAPI::fetchMetaData(const FB::variant& inputUrl)
 {
     std::string inputUrlString   = inputUrl.cast<std::string>();
 
-    std::string command = "metadataextractor -auto -url ";
+    std::string command = "nepomuk-webminer -auto -url -standalone ";
     command.append(inputUrlString);
 
     // calls the commandline program to do the data fetching and nepomuk importing

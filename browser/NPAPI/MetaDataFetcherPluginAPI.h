@@ -28,8 +28,7 @@
 #ifndef H_MetaDataFetcherPluginAPI
 #define H_MetaDataFetcherPluginAPI
 
-#include <nepomukmetadataextractor/extractorfactory.h>
-#include <nepomukmetadataextractor/automaticfetcher.h>
+#include <nepomuk-webminer/extractorfactory.h>
 
 class MetaDataFetcherPluginAPI : public FB::JSAPIAuto
 {
@@ -49,8 +48,7 @@ public:
         registerMethod("checkUrl",      make_method(this, &MetaDataFetcherPluginAPI::checkUrl));
         registerMethod("fetchMetaData", make_method(this, &MetaDataFetcherPluginAPI::fetchMetaData));
 
-        m_ef = new NepomukMetaDataExtractor::Extractor::ExtractorFactory;
-        m_automaticFetcher = new NepomukMetaDataExtractor::UI::AutomaticFetcher;
+        m_ef = new NepomukWebMiner::Extractor::ExtractorFactory();
     }
 
     /**
@@ -78,8 +76,7 @@ private:
     MetaDataFetcherPluginWeakPtr m_plugin;
     FB::BrowserHostPtr m_host;
 
-    NepomukMetaDataExtractor::Extractor::ExtractorFactory *m_ef;
-    NepomukMetaDataExtractor::UI::AutomaticFetcher *m_automaticFetcher;
+    NepomukWebMiner::Extractor::ExtractorFactory *m_ef;
 };
 
 #endif // H_MetaDataFetcherPluginAPI

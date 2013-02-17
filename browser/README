@@ -11,21 +11,25 @@ To to this you need firebreath.
 @see http://colonelpanic.net/2010/11/firebreath-tips-working-with-source-control/
 
 git clone git://github.com/firebreath/FireBreath.git firebreath-dev
+cd firebreath-dev
 git submodule update --recursive --init
+
+mkdir projects
 
 Than copy the NPAPI folder into the projects folder and run
 
 bash ./prepmake.sh
+cd build
 make
 
-Now copy the created "npMetaDataFetcherPlugin.so" into the chrome folder.
+Now copy the created "build/bin/npNepomukWebMinerPlugin.so" into the nepomuk-webminer/browser/chrome folder.
 
 To get this into chrome
 * open it
 * select Tools->Extensions from the menu
 * Enable the Developer mode
 * Load the unpacked Plugin
-* select the "chrome folder with the npMetaDataFetcherPlugin.so" file
+* select the "chrome folder with the npNepomukWebMinerPlugin.so" file
 
 Everything is working now.
 

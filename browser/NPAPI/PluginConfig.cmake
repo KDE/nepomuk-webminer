@@ -1,7 +1,7 @@
 #/**********************************************************\ 
 #
 # Auto-Generated Plugin Configuration file
-# for MetaDataFetcherPlugin
+# for NepomukWebMinerPlugin
 #
 #\**********************************************************/
 
@@ -10,18 +10,18 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-set(PLUGIN_NAME "MetaDataFetcherPlugin")
-set(PLUGIN_PREFIX "MDFP")
+set(PLUGIN_NAME "NepomukWebMinerPlugin")
+set(PLUGIN_PREFIX "NWMP")
 set(COMPANY_NAME "KDE")
 
 # ActiveX constants:
-set(FBTYPELIB_NAME MetaDataFetcherPluginLib)
-set(FBTYPELIB_DESC "MetaDataFetcherPlugin 1.0 Type Library")
-set(IFBControl_DESC "MetaDataFetcherPlugin Control Interface")
-set(FBControl_DESC "MetaDataFetcherPlugin Control Class")
-set(IFBComJavascriptObject_DESC "MetaDataFetcherPlugin IComJavascriptObject Interface")
-set(FBComJavascriptObject_DESC "MetaDataFetcherPlugin ComJavascriptObject Class")
-set(IFBComEventSource_DESC "MetaDataFetcherPlugin IFBComEventSource Interface")
+set(FBTYPELIB_NAME NepomukWebMinerPluginLib)
+set(FBTYPELIB_DESC "NepomukWebMinerPlugin 1.0 Type Library")
+set(IFBControl_DESC "NepomukWebMinerPlugin Control Interface")
+set(FBControl_DESC "NepomukWebMinerPlugin Control Class")
+set(IFBComJavascriptObject_DESC "NepomukWebMinerPlugin IComJavascriptObject Interface")
+set(FBComJavascriptObject_DESC "NepomukWebMinerPlugin ComJavascriptObject Class")
+set(IFBComEventSource_DESC "NepomukWebMinerPlugin IFBComEventSource Interface")
 set(AXVERSION_NUM "1")
 
 # NOTE: THESE GUIDS *MUST* BE UNIQUE TO YOUR PLUGIN/ACTIVEX CONTROL!  YES, ALL OF THEM!
@@ -33,8 +33,8 @@ set(FBComJavascriptObject_GUID 977735a7-54db-5c0d-aee5-4a69622879b3)
 set(IFBComEventSource_GUID 97e0f94b-02b3-50ab-a478-00cf105a2095)
 
 # these are the pieces that are relevant to using it from Javascript
-set(ACTIVEX_PROGID "KDE.MetaDataFetcherPlugin")
-set(MOZILLA_PLUGINID "kde.org/MetaDataFetcherPlugin")
+set(ACTIVEX_PROGID "KDE.NepomukWebMinerPlugin")
+set(MOZILLA_PLUGINID "kde.org/NepomukWebMinerPlugin")
 
 # strings
 set(FBSTRING_CompanyName "KDE")
@@ -42,10 +42,10 @@ set(FBSTRING_PluginDescription "Extract meta data from the webpage and put it in
 set(FBSTRING_PLUGIN_VERSION "1.0.0.0")
 set(FBSTRING_LegalCopyright "Copyright 2012 KDE")
 set(FBSTRING_PluginFileName "np${PLUGIN_NAME}.dll")
-set(FBSTRING_ProductName "MetaDataFetcherPlugin")
+set(FBSTRING_ProductName "NepomukWebMinerPlugin")
 set(FBSTRING_FileExtents "")
-set(FBSTRING_PluginName "MetaDataFetcherPlugin")
-set(FBSTRING_MIMEType "application/x-metadatafetcherplugin")
+set(FBSTRING_PluginName "NepomukWebMinerPlugin")
+set(FBSTRING_MIMEType "application/x-nepomukwebminerplugin")
 
 # Uncomment this next line if you're not planning on your plugin doing
 # any drawing:

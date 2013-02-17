@@ -3,7 +3,7 @@
   "version": "0.1",
   "description": "Extract meta data from the webpage and put it into nepomuk",
   "plugins": [
-    { "path": "npMetaDataFetcherPlugin.so", "public": false }
+    { "path": "npNepomukWebMinerPlugin.so", "public": false }
   ],
   "background": { "page": "background.html" },
   "page_action" :

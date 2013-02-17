@@ -126,6 +126,21 @@ NepomukWebMiner::Extractor::WebExtractor *NepomukWebMiner::Extractor::ExtractorF
     return 0;
 }
 
+bool NepomukWebMiner::Extractor::ExtractorFactory::urlSupported(const QUrl &uri)
+{
+    Q_D(ExtractorFactory);
+
+    foreach (const WebExtractor::Info i, d->availableScripts) {
+        foreach (const QString & urlregex, i.urlregex) {
+            if (uri.toString().contains(QRegExp(urlregex))) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 QList<NepomukWebMiner::Extractor::WebExtractor::Info> NepomukWebMiner::Extractor::ExtractorFactory::listAvailablePlugins(const QString &type)
 {
     Q_D(ExtractorFactory);
