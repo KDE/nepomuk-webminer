@@ -192,37 +192,77 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::saveResult(NepomukWebMiner::E
 {
     switch(type) {
     case Extractor::MATCH_TITLE:
-        mdp->setSearchTitle(text.simplified());
-        kDebug() << "set title name to: " << text;
+        if(MDESettings::preferFileParsing() || mdp->searchTitle().isEmpty()) {
+            mdp->setSearchTitle(text.simplified());
+            kDebug() << "set title name to: " << text;
+        }
+        else {
+            kDebug() << "no not overwrite title " << mdp->searchTitle() << "with" << text;
+        }
         break;
     case Extractor::MATCH_SHOW:
-        mdp->setSearchShowTitle(text.simplified());
-        kDebug() << "set tvshow to: " << text;
+        if(MDESettings::preferFileParsing() || mdp->searchShowTitle().isEmpty()) {
+            mdp->setSearchShowTitle(text.simplified());
+            kDebug() << "set tvshow to: " << text;
+        }
+        else {
+            kDebug() << "no not overwrite tvshow " << mdp->searchShowTitle() << "with" << text;
+        }
         break;
     case Extractor::MATCH_SEASON:
-        mdp->setSearchSeason(text.simplified());
-        kDebug() << "set season to: " << text;
+        if(MDESettings::preferFileParsing() || mdp->searchSeason().isEmpty()) {
+            mdp->setSearchSeason(text.simplified());
+            kDebug() << "set season to: " << text;
+        }
+        else {
+            kDebug() << "no not overwrite season " << mdp->searchSeason() << "with" << text;
+        }
         break;
     case Extractor::MATCH_EPISODE:
-        mdp->setSearchEpisode(text.simplified());
-        kDebug() << "set episode to: " << text;
+        if(MDESettings::preferFileParsing() || mdp->searchEpisode().isEmpty()) {
+            mdp->setSearchEpisode(text.simplified());
+            kDebug() << "set episode to: " << text;
+        }
+        else {
+            kDebug() << "no not overwrite episode " << mdp->searchEpisode() << "with" << text;
+        }
         break;
     case Extractor::MATCH_PERSON:
-        mdp->setSearchPerson(text.simplified());
-        kDebug() << "set person to: " << text;
+        if(MDESettings::preferFileParsing() || mdp->searchPerson().isEmpty()) {
+            mdp->setSearchPerson(text.simplified());
+            kDebug() << "set person to: " << text;
+        }
+        else {
+            kDebug() << "no not overwrite person " << mdp->searchPerson() << "with" << text;
+        }
         break;
     case Extractor::MATCH_ALBUM:
-        mdp->setSearchAlbum(text.simplified());
-        kDebug() << "set album to: " << text;
+        if(MDESettings::preferFileParsing() || mdp->searchAlbum().isEmpty()) {
+            mdp->setSearchAlbum(text.simplified());
+            kDebug() << "set album to: " << text;
+        }
+        else {
+            kDebug() << "no not overwrite album " << mdp->searchAlbum() << "with" << text;
+        }
         break;
     case Extractor::MATCH_YEAR:
-        mdp->setSearchYearMax(text.simplified());
-        mdp->setSearchYearMin(text);
-        kDebug() << "set year to: " << text;
+        if(MDESettings::preferFileParsing() || mdp->searchYearMax().isEmpty()) {
+            mdp->setSearchYearMax(text.simplified());
+            mdp->setSearchYearMin(text);
+            kDebug() << "set year to: " << text;
+        }
+        else {
+            kDebug() << "no not overwrite year " << mdp->searchYearMax() << "with" << text;
+        }
         break;
     case Extractor::MATCH_TRACK:
-        mdp->setSearchTrack(text.simplified());
-        kDebug() << "set track to: " << text;
+        if(MDESettings::preferFileParsing() || mdp->searchTrack().isEmpty()) {
+            mdp->setSearchTrack(text.simplified());
+            kDebug() << "set track to: " << text;
+        }
+        else {
+            kDebug() << "no not overwrite track " << mdp->searchTrack() << "with" << text;
+        }
         break;
     }
 }

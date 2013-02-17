@@ -64,6 +64,10 @@
   </group>
 
   <group name="FilenameAnalyzer">
+  <entry name="PreferFileParsing" type="Bool">
+    <label>Prefer data extracted from filename over data from the Nepomuk FileIndexer.</label>
+    <default>false</default>
+  </entry>
     <entry name="StripNames" type="StringList">
       <label>Regular expressions that remove the matched text from any filename.</label>
     </entry>
