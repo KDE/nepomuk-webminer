@@ -188,7 +188,7 @@ bool NepomukWebMiner::Extractor::FilenameAnalyzer::analyzeFileName(QList<Extract
     return foundMatch;
 }
 
-void NepomukWebMiner::Extractor::FilenameAnalyzer::saveResult(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const QString &text, MatchTypes type)
+void NepomukWebMiner::Extractor::FilenameAnalyzer::saveResult(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const QString &text, Extractor::MatchTypes type)
 {
     switch(type) {
     case Extractor::MATCH_TITLE:
