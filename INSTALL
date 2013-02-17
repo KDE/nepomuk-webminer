@@ -6,9 +6,7 @@ Here are some important information for the build/runtime dependencies
 * Nepomuk
 ** SDO 0.10.0
 
-* poppler (for pdf parsing)
-* TagLib (for music parsing)
-* Python for the header generation via nepomuk-simpleresource-rcgen.py
+* Python and PyKDE/PyQt for the header generation via nepomuk-simpleresource-rcgen.py
 * Kross framework with working python interpreters
 
 #################################################################
@@ -22,7 +20,7 @@ Here are some important information for the build/runtime dependencies
   + BeautifulSoup
   + httplib2
   + urllib2
-  
+
   To use the extended tvdb (augmented with MyAnimeList support)
   + PyQt4
   + PyKDE
