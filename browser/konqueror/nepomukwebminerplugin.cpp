@@ -27,6 +27,9 @@
 
 #include <KParts/StatusBarExtension>
 
+#include <KDE/KConfig>
+#include <KDE/KConfigGroup>
+
 #include "webextractor/extractorfactory.h"
 #include "webextractor/webextractor.h"
 
@@ -69,7 +72,8 @@ NepomukWebMinerPlugin::NepomukWebMinerPlugin(QObject *parent, const QVariantList
 
 NepomukWebMinerPlugin::~NepomukWebMinerPlugin()
 {
-    delete m_ef;
+    //FIXME: crashes on konqueror exit
+//    delete m_ef;
 }
 
 void NepomukWebMinerPlugin::lateInitialization()
@@ -124,7 +128,15 @@ void NepomukWebMinerPlugin::extract()
     connect(we, SIGNAL(itemResults(QString,QVariantMap)), this, SLOT(pushDataToNepomuk(QString,QVariantMap)));
 
     if (we) {
-        we->extractItem(url, QVariantMap());
+
+        KConfig config( "nepomuk-webminerrc" );
+        KConfigGroup cfg = config.group( "Fetcher" );
+
+        QVariantMap options;
+        options.insert(QString("references"), cfg.readEntry( "DownloadReferences", false ));
+        options.insert(QString("banner"), cfg.readEntry( "DownloadBanner", true ));
+
+        we->extractItem(url, options);
         extractionInProgress = true;
         m_icon.setEnabled(false);
     }
@@ -154,5 +166,4 @@ void NepomukWebMinerPlugin::pushDataToNepomuk(const QString &resourceType, const
     m_icon.setEnabled(true);
 
     delete nepomukPipe;
-    sender()->deleteLater();
 }
