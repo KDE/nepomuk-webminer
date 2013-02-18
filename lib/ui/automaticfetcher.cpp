@@ -230,6 +230,7 @@ void NepomukWebMiner::UI::AutomaticFetcher::selectSearchEntry(QVariantList searc
         // also this sorts the list and takes the best fit
         QVariantList sortedList = setLevenshteinDistance(searchResults, d->currentItemToupdate,10);
         if(sortedList.isEmpty()) {
+            kDebug() << "Levenshtein distance to big for all" << searchResults.size() << "results";
             selectSearchEntry(QVariantList());
             return;
         }
