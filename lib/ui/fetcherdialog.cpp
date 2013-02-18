@@ -234,7 +234,7 @@ void NepomukWebMiner::UI::FetcherDialog::openSettings()
 
 void NepomukWebMiner::UI::FetcherDialog::openHelp()
 {
-    KToolInvocation::invokeHelp(QString(), QString("kcontrol/nepomuk-webminer"));
+    KToolInvocation::invokeHelp(QString(), QLatin1String("kcontrol/nepomuk-webminer"));
 }
 
 void NepomukWebMiner::UI::FetcherDialog::resourceFetchingDone()
@@ -448,17 +448,17 @@ void NepomukWebMiner::UI::FetcherDialog::startSearch()
     }
 
     QVariantMap searchParameters;
-    searchParameters.insert("title", mdp->searchTitle());
-    searchParameters.insert("alttitle", mdp->searchAltTitle());
-    searchParameters.insert("author", mdp->searchPerson());
-    searchParameters.insert("season", mdp->searchSeason());
-    searchParameters.insert("episode", mdp->searchEpisode());
-    searchParameters.insert("yearMin", mdp->searchYearMin());
-    searchParameters.insert("yearMax", mdp->searchYearMax());
-    searchParameters.insert("journal", mdp->searchJournal());
-    searchParameters.insert("showtitle", mdp->searchShowTitle());
-    searchParameters.insert("album", mdp->searchAlbum());
-    searchParameters.insert("track", mdp->searchTrack());
+    searchParameters.insert(QLatin1String("title"), mdp->searchTitle());
+    searchParameters.insert(QLatin1String("alttitle"), mdp->searchAltTitle());
+    searchParameters.insert(QLatin1String("author"), mdp->searchPerson());
+    searchParameters.insert(QLatin1String("season"), mdp->searchSeason());
+    searchParameters.insert(QLatin1String("episode"), mdp->searchEpisode());
+    searchParameters.insert(QLatin1String("yearMin"), mdp->searchYearMin());
+    searchParameters.insert(QLatin1String("yearMax"), mdp->searchYearMax());
+    searchParameters.insert(QLatin1String("journal"), mdp->searchJournal());
+    searchParameters.insert(QLatin1String("showtitle"), mdp->searchShowTitle());
+    searchParameters.insert(QLatin1String("album"), mdp->searchAlbum());
+    searchParameters.insert(QLatin1String("track"), mdp->searchTrack());
 
     //kDebug() << "webextractor->search :: " << searchParameters;
 
@@ -672,8 +672,8 @@ void NepomukWebMiner::UI::FetcherDialog::fetchMoreDetails()
     KUrl fetchUrl(entry.value(QLatin1String("url")).toString());
 
     QVariantMap options;
-    options.insert(QString("references"), MDESettings::downloadReferences());
-    options.insert(QString("banner"), MDESettings::downloadBanner());
+    options.insert(QLatin1String("references"), MDESettings::downloadReferences());
+    options.insert(QLatin1String("banner"), MDESettings::downloadBanner());
 
     d->webextractor->extractItem(fetchUrl, options);
 }
@@ -750,13 +750,13 @@ void NepomukWebMiner::UI::FetcherDialog::fillEngineList(const QString &category)
                                       engine.identifier);
     }
 
-    if (category == QString("movie")) {
+    if (category == QLatin1String("movie")) {
         comboBoxSearchEngine->setCurrentIndex(comboBoxSearchEngine->findData(MDESettings::favoriteMoviePlugin()));
-    } else if (category == QString("tvshow")) {
+    } else if (category == QLatin1String("tvshow")) {
         comboBoxSearchEngine->setCurrentIndex(comboBoxSearchEngine->findData(MDESettings::favoriteTvShowPlugin()));
-    } else if (category == QString("music")) {
+    } else if (category == QLatin1String("music")) {
         comboBoxSearchEngine->setCurrentIndex(comboBoxSearchEngine->findData(MDESettings::favoriteMusicPlugin()));
-    } else if (category == QString("publication")) {
+    } else if (category == QLatin1String("publication")) {
         comboBoxSearchEngine->setCurrentIndex(comboBoxSearchEngine->findData(MDESettings::favoritePublicationPlugin()));
     }
 }

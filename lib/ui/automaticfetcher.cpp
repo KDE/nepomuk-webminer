@@ -187,17 +187,17 @@ void NepomukWebMiner::UI::AutomaticFetcher::searchNextItem()
     }
 
     QVariantMap searchParameters;
-    searchParameters.insert("title", d->currentItemToupdate->searchTitle());
-    searchParameters.insert("alttitle", d->currentItemToupdate->searchAltTitle());
-    searchParameters.insert("author", d->currentItemToupdate->searchPerson());
-    searchParameters.insert("season", d->currentItemToupdate->searchSeason());
-    searchParameters.insert("episode", d->currentItemToupdate->searchEpisode());
-    searchParameters.insert("yearMin", d->currentItemToupdate->searchYearMin());
-    searchParameters.insert("yearMax", d->currentItemToupdate->searchYearMax());
-    searchParameters.insert("journal", d->currentItemToupdate->searchJournal());
-    searchParameters.insert("showtitle", d->currentItemToupdate->searchShowTitle());
-    searchParameters.insert("album", d->currentItemToupdate->searchAlbum());
-    searchParameters.insert("track", d->currentItemToupdate->searchTrack());
+    searchParameters.insert(QLatin1String("title"), d->currentItemToupdate->searchTitle());
+    searchParameters.insert(QLatin1String("alttitle"), d->currentItemToupdate->searchAltTitle());
+    searchParameters.insert(QLatin1String("author"), d->currentItemToupdate->searchPerson());
+    searchParameters.insert(QLatin1String("season"), d->currentItemToupdate->searchSeason());
+    searchParameters.insert(QLatin1String("episode"), d->currentItemToupdate->searchEpisode());
+    searchParameters.insert(QLatin1String("yearMin"), d->currentItemToupdate->searchYearMin());
+    searchParameters.insert(QLatin1String("yearMax"), d->currentItemToupdate->searchYearMax());
+    searchParameters.insert(QLatin1String("journal"), d->currentItemToupdate->searchJournal());
+    searchParameters.insert(QLatin1String("showtitle"), d->currentItemToupdate->searchShowTitle());
+    searchParameters.insert(QLatin1String("album"), d->currentItemToupdate->searchAlbum());
+    searchParameters.insert(QLatin1String("track"), d->currentItemToupdate->searchTrack());
 
     kDebug() << "Start searching with " << d->webextractor->info().name;
     //kDebug() << searchParameters;
@@ -242,8 +242,8 @@ void NepomukWebMiner::UI::AutomaticFetcher::selectSearchEntry(QVariantList searc
         KUrl fetchUrl(selectedSearchResult.value(QLatin1String("url")).toString());
 
         QVariantMap options;
-        options.insert(QString("references"), MDESettings::downloadReferences());
-        options.insert(QString("banner"), MDESettings::downloadBanner());
+        options.insert(QLatin1String("references"), MDESettings::downloadReferences());
+        options.insert(QLatin1String("banner"), MDESettings::downloadBanner());
 
         d->webextractor->extractItem(fetchUrl, options);
     }
