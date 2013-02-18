@@ -31,6 +31,7 @@
 #include <KDE/KDebug>
 
 #include <QtCore/QTimer>
+#include <QtCore/QFileInfo>
 
 WebMinerIndexingQueue::WebMinerIndexingQueue(QObject *parent)
     : IndexingQueue(parent)
@@ -78,7 +79,21 @@ void WebMinerIndexingQueue::fillQueue()
     Soprano::Model* model = Nepomuk2::ResourceManager::instance()->mainModel();
     Soprano::QueryResultIterator it = model->executeQuery( query, Soprano::Query::QueryLanguageSparql );
     while( it.next() ) {
-        m_fileQueue.enqueue( it[0].uri() );
+        //only add urls of files that exist
+        //as we can't save metadata for localfiles that are on an external drive when the
+        //drive is not connected this would fail anyway
+        //TODO: external harddrives queue should be solved differently.
+        //      otherwise even if we have resources on local drive this queue will never fill
+        //      until all resources on the external drive is checked again.
+        //      maybe have a list of external drives, and change the SPARQL query so it only
+        //      looks for path that are currently available?
+        QFileInfo fi( it[0].uri().toLocalFile() );
+        if(fi.exists()) {
+            m_fileQueue.enqueue( it[0].uri() );
+        }
+        else {
+            kDebug() << fi.absoluteFilePath() << "does not exist";
+        }
     }
 }
 
