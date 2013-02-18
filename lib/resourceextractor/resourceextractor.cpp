@@ -53,7 +53,6 @@ public:
     NepomukWebMiner::Extractor::FilenameAnalyzer *filenameAnalyzer;
     bool forceUpdate;
     bool cancel;
-    KUrl baseCallUrl; //TODO: remove this parameter? helps in the video extractor in folder name detection
     QList<MetaDataParameters *> resourcesToLookup;
 };
 }
@@ -95,9 +94,6 @@ void NepomukWebMiner::Extractor::ResourceExtractor::setMovieMode(bool moviemode)
 void NepomukWebMiner::Extractor::ResourceExtractor::lookupFiles(const KUrl &fileOrFolder, bool nested)
 {
     Q_D(ResourceExtractor);
-    if (!d->baseCallUrl.isValid()) {
-        d->baseCallUrl = fileOrFolder;
-    }
 
     emit progressStatus(i18n("Check available files"));
     QDir dir(fileOrFolder.toLocalFile());

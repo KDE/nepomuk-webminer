@@ -773,7 +773,7 @@ void  NepomukWebMiner::Pipe::PublicationPipe::addNote(const QString &contentVale
 
 void  NepomukWebMiner::Pipe::PublicationPipe::addPublisher(const QString &publisherValue, const QString &addressString, Nepomuk2::NBIB::Publication &publication, Nepomuk2::SimpleResourceGraph &graph)
 {
-    //FIXME: extendedAddress is not correct, but determining which part of the @p address is the street/location and so on is nearly impossible
+    //TODO: extendedAddress is not correct, but determining which part of the @p address is the street/location and so on is nearly impossible
     Nepomuk2::NCO::PostalAddress postalAddress;
     if (!addressString.isEmpty()) {
         postalAddress.setExtendedAddress(addressString);

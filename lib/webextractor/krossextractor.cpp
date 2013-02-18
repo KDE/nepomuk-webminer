@@ -129,7 +129,7 @@ NepomukWebMiner::Extractor::WebExtractor::Info NepomukWebMiner::Extractor::Kross
 
 void NepomukWebMiner::Extractor::KrossExtractor::search(const QString &resourceType, const QVariantMap &parameters)
 {
-    //BUG: concurrent execution crashes with 4.10, needs a better solution to not block the ui
+    //BUG: concurrent execution crashes, needs a better solution to not block the ui
     emit searchItems(resourceType, parameters);
 
 //    Q_D(KrossExstractor);
@@ -152,7 +152,7 @@ void NepomukWebMiner::Extractor::KrossExtractor::search(const QString &resourceT
 
 void NepomukWebMiner::Extractor::KrossExtractor::extractItem(const QUrl &url, const QVariantMap &options)
 {
-    //BUG: concurrent execution crashes with 4.10, needs a better solution to not block the ui
+    //BUG: concurrent execution crashes, needs a better solution to not block the ui
     emit extractItemFromUri(url, options);
 
 //    Q_D(KrossExtractor);

@@ -58,13 +58,12 @@ NepomukWebMiner::Pipe::MoviePipe::MoviePipe(QObject *parent)
 
 void NepomukWebMiner::Pipe::MoviePipe::pipeImport(const QVariantMap &movieEntry)
 {
-    //TODO: do not use local file url here, this will double type the resource for now this is the best way to deal with this
+    //TODO: do not use local file url here, this will double type the resource. for now this is the best way to deal with this
     QString resourceUri = movieEntry.value(QLatin1String("resourceuri"), QString()).toString();
     KUrl existingUri;
     existingUri.setEncodedUrl(resourceUri.toLatin1());
 
     // first remove the old metadata
-    //BUG: Removing lots of person subresources cause virtuoso to go crazy. Takes ~10Min to get all the data removed properly
     KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << existingUri, Nepomuk2::NoRemovalFlags, KComponentData(componentName().toLatin1()));
     if (!job->exec()) {
         kWarning() << job->errorString();

@@ -28,13 +28,12 @@ namespace Extractor
 class MetaDataParametersPrivate
 {
 public:
-    //NOTE: replace single QString parameters with a search QMap in case we need to add many other parameters in the future?
     QString searchTitle;          /**< title of the entry to search for */
     QString searchAltTitle;       /**< alternative title of the entry to search for in case the first one does not return anything */
     QString searchYearMin;
     QString searchYearMax;
 
-    QString searchPerson; /**< Publication author, movie director, album preformer */
+    QString searchPerson;         /**< Publication author, movie director, album preformer */
 
     // tv show related
     QString searchShowTitle;

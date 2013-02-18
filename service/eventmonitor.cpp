@@ -58,7 +58,7 @@ Nepomuk2::EventMonitor::EventMonitor( QObject* parent )
     m_isIdle = false;
     m_isDiskSpaceLow = false; /* We hope */
     m_enabled = false;
-    m_isNetworkDisabled = false; //FIXME: ask Solid for network status
+    m_isNetworkDisabled = false;
 }
 
 Nepomuk2::EventMonitor::~EventMonitor()
