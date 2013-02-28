@@ -10,9 +10,6 @@
     <height>160</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>RegExpBox</string>
-  </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <widget class="QTableView" name="tableView">
