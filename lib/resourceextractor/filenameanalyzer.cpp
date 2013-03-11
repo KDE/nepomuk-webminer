@@ -127,6 +127,13 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::analyze(NepomukWebMiner::Extr
     if(! extractionWorked ) {
         mdp->setSearchTitle( filenName );
     }
+
+    //do in case season was not detected but we have a tvshow, set season as default to "1"
+    if(mdp->resourceType() == QLatin1String("tvshow")) {
+        if(mdp->searchSeason().isEmpty()) {
+            mdp->setSearchSeason(QLatin1String("1"));
+        }
+    }
 }
 
 void NepomukWebMiner::Extractor::FilenameAnalyzer::stripFileName(QString &fileName)
