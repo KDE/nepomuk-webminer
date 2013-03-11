@@ -72,7 +72,7 @@
       <label>Regular expressions that remove the matched text from any filename.</label>
     </entry>
     <entry name="RegExpTvShow" type="String">
-      <label>Regular expressions that will detect and extract parts of a a tv show filename.</label>
+      <label>Regular expressions that will detect and extract parts of a tv show filename.</label>
       <default>(.+)[\\s\\-]?\\[s([0-9]+)\\]\\s?\\[e([0-9]+)\\].*#,#false#,#2,3,4#,#foo [s01][e01]#|#(.+)[\\s\\-]+([0-9]{1,2})x([0-9]+).*#,#false#,#0,3,4#,#foo 1x03#|#(.+)[\\s\\-]?s([0-9]+)[\\s\\-]?e([0-9]+).*#,#false#,#2,3,4#,#foo s01e01#|#(.*)\\s?\\-\\s?(?:e|Episode)+[\\s\\-]?([0-9]{1,2})\\s?\\-?\\s?.*#,#false#,#2,4#,#foo - e01#|#(.+)[\\s\\-]s([0-9]{1,2})[\\s\\-]+([0-9]+).*#,#false#,#2,3,4#,#foo-s1-1#|#(.*)\\s?\\-\\s?([0-9]{2})+.*#,#false#,#2,4#,#foo - 01 - [01293]#|#(.+)[\\s\\-]([0-9]{1})([0-9]{2})(?:[^\\d][^/]*)?#,#false#,#2,3,4#,#foo 103#|#(.+)[\\s\\-]?([0-9]{2})([0-9]{2,3})(?:[^\\d][^/]*)?#,#false#,#2,3,4#,#foo 0103#|#.*/([^/]*)/(?:[^/]*)([0-9]+)/(?:Episode|e)?\\s?([0-9]+).*#,#true#,#2,3,4#,#~/Videos/Show/Season 1/e01 - title#|#.*/([^/]+)/(?:Episode|e)+[\\s\\-]?([0-9]{1,2}).*#,#true#,#2,4#,#~/Videos/Show/Episode 01#|#.*/([^/]*)/(?:Episode|e)+([0-9]{1,2})\\s?\\-(.*)#,#true#,#2,4,0#,#~/Videos/Show/e01 - title</default>
     </entry>
     <entry name="RegExpMovie" type="String">
