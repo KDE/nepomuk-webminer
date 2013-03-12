@@ -30,7 +30,7 @@ from datetime import date, datetime
 import sys
 import argparse
 
-def fetchLocalEposides():
+def fetchLocalEposides(ignoreList):
     '''
     Query Nepomuk for all TVShows that are accociated with a file.
 
@@ -51,6 +51,11 @@ def fetchLocalEposides():
     query +=    '?e nmm:episodeNumber ?EpisodeNumber .'
     query +=    '?e nmm:isPartOfSeason ?s .'
     query +=    '?s nmm:seasonNumber ?SeasonNumer .'
+
+    if ignoreList:
+        query += 'FILTER (str(?ShowName) != "'
+        query += '" && str(?ShowName) != "'.join(ignoreList)
+        query +=  '") .'
     query +=    '}'
     query +=    'ORDER BY ?ShowName ?SeasonNumer ?EpisodeNumber'
 
@@ -194,13 +199,16 @@ def main():
     parser.add_argument('--list', '-l', action="store_true", dest="listOnly", default=False,
                         help='Only the list without additional info')
 
+    parser.add_argument('--ignore', '-i', action="append", dest="ignoreList",
+                        help='Add showname to ignore (can be specified multiply times -i Show1 -i show2 ...')
+
     args = parser.parse_args()
 
     # first get a nice list of all tvshows/season/episodes known to nepomuk
     if not args.listOnly:
         print 'Fetch data from Nepomuk storage'
 
-    tvShowDict = fetchLocalEposides()
+    tvShowDict = fetchLocalEposides(args.ignoreList)
 
     missingData = dict()
 
