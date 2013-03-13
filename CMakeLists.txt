@@ -10,6 +10,14 @@ set(CMAKE_NEPOMUKWEBMINER_VERSION "${CMAKE_NEPOMUKWEBMINER_VERSION_MAJOR}.${CMAK
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules)
 
+#--------------------------------------------------------------------------
+# CTest setup
+#--------------------------------------------------------------------------
+ENABLE_TESTING()
+include(CTest)
+include(CTestConfig.cmake)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CTestCustom.cmake ${CMAKE_CURRENT_BINARY_DIR}/CTestCustom.cmake COPYONLY)
+
 
 #--------------------------------------------------------------------------
 # find required dependencies
@@ -58,6 +66,7 @@ add_subdirectory( service )
 add_subdirectory( browser/konqueror )
 add_subdirectory( kcm )
 add_subdirectory( doc )
+add_subdirectory( autotests )
 
 macro_display_feature_log()
 MESSAGE("###############################################################################################")

@@ -153,7 +153,7 @@ static void concurrentPipe(const QString &resourceType, const QVariantMap &entry
     }
 
     if (nepomukPipe) {
-        nepomukPipe->pipeImport(entry);
+        nepomukPipe->import(entry);
     } else {
         kWarning() << "No nepomuk pipe available for the resource type" << resourceType;
     }

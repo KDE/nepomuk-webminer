@@ -96,8 +96,9 @@ NepomukWebMiner::Pipe::PublicationPipe::~PublicationPipe()
 
 }
 
-void NepomukWebMiner::Pipe::PublicationPipe::pipeImport(const QVariantMap &bibEntry)
+bool NepomukWebMiner::Pipe::PublicationPipe::import(const QVariantMap &bibEntry)
 {
+    bool importSuccessful = true;
     QVariantMap bibEntryNonConst(bibEntry);
     // The MetaDataParameters contain the metadata for the publication as bibEntry->metaData
     // also if it is related to a file the bibEntry->resourceUri points to it.
@@ -142,6 +143,7 @@ void NepomukWebMiner::Pipe::PublicationPipe::pipeImport(const QVariantMap &bibEn
         // remove any metadata from this file created by the metadata extractor
         KJob *job = Nepomuk2::removeDataByApplication(QList<QUrl>() << fileurl, Nepomuk2::NoRemovalFlags, KComponentData(componentName().toLatin1()));
         if (!job->exec()) {
+            importSuccessful = false;
             kWarning() << job->errorString();
         } else {
             kDebug() << "Successfully removed old metadata from " << fileurl;
@@ -182,6 +184,8 @@ void NepomukWebMiner::Pipe::PublicationPipe::pipeImport(const QVariantMap &bibEn
         value.clear(); value << fileResourceUri;
         Nepomuk2::addProperty(resUri, NBIB::isPublicationOf(), value);
     }
+
+    return importSuccessful;
 }
 
 void NepomukWebMiner::Pipe::PublicationPipe::setProjectPimoThing(Nepomuk2::Resource projectThing)

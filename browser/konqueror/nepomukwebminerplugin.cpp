@@ -158,7 +158,7 @@ void NepomukWebMinerPlugin::pushDataToNepomuk(const QString &resourceType, const
     }
 
     if (nepomukPipe) {
-        nepomukPipe->pipeImport(entry);
+        nepomukPipe->import(entry);
     } else {
         kDebug() << "No nepomuk pipe available for the resource type" << resourceType;
     }

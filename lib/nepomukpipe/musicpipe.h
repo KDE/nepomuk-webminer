@@ -39,9 +39,9 @@ class MusicPipePrivate;
  * @li @c title - Album title
  * @li @c musicbrainz - MusicBrainz id
  * @li @c trackcount - number of tracks on the album
- * @li @c performer - performer of the track split by ;
+ * @li @c performer - performer of the Album split by ;
  * @li @c cover - url for the cover image
- * @li @c genre - list of genres for the album split by ;
+ * @li @c genres - list of genres for the album split by ;
  *
  * @li @c tracks - QVariantList containing more QVariantMaps with the track information
  *
@@ -56,8 +56,8 @@ class MusicPipePrivate;
  * @li @c seealso - url where we got the metadata from
  * @li @c lyrics - lyrics for track
  *
- * The @c cover won't be downloaded and added if it disabeld in the metadata KConfig.
- * The location of the cover can be configured as well, either next to the music file or in the data fodler of the library
+ * The @c cover won't be downloaded and added if it is disabled in the metadata KConfig.
+ * The location of the cover can be configured as well, either next to the music file or in the data folder of the library
  */
 class NEPOMUKWEBMINER_EXPORT MusicPipe : public NepomukPipe
 {
@@ -69,7 +69,7 @@ public:
      */
     explicit MusicPipe(QObject *parent = 0);
 
-    void pipeImport(const QVariantMap &movieEntry);
+    bool import(const QVariantMap &musicAlbum);
 
 private:
     Q_DECLARE_PRIVATE(MusicPipe)

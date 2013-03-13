@@ -74,7 +74,7 @@ public:
       *
       * @p entry input variantmap with all the necessary data
       */
-    virtual void pipeImport(const QVariantMap &entry) = 0;
+    virtual bool import(const QVariantMap &entry) = 0;
 
     /**
       * @brief Transforms some common variants of date formats into a QDateTime.

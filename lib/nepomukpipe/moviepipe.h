@@ -48,8 +48,8 @@ class MoviePipePrivate;
   * @li @c poster - url where the poster can be found
   * @li @c seealso - url where we got the metadata from
   *
- * The @c poster won't be downloaded and added if it disabeld in the metadata KConfig.
- * The location of the poster can be configured as well, either next to the movie file or in the data fodler of the library
+ * The @c poster won't be downloaded and added if it disabled in the metadata KConfig.
+ * The location of the poster can be configured as well, either next to the movie file or in the data folder of the library
   */
 class NEPOMUKWEBMINER_EXPORT MoviePipe : public NepomukPipe
 {
@@ -62,7 +62,7 @@ public:
      */
     explicit MoviePipe(QObject *parent = 0);
 
-    void pipeImport(const QVariantMap &movieEntry);
+    bool import(const QVariantMap &movieEntry);
 
 private:
     Q_DECLARE_PRIVATE(MoviePipe)

@@ -34,19 +34,19 @@ namespace Extractor
 class MetaDataParameters;
 class FilenameAnalyzerPrivate;
 
-//only add new entry at the bottom, or else the KConfig stuff will break
+// only add new entry at the bottom, or else the KConfig stuff will break
 // this relys on the enum <->int conversion
 enum MatchTypes {
-    MATCH_TITLE = 0,
-    MATCH_YEAR = 1,
+    MATCH_TITLE = 0,    /**< Title of the Book, music piece, tvshow episode */
+    MATCH_YEAR = 1,     /**< Release date */
 
-    MATCH_SHOW = 2,
-    MATCH_SEASON = 3,
-    MATCH_EPISODE = 4,
+    MATCH_SHOW = 2,     /**< Name of the tv show */
+    MATCH_SEASON = 3,   /**< TvShow season number */
+    MATCH_EPISODE = 4,  /**< TvShow episode number */
 
-    MATCH_PERSON = 5,
-    MATCH_ALBUM = 6,
-    MATCH_TRACK = 7
+    MATCH_PERSON = 5,   /**< name of the music artist, book author */
+    MATCH_ALBUM = 6,    /**< name of the music album */
+    MATCH_TRACK = 7     /**< number of the track on the album */
 };
 
 struct RegExpData {
@@ -87,9 +87,6 @@ public:
      *
      * @param mdp the file/resource object where the data should be saved in
      * @param fileUrl the url of the file to be checked
-     *
-     * @return @arg @c true if some data was found
-     *         @arg @c false if nothing could be extracted
      */
     void analyze(NepomukWebMiner::Extractor::MetaDataParameters *mdp, const KUrl &fileUrl);
 

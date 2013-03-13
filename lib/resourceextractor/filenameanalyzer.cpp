@@ -53,6 +53,10 @@ NepomukWebMiner::Extractor::FilenameAnalyzer::FilenameAnalyzer(QObject *parent)
     , d_ptr(new NepomukWebMiner::Extractor::FilenameAnalyzerPrivate)
 {
     reloadRegExp();
+
+    Q_D(FilenameAnalyzer);
+    d->tvShowMode = false;
+    d->movieShowMode = false;
 }
 
 void NepomukWebMiner::Extractor::FilenameAnalyzer::setTvShowMode(bool tvshowmode)
@@ -79,7 +83,9 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::analyze(NepomukWebMiner::Extr
     KSharedPtr<KMimeType> kmt = KMimeType::findByUrl(fileUrl);
     QString mimetype = kmt.data()->name();
 
-    // we do not use the original fileUrl even for regular expressions that want path+ filename
+    kDebug() << "check filename with a mimetype of" << mimetype;
+
+    // we do not use the original fileUrl even for regular expressions that wants path+filename
     // instead we use the cleaned filename and construct a new kurl
     QString cleanedFileUrl = fileUrl.prettyUrl();
     cleanedFileUrl.remove(fileUrl.fileName());
@@ -89,19 +95,35 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::analyze(NepomukWebMiner::Extr
     // select the right set of regexp for a specific mimetype
     if ( mimetype.contains(QLatin1String("application/vnd.oasis.opendocument.text")) ) {
         extractionWorked = analyzeFileName(d->regexpDocuments, mdp, filenName, cleanedFileUrl );
+
+        if( extractionWorked ) {
+            mdp->setResourceType( QLatin1String("publication") );
+        }
     }
     else if( mimetype.contains(QLatin1String("application/pdf")) ) {
         extractionWorked = analyzeFileName(d->regexpDocuments, mdp, filenName, cleanedFileUrl );
+
+        if( extractionWorked ) {
+            mdp->setResourceType( QLatin1String("publication") );
+        }
     }
     else if ( mimetype.contains(QLatin1String("video/")) ) {
         if(d->movieShowMode) {
             extractionWorked = analyzeFileName(d->regexpMovies, mdp, filenName, cleanedFileUrl );
+
+            if( extractionWorked ) {
+                mdp->setResourceType( QLatin1String("movie") );
+            }
         }
         else if(d->tvShowMode) {
             extractionWorked = analyzeFileName(d->regexpTvShows, mdp, filenName, cleanedFileUrl );
+
+            if( extractionWorked ) {
+                mdp->setResourceType( QLatin1String("tvshow") );
+            }
         }
         else {
-            // we did not specify directly if thsi was a tvshow or movie
+            // we did not specify directly if this was a tvshow or movie
             // so try tvshow first, it it fails try movie afterwards
             extractionWorked = analyzeFileName(d->regexpTvShows, mdp, filenName, cleanedFileUrl );
 
@@ -119,6 +141,9 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::analyze(NepomukWebMiner::Extr
     }
     else if( mimetype.contains(QLatin1String("audio/")) ) {
         extractionWorked = analyzeFileName(d->regexpMusic, mdp, filenName, cleanedFileUrl );
+        if( extractionWorked ) {
+            mdp->setResourceType( QLatin1String("music") );
+        }
     }
 
 
@@ -209,29 +234,33 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::saveResult(NepomukWebMiner::E
         break;
     case Extractor::MATCH_SHOW:
         if(MDESettings::preferFileParsing() || mdp->searchShowTitle().isEmpty()) {
-            mdp->setSearchShowTitle(text.simplified());
+            QString showName = text;
+            showName.replace(QChar('-'),QChar(' '));
+            mdp->setSearchShowTitle(showName.simplified());
             kDebug() << "set tvshow to: " << text;
         }
         else {
-            kDebug() << "no not overwrite tvshow " << mdp->searchShowTitle() << "with" << text;
+            kDebug() << "do not overwrite tvshow " << mdp->searchShowTitle() << "with" << text;
         }
         break;
     case Extractor::MATCH_SEASON:
         if(MDESettings::preferFileParsing() || mdp->searchSeason().isEmpty()) {
-            mdp->setSearchSeason(text.simplified());
-            kDebug() << "set season to: " << text;
+            QString number = text.simplified().remove(QRegExp("^0"));
+            mdp->setSearchSeason(number);
+            kDebug() << "set season to: " << number;
         }
         else {
-            kDebug() << "no not overwrite season " << mdp->searchSeason() << "with" << text;
+            kDebug() << "do not overwrite season " << mdp->searchSeason() << "with" << text;
         }
         break;
     case Extractor::MATCH_EPISODE:
         if(MDESettings::preferFileParsing() || mdp->searchEpisode().isEmpty()) {
-            mdp->setSearchEpisode(text.simplified());
-            kDebug() << "set episode to: " << text;
+            QString number = text.simplified().remove(QRegExp("^0"));
+            mdp->setSearchEpisode(number);
+            kDebug() << "set episode to: " << number;
         }
         else {
-            kDebug() << "no not overwrite episode " << mdp->searchEpisode() << "with" << text;
+            kDebug() << "do not overwrite episode " << mdp->searchEpisode() << "with" << text;
         }
         break;
     case Extractor::MATCH_PERSON:
@@ -240,7 +269,7 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::saveResult(NepomukWebMiner::E
             kDebug() << "set person to: " << text;
         }
         else {
-            kDebug() << "no not overwrite person " << mdp->searchPerson() << "with" << text;
+            kDebug() << "do not overwrite person " << mdp->searchPerson() << "with" << text;
         }
         break;
     case Extractor::MATCH_ALBUM:
@@ -249,7 +278,7 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::saveResult(NepomukWebMiner::E
             kDebug() << "set album to: " << text;
         }
         else {
-            kDebug() << "no not overwrite album " << mdp->searchAlbum() << "with" << text;
+            kDebug() << "do not overwrite album " << mdp->searchAlbum() << "with" << text;
         }
         break;
     case Extractor::MATCH_YEAR:
@@ -259,16 +288,17 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::saveResult(NepomukWebMiner::E
             kDebug() << "set year to: " << text;
         }
         else {
-            kDebug() << "no not overwrite year " << mdp->searchYearMax() << "with" << text;
+            kDebug() << "do not overwrite year " << mdp->searchYearMax() << "with" << text;
         }
         break;
     case Extractor::MATCH_TRACK:
         if(MDESettings::preferFileParsing() || mdp->searchTrack().isEmpty()) {
-            mdp->setSearchTrack(text.simplified());
-            kDebug() << "set track to: " << text;
+            QString number = text.simplified().remove(QRegExp("^0"));
+            mdp->setSearchTrack(number);
+            kDebug() << "set track to: " << number;
         }
         else {
-            kDebug() << "no not overwrite track " << mdp->searchTrack() << "with" << text;
+            kDebug() << "do not overwrite track " << mdp->searchTrack() << "with" << text;
         }
         break;
     }
@@ -294,6 +324,12 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::reloadRegExp()
 QList<NepomukWebMiner::Extractor::RegExpData> NepomukWebMiner::Extractor::FilenameAnalyzer::parseRegExpConfig(const QString &config)
 {
     QList<Extractor::RegExpData> regexpList;
+
+    if(config.isEmpty()) {
+        kWarning() << "could not parse the regular expressionline. Empty content";
+        return regexpList;
+    }
+
     // in the KConfig each single entry is encapsluated by #|# and the single parts are encapsulated by #,#
     // its done this way, because ;,| and so on could be part of the regular expression and thus cause problems
     foreach(const QString &entry, config.split(QLatin1String("#|#"))) {
@@ -301,7 +337,9 @@ QList<NepomukWebMiner::Extractor::RegExpData> NepomukWebMiner::Extractor::Filena
 
         if(settings.size() == 4) {
             Extractor::RegExpData red;
-            red.regExp = QRegExp(settings.at(0), Qt::CaseInsensitive, QRegExp::RegExp2);
+            QString unescaped = settings.at(0);
+            unescaped.replace(QString("\\\\\\\\"), QString("\\"));
+            red.regExp = QRegExp(unescaped, Qt::CaseInsensitive, QRegExp::RegExp2);
 
             if(settings.at(1).toLower() == "true") {
                 red.useFolder = true;

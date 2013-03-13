@@ -55,7 +55,7 @@ class PublicationPipePrivate;
   * In addition each entry has a type identifier <i>(article, book etc)</i> and citation id.
   *
   * Based on the given type identifier different Ontology classes are used and several keys have a different meaning depending on the used type identifier
-  * This class keeps care of this and creates the nepomuk data correctly.
+  * This class takes care of this and creates the nepomuk data correctly.
   *
   * Each publication entry is transformed into:
   * @li @c nbib:Reference - points to the publication with additional info like @c chapter, @c page, @c citekey etc
@@ -82,7 +82,7 @@ public:
     explicit PublicationPipe(QObject *parent = 0);
     virtual ~PublicationPipe();
 
-    void pipeImport(const QVariantMap &bibEntry);
+    bool import(const QVariantMap &bibEntry);
 
     /**
       * @brief if the @p projectThing is valid all imported data will be related via @c pimo:isRelated to the project

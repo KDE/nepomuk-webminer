@@ -58,7 +58,6 @@ class TvShowPipePrivate;
   * @li @c banner - url of the banner location
   * @li @c poster - url of the poster location
   * @li @c seasons - QVariantList containing more QVariantMaps with the @c season info
-  * @li @c seealso - url where we got the metadata from
   *
   * The QVariantMap containing the season information looks like this:
   *
@@ -100,7 +99,7 @@ public:
      *
      * @param tvshowEntry metadata map
      */
-    void pipeImport(const QVariantMap &tvshowEntry);
+    bool import(const QVariantMap &tvshowEntry);
 
 private:
     /**

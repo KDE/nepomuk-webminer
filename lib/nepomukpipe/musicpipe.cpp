@@ -56,19 +56,19 @@ NepomukWebMiner::Pipe::MusicPipe::MusicPipe(QObject *parent)
 {
 }
 
-void NepomukWebMiner::Pipe::MusicPipe::pipeImport(const QVariantMap &musicEntry)
+bool NepomukWebMiner::Pipe::MusicPipe::import(const QVariantMap &musicAlbum)
 {
     Nepomuk2::SimpleResourceGraph graph;
 
     // create the  Music Album
     Nepomuk2::NMM::MusicAlbum albumResource;
 
-    QString albumTitle = musicEntry.value(QLatin1String("title")).toString();
+    QString albumTitle = musicAlbum.value(QLatin1String("title")).toString();
     if (!albumTitle.isEmpty()) {
         albumResource.setTitle(albumTitle);
     }
 
-    QString musicBrainz = musicEntry.value(QLatin1String("musicbrainz")).toString();
+    QString musicBrainz = musicAlbum.value(QLatin1String("musicbrainz")).toString();
     if (!musicBrainz.isEmpty()) {
         albumResource.setMusicBrainzAlbumID(musicBrainz);
     }
@@ -89,21 +89,21 @@ void NepomukWebMiner::Pipe::MusicPipe::pipeImport(const QVariantMap &musicEntry)
     */
 
     //FIXME: NMM:MusicAlbum is missing the artist parameter for Music albums
-    QString albumArtist = musicEntry.value(QLatin1String("performer")).toString();
+    QString albumArtist = musicAlbum.value(QLatin1String("performer")).toString();
 //    if(!albumArtist.isEmpty()) {
 //        albumResource.setArtist( albumArtist.);
 //    }
 
-    if (!musicEntry.value(QLatin1String("trackcount")).isNull()) {
-        int trackCount = musicEntry.value(QLatin1String("trackcount")).toInt();
+    if (!musicAlbum.value(QLatin1String("trackcount")).isNull()) {
+        int trackCount = musicAlbum.value(QLatin1String("trackcount")).toInt();
         albumResource.setAlbumTrackCount(trackCount);
     }
 
     // download cover
-    QString albumCoverUrl = musicEntry.value(QLatin1String("cover")).toString();
+    QString albumCoverUrl = musicAlbum.value(QLatin1String("cover")).toString();
     KUrl localCoverUrl;
     if (!albumCoverUrl.isEmpty()) {
-        KUrl resourceFolder(musicEntry.value(QLatin1String("resourceuri")).toString());
+        KUrl resourceFolder(musicAlbum.value(QLatin1String("resourceuri")).toString());
         localCoverUrl = downloadBanner(albumCoverUrl,
                                        QString("%1 - %2").arg(albumArtist).arg(albumTitle),
                                        albumArtist,
@@ -120,7 +120,7 @@ void NepomukWebMiner::Pipe::MusicPipe::pipeImport(const QVariantMap &musicEntry)
     graph << albumResource;
 
     // now generate all the music pieces
-    QVariantList trackList = musicEntry.value(QLatin1String("tracks")).toList();
+    QVariantList trackList = musicAlbum.value(QLatin1String("tracks")).toList();
 
     foreach (const QVariant & track, trackList) {
         QVariantMap trackInfo = track.toMap();
@@ -216,4 +216,13 @@ void NepomukWebMiner::Pipe::MusicPipe::pipeImport(const QVariantMap &musicEntry)
                                        QHash<QUrl, QVariant>(), KComponentData(componentName().toLatin1()));
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
+
+
+    if(srj->error()) {
+        kDebug() << srj->errorString();
+        return false;
+    }
+    else {
+        return true;
+    }
 }

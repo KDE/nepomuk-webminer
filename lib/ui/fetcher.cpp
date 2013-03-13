@@ -201,7 +201,7 @@ void NepomukWebMiner::UI::Fetcher::saveMetaData(NepomukWebMiner::Extractor::Meta
     }
 
     if (nepomukPipe) {
-        nepomukPipe->pipeImport(mdp->metaData());
+        nepomukPipe->import(mdp->metaData());
     } else {
         kWarning() << "No nepomuk pipe available for the resource type" << type;
     }

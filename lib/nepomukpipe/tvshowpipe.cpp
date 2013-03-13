@@ -57,7 +57,7 @@ NepomukWebMiner::Pipe::TvShowPipe::TvShowPipe(QObject *parent)
 {
 }
 
-void NepomukWebMiner::Pipe::TvShowPipe::pipeImport(const QVariantMap &tvshowEntry)
+bool NepomukWebMiner::Pipe::TvShowPipe::import(const QVariantMap &tvshowEntry)
 {
     Nepomuk2::SimpleResourceGraph graph;
 
@@ -134,8 +134,10 @@ void NepomukWebMiner::Pipe::TvShowPipe::pipeImport(const QVariantMap &tvshowEntr
         Nepomuk2::NMM::TVSeason seasonRes;
 
         QString seasonNumber = seasonInfo.value(QLatin1String("number")).toString();
-        // this is just for the internal usage in NepSak
-        seasonRes.setPrefLabel(i18n("Season %1", seasonNumber));
+        // this is good for the internal usage in NepSak
+        // also this prevents that two season fro mdifferent TvSeries get merged together
+        // Otherwise Season 5 of one show might be merged with Season 5 of another show
+        seasonRes.setPrefLabel(i18n("Season %1 of %2", seasonNumber, seriesTitle));
 
         seasonRes.setSeasonNumber(seasonNumber.toInt());
         seasonRes.setSeasonOf(seriesRes.uri());
@@ -268,6 +270,14 @@ void NepomukWebMiner::Pipe::TvShowPipe::pipeImport(const QVariantMap &tvshowEntr
                                        QHash<QUrl, QVariant>(), KComponentData(componentName().toLatin1()));
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
+
+    if(srj->error()) {
+        kDebug() << srj->errorString();
+        return false;
+    }
+    else {
+        return true;
+    }
 }
 
 Nepomuk2::NMM::TVShow NepomukWebMiner::Pipe::TvShowPipe::createEpisode(const QVariantMap &episodeInfo, const Nepomuk2::NMM::TVSeason &season)

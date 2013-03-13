@@ -56,7 +56,7 @@ NepomukWebMiner::Pipe::MoviePipe::MoviePipe(QObject *parent)
 {
 }
 
-void NepomukWebMiner::Pipe::MoviePipe::pipeImport(const QVariantMap &movieEntry)
+bool NepomukWebMiner::Pipe::MoviePipe::import(const QVariantMap &movieEntry)
 {
     //TODO: do not use local file url here, this will double type the resource. for now this is the best way to deal with this
     QString resourceUri = movieEntry.value(QLatin1String("resourceuri"), QString()).toString();
@@ -153,4 +153,12 @@ void NepomukWebMiner::Pipe::MoviePipe::pipeImport(const QVariantMap &movieEntry)
                                        QHash<QUrl, QVariant>(), KComponentData(componentName().toLatin1()));
     connect(srj, SIGNAL(result(KJob*)), this, SLOT(slotSaveToNepomukDone(KJob*)));
     srj->exec();
+
+    if(srj->error()) {
+        kDebug() << srj->errorString();
+        return false;
+    }
+    else {
+        return true;
+    }
 }
