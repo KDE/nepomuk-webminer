@@ -50,21 +50,23 @@ include_directories(
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}
-  ${CMAKE_SOURCE_DIR}/kcm
-  ${CMAKE_SOURCE_DIR}/lib
-  ${CMAKE_SOURCE_DIR}/lib/ui
-  ${CMAKE_CURRENT_BUILD_DIR}/lib
+  ${CMAKE_SOURCE_DIR}/src
+  ${CMAKE_SOURCE_DIR}/src/kcm
+  ${CMAKE_SOURCE_DIR}/src/lib
+  ${CMAKE_SOURCE_DIR}/src/lib/ui
+  ${CMAKE_CURRENT_BUILD_DIR}/src/lib
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}/lib
+  ${CMAKE_CURRENT_BINARY_DIR}/src
+  ${CMAKE_CURRENT_BINARY_DIR}/src/lib
   ${CMAKE_CURRENT_BINARY_DIR}/ontology
 )
 
 add_subdirectory( ontology )
-add_subdirectory( lib )
-add_subdirectory( extractor )
-add_subdirectory( service )
-add_subdirectory( browser/konqueror )
-add_subdirectory( kcm )
+add_subdirectory( src/lib )
+add_subdirectory( src/extractor )
+add_subdirectory( src/service )
+add_subdirectory( src/browser/konqueror )
+add_subdirectory( src/kcm )
 add_subdirectory( doc )
 add_subdirectory( autotests )
 
