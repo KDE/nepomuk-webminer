@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PublicationWidget</class>
+ <widget class="QWidget" name="PublicationWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>589</width>
+    <height>387</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="tabPosition">
+      <enum>QTabWidget::South</enum>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <property name="documentMode">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="tabBasic">
+      <attribute name="title">
+       <string>Basics</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>589</width>
+            <height>358</height>
+           </rect>
+          </property>
+          <layout class="QFormLayout" name="formLayout_2">
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelEntryType">
+             <property name="text">
+              <string>Entry Type:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="editEntryType"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelTitle">
+             <property name="text">
+              <string>Title:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="KLineEdit" name="editTitle"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelCiteKey">
+             <property name="text">
+              <string>Citekey:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="KLineEdit" name="editCiteKey"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelPages">
+             <property name="text">
+              <string>Pages:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="KLineEdit" name="editPages"/>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="labelAuthors">
+             <property name="text">
+              <string>Authors:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="KLineEdit" name="editAuthors"/>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="labelEditors">
+             <property name="text">
+              <string>Editors:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="KLineEdit" name="editEditors"/>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="labelOrganization">
+             <property name="text">
+              <string>Organization:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="KLineEdit" name="editOrganization"/>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="labelPublisher">
+             <property name="text">
+              <string>Publisher:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="KLineEdit" name="editPublisher"/>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="labelTopics">
+             <property name="text">
+              <string>Topics:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="KLineEdit" name="editTopics"/>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="labelAbstract">
+             <property name="text">
+              <string>Abstract:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="KTextEdit" name="editAbstract">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>50</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabExtra">
+      <attribute name="title">
+       <string>Extra</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QScrollArea" name="scrollArea_2">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>589</width>
+            <height>358</height>
+           </rect>
+          </property>
+          <layout class="QFormLayout" name="formLayout">
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::ExpandingFieldsGrow</enum>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelEvent">
+             <property name="text">
+              <string>Event:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="KLineEdit" name="editEvent"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelSeries">
+             <property name="text">
+              <string>Series:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="KLineEdit" name="editSeries"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelVolume">
+             <property name="text">
+              <string>Volume:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="KLineEdit" name="editVolume"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelNumber">
+             <property name="text">
+              <string>Number:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="KLineEdit" name="editNumber"/>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="labelEdition">
+             <property name="text">
+              <string>Edition:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="KLineEdit" name="editEdition"/>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="labelReportType">
+             <property name="text">
+              <string>Type:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="KLineEdit" name="editReportType"/>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="labelCopyright">
+             <property name="text">
+              <string>Copyright:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="KLineEdit" name="editCopyright"/>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="labelLanguage">
+             <property name="text">
+              <string>Language:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="KLineEdit" name="editLanguage"/>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabIdentification">
+      <attribute name="title">
+       <string>Identification</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QScrollArea" name="scrollArea_3">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_3">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>589</width>
+            <height>358</height>
+           </rect>
+          </property>
+          <layout class="QFormLayout" name="formLayout_3">
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelArchive">
+             <property name="text">
+              <string>Archive:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="KLineEdit" name="editArchive"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelArchiveLocation">
+             <property name="text">
+              <string>Archive Location:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="KLineEdit" name="editArchiveLocation"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelEPrint">
+             <property name="text">
+              <string>E-Print:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="KLineEdit" name="editEPrint"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelISBN">
+             <property name="text">
+              <string>ISBN:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="KLineEdit" name="editISBN"/>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="labelISSN">
+             <property name="text">
+              <string>ISSN:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="KLineEdit" name="editISSN"/>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="labelLCCN">
+             <property name="text">
+              <string>LCCN:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="KLineEdit" name="editLCCN"/>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="labelMRNumber">
+             <property name="text">
+              <string>MRNumber:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="KLineEdit" name="editMRNumber"/>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="labelPubMed">
+             <property name="text">
+              <string>PubMed:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="KLineEdit" name="editPubMed"/>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="labelDOI">
+             <property name="text">
+              <string>DOI:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="KLineEdit" name="editDOI"/>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabReferences">
+      <attribute name="title">
+       <string>References</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QListWidget" name="listWidget"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>ktextedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
