@@ -258,10 +258,10 @@ QString NepomukWebMiner::Extractor::ResourceExtractor::selectPlugin(const KUrl f
     QString mimetype = kmt.data()->name();
 
     if ( mimetype.contains(QLatin1String("application/vnd.oasis.opendocument.text")) ) {
-        return QLatin1String("document");
+        return QLatin1String("publication");
     }
     else if( mimetype.contains(QLatin1String("application/pdf")) ) {
-        return QLatin1String("document");
+        return QLatin1String("publication");
     }
     else if ( mimetype.contains(QLatin1String("video/")) ) {
         return QLatin1String("tvshow");
@@ -292,9 +292,6 @@ bool NepomukWebMiner::Extractor::ResourceExtractor::resourceChecker(NepomukWebMi
     if (queryResource.hasType(Nepomuk2::Vocabulary::NBIB::Publication())) {
         foundData = true;
         mdp->setResourceType(QLatin1String("publication"));
-
-        //TODO: check if we can reuse SimpleResource here
-        //Nepomuk2::NBIB::Publication publication( fileResource.uri() ); seems this only works for new resources
 
         QString title = queryResource.property(Nepomuk2::Vocabulary::NIE::title()).toString();
         if (!title.isEmpty()) {
@@ -342,7 +339,6 @@ bool NepomukWebMiner::Extractor::ResourceExtractor::resourceChecker(NepomukWebMi
     else if (resource.hasType(Nepomuk2::Vocabulary::NMM::Movie())) {
         foundData = true;
         mdp->setResourceType(QLatin1String("movie"));
-        //Nepomuk2::NMM::Movie movie(queryResource.uri()); seems this only works for new resources
 
         QString title = queryResource.property(Nepomuk2::Vocabulary::NIE::title()).toString();
         if (!title.isEmpty()) {

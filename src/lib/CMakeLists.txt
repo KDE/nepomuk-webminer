@@ -19,17 +19,29 @@ set( nepomuk-webminer_LIB_SRCS
   nepomukpipe/tvshowpipe.cpp
   nepomukpipe/musicpipe.cpp
 
+  metadatawidget/metadatawidget.cpp
+  metadatawidget/metadatabasewidget.cpp
+  metadatawidget/moviewidget.cpp
+  metadatawidget/musicwidget.cpp
+  metadatawidget/publicationwidget.cpp
+  metadatawidget/tvshowwidget.cpp
+
   ui/fetcher.cpp
   ui/fetcherdialog.cpp
   ui/batchextractor.cpp
   ui/searchresultsmodel.cpp
   ui/searchresultdelegate.cpp
   ui/automaticfetcher.cpp
-  ui/metadatawidget.cpp
   ui/startupdialog.cpp
 )
 
 kde4_add_ui_files( nepomuk-webminer_LIB_SRCS
+
+                   metadatawidget/moviewidget.ui
+                   metadatawidget/musicwidget.ui
+                   metadatawidget/publicationwidget.ui
+                   metadatawidget/tvshowwidget.ui
+
                    ui/fetcherdialog.ui
                    ui/startupdialog.ui
 )
@@ -76,6 +88,13 @@ set( nepomuk-webminer_LIB_HDRS
   webextractor/extractorfactory.h
   webextractor/webextractor.h
 
+  metadatawidget/metadatawidget.h
+  metadatawidget/metadatabasewidget.h
+  metadatawidget/moviewidget.h
+  metadatawidget/musicwidget.h
+  metadatawidget/publicationwidget.h
+  metadatawidget/tvshowwidget.h
+
   nepomukpipe/nepomukpipe.h
   nepomukpipe/moviepipe.h
   nepomukpipe/publicationpipe.h
@@ -86,7 +105,6 @@ set( nepomuk-webminer_LIB_HDRS
   ui/batchextractor.h
   ui/automaticfetcher.h
   ui/fetcherdialog.h
-  ui/metadatawidget.h
   ui/startupdialog.h
   ${CMAKE_CURRENT_BINARY_DIR}/ui_fetcherdialog.h
 )

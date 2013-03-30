@@ -277,6 +277,8 @@ void NepomukWebMiner::UI::FetcherDialog::setupCurrentResourceToLookup()
     // get next resourceInformation
     MetaDataParameters *mdp = resourceExtractor()->resourcesList().at(d->currentItemNumber);
 
+    metaDataList->switchWidget(mdp->resourceType());
+    metaDataList->setMetaDataParameter(mdp->metaData());
     fillEngineList(mdp->resourceType());
 
     labelResourceCount->setText(i18n("Resource %1 of %2", d->currentItemNumber + 1, resourceCount));
@@ -400,6 +402,7 @@ void NepomukWebMiner::UI::FetcherDialog::resourceTypeSelectionChanged(int select
         mdp->setResourceType(QLatin1String("tvshow"));
     }
 
+    metaDataList->switchWidget(mdp->resourceType());
     fillEngineList(mdp->resourceType());
 }
 
@@ -467,6 +470,7 @@ void NepomukWebMiner::UI::FetcherDialog::startSearch()
     // background servcie no matter if we found something or not
     updateIndexingLevel(mdp->resourceUri(), 3);
 
+    resultsTabWidget->setCurrentIndex(0);
 
     d->webextractor->search(mdp->resourceType(), searchParameters);
 }
@@ -480,9 +484,6 @@ void NepomukWebMiner::UI::FetcherDialog::searchResultList(QVariantList searchRes
     // this ensures the returned item are at least similar to the search result.
     QVariantList sortedList = setLevenshteinDistance(searchResultList, resourceExtractor()->resourcesList().at(d->currentItemNumber), 20);
     d->resultModel->setSearchResults(sortedList);
-
-    QString searchEngineName = comboBoxSearchEngine->currentText();
-    labelSearchResults->setText(i18ncp("%2 is a search engine", "Found <b>1</b> result via <b>%2</b>", "Found <b>%1</b> results via <b>%2</b>", searchResultList.size(), searchEngineName));
 
     searchResults->setCurrentIndex(d->resultModel->index(0));
 }
@@ -531,10 +532,6 @@ void NepomukWebMiner::UI::FetcherDialog::showSearchParameters()
     KLineEdit *editTitle = new KLineEdit(mdp->searchTitle(), w);
     gl->addWidget(labelTitle, 0, 0);
     gl->addWidget(editTitle, 0, 1);
-    QLabel *labelAltTitle = new QLabel(i18n("Alternative Title:"), w);
-    KLineEdit *editAltTitle = new KLineEdit(mdp->searchAltTitle(), w);
-    gl->addWidget(labelAltTitle, 1, 0);
-    gl->addWidget(editAltTitle, 1, 1);
 
     QLabel *labelYearMin = new QLabel(i18n("Year Min:"), w);
     KLineEdit *editYearMin = new KLineEdit(mdp->searchYearMin(), w);
@@ -617,7 +614,6 @@ void NepomukWebMiner::UI::FetcherDialog::showSearchParameters()
 
     if (ret == KDialog::Accepted) {
         mdp->setSearchTitle(editTitle->text());
-        mdp->setSearchAltTitle(editAltTitle->text());
         mdp->setSearchYearMin(editYearMin->text());
         mdp->setSearchYearMax(editYearMax->text());
 
@@ -660,7 +656,6 @@ void NepomukWebMiner::UI::FetcherDialog::openDetailsLink(const QString &url)
 void NepomukWebMiner::UI::FetcherDialog::fetchMoreDetails()
 {
     Q_D(FetcherDialog);
-    metaDataList->setBusy(true);
     busyFetching();
 
     // get the current item to fetch
@@ -674,6 +669,8 @@ void NepomukWebMiner::UI::FetcherDialog::fetchMoreDetails()
     QVariantMap options;
     options.insert(QLatin1String("references"), MDESettings::downloadReferences());
     options.insert(QLatin1String("banner"), MDESettings::downloadBanner());
+
+    resultsTabWidget->setCurrentIndex(1);
 
     d->webextractor->extractItem(fetchUrl, options);
 }
@@ -696,6 +693,7 @@ void NepomukWebMiner::UI::FetcherDialog::fetchedItemDetails(const QString &resou
 
     addResourceUriToMetaData(d->currentItemToupdate);
     d->currentItemToupdate->setMetaDataSaved(false);
+    metaDataList->setMetaDataParameter(d->currentItemToupdate->metaData());
 
     showItemDetails();
     finishedFetching();
@@ -707,23 +705,19 @@ void NepomukWebMiner::UI::FetcherDialog::fetchedItemDetails(const QString &resou
     }
 
     d->saveAutomatically=false;
-
-    //kDebug() << itemDetails;
 }
 
 void NepomukWebMiner::UI::FetcherDialog::saveMetaDataSlot()
 {
     Q_D(FetcherDialog);
-    MetaDataParameters *mdp = resourceExtractor()->resourcesList().at(d->currentItemNumber);
-
-    metaDataList->setBusy(true);
     busyFetching();
 
+    MetaDataParameters *mdp = resourceExtractor()->resourcesList().at(d->currentItemNumber);
+    mdp->setMetaData( metaDataList->metaData() );
     saveMetaData(mdp);
     buttonSave->setEnabled(false);
     mdp->setMetaDataSaved(true);
 
-    metaDataList->setBusy(false);
     finishedFetching();
 }
 
@@ -767,7 +761,7 @@ void NepomukWebMiner::UI::FetcherDialog::showItemDetails()
     // current Item metadata
     MetaDataParameters *mdp = resourceExtractor()->resourcesList().at(d->currentItemNumber);
 
-    metaDataList->setMetaDataParameter(mdp);
+    metaDataList->setMetaDataParameter(mdp->metaData());
 
     kDebug() << mdp->metaDataSaved();
     if (mdp->metaDataSaved() == true) {
@@ -793,7 +787,6 @@ void NepomukWebMiner::UI::FetcherDialog::finishedFetching()
 {
     Q_D(FetcherDialog);
     d->busySearchWidget->stop();
-    metaDataList->setBusy(false);
 
     QWidget::setCursor(Qt::ArrowCursor);
 

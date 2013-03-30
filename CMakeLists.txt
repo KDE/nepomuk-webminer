@@ -54,6 +54,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/kcm
   ${CMAKE_SOURCE_DIR}/src/lib
   ${CMAKE_SOURCE_DIR}/src/lib/ui
+  ${CMAKE_SOURCE_DIR}/src/lib/metadatawidget
   ${CMAKE_CURRENT_BUILD_DIR}/src/lib
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/src

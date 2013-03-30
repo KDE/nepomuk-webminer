@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MovieWidget</class>
+ <widget class="QWidget" name="MovieWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>427</width>
+    <height>319</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string/>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>427</width>
+        <height>319</height>
+       </rect>
+      </property>
+      <layout class="QFormLayout" name="formLayout">
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="labelTitle">
+         <property name="text">
+          <string>Title:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="KLineEdit" name="editTitle"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="labelYear">
+         <property name="text">
+          <string>Year:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="labelGenre">
+         <property name="text">
+          <string>Genre:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="KLineEdit" name="editGenre"/>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="labelPlot">
+         <property name="text">
+          <string>Plot:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="KTextEdit" name="editPlot"/>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="labelDirector">
+         <property name="text">
+          <string>Director:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="KLineEdit" name="editDirector"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="labelWriter">
+         <property name="text">
+          <string>Writer:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="KLineEdit" name="editWriter"/>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="labelCast">
+         <property name="text">
+          <string>Cast:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="KLineEdit" name="editCast"/>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="labelSeeAlso">
+         <property name="text">
+          <string>See Also:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="KLineEdit" name="editSeeAlso"/>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="labelPoster">
+         <property name="text">
+          <string>Poster:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="KLineEdit" name="editPoster"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="KLineEdit" name="editYear"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>ktextedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
