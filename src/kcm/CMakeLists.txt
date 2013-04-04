@@ -11,6 +11,8 @@ set(kcm_nepomuk-webminer_SRCS
   configregexp.cpp
   regexpmodel.cpp
   regexpdialog.cpp
+  indexfolderselectiondialog.cpp
+  folderselectionmodel.cpp
 )
 
 kde4_add_ui_files(kcm_nepomuk-webminer_SRCS
@@ -19,6 +21,7 @@ kde4_add_ui_files(kcm_nepomuk-webminer_SRCS
   regexpbox.ui
   configregexp.ui
   regexpdialog.ui
+  indexfolderselectionwidget.ui
 )
 
 kde4_add_kcfg_files(kcm_nepomuk-webminer_SRCS ../lib/mdesettings.kcfgc)
@@ -29,7 +32,7 @@ target_link_libraries(kcm_nepomuk-webminer
   ${KDE4_KIO_LIBS}
   ${KDE4_KDECORE_LIBS}
   ${KDE4_KROSSCORE_LIBS}
-  
+
   nepomuk-webminerlib
   )
 # -----------------------------

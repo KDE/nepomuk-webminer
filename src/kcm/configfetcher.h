@@ -67,11 +67,15 @@ public slots:
     void saveConfig();
     void loadConfig();
 
+private slots:
+    void openWhiteListDialog();
+
 private:
     void setupUi();
     Ui::ConfigFetcher *ui;
     QDBusServiceWatcher *m_watcher;
     NepomukWebMiner::Extractor::ExtractorFactory  *extractorFactory;
+    QStringList m_whitelistFolders;
 };
 
 }

@@ -21,6 +21,8 @@
 #include "configfetcher.h"
 #include "ui_configfetcher.h"
 
+#include "indexfolderselectiondialog.h"
+
 #include <mdesettings.h>
 
 #include "webextractor/extractorfactory.h"
@@ -111,6 +113,8 @@ void ConfigFetcher::saveConfig()
     MDESettings::setDocumentServiceEnabled(ui->kcfg_FetchDocuments->isChecked());
     MDESettings::setVideoServiceEnabled(ui->kcfg_FetchVideos->isChecked());
     MDESettings::setMusicServiceEnabled(ui->kcfg_FetchMusic->isChecked());
+    MDESettings::setUseWhiteList(ui->kcfg_UseWhiteList->isChecked());
+    MDESettings::setWhiteList(m_whitelistFolders);
 
     MDESettings::self()->writeConfig();
 }
@@ -129,6 +133,22 @@ void ConfigFetcher::loadConfig()
     ui->kcfg_FetchDocuments->setChecked( MDESettings::documentServiceEnabled());
     ui->kcfg_FetchVideos->setChecked( MDESettings::videoServiceEnabled());
     ui->kcfg_FetchMusic->setChecked( MDESettings::musicServiceEnabled());
+    ui->kcfg_UseWhiteList->setChecked( MDESettings::useWhiteList());
+    m_whitelistFolders = MDESettings::whiteList();
+}
+
+void ConfigFetcher::openWhiteListDialog()
+{
+    QPointer<NepomukWebMiner::IndexFolderSelectionDialog> dlg = new NepomukWebMiner::IndexFolderSelectionDialog(this);
+
+    dlg->setFolders( MDESettings::whiteList(), QStringList());
+    int ret = dlg->exec();
+
+    if(ret == QDialog::Accepted) {
+        m_whitelistFolders = dlg->includeFolders();
+
+        emit configChanged();
+    }
 }
 
 void ConfigFetcher::setupUi()
@@ -204,8 +224,13 @@ void ConfigFetcher::setupUi()
     ui->kcfg_FetchDocuments->setChecked( MDESettings::documentServiceEnabled());
     ui->kcfg_FetchVideos->setChecked( MDESettings::videoServiceEnabled());
     ui->kcfg_FetchMusic->setChecked( MDESettings::musicServiceEnabled());
+    ui->kcfg_UseWhiteList->setChecked( MDESettings::useWhiteList());
+    m_whitelistFolders = MDESettings::whiteList();
 
     connect(ui->kcfg_FetchDocuments, SIGNAL(clicked(bool)), this, SIGNAL(configChanged()));
     connect(ui->kcfg_FetchVideos, SIGNAL(clicked(bool)), this, SIGNAL(configChanged()));
     connect(ui->kcfg_FetchMusic, SIGNAL(clicked(bool)), this, SIGNAL(configChanged()));
+
+    connect(ui->kcfg_UseWhiteList, SIGNAL(clicked(bool)), this, SIGNAL(configChanged()));
+    connect(ui->whitelistButton, SIGNAL(clicked()), this, SLOT(openWhiteListDialog()));
 }

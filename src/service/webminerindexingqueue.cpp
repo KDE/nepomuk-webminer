@@ -24,6 +24,7 @@
 
 #include <Nepomuk2/ResourceManager>
 #include <Soprano/Model>
+#include <Soprano/Node>
 #include <Soprano/QueryResultIterator>
 
 #include <KDE/KConfig>
@@ -72,9 +73,24 @@ void WebMinerIndexingQueue::fillQueue()
         return;
     }
 
+    QString whiteListRegExp;
+    if( MDESettings::useWhiteList() ) {
+        whiteListRegExp.append( QLatin1String("Filter (") );
+
+        foreach(const QString &folder, MDESettings::whiteList()) {
+            QString regexp = QString( "regex(?url , \"%1\", \"i\") || " ).arg( Soprano::Node::resourceToN3(folder) );
+            whiteListRegExp.append( regexp );
+        }
+
+        whiteListRegExp.chop(2);
+        whiteListRegExp.append( QLatin1String(" ).") );
+    }
+
     QString query = QString("select ?url where { ?r nie:url ?url ; kext:indexingLevel ?l ; nie:mimeType ?mime"
-                            " Filter regex(?mime , \"%1\", \"i\")"
-                            " FILTER(?l = 2  ). } LIMIT 10").arg(mimeSelection.join(QLatin1String("|")));
+                            " Filter regex(?mime , \"%1\", \"i\") . %2"
+                            " FILTER(?l = 2  ). } LIMIT 10")
+                            .arg( mimeSelection.join(QLatin1String("|")) )
+                            .arg( whiteListRegExp );
 
     Soprano::Model* model = Nepomuk2::ResourceManager::instance()->mainModel();
     Soprano::QueryResultIterator it = model->executeQuery( query, Soprano::Query::QueryLanguageSparql );

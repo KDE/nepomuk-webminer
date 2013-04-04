@@ -61,6 +61,13 @@
       <label>Used to disable the service on the first run after installation for privacy reasons.</label>
       <default>true</default>
     </entry>
+    <entry name="UseWhiteList" type="Bool">
+      <label>Defines if a whitelist for automatic background folders should be used instead of all nepomuk files.</label>
+      <default>false</default>
+    </entry>
+    <entry name="WhiteList" type="StringList">
+      <label>List of folders that should be used for the automatic metadata search instead of all known files.</label>
+    </entry>
   </group>
 
   <group name="FilenameAnalyzer">
