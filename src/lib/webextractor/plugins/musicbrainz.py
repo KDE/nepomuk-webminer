@@ -18,7 +18,7 @@ try:
 
 except:
     isAvailable = False
-    errorMsg = "The python-musicbrainz-ngs python module git master needs to be installed. See https://github.com/alastair/python-musicbrainz-ngs/ . The urllib2 lib is necessary to fetch cover art"
+    errorMsg = "The python-musicbrainz-ngs python module git master needs to be installed. See https://github.com/alastair/python-musicbrainz-ngs/ . "
 
 # general script settings
 musicbrainzngs.set_rate_limit(False) # set on again to reduce server load?

@@ -16,9 +16,11 @@ Here are some important information for the build/runtime dependencies
   + imdbpy 4.9 - http://imdbpy.sourceforge.net/
   + Musicbrainz NGS (master) - https://github.com/alastair/python-musicbrainz-ngs/
   + tvdb_api module (master) - https://github.com/dbr/tvdb_api
-  + json
   + BeautifulSoup
   + httplib2
+
+  Those should be shipped with the default python install
+  + json
   + urllib2
 
   To use the extended tvdb (augmented with MyAnimeList support)
