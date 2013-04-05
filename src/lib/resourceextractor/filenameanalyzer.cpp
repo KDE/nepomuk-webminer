@@ -120,6 +120,7 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::analyze(NepomukWebMiner::Extr
     }
     else if ( mimetype.contains(QLatin1String("video/")) ) {
         if(d->movieShowMode) {
+            kDebug() << "force movie regexp";
             extractionWorked = analyzeFileName(d->regexpMovies, mdp, filenName, cleanedFileUrl );
 
             if( extractionWorked ) {
@@ -127,6 +128,7 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::analyze(NepomukWebMiner::Extr
             }
         }
         else if(d->tvShowMode) {
+            kDebug() << "force tvshow regexp";
             extractionWorked = analyzeFileName(d->regexpTvShows, mdp, filenName, cleanedFileUrl );
 
             if( extractionWorked ) {
@@ -135,18 +137,19 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::analyze(NepomukWebMiner::Extr
         }
         else {
             // we did not specify directly if this was a tvshow or movie
-            // so try tvshow first, it it fails try movie afterwards
-            extractionWorked = analyzeFileName(d->regexpTvShows, mdp, filenName, cleanedFileUrl );
+            // so try movie first, if it fails try tvshow afterwards
+            extractionWorked = analyzeFileName(d->regexpMovies, mdp, filenName, cleanedFileUrl );
 
-            if(!extractionWorked) {
-                extractionWorked = analyzeFileName(d->regexpMovies, mdp, filenName, cleanedFileUrl );
+            if( !extractionWorked ) {
+                kDebug() << "movie regexp failed, try tvshows next";
+                extractionWorked = analyzeFileName(d->regexpTvShows, mdp, filenName, cleanedFileUrl );
 
-                if(extractionWorked) {
-                    mdp->setResourceType(QLatin1String("movie"));
+                if( extractionWorked ) {
+                    mdp->setResourceType(QLatin1String("tvshow"));
                 }
             }
             else {
-                mdp->setResourceType(QLatin1String("tvshow"));
+                mdp->setResourceType(QLatin1String("movie"));
             }
         }
     }
