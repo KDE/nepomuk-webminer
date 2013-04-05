@@ -377,13 +377,13 @@ bool NepomukWebMiner::Extractor::ResourceExtractor::resourceChecker(NepomukWebMi
             mdp->setSearchAlbum(albumName);
         }
     }
-    else {
-        // try to get some general info
-        if (mdp->searchTitle().isEmpty() && !queryResource.genericLabel().isEmpty()) {
-            foundData = true;
-            mdp->setSearchTitle(queryResource.genericLabel());
-        }
-    }
+//    else {
+//        // try to get some general info
+//        if (mdp->searchTitle().isEmpty() && !queryResource.genericLabel().isEmpty()) {
+//            foundData = true;
+//            mdp->setSearchTitle(queryResource.genericLabel());
+//        }
+//    }
 
     return foundData;
 }

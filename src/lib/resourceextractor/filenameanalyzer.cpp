@@ -163,7 +163,7 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::analyze(NepomukWebMiner::Extr
 
     // if by now no analyzer found something, we use the stripped filename as searchtitle
     // if nothing mat
-    if(! extractionWorked ) {
+    if( !extractionWorked ) {
         mdp->setSearchTitle( filenName );
     }
 
