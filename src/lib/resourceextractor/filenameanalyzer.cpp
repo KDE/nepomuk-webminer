@@ -26,6 +26,8 @@
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
 #include <KDE/KMimeType>
+#include <KDE/KDirWatch>
+#include <KDE/KStandardDirs>
 
 #include <KDE/KDebug>
 
@@ -44,6 +46,8 @@ public:
     QList<RegExpData> regexpMovies;
     QList<RegExpData> regexpDocuments;
     QList<RegExpData> regexpMusic;
+
+    KDirWatch *configFileWatch;
 };
 }
 }
@@ -57,6 +61,13 @@ NepomukWebMiner::Extractor::FilenameAnalyzer::FilenameAnalyzer(QObject *parent)
     Q_D(FilenameAnalyzer);
     d->tvShowMode = false;
     d->movieShowMode = false;
+    d->configFileWatch = new KDirWatch(this);
+
+    QString configFile = KGlobal::dirs()->findResource("config", QLatin1String("nepomuk-webminerrc"));
+    d->configFileWatch->addFile(configFile);
+
+    connect(d->configFileWatch, SIGNAL(dirty(QString)), this, SLOT(reloadRegExp()));
+    connect(d->configFileWatch, SIGNAL(created(QString)), this, SLOT(reloadRegExp()));
 }
 
 void NepomukWebMiner::Extractor::FilenameAnalyzer::setTvShowMode(bool tvshowmode)
@@ -306,7 +317,6 @@ void NepomukWebMiner::Extractor::FilenameAnalyzer::saveResult(NepomukWebMiner::E
 
 void NepomukWebMiner::Extractor::FilenameAnalyzer::reloadRegExp()
 {
-    //FIXME: find a way to reload regexp cache whenever the KConfig/user changes the file
     kDebug() << "reload filename regexp cache";
 
     Q_D(FilenameAnalyzer);
