@@ -23,6 +23,8 @@
 
 #include <KDE/KDebug>
 
+#include <QtGui/QListWidgetItem>
+
 namespace NepomukWebMiner
 {
 namespace UI
@@ -110,7 +112,17 @@ void NepomukWebMiner::UI::PublicationWidget::setMetaData(const QVariantMap &publ
     d->ui->editPubMed->setText( publication.value(QLatin1String("pubmed")).toString() );
     d->ui->editDOI->setText( publication.value(QLatin1String("doi")).toString() );
 
-    //TODO: fill references
+    // remove old reference list
+    d->ui->listWidget->clear();
+
+    QVariantList references = publication.value(QLatin1String("bibreferences")).toList();
+
+    foreach (const QVariant &r, references) {
+        QVariantMap map = r.toMap();
+
+        QString text = map.value(QLatin1String("title")).toString();
+        new QListWidgetItem(text,d->ui->listWidget);
+    }
 }
 
 QVariantMap NepomukWebMiner::UI::PublicationWidget::metaData() const
