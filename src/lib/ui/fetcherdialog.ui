@@ -49,6 +49,9 @@
        <property name="text">
         <string>Search Engine:</string>
        </property>
+       <property name="buddy">
+        <cstring>comboBoxSearchEngine</cstring>
+       </property>
       </widget>
      </item>
      <item row="0" column="1">
@@ -77,6 +80,9 @@
       <widget class="QLabel" name="labelTitle">
        <property name="text">
         <string comment="Title of the Publication/Movie/Music Track/tv-show episode">Title:</string>
+       </property>
+       <property name="buddy">
+        <cstring>lineEditTitle</cstring>
        </property>
       </widget>
      </item>
@@ -159,6 +165,9 @@
        <property name="text">
         <string>Show:</string>
        </property>
+       <property name="buddy">
+        <cstring>lineEditShow</cstring>
+       </property>
       </widget>
      </item>
      <item row="3" column="1" colspan="2">
@@ -170,6 +179,9 @@
         <widget class="QLabel" name="labelAlbum">
          <property name="text">
           <string>Album:</string>
+         </property>
+         <property name="buddy">
+          <cstring>lineEditAlbum</cstring>
          </property>
         </widget>
        </item>
@@ -187,6 +199,9 @@
         <widget class="QLabel" name="labelSeason">
          <property name="text">
           <string>Season:</string>
+         </property>
+         <property name="buddy">
+          <cstring>lineEditSeason</cstring>
          </property>
         </widget>
        </item>
@@ -210,6 +225,9 @@
         <widget class="QLabel" name="labelEpisode">
          <property name="text">
           <string>Episode:</string>
+         </property>
+         <property name="buddy">
+          <cstring>lineEditEpisode</cstring>
          </property>
         </widget>
        </item>
@@ -235,6 +253,9 @@
       <widget class="QLabel" name="labelArtist">
        <property name="text">
         <string>Artist:</string>
+       </property>
+       <property name="buddy">
+        <cstring>lineEditArtist</cstring>
        </property>
       </widget>
      </item>
@@ -507,6 +528,29 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>comboBoxSearchEngine</tabstop>
+  <tabstop>lineEditTitle</tabstop>
+  <tabstop>buttonSearch</tabstop>
+  <tabstop>buttonEngineSettings</tabstop>
+  <tabstop>buttonSearchDetails</tabstop>
+  <tabstop>cbSelectType</tabstop>
+  <tabstop>lineEditShow</tabstop>
+  <tabstop>lineEditSeason</tabstop>
+  <tabstop>lineEditEpisode</tabstop>
+  <tabstop>lineEditArtist</tabstop>
+  <tabstop>lineEditAlbum</tabstop>
+  <tabstop>searchResults</tabstop>
+  <tabstop>resultsTabWidget</tabstop>
+  <tabstop>buttonHelp</tabstop>
+  <tabstop>buttonLog</tabstop>
+  <tabstop>buttonFetchMore</tabstop>
+  <tabstop>buttonFetchAndSave</tabstop>
+  <tabstop>buttonPrevious</tabstop>
+  <tabstop>buttonNext</tabstop>
+  <tabstop>buttonCancel</tabstop>
+  <tabstop>buttonSave</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
