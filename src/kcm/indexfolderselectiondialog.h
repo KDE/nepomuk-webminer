@@ -31,7 +31,7 @@ namespace NepomukWebMiner {
         Q_OBJECT
 
     public:
-        IndexFolderSelectionDialog( QWidget* parent = 0 );
+        explicit IndexFolderSelectionDialog( QWidget* parent = 0 );
         ~IndexFolderSelectionDialog();
 
         void setFolders( const QStringList& includeDirs, const QStringList& exclude );

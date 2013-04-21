@@ -35,7 +35,7 @@ class FolderSelectionModel : public QFileSystemModel
     Q_OBJECT
 
 public:
-    FolderSelectionModel( QObject* parent = 0 );
+    explicit FolderSelectionModel( QObject* parent = 0 );
     virtual ~FolderSelectionModel();
 
     enum IncludeState {

@@ -71,8 +71,8 @@ NepomukWebMiner::IndexFolderSelectionDialog::IndexFolderSelectionDialog( QWidget
     m_viewIndexFolders->setAnimated( true );
     m_viewIndexFolders->setRootIndex( m_folderModel->setRootPath( QDir::rootPath() ) );
 
-    connect( m_checkShowHiddenFolders, SIGNAL( toggled( bool ) ),
-             m_folderModel, SLOT( setHiddenFoldersShown( bool ) ) );
+    connect(m_checkShowHiddenFolders,SIGNAL(toggled(bool)),
+            m_folderModel,SLOT(setHiddenFoldersShown(bool)));
 }
 
 

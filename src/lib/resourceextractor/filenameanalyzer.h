@@ -93,14 +93,14 @@ public:
     /**
      * @brief Helper function to parse the KConfig entry for the regexp line
      *
-     * Each regexp line is split by #|# and each entry is split by #,# as |;, could be part of the regexp this was choosen
+     * Each regexp line is split by #|# and each entry is split by #,# as |;, could be part of the regexp this was chosen
      *
      * @param config the regeyp line that need to be parsed
      */
     static QList<NepomukWebMiner::Extractor::RegExpData> parseRegExpConfig(const QString &config);
     static QString writeRegExpConfig(const QList<NepomukWebMiner::Extractor::RegExpData> &data);
 
-public slots:
+public Q_SLOTS:
     /**
      * @brief Reloads all user regexp from the "nepomuk-webminerrc" config file
      */

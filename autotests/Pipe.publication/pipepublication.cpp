@@ -118,7 +118,7 @@ void PipePublication::checknames(const Nepomuk2::Resource &r, QStringList &names
     foreach(const Nepomuk2::Resource &r2, contactList) {
         QString name = r2.property(NCO::fullname()).toString();
 
-        foreach(QString checkname, names) {
+        foreach(const QString &checkname, names) {
             if(name == checkname) {
                 names.removeOne(checkname);
             }

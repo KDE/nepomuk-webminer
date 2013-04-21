@@ -398,7 +398,7 @@ QString NepomukWebMiner::Extractor::FilenameAnalyzer::writeRegExpConfig(const QL
         }
         configString.append(QLatin1String("#,#"));
 
-        foreach(Extractor::MatchTypes mt, red.matchList) {
+        foreach(const Extractor::MatchTypes & mt, red.matchList) {
             configString.append( QString::number((int)mt) );
             configString.append(QLatin1String(","));
         }
