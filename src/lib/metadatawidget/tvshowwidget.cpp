@@ -109,6 +109,8 @@ QVariantMap NepomukWebMiner::UI::TvShowWidget::metaData() const
     season.insert(QLatin1String("banner"), d->ui->editSeasonBanner->text());
     season.insert(QLatin1String("poster"), d->ui->editSeasonPoster->text());
 
+    seasonlist.replace(0, season);
+
     QVariantList episodeList = season.value(QLatin1String("episodes")).toList();
     QVariantMap episode = QVariantMap();
 
@@ -128,8 +130,10 @@ QVariantMap NepomukWebMiner::UI::TvShowWidget::metaData() const
     episode.insert(QLatin1String("title"), d->ui->editEpisodeTitle->text());
     episode.insert(QLatin1String("writer"), d->ui->editEpisodeWriter->text());
 
-    season.insert(QLatin1String("episodes"), episode);
-    map.insert(QLatin1String("seasons"), season);
+    episodeList.replace(0, episode);
+
+    season.insert(QLatin1String("episodes"), episodeList);
+    map.insert(QLatin1String("seasons"), seasonlist);
 
     return map;
 }
