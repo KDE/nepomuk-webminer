@@ -101,7 +101,8 @@ QVariantMap NepomukWebMiner::UI::MusicWidget::metaData() const
     track.insert(QLatin1String("seealso"), d->ui->editTrackSeeAlso->text());
     track.insert(QLatin1String("lyrics"), d->ui->editTrackLyrics->document()->toPlainText());
 
-    map.insert(QLatin1String("tracks"), track);
+    trackList.replace(0, track);
+    map.insert(QLatin1String("tracks"), trackList);
 
     return map;
 }
