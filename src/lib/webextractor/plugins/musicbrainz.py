@@ -20,13 +20,14 @@ except:
     isAvailable = False
     errorMsg = "The python-musicbrainz-ngs python module git master needs to be installed. See https://github.com/alastair/python-musicbrainz-ngs/ . "
 
+else:
 # general script settings
-musicbrainzngs.set_rate_limit(False) # set on again to reduce server load?
-musicbrainzngs.set_useragent(
+  musicbrainzngs.set_rate_limit(False) # set on again to reduce server load?
+  musicbrainzngs.set_useragent(
     "kde-nepomuk-metadata-extractor",
     "0.2",
     "https://projects.kde.org/projects/playground/base/nepomuk-metadata-extractor",
-)
+  )
 
 #------------------------------------------------------------------------------
 # Module options
