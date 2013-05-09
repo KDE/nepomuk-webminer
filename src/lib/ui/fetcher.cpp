@@ -250,6 +250,15 @@ QVariantList NepomukWebMiner::UI::Fetcher::setLevenshteinDistance(const QVariant
     foreach(const QVariant &v, searchResults) {
 
         QVariantMap vMap = v.toMap();
+
+        // if the plugin does not specify a distance string, the distance will not be checked
+        // the plugin needs to remove false positive on their own.
+        // necessary to deal with plugins that use alias for their searches see tvdbmal
+        if( !vMap.contains(QLatin1String("distanceString"))) {
+            sortedList.append(vMap);
+            continue;
+        }
+
         QString resultString = vMap.value(QLatin1String("distanceString")).toString();
 
         resultString.remove(QChar(' '));
