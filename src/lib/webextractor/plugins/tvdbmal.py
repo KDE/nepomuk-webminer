@@ -8,6 +8,7 @@
 import re
 import json
 import urllib2
+import difflib
 
 # Prerrequisites.
 isAvailable = True
@@ -388,20 +389,54 @@ def raw_get_anime_details(anime_id):
         return None
     return content
 
-# TODO: search results aren't sorted by relevance, need to workaround that
-def get_other_titles(query):
+# tries to find the "best match" series entry on MAL for given query
+def get_mal_entry(query):
+    min_acceptable_score = 0.7
     entries = json.loads(raw_search_anime(query))
-    if len(entries) < 1:
-        return None
-    details = json.loads(raw_get_anime_details(entries[0]['id']))
-    result = [details['title']]
-    if 'english' in details['other_titles']:
-        for title in details['other_titles']['english']:
-            result.append(title)
-    if 'synonyms' in details['other_titles']:
-        for title in details['other_titles']['synonyms']:
-            result.append(title)
+    # put some back into finding the best result!
+    details = None
+    while len(entries) > 0:
+        # first we try and pick out the best title match
+        best_score = 0
+        best_match_index = 0
+        for i in range(len(entries)):
+            if match_score(entries[i]['title'], query) > best_score:
+                best_score = match_score(entries[i]['title'], query)
+                best_match_index = i
+        best_match = entries.pop(best_match_index)
+        if (best_match['type'] != "TV"):
+            continue # we ignore non TV-series for now
+        details = json.loads(raw_get_anime_details(best_match['id']))
+        WebExtractor.log("Evaluating "+ details['title'])
+        # then we check if there is at least one alias meeting the minimum score
+        if (match_score(details['title'], query) > min_acceptable_score):
+            break;
+        if 'english' in details['other_titles']:
+            for title in details['other_titles']['english']:
+                if (match_score(title, query) > min_acceptable_score):
+                    break;
+        if 'synonyms' in details['other_titles']:
+            for title in details['other_titles']['synonyms']:
+                if (match_score(title, query) > min_acceptable_score):
+                    break;
+        details = None
+    return details
+
+def get_other_titles(query):
+    details = get_mal_entry(query)
+    result = None
+    if details: # we found something meeting our criteria!
+        result = [details['title']]
+        if 'english' in details['other_titles']:
+            for title in details['other_titles']['english']:
+                result.append(title)
+        if 'synonyms' in details['other_titles']:
+            for title in details['other_titles']['synonyms']:
+                result.append(title)
     return result
+
+def match_score(str1, str2):
+    return difflib.SequenceMatcher(None, str1, str2).ratio()
 
 #------------------------------------------------------------------------------
 # Code for plugin-specific config dialog.
