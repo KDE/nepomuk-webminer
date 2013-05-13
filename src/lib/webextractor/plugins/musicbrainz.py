@@ -25,7 +25,7 @@ else:
   musicbrainzngs.set_rate_limit(False) # set on again to reduce server load?
   musicbrainzngs.set_useragent(
     "kde-nepomuk-metadata-extractor",
-    "0.2",
+    "0.6",
     "https://projects.kde.org/projects/playground/base/nepomuk-metadata-extractor",
   )
 
