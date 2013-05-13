@@ -100,13 +100,13 @@ def searchItems( resourcetype, parameters ):
 
     t = tvdb_api.Tvdb()
 
-    searchResults = trySearch(parameters, t)
+    searchResults = trySearch(parameters, t, "notfetched")
     WebExtractor.searchResults( searchResults )
 
 #------------------------------------------------------------------------------
 # put the logic code here into a helper so we can retry recursively (for cases where we have aliases)
 
-def trySearch(parameters, t, recurse = True):
+def trySearch(parameters, t, the_mal_entry, recurse = True):
     
     title = ''
     showtitle = ''
@@ -124,7 +124,17 @@ def trySearch(parameters, t, recurse = True):
         showtitle = parameters['showtitle']
       
         WebExtractor.log("looking for configured aliases")
+        oldseason = season
         showtitle, season, episode = getConfiguredAlias(showtitle, season, episode)
+        if season == oldseason and season == "1":
+            # means we probably can't get a definite season from the filename or the alias config
+            # so we make an effort to figure out the season ourself
+            # Note we don't need to change the showtitle becauses tvdb seems to list sequel names searchably as well
+            if the_mal_entry == "notfetched":
+                the_mal_entry = get_mal_entry(showtitle)
+            season = mal_deduce_season(the_mal_entry, season)
+            parameters['season'] = season
+            
     
     WebExtractor.log("Showtitle is " + str(showtitle) + " and season is " + str(season) + " and episode is " + str(episode))
 
@@ -158,7 +168,9 @@ def trySearch(parameters, t, recurse = True):
             # we try to find aliases
             WebExtractor.log("finding aliases")
             
-            aliases = get_other_titles(showtitle)
+            if the_mal_entry == "notfetched":
+                the_mal_entry = get_mal_entry(showtitle)
+            aliases = mal_get_other_titles(the_mal_entry)
             if aliases:
                 for alias in aliases:
                     if alias == parameters['showtitle']:
@@ -166,7 +178,7 @@ def trySearch(parameters, t, recurse = True):
                     WebExtractor.log("trying " + alias)
                     newparameters = parameters
                     newparameters['showtitle'] = alias
-                    searchResults = trySearch(newparameters, t, False) # try the alias
+                    searchResults = trySearch(newparameters, t, the_mal_entry, False) # try the alias
                     if searchResults:
                         return searchResults
             
@@ -373,6 +385,7 @@ def extractItemFromUri( url, options ):
 # Much of this code is adapted from malconstrict, a MAL api python wrapper
 
 malapiurl = 'http://mal-api.com'
+the_mal_entry = -1
 
 def raw_search_anime(query):
     h = httplib2.Http("/tmp/httplib2")
@@ -422,10 +435,10 @@ def get_mal_entry(query):
         details = None
     return details
 
-def get_other_titles(query):
-    details = get_mal_entry(query)
+def mal_get_other_titles(the_mal_entry):
+    details = the_mal_entry
     result = None
-    if details: # we found something meeting our criteria!
+    if details:
         result = [details['title']]
         if 'english' in details['other_titles']:
             for title in details['other_titles']['english']:
@@ -435,8 +448,46 @@ def get_other_titles(query):
                 result.append(title)
     return result
 
+def mal_deduce_season(the_mal_entry, default):
+    details = the_mal_entry
+    if details:
+        WebExtractor.log("Deducing season number with MAL..")
+        # firstly, a lot of shows list sequel shows as "<showname> Nth Season"
+        # in the synonym list, we look for that, and assume that "Nth Season"
+        # isn't actually part of the real title
+        # TODO: think harder about this assumption, can we avoid it?
+        if 'synonyms' in details['other_titles']:
+            for title in details['other_titles']['synonyms']:
+                if title[-6:].lower() == "season":
+                    if title[-10:-9] == "1" and title[-9:-7].lower() == "st":
+                        WebExtractor.log("Deduced season with synonym " + title)
+                        return 1
+                    elif title[-10:-9] == "2" and title[-9:-7].lower() == "nd":
+                        WebExtractor.log("Deduced season with synonym " + title)
+                        return 2
+                    elif title[-10:-9].isdigit() and title[-9:-7].lower() == "th":
+                        WebExtractor.log("Deduced season with synonym " + title)
+                        return int(title[-10:-9])
+        # well that didn't work, guess we need to do it the hard way.
+        # basically, we see if a prequel is specified, and if it is, we look
+        # and see if the prequel has a prequel, and we deduce the season by
+        # counting the length of the prequel chain, assuming the end of the chain is
+        # season 1
+        season_count = 0
+        curentry = details
+        while True:
+            if curentry['type'] == "TV":
+                WebExtractor.log("Prequel count at " + curentry['title'] + " : " + str(season_count))
+                season_count += 1
+            if len(curentry['prequels']) < 1:
+                break
+            curentry = json.loads(raw_get_anime_details(curentry['prequels'][0]['anime_id']))
+        if season_count > 1:
+            return season_count
+    return default
+
 def match_score(str1, str2):
-    return difflib.SequenceMatcher(None, str1, str2).ratio()
+    return difflib.SequenceMatcher(None, str1.lower(), str2.lower()).ratio()
 
 #------------------------------------------------------------------------------
 # Code for plugin-specific config dialog.
