@@ -141,7 +141,16 @@ def trySearch(parameters, t, the_mal_entry, recurse = True):
     searchResults = []
     try:
         if showtitle and season and episode:
-            episodeResult = t[showtitle.decode('utf')][int(season)][int(episode)] # the utf part is to prevent flipping out when filename has unicode
+            # automatically advance to the next season if we can't find enough episodes
+            # in the current season. Some series are listed this way, esp long series like
+            # One Piece/Naruto.
+            seasoninfo = t[showtitle.decode('utf')][int(season)] # the utf part is to prevent flipping out when filename has unicode
+            while int(episode) > len(seasoninfo.keys()):
+                episode = int(episode) - len(seasoninfo.keys())
+                season = int(season) + 1
+                WebExtractor.log("Season " + str(season - 1) + " only has " + str(len(seasoninfo.keys())) + " episodes, auto-advancing to season " + str(season))
+                seasoninfo = t[showtitle.decode('utf')][int(season)]
+            episodeResult = t[showtitle.decode('utf')][int(season)][int(episode)]
             searchResults.append( getEpisodeDetails(episodeResult) )
 
         elif showtitle and season:
