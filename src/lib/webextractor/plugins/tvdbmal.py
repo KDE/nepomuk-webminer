@@ -210,8 +210,49 @@ class ConfigRulesWrapper:
             else:
                 return str(components[0]), showepisode
         return showseason, showepisode
-            
-        
+
+    def get_titles(self):
+        return self.confgroup.keyList()
+
+    def get_rawentry(self, key):
+        return self.confgroup.readEntry(key, QtCore.QStringList()).toStringList()
+
+    def get_entry(self, key):
+        return self.interpret_rules(self.get_rawentry(key))
+
+    def interpret_rules(self, entry):
+        element = {}
+        element['alias'] = entry.takeFirst()
+        rules = []
+        if entry.__len__() > 0 and entry[0] != "-":
+            for rule in entry:
+                components = QtCore.QString(rule).split(self.ruleSeparator)
+                if components.count() < 2:
+                    rules.append({'type': 'globalseason', 'season': components[0]})
+                    continue
+                rules.append({'type': 'customseason', 'season': components[0], 'fromepisode': components[1], 'toepisode': components[2], 'reset': components[3]})
+        element['rules'] = rules
+        return element
+
+    def entry_to_raw(self, entry):
+        if entry['rules'].__len__() < 1:
+            return QtCore.QStringList([entry['alias'], "-"])
+        rawentry = QtCore.QStringList([entry['alias']])
+        for rule in entry['rules']:
+            if rule['type'] == 'globalseason':
+                rawentry.append(rule['season'])
+            elif rule['type'] == 'customseason':
+                rawentry.append(str(rule['season']) + self.ruleSeparator + str(rule['fromepisode']) + self.ruleSeparator + str(rule['toepisode']) + self.ruleSeparator + str(rule['reset']))
+        return rawentry
+
+    def save_new_entry(self, title, entry):
+        self.confgroup.writeEntry(title, self.entry_to_raw(entry))
+        self.confgroup.sync()
+
+    def remove_entry(self, title):
+        self.confgroup.deleteEntry(title)
+        self.confgroup.sync()
+
 #------------------------------------------------------------------------------
 # Module options
 #
@@ -294,6 +335,8 @@ def trySearch(parameters, t, recurse = True):
         WebExtractor.log("looking for configured aliases")
         oldseason = season
         showtitle, season, episode = confwrapper.apply_configured_rules(showtitle, season, episode)
+        parameters['season'] = season
+        parameters['episode'] = episode
         if season == oldseason and season == "1" and recurse == True:
             # means we probably can't get a definite season from the filename or the alias config
             # so we make an effort to figure out the season ourself
@@ -519,8 +562,6 @@ def extractItemFromUri( url, options ):
 class ConfDialogController:
     def __init__(self):
         self.ui = uic.loadUi(uifileFolder + "/tvdbmalconfig.ui", QtGui.QDialog())
-        self.conf = kdecore.KConfig(confFileName)
-        self.confgroup = kdecore.KConfigGroup(self.conf, "aliases")
         self.refresh_widgets()
         self.ui.addButton.clicked.connect(self.add_item)
         self.ui.deleteButton.clicked.connect(self.remove_item)
@@ -531,30 +572,29 @@ class ConfDialogController:
 
     def refresh_widgets(self):
         self.ui.overrideList.clear()
-        for key in self.confgroup.keyList():
-            entry = self.confgroup.readEntry(key, QtCore.QStringList()).toStringList()
-            alias = entry[0]
-            if entry.__len__ > 1 and entry[1] != "-":
-              alias += " (custom season rules)"
+        for key in confwrapper.get_titles():
+            entry = confwrapper.get_entry(key)
+            alias = entry['alias']
+            if entry['rules'].__len__() > 0:
+                alias += " (custom season rules)"
             i = QtGui.QListWidgetItem(key + " -> " + alias)
             i.setData(4, key)
-            i.setData(5, self.confgroup.readEntry(key, QtCore.QStringList()))
+            i.setData(5, confwrapper.get_rawentry(key))
             self.ui.overrideList.addItem(i)
 
     def remove_item(self):
         i = self.ui.overrideList.currentItem()
         if i:
-            self.confgroup.deleteEntry(i.data(4).toString())
-            self.conf.sync()
+            confwrapper.remove_entry(i.data(4).toString())
             self.refresh_widgets()
 
     def add_item(self):
-        self.show_aliasui("", QtCore.QStringList(["", "-"]))
+        self.show_aliasui("", {'alias': '', 'rules':[] })
 
     def modify_item(self):
         i = self.ui.overrideList.currentItem()
         if i:
-            self.show_aliasui(i.data(4).toString(), i.data(5).toStringList())
+            self.show_aliasui(i.data(4).toString(), confwrapper.interpret_rules(i.data(5).toStringList()))
 
     def show_aliasui(self, field, value):
         self.aliasui = uic.loadUi(uifileFolder + "/tvdbmalaliasconfig.ui", QtGui.QDialog())
@@ -567,10 +607,10 @@ class ConfDialogController:
         self.aliasui.deleteButton.clicked.connect(self.delete_rule)
         self.aliasui.okButton.clicked.connect(self.validate_newalias)
         self.aliasui.beforeText.setText(field)
-        self.aliasui.afterText.setText(value.takeFirst())
+        self.aliasui.afterText.setText(value['alias'])
         self.definedRuleList = []
-        if value[0] != "-":
-            self.definedRuleList.extend(value)
+        if value['rules'].__len__() > 0:
+            self.definedRuleList.extend(value['rules'])
             self.aliasui.manualRadio.setChecked(True)
             self.enable_aliascustom(True)
         self.refresh_rulelist_widget()
@@ -579,18 +619,16 @@ class ConfDialogController:
 
     def save_new_alias(self):
         newEntry, newRule = self.get_new_aliasrule()
-        self.confgroup.writeEntry(newEntry, newRule)
-        self.confgroup.sync()
+        confwrapper.save_new_entry(newEntry, newRule)
         self.refresh_widgets()
 
     def get_new_aliasrule(self):
         newEntry = self.aliasui.beforeText.text()
-        newRule = []
-        newRule.append(self.aliasui.afterText.text())
-        if self.aliasui.autoRadio.isChecked():
-            newRule.append("-")
-        else:
-            newRule.extend(self.definedRuleList)
+        newRule = {}
+        newRule['alias'] = self.aliasui.afterText.text()
+        newRule['rules'] = []
+        if not self.aliasui.autoRadio.isChecked():
+            newRule['rules'].extend(self.definedRuleList)
         return newEntry, newRule
 
     def delete_rule(self):
@@ -613,7 +651,7 @@ class ConfDialogController:
             kdeui.KMessageBox.error(None, "Enter an integer for season number!")
             return
         if self.aliasui.allOrRangeCombo.currentIndex() == 0:
-            self.definedRuleList.append(str(season))
+            self.definedRuleList.append({'type': 'globalseason', 'season': str(season)})
             self.clear_rule_area()
             self.refresh_rulelist_widget()
             return
@@ -625,7 +663,7 @@ class ConfDialogController:
         if self.aliasui.resetEpisodes.isChecked():
             reset = "1"
         if self.aliasui.toOrOnwardsCombo.currentIndex() == 0:
-            self.definedRuleList.append(str(season) + ruleSeparator + str(fromEpisode) + ruleSeparator + "-" + ruleSeparator + reset)
+            self.definedRuleList.append({'type': 'customseason', 'season': str(season), 'fromepisode': str(fromEpisode), 'toepisode': "-", 'reset': reset})
             self.clear_rule_area()
             self.refresh_rulelist_widget()
             return
@@ -633,7 +671,7 @@ class ConfDialogController:
         if not ok:
             kdeui.KMessageBox.error(None, "Enter a numeric value for episode numbers!")
             return
-        self.definedRuleList.append(str(season) + ruleSeparator + str(fromEpisode) + ruleSeparator + str(toEpisode) + ruleSeparator + reset)
+        self.definedRuleList.append({'type': 'customseason', 'season': str(season), 'fromepisode': str(fromEpisode), 'toepisode': str(toEpisode), 'reset': reset})
         self.clear_rule_area()
         self.refresh_rulelist_widget()
 
@@ -648,19 +686,18 @@ class ConfDialogController:
     def refresh_rulelist_widget(self):
         self.aliasui.ruleList.clear()
         for rule in self.definedRuleList:
-            components = QtCore.QString(rule).split(ruleSeparator)
-            if components.__len__() == 1:
-                self.aliasui.ruleList.addItem("Use season " + components[0] + " for all episodes")
-            elif components[2] == "-":
+            if rule['type'] == 'globalseason':
+                self.aliasui.ruleList.addItem("Use season " + rule['season'] + " for all episodes")
+            elif rule['type'] == 'customseason' and rule['toepisode'] == "-":
                 addition = ""
-                if components[3] == "1":
+                if rule['reset'] == "1":
                     addition = " (reset)"
-                self.aliasui.ruleList.addItem("Use season " + components[0] + " for episode " + components[1] + " and after" + addition)
+                self.aliasui.ruleList.addItem("Use season " + rule['season'] + " for episode " + rule['fromepisode'] + " and after" + addition)
             else:
                 addition = ""
-                if components[3] == "1":
+                if rule['reset'] == "1":
                     addition = " (reset)"
-                self.aliasui.ruleList.addItem("Use season " + components[0] + " for episodes " + components[1] + " through " + components[2] + addition)
+                self.aliasui.ruleList.addItem("Use season " + rule['season'] + " for episodes " + rule['fromepisode'] + " through " + rule['toepisode'] + addition)
 
     def toggle_episode_from(self, index):
         if index == 1:
