@@ -167,7 +167,7 @@ class MalWrapper:
 #
 class ConfigRulesWrapper:
     def __init__(self):
-        self.confFileName = "tvdbrc"
+        self.confFileName = "tvdbmalrc"
         self.ruleSeparator = "|"
         self.conf = kdecore.KConfig(self.confFileName)
         self.confgroup = kdecore.KConfigGroup(self.conf, "aliases")
@@ -179,36 +179,42 @@ class ConfigRulesWrapper:
         
         rawdata = self.confgroup.readEntry(showtitle, QtCore.QStringList()).toStringList()
         if len(rawdata) > 1:
-            if rawdata[1] == "-":
-                return str(rawdata[0]), showseason, showepisode
+            entry = self.interpret_rules(rawdata)
+            if entry['rules'].__len__() < 1:
+                return str(entry['alias']), showseason, showepisode
             else:
-                alias = rawdata.takeFirst()
+                alias = entry['alias']
                 season, episode = showseason, showepisode
-                for rule in rawdata:
+                for rule in entry['rules']:
                     season, episode = self.apply_rule(rule, season, episode)
                 return str(alias), season, episode
         # in case there's unicode involved
         rawdata = self.confgroup.readEntry(showtitle.decode('utf'), QtCore.QStringList()).toStringList()
         if len(rawdata) > 1:
-            if rawdata[1] == "-":
-                return str(rawdata[0]), showseason, showepisode
+            entry = self.interpret_rules(rawdata)
+            if entry['rules'].__len__() < 1:
+                return str(entry['alias']), showseason, showepisode
             else:
-                alias = rawdata.takeFirst()
+                alias = entry['alias']
                 season, episode = showseason, showepisode
-                for rule in rawdata:
+                for rule in entry['rules']:
                     season, episode = self.apply_rule(rule, season, episode)
                 return str(alias), season, episode
         return showtitle, showseason, showepisode
 
     def apply_rule(self, rule, showseason, showepisode):
-        components = QtCore.QString(rule).split(self.ruleSeparator)
-        if components.count() < 2:
-            return str(components[0]), showepisode
-        if showepisode >= str(components[1]) and (components[2] == "-" or showepisode <= str(components[2])) :
-            if components[3] == "1":
-                return str(components[0]), str(int(str(showepisode)) - int(str(components[1])) + 1)
+        components = rule
+        if components['type'] == 'globalseason':
+            return str(components['season']), showepisode
+        if components['type'] == 'customseason' and showepisode >= str(components['fromepisode']) and (components['toepisode'] == "-" or showepisode <= str(components[['toepisode']])) :
+            if components['reset'] == "1":
+                return str(components['season']), str(int(str(showepisode)) - int(str(components['fromepisode'])) + 1)
             else:
-                return str(components[0]), showepisode
+                return str(components['season']), showepisode
+        if components['type'] == 'addepisode' and showseason == str(components['season']) and showepisode >= str(components['fromepisode']) and (components['toepisode'] == "-" or showepisode <= str(components[['toepisode']])) :
+            return showseason, str(int(str(showepisode)) + int(str(components['amount'])))
+        if components['type'] == 'skipepisode' and showseason == str(components['season']) and showepisode >= str(components['fromepisode']) and (components['toepisode'] == "-" or showepisode <= str(components[['toepisode']])) :
+            return showseason, str(int(str(showepisode)) - int(str(components['amount'])))
         return showseason, showepisode
 
     def get_titles(self):
@@ -226,13 +232,20 @@ class ConfigRulesWrapper:
         rules = []
         if entry.__len__() > 0 and entry[0] != "-":
             for rule in entry:
-                components = QtCore.QString(rule).split(self.ruleSeparator)
-                if components.count() < 2:
-                    rules.append({'type': 'globalseason', 'season': components[0]})
-                    continue
-                rules.append({'type': 'customseason', 'season': components[0], 'fromepisode': components[1], 'toepisode': components[2], 'reset': components[3]})
+                rules.append(self.convert_seasonepisode_rule(rule))
         element['rules'] = rules
         return element
+
+    def convert_seasonepisode_rule(self, rule):
+        components = QtCore.QString(rule).split(self.ruleSeparator)
+        if components[0] == 'globalseason':
+            return {'type': 'globalseason', 'season': components[1]}
+        if components[0] == 'customseason':
+            return {'type': 'customseason', 'season': components[1], 'fromepisode': components[2], 'toepisode': components[3], 'reset': components[4]}
+        if components[0] == 'addepisode':
+            return {'type': 'addepisode', 'season': components[1], 'fromepisode': components[2], 'toepisode': components[3], 'amount': components[4]}
+        if components[0] == 'skipepisode':
+            return {'type': 'skipepisode', 'season': components[1], 'fromepisode': components[2], 'toepisode': components[3], 'amount': components[4]}
 
     def entry_to_raw(self, entry):
         if entry['rules'].__len__() < 1:
@@ -240,9 +253,13 @@ class ConfigRulesWrapper:
         rawentry = QtCore.QStringList([entry['alias']])
         for rule in entry['rules']:
             if rule['type'] == 'globalseason':
-                rawentry.append(rule['season'])
+                rawentry.append('globalseason' + self.ruleSeparator + str(rule['season']))
             elif rule['type'] == 'customseason':
-                rawentry.append(str(rule['season']) + self.ruleSeparator + str(rule['fromepisode']) + self.ruleSeparator + str(rule['toepisode']) + self.ruleSeparator + str(rule['reset']))
+                rawentry.append('customseason' + self.ruleSeparator + str(rule['season']) + self.ruleSeparator + str(rule['fromepisode']) + self.ruleSeparator + str(rule['toepisode']) + self.ruleSeparator + str(rule['reset']))
+            elif rule['type'] == 'addepisode':
+                rawentry.append('addepisode' + self.ruleSeparator + str(rule['season']) + self.ruleSeparator + str(rule['fromepisode']) + self.ruleSeparator + str(rule['toepisode']) + self.ruleSeparator + str(rule['amount']))
+            elif rule['type'] == 'skipepisode':
+                rawentry.append('skipepisode' + self.ruleSeparator + str(rule['season']) + self.ruleSeparator + str(rule['fromepisode']) + self.ruleSeparator + str(rule['toepisode']) + self.ruleSeparator + str(rule['amount']))
         return rawentry
 
     def save_new_entry(self, title, entry):
