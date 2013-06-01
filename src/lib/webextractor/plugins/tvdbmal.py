@@ -206,14 +206,14 @@ class ConfigRulesWrapper:
         components = rule
         if components['type'] == 'globalseason':
             return str(components['season']), showepisode
-        if components['type'] == 'customseason' and showepisode >= str(components['fromepisode']) and (components['toepisode'] == "-" or showepisode <= str(components[['toepisode']])) :
+        if components['type'] == 'customseason' and showepisode >= str(components['fromepisode']) and (components['toepisode'] == "-" or showepisode <= str(components['toepisode'])) :
             if components['reset'] == "1":
                 return str(components['season']), str(int(str(showepisode)) - int(str(components['fromepisode'])) + 1)
             else:
                 return str(components['season']), showepisode
-        if components['type'] == 'addepisode' and showseason == str(components['season']) and showepisode >= str(components['fromepisode']) and (components['toepisode'] == "-" or showepisode <= str(components[['toepisode']])) :
+        if components['type'] == 'addepisode' and showseason == str(components['season']) and showepisode >= str(components['fromepisode']) and (components['toepisode'] == "-" or showepisode <= str(components['toepisode'])) :
             return showseason, str(int(str(showepisode)) + int(str(components['amount'])))
-        if components['type'] == 'skipepisode' and showseason == str(components['season']) and showepisode >= str(components['fromepisode']) and (components['toepisode'] == "-" or showepisode <= str(components[['toepisode']])) :
+        if components['type'] == 'skipepisode' and showseason == str(components['season']) and showepisode >= str(components['fromepisode']) and (components['toepisode'] == "-" or showepisode <= str(components['toepisode'])) :
             return showseason, str(int(str(showepisode)) - int(str(components['amount'])))
         return showseason, showepisode
 
@@ -621,7 +621,12 @@ class ConfDialogController:
         self.aliasui.allOrRangeCombo.currentIndexChanged.connect(self.toggle_episode_from)
         self.aliasui.toOrOnwardsCombo.currentIndexChanged.connect(self.toggle_episode_to)
         self.aliasui.addButton.clicked.connect(self.add_rule)
+        self.aliasui.episodeAllOrRangeCombo.currentIndexChanged.connect(self.episode_toggle_episode_from)
+        self.aliasui.episodeToOrOnwardsCombo.currentIndexChanged.connect(self.episode_toggle_episode_to)
+        self.aliasui.episodeAddButton.clicked.connect(self.episode_add_rule)
         self.aliasui.deleteButton.clicked.connect(self.delete_rule)
+        self.aliasui.moveUpButton.clicked.connect(self.move_rule_up)
+        self.aliasui.moveDownButton.clicked.connect(self.move_rule_down)
         self.aliasui.okButton.clicked.connect(self.validate_newalias)
         self.aliasui.beforeText.setText(field)
         self.aliasui.afterText.setText(value['alias'])
@@ -653,6 +658,24 @@ class ConfDialogController:
         self.definedRuleList.pop(self.aliasui.ruleList.currentRow())
         self.refresh_rulelist_widget()
 
+    def move_rule_up(self):
+        cur = self.aliasui.ruleList.currentRow()
+        if cur != 0:
+            new = cur - 1
+            item = self.definedRuleList.pop(cur)
+            self.definedRuleList.insert(new, item)
+            self.refresh_rulelist_widget()
+            self.aliasui.ruleList.setCurrentRow(new)
+    
+    def move_rule_down(self):
+        cur = self.aliasui.ruleList.currentRow()
+        if cur != self.definedRuleList.__len__() - 1:
+            new = cur + 1
+            item = self.definedRuleList.pop(cur)
+            self.definedRuleList.insert(new, item)
+            self.refresh_rulelist_widget()
+            self.aliasui.ruleList.setCurrentRow(new)
+
     def validate_newalias(self):
         if self.aliasui.beforeText.text().isEmpty() or self.aliasui.afterText.text().isEmpty():
             kdeui.KMessageBox.error(None, "Enter the original and the alias to configure!")
@@ -660,6 +683,46 @@ class ConfDialogController:
             kdeui.KMessageBox.error(None, "You haven't created any custom season rules!")
         else:
             self.aliasui.accept()
+
+    def episode_add_rule(self):
+        ok = False
+        rule = {}
+        season, ok = self.aliasui.episodeSeasonEdit.text().toInt()
+        if not ok:
+            kdeui.KMessageBox.error(None, "Enter an integer for season number!")
+            return
+        amount, ok = self.aliasui.episodeAmountEdit.text().toInt()
+        if not ok:
+            kdeui.KMessageBox.error(None, "Enter an integer for number of episodes to add/minus!")
+            return
+        if self.aliasui.addMinusCombo.currentIndex() == 0:
+            rule['type'] = 'addepisode'
+        else:
+            rule['type'] = 'skipepisode'
+        fromEpisode, ok = self.aliasui.episodeFromEpisodeEdit.text().toInt()
+        if not ok:
+            kdeui.KMessageBox.error(None, "Enter a numeric value for episode numbers!")
+            return
+        if self.aliasui.episodeToOrOnwardsCombo.currentIndex() == 0:
+            rule['season'] = str(season)
+            rule['fromepisode'] = str(fromEpisode)
+            rule['toepisode'] = "-"
+            rule['amount'] = str(amount)
+            self.definedRuleList.append(rule)
+            self.clear_rule_area()
+            self.refresh_rulelist_widget()
+            return
+        toEpisode, ok = self.aliasui.episodeToEpisodeEdit.text().toInt()
+        if not ok:
+            kdeui.KMessageBox.error(None, "Enter a numeric value for episode numbers!")
+            return
+        rule['season'] = str(season)
+        rule['fromepisode'] = str(fromEpisode)
+        rule['toepisode'] = str(toEpisode)
+        rule['amount'] = str(amount)
+        self.definedRuleList.append(rule)
+        self.clear_rule_area()
+        self.refresh_rulelist_widget()
 
     def add_rule(self):
         ok = False
@@ -699,6 +762,13 @@ class ConfDialogController:
         self.aliasui.toOrOnwardsCombo.setCurrentIndex(0)
         self.aliasui.toEpisodeEdit.setText("")
         self.aliasui.resetEpisodes.setChecked(True);
+        self.aliasui.addMinusCombo.setCurrentIndex(0)
+        self.aliasui.episodeAmountEdit.setText("")
+        self.aliasui.episodeSeasonEdit.setText("")
+        self.aliasui.episodeAllOrRangeCombo.setCurrentIndex(0)
+        self.aliasui.episodeFromEpisodeEdit.setText("")
+        self.aliasui.episodeToOrOnwardsCombo.setCurrentIndex(0)
+        self.aliasui.episodeToEpisodeEdit.setText("")
 
     def refresh_rulelist_widget(self):
         self.aliasui.ruleList.clear()
@@ -710,11 +780,19 @@ class ConfDialogController:
                 if rule['reset'] == "1":
                     addition = " (reset)"
                 self.aliasui.ruleList.addItem("Use season " + rule['season'] + " for episode " + rule['fromepisode'] + " and after" + addition)
-            else:
+            elif rule['type'] == 'customseason':
                 addition = ""
                 if rule['reset'] == "1":
                     addition = " (reset)"
                 self.aliasui.ruleList.addItem("Use season " + rule['season'] + " for episodes " + rule['fromepisode'] + " through " + rule['toepisode'] + addition)
+            elif rule['type'] == 'addepisode' and rule['toepisode'] == "-":
+                self.aliasui.ruleList.addItem("Add " + rule['amount'] + " to episode number for: Season " + rule['season'] + ", episodes " + rule['fromepisode'] + " and after")
+            elif rule['type'] == 'addepisode':
+                self.aliasui.ruleList.addItem("Add " + rule['amount'] + " to episode number for: Season " + rule['season'] + ", episodes " + rule['fromepisode'] + " through " + rule['toepisode'])
+            elif rule['type'] == 'skipepisode' and rule['toepisode'] == "-":
+                self.aliasui.ruleList.addItem("Minus " + rule['amount'] + " from episode number for: Season " + rule['season'] + ", episodes " + rule['fromepisode'] + " and after")
+            elif rule['type'] == 'skipepisode':
+                self.aliasui.ruleList.addItem("Minus " + rule['amount'] + " from episode number for: Season " + rule['season'] + ", episodes " + rule['fromepisode'] + " through " + rule['toepisode'])
 
     def toggle_episode_from(self, index):
         if index == 1:
@@ -735,6 +813,23 @@ class ConfDialogController:
         elif index == 0:
             self.aliasui.toEpisodeEdit.setEnabled(False);
 
+    def episode_toggle_episode_from(self, index):
+        if index == 1:
+            self.aliasui.episodeFromEpisodeEdit.setEnabled(True);
+            self.aliasui.episodeToOrOnwardsCombo.setEnabled(True);
+            if self.aliasui.episodeToOrOnwardsCombo.currentIndex() == 1:
+                self.aliasui.episodeToEpisodeEdit.setEnabled(True);
+        elif index == 0:
+            self.aliasui.episodeFromEpisodeEdit.setEnabled(False);
+            self.aliasui.episodeToOrOnwardsCombo.setEnabled(False);
+            self.aliasui.episodeToEpisodeEdit.setEnabled(False);
+
+    def episode_toggle_episode_to(self, index):
+        if index == 1:
+            self.aliasui.episodeToEpisodeEdit.setEnabled(True);
+        elif index == 0:
+            self.aliasui.episodeToEpisodeEdit.setEnabled(False);
+
     def disable_aliascustom(self, checked):
         if checked:
             self.aliasui.seasonEdit.setEnabled(False);
@@ -746,20 +841,43 @@ class ConfDialogController:
             self.aliasui.addButton.setEnabled(False);
             self.aliasui.ruleList.setEnabled(False);
             self.aliasui.deleteButton.setEnabled(False);
+            self.aliasui.moveUpButton.setEnabled(False);
+            self.aliasui.moveDownButton.setEnabled(False);
+            self.aliasui.episodeAddButton.setEnabled(False);
+            self.aliasui.episodeAmountEdit.setEnabled(False);
+            self.aliasui.episodeSeasonEdit.setEnabled(False);
+            self.aliasui.episodeAllOrRangeCombo.setEnabled(False);
+            self.aliasui.episodeFromEpisodeEdit.setEnabled(False);
+            self.aliasui.episodeToOrOnwardsCombo.setEnabled(False);
+            self.aliasui.episodeToEpisodeEdit.setEnabled(False);
+            self.aliasui.episodeAddButton.setEnabled(False);
+            self.aliasui.addMinusCombo.setEnabled(False);
 
     def enable_aliascustom(self, checked):
         if checked:
             self.aliasui.seasonEdit.setEnabled(True);
             self.aliasui.allOrRangeCombo.setEnabled(True);
+            self.aliasui.addMinusCombo.setEnabled(True);
+            self.aliasui.episodeAllOrRangeCombo.setEnabled(True);
+            self.aliasui.episodeAmountEdit.setEnabled(True);
+            self.aliasui.episodeSeasonEdit.setEnabled(True);
             if self.aliasui.allOrRangeCombo.currentIndex() == 1:
                 self.aliasui.fromEpisodeEdit.setEnabled(True);
                 self.aliasui.toOrOnwardsCombo.setEnabled(True);
                 self.aliasui.resetEpisodes.setEnabled(True);
                 if self.aliasui.toOrOnwardsCombo.currentIndex() == 1:
                     self.aliasui.toEpisodeEdit.setEnabled(True);
+            if self.aliasui.episodeAllOrRangeCombo.currentIndex() == 1:
+                self.aliasui.episodeFromEpisodeEdit.setEnabled(True);
+                self.aliasui.episodeToOrOnwardsCombo.setEnabled(True);
+                if self.aliasui.episodeToOrOnwardsCombo.currentIndex() == 1:
+                    self.aliasui.episodeToEpisodeEdit.setEnabled(True);
             self.aliasui.addButton.setEnabled(True);
+            self.aliasui.episodeAddButton.setEnabled(True);
             self.aliasui.ruleList.setEnabled(True);
             self.aliasui.deleteButton.setEnabled(True);
+            self.aliasui.moveUpButton.setEnabled(True);
+            self.aliasui.moveDownButton.setEnabled(True);
 
 
 def showConfigDialog():
