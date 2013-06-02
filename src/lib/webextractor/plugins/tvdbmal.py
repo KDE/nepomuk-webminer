@@ -321,18 +321,18 @@ def info():
 #       good for bulk download/select a folder and then fetch all episode info
 #
 malwrapper = MalWrapper()
-confwrapper = ConfigRulesWrapper()
 def searchItems( resourcetype, parameters ):
 
     t = tvdb_api.Tvdb()
+    confwrapper = ConfigRulesWrapper()
 
-    searchResults = trySearch(parameters, t)
+    searchResults = trySearch(parameters, t, confwrapper)
     WebExtractor.searchResults( searchResults )
 
 #------------------------------------------------------------------------------
 # put the logic code here into a helper so we can retry recursively (for cases where we have aliases)
 
-def trySearch(parameters, t, recurse = True):
+def trySearch(parameters, t, confwrapper, recurse = True):
     
     title = ''
     showtitle = ''
@@ -412,7 +412,7 @@ def trySearch(parameters, t, recurse = True):
                     WebExtractor.log("trying " + alias)
                     newparameters = parameters
                     newparameters['showtitle'] = alias
-                    searchResults = trySearch(newparameters, t, False) # try the alias
+                    searchResults = trySearch(newparameters, t, confwrapper, False) # try the alias
                     if searchResults:
                         return searchResults
             
@@ -579,6 +579,7 @@ def extractItemFromUri( url, options ):
 class ConfDialogController:
     def __init__(self):
         self.ui = uic.loadUi(uifileFolder + "/tvdbmalconfig.ui", QtGui.QDialog())
+        self.confwrapper = ConfigRulesWrapper()
         self.refresh_widgets()
         self.ui.addButton.clicked.connect(self.add_item)
         self.ui.deleteButton.clicked.connect(self.remove_item)
@@ -589,20 +590,20 @@ class ConfDialogController:
 
     def refresh_widgets(self):
         self.ui.overrideList.clear()
-        for key in confwrapper.get_titles():
-            entry = confwrapper.get_entry(key)
+        for key in self.confwrapper.get_titles():
+            entry = self.confwrapper.get_entry(key)
             alias = entry['alias']
             if entry['rules'].__len__() > 0:
                 alias += " (custom season rules)"
             i = QtGui.QListWidgetItem(key + " -> " + alias)
             i.setData(4, key)
-            i.setData(5, confwrapper.get_rawentry(key))
+            i.setData(5, self.confwrapper.get_rawentry(key))
             self.ui.overrideList.addItem(i)
 
     def remove_item(self):
         i = self.ui.overrideList.currentItem()
         if i:
-            confwrapper.remove_entry(i.data(4).toString())
+            self.confwrapper.remove_entry(i.data(4).toString())
             self.refresh_widgets()
 
     def add_item(self):
@@ -611,7 +612,7 @@ class ConfDialogController:
     def modify_item(self):
         i = self.ui.overrideList.currentItem()
         if i:
-            self.show_aliasui(i.data(4).toString(), confwrapper.interpret_rules(i.data(5).toStringList()))
+            self.show_aliasui(i.data(4).toString(), self.confwrapper.interpret_rules(i.data(5).toStringList()))
 
     def show_aliasui(self, field, value):
         self.aliasui = uic.loadUi(uifileFolder + "/tvdbmalaliasconfig.ui", QtGui.QDialog())
@@ -641,7 +642,7 @@ class ConfDialogController:
 
     def save_new_alias(self):
         newEntry, newRule = self.get_new_aliasrule()
-        confwrapper.save_new_entry(newEntry, newRule)
+        self.confwrapper.save_new_entry(newEntry, newRule)
         self.refresh_widgets()
 
     def get_new_aliasrule(self):
