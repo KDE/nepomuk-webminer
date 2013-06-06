@@ -82,7 +82,7 @@ void WebMinerIndexingQueue::fillQueue()
             whiteListRegExp.append( regexp );
         }
 
-        whiteListRegExp.chop(2);
+        whiteListRegExp.chop(4); // remove " || "
         whiteListRegExp.append( QLatin1String(" ).") );
     }
 
