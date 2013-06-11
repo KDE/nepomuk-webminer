@@ -2,7 +2,7 @@
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
   <!ENTITY kappname "<application>Nepomuk-WebMiner</application>">
   <!ENTITY package "kcontrol">
-  <!ENTITY kappversion "0.3"><!--Application version. Use this variable everywhere it's needed.-->
+  <!ENTITY kappversion "0.6"><!--Application version. Use this variable everywhere it's needed.-->
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
 ]>
@@ -27,7 +27,7 @@
 
     <legalnotice>&FDLNotice;</legalnotice>
 
-    <date>2012-10-19</date><!-- Date of (re)writing, or update.-->
+    <date>2013-06-11</date><!-- Date of (re)writing, or update.-->
     <releaseinfo>&kappversion;</releaseinfo><!-- Application version number. Use the variable definitions within header to change this value.-->
 
     <abstract>
@@ -119,11 +119,11 @@
         Select the right entry you want fetch here.
     </para>
     <para>
-        Some more details about the currently selected entry is shown in <command>4</command>. The show online link will open the web browser with the website
+        Some more details about the currently selected entry is shown in tab <command>4</command>. The show online link will open the web browser with the website
         that will be used for the data extraction. To start the extraction click on the <guibutton>Fetch Metadata</guibutton> button.
     </para>
     <para>
-        The results of the item extraction is shown in the list <command>5</command>. To save the metadata press the <guibutton>Save</guibutton> button.
+        The results of the item extraction is shown in the tab <command>5</command>. To save the metadata press the <guibutton>Save</guibutton> button.
     </para>
     <para>
         To select a different file in the list of files the <guibutton>Previous</guibutton> and <guibutton>Next</guibutton> buttons in <command>6</command> can be used.
@@ -154,24 +154,15 @@
     <para>
     The fetcher settings handle the general behavior of the &kappname;.
     </para>
+    <sect2 id="fetcher-general">
+    <title>General Settings</title>
+    <para>
     <itemizedlist>
         <listitem>
             <para>
                 <guilabel>Download Banner/Poster/Cover</guilabel>:
                  If enabled the extractor looks for the matching poster/banner or cover of the item to fetch.
                  The image will be saved into the application folder and added to the resource via <application>Nepomuk</application>.
-            </para>
-        </listitem>
-        <listitem>
-            <para>
-                <guilabel>Save Banner in Resource Folder</guilabel>:
-                 Instead of saving the image into the application folder the image is saved next to the file.
-                 <note>
-                     <para>
-                         Might lead to duplicated images if the same image for two different resources will be saved in different folders.
-                         This can happen for TV shows and the season posters, when the episodes are in two different folders.
-                     </para>
-                 </note>
             </para>
         </listitem>
         <listitem>
@@ -186,34 +177,41 @@
                      </para>
                  </note>
             </para>
-        </listitem><listitem>
+        </listitem>
+	<listitem>
+            <para>
+                <guilabel>Save Image in Resource Folder</guilabel>:
+                 Instead of saving the image into the application folder the image is saved next to the file.
+                 <note>
+                     <para>
+                         Might lead to duplicated images if the same image for two different resources will be saved in different folders.
+                         This can happen for TV shows and the season posters, when the episodes are in two different folders.
+                     </para>
+                 </note>
+            </para>
+        </listitem>
+    </itemizedlist>
+    </para>
+    </sect2>
+    
+    <sect2 id="fetcher-plugins">
+      <title>Plugin Selection</title>
         <para>
             <guilabel>Preferred Plugin</guilabel>:
              Defines which plugin will be used first to fetch the metadata from. Only if the first search failed the other plugins are queried
              to get the information.
         </para>
-    </listitem>
-    </itemizedlist>
-    </sect1>
+    </sect2>
 
-
-    <sect1 id="fetcher-plugins">
-    <title>Plugins</title>
-    <para>
-        In this list all available plugins are shown. For more information about the plugin press the <guibutton>Info</guibutton> button.
-        Some plugins allow to specify additional settings which can be seen via the <guibutton>Configure</guibutton> button.
-    </para>
-    </sect1>
-
-
-    <sect1 id="fetcher-service">
-    <title>Service</title>
+    <sect2 id="fetcher-service">
+    <title>Background Service</title>
     <para>
     The service settings allow to <command>enable/disable</command> the background service.
     If the service is enabled the extractor will be run on each newly indexed file created by the <application>Nepomuk fileindexerservice</application>.
 
     When the service is disabled the metadata will only be fetched if the user requests it via the &dolphin; context menu.
 
+    <!-- Not here in 0.6
     The number of <guilabel>Simultaneous calls</guilabel> denotes the number of extractor processes that are executed at the same time.
     </para>
     <important>
@@ -224,6 +222,7 @@
     </important>
     
     <para>
+    -->
     <itemizedlist>
       <listitem>
         <para> <guilabel>Fetch document information</guilabel>:
@@ -246,11 +245,32 @@
 	When this option is enabled the Service will automatically fetch additional information about any video file that got indexed by Nepomuk. If disabled you need to start the extractor manually for any video file.
         </para>
       </listitem>
+      <listitem>
+        <para> <guilabel>Use Folder Whitelist</guilabel>:
+	  When this option is enabled only the folders specified by the whitelist are used for the metadata lookups. The list of the folders can be configured using <guibutton>Customize Folders</guibutton> button.
+        </para>
+      </listitem>
     </itemizedlist>
       
     </para>
+    </sect2>
+    </sect1>
+    
+
+    <sect1 id="plugins">
+    <title>Plugins</title>
+    <para>
+        In this tab all available plugins are shown. For more information about the plugin press the <guibutton>Info</guibutton> button.
+        Some plugins allow to specify additional settings which can be seen via the <guibutton>Configure</guibutton> button.
+    </para>
     </sect1>
 
+    <sect1 id="parsing">
+    <title>Filename Parsing</title>
+    <para>
+        Using this tab you can fine tune filename parsing during automatic metadata extraction. Use the examples to construct your own effective parsing regular expressions.
+    </para>
+    </sect1>
     </chapter>
 
     <chapter id="credits"><title>Credits and License</title> 
