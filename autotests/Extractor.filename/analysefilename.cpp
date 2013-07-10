@@ -77,15 +77,24 @@ void AnalyseFileName::checkTvShows_data()
     QTest::newRow("Test 3") << "foo s02e03.avi" << "foo" << "" << "2" << "3";
     QTest::newRow("Test 4") << "foo s2-3.avi" << "foo" << "" << "2" << "3";
     QTest::newRow("Test 5") << "foo - 03.avi" << "foo" << "" << "1" << "3";
-    QTest::newRow("Test 6") << "foo - 203.avi" << "foo" << "" << "2" << "3";
+    QTest::newRow("Test 6") << "foo - 203.avi" << "foo" << "" << "1" << "203";
     QTest::newRow("Test 7") << "foo - 0203.avi" << "foo" << "" << "2" << "3";
 
     QTest::newRow("Test 8") << "/Videos/foo/Episode 03.avi" << "foo" << "" << "1" << "3";
     QTest::newRow("Test 9") << "/Videos/foo/Season 02/e03 - bar.avi" << "foo" << "" << "2" << "3";
     QTest::newRow("Test 10") << "/Videos/foo/Episode 03 - bar.avi" << "foo" << "" << "1" << "3";
+    QTest::newRow("Test 11") << "foo 203.avi" << "foo" << "" << "2" << "3";
 
     //QTest::newRow("Test 9") << "/Videos/foo/Season 02/e03 - bar.avi" << "foo" << "bar" << "2" << "3";
     //QTest::newRow("Test 10") << "/Videos/foo/Episode 03 - bar.avi" << "foo" << "bar" << "1" << "3";
+
+    // anime filename patterns
+    QTest::newRow("Test 12") << "[Fan_Subber] Foo Bar - 08 (1280x720 h264 AAC) [4169FF55].mkv" << "Foo Bar" << "" << "1" << "8";
+    QTest::newRow("Test 13") << "[SubGroup] Show Name! - 157 [720p] [06BD4243].mkv" << "Show Name!" << "" << "1" << "157";
+    QTest::newRow("Test 14") << "[sub-group]_foo_bar_-_02v2_[665EB12C].mkv" << "foo bar" << "" << "1" << "2";
+    QTest::newRow("Test 15") << "[FoofooGroup].Foo!.02.h264.vorbis.mkv" << "Foo!" << "" << "1" << "2";
+    QTest::newRow("Test 16") << "FOOBAR_24_WS_[H264][AQS][Sprocket][TWH][90635A6F].mkv.avi" << "FOOBAR" << "" << "1" << "24";
+    QTest::newRow("Test 17") << "[Group]Foo_-_06_-_EpTitle_[AnGroup]_[FC7D9D6F].mkv" << "Foo" << "" << "1" << "6";
 
     fna->setTvShowMode(true);
     fna->setMovieMode(false);
