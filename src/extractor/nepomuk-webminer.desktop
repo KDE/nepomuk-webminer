@@ -5,6 +5,7 @@ MimeType=application/*;video/*;audio/*;inode/directory;
 Actions=mdfetcher;mdfetcher2;mdfetcher3;mdfetcher4;
 X-KDE-Submenu=Desktop Search
 X-KDE-Submenu[bs]=Pretraga na radnoj površi
+X-KDE-Submenu[ca]=Cerca a l'escriptori
 X-KDE-Submenu[cs]=Vyhledávací služby
 X-KDE-Submenu[da]=Skrivebordssøgning
 X-KDE-Submenu[de]=Desktop-Suche
@@ -42,6 +43,7 @@ Icon=nepomuk
 [Desktop Action mdfetcher]
 Name=Harvest meta data for this file or folder
 Name[bs]=Žetva metapodataka za ovu datoteku ili direktorij
+Name[ca]=Recull les metadades per aquest fitxer o carpeta
 Name[da]=Høst metadata for denne fil eller mappe
 Name[de]=Metadaten für die Datei oder Ordner einholen
 Name[el]=Συλλογή μετα δεδομένων για αυτό το αρχείο ή το φάκελο
@@ -74,6 +76,7 @@ Exec=nepomuk-webminer %f
 [Desktop Action mdfetcher2]
 Name=Harvest meta data for this file or folder (automatically)
 Name[bs]=Žetva metapodataka za ovu datoteku ili direktorij (automatski)
+Name[ca]=Recull les metadades per aquest fitxer o carpeta (automàticament)
 Name[da]=Høst metadata for denne fil eller mappe (automatisk)
 Name[de]=Metadaten für die Datei oder Ordner einholen (automatisch)
 Name[el]=Συλλογή μετα δεδομένων για αυτό το αρχείο ή το φάκελο (αυτόματα)
@@ -106,6 +109,7 @@ Exec=nepomuk-webminer -a %f
 [Desktop Action mdfetcher3]
 Name=Harvest meta data for this file or folder (force download)
 Name[bs]=Žetva metapodataka za ovu datoteku ili direktorij (forsiraj preuzimanje)
+Name[ca]=Recull les metadades per aquest fitxer o carpeta (descàrrega forçada)
 Name[da]=Høst metadata for denne fil eller mappe (gennemtving download)
 Name[de]=Metadaten für die Datei oder Ordner einholen (herunterladen erzwingen)
 Name[el]=Συλλογή μετα δεδομένων για αυτό το αρχείο ή το φάκελο (με εξαναγκασμό λήψης)
@@ -139,6 +143,7 @@ Exec=nepomuk-webminer -f %f
 [Desktop Action mdfetcher4]
 Name=Harvest meta data for this file or folder (automatically, force download)
 Name[bs]=Žetva metapodataka za ovu datoteku ili direktorij (automatski, forsiraj preuzimanje)
+Name[ca]=Recull les metadades per aquest fitxer o carpeta (automàticament, descàrrega forçada)
 Name[da]=Høst metadata for denne fil eller mappe (automatisk, gennemtving download)
 Name[de]=Metadaten für die Datei oder Ordner einholen (automatisch, herunterladen erzwingen)
 Name[el]=Συλλογή μετα δεδομένων για αυτό το αρχείο ή το φάκελο (αυτόματα, με εξαναγκασμό λήψης)
