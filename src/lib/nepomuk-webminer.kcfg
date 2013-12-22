@@ -88,7 +88,7 @@
       <default>(.*)[\(\[]([0-9]{4})[\)\]].*#,#false#,#0,1#,#Foo bar [2013]#|#(.*)\s[\-]+[\s(\[]+([0-9]{4})[\)\]]?.*#,#false#,#0,1#,#Foo bar - (2013)</default>
     </entry>
     <entry name="RegExpMusic" type="String">
-      <label>Regular expressions that will detect and extract  parts of a music filename.</label>
+      <label>Regular expressions that will detect and extract parts of a music filename.</label>
       <default>(.*)[\s\-]+\s([0-9]+)\s[\-]+(.*)#,#false#,#5,7,0#,#Artist - 04 - Track#|#.*/([^/]*)/([^/]*)/([0-9]+)\s?\-+(.*)#,#true#,#5,6,7,0#,#~/Music/Artist/Album/04 - Track#|#.*/([^/]*)/([^/]*)/([^/]*)#,#true#,#5,6,0#,#~/Music/Artist/Album/track#|#(.*)\s?[\-]+\s?(.*)#,#false#,#5,0#,#Artist - Track</default>
     </entry>
     <entry name="RegExpDocument" type="String">
