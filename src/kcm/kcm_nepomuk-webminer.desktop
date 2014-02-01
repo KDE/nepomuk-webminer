@@ -11,6 +11,7 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=desktop-search
 
 Name=WebMiner
+Name[bs]=WebMiner
 Name[ca]=WebMiner
 Name[cs]=WebMiner
 Name[da]=WebMiner
